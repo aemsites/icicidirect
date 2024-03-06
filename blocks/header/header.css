@@ -33,13 +33,13 @@ Cutpoint 1: 768px - hide hamburger
 }
 
 body, button {
-  font-family: "Poppins", sans-serif;
+  font-family: Poppins, sans-serif;
   font-weight: 400;
   font-style: normal;
-  margin: 0rem;
+  margin: 0;
 }
 
-/* Page specific css starts*/
+/* Page specific css starts */
 
 .top-bar {
   border-bottom: var(--line-width-xxs) solid var(--light-grey) /* Adding a bottom border */
@@ -48,11 +48,7 @@ body, button {
 .top-bar .container{
   display: flex;
   flex-direction: column;
-  padding-top: var(--space-xs);
-  padding-bottom: var(--space-xxs);
-  padding-left: var(--space-s);
-  padding-right: var(--space-s);
-  
+  padding: var(--space-xs) var(--space-s) var(--space-xxs) var(--space-s);
 }
 
 .top-bar .row1 {
@@ -64,9 +60,8 @@ body, button {
 
 .top-bar .row1 .primary-buttons {
   display: flex;
-  flex-direction: row;
+  flex-flow: row wrap;
   align-items: center;
-  flex-wrap: wrap;
   justify-content: flex-end;
   gap: 2px;
 }
@@ -134,7 +129,7 @@ body, button {
   margin: 2px 0;
 }
 
-/* hamburger pannel related css*/
+/* hamburger pannel related css */
 
 .sidepanel  {
   width: 270px;
@@ -144,8 +139,7 @@ body, button {
   top: 0;
   left: -270px;
   background-color: var(--white);
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow: hidden auto;
   transition: 0.4s;
   box-shadow: none;
   display: flex;
@@ -154,7 +148,7 @@ body, button {
 
 .sidepanel.open {
   transform: translateX(100%);
-  box-shadow: 3px 0px 10px -4px rgba(0, 0, 0, 0.75);
+  box-shadow: 3px 0 10px -4px #000000bf;
 }
 
 .sidepanel .top-area {
@@ -178,8 +172,7 @@ body, button {
 
 .bottom-area-primary-actions{
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
   align-items: center;
   justify-content: center;
   gap: 10px;
@@ -187,7 +180,7 @@ body, button {
   border-bottom: 1px solid #415270;
 }
 
-/* hamburger menu close button*/
+/* hamburger menu close button */
 .sidepanel .top-area-closebutton {
   width: 35px;
   height: 32px;
@@ -258,7 +251,7 @@ body, button {
 }
 
 .search-bar .category-picker .dropdown {
-  font-family: icomoon;
+  font-family: icomoon, sans-serif;
   margin-right: 10px;
   font-weight: 800;
   color: var(--theme-dark-blue);
@@ -281,6 +274,7 @@ body, button {
 .search-bar .search-box .search-icon {
   margin-right: 15px;
 }
+
 /* main content related css */
 .main-content {
   margin-left: 15px;
@@ -293,11 +287,11 @@ h1,h2 {
 }
 
 p {
-  font: 400 16px/24px "Poppins", sans-serif;
+  font: 400 16px/24px Poppins, sans-serif;
   color: #4a4a4a;
 }
 
-/* Main content breadcrumbs css*/
+/* Main content breadcrumbs css */
 .breadcrumbs {
   font-size: 16px;
   margin: 20px 0;
@@ -310,15 +304,50 @@ p {
   transition: color 0.3s;
 }
 
+/* Topmost grey navigator related css */
 
-/* Copied accordian collapsable from hlx*/
+.global-navigator {
+  background-color: var(--lighter-grey);
+}
+
+.global-navigator .container {
+  display: none;
+  overflow-x: auto;
+  font-size: 13px;
+  color: var(--dark-grey);
+  scrollbar-width: thin;
+}
+
+.global-navigator .global-section-item {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex: 0 0 auto;
+}
+
+.global-navigator .global-section-item a {
+  padding-left: 9px;
+  padding-right: 9px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.global-navigator .global-section-item a:hover {
+  color: var(--theme-dark-blue);
+}
+
+.global-navigator .global-section-item:not(:last-child) a {
+  border-right: var(--line-width-xxs) solid var(--normal-grey);
+}
+
+/* Copied accordian collapsable from hlx */
 
 .accordion {
   font-size: 13px;
   color: var(--normal-grey);
 }
 
-a {
+/* stylelint-disable-next-line no-descending-specificity */
+.accordion a {
   text-decoration: none; /* Remove underline */
   color: inherit; /* Inherit color from parent */
   user-select: none;
@@ -335,11 +364,23 @@ a {
   overflow: auto;
   transition: background-color 0.2s;
 }
-.accordion details[open] .accordion-item-label {
-  border-bottom: none;
-  a {
-    color: var(--theme-dark-blue);
-  }
+
+.accordion details .accordion-item-label {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-bottom: var(--line-width-xxs) solid var(--light-grey);
+}
+
+/* stylelint-disable-next-line no-descending-specificity */
+.accordion details a, .accordion-item-expand {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+
+.accordion details .accordion-item-expand {
+  font-weight: 600;
+  font-size: large;
+  color: var(--theme-dark-blue);
 }
 
 .accordion details:not(:has(.accordion-subitem)) .accordion-item-label {
@@ -347,13 +388,15 @@ a {
 }
 
 .accordion details:not(:has(.accordion-subitem)) .accordion-item-expand {
-  display: none; /* for no sub items, hide the plus symbol*/
+  display: none; /* for no sub items, hide the plus symbol */
 }
 
-.accordion details .accordion-item-label {
-  padding-top: 8px;
-  padding-bottom: 8px;
-  border-bottom: var(--line-width-xxs) solid var(--light-grey);
+.accordion details[open] .accordion-item-label {
+  border-bottom: none;
+  
+  a {
+    color: var(--theme-dark-blue);
+  }
 }
 
 .accordion details .accordion-subitem {
@@ -371,55 +414,9 @@ a {
   margin-right: 10px;
 }
 
-.accordion details .accordion-item-expand {
-  font-weight: 600;
-  font-size: large;
-  color: var(--theme-dark-blue);
-}
-
-.accordion details a, .accordion-item-expand{
-  margin-left: 15px;
-  margin-right: 15px;
-}
-
-/* Topmost grey navigator related css*/
-
-.global-navigator {
-  background-color: var(--lighter-grey);
-}
-
-.global-navigator .container {
-  display: none;
-  overflow-x: auto;
-  font-size: 13px;
-  color: var(--dark-grey);
-  scrollbar-width: thin;
-}
-
-.global-navigator .global-section-item a:hover {
-  color: var(--theme-dark-blue);
-}
-
-.global-navigator .global-section-item {
-  padding-top: 10px;
-  padding-bottom: 10px;
-  flex: 0 0 auto;
-}
-
-.global-navigator .global-section-item a {
-  padding-left: 9px;
-  padding-right: 9px;
-  text-decoration: none;
-  color: inherit;
-}
-
-.global-navigator .global-section-item:not(:last-child) a {
-  border-right: var(--line-width-xxs) solid var(--normal-grey);
-}
-
 /* Media queries starts here */
 
-@media screen and (min-width: 768px) {
+@media screen and (width >= 768px) {
   /* CSS styles to apply when the screen width is more than 768px */
   .sidepanel {
     display: none;
@@ -429,15 +426,15 @@ a {
     display: none;
   }
 
-  .global-navigator .container{
-    display: flex;
-  }
-
-  /* global margin on the left and right side of full page*/
+  /* global margin on the left and right side of full page */
   .container {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
+  }
+
+  .global-navigator .container{
+    display: flex;
   }
 
   .top-bar .logo img {
