@@ -4,6 +4,9 @@ Cutpoint 1: 768px - hide hamburger
 */
 
 :root {
+  /* defaults for rem calculations */
+  font-size: 16px;
+
   /* color related */
   --black: #000;
   --white: white;
@@ -18,18 +21,18 @@ Cutpoint 1: 768px - hide hamburger
   --linear-gradient-theme: linear-gradient(to bottom, #e77817, #97291e);
 
   /* line main fine space related */
-  --line-width-xxs: 1px;
-  --line-width-xs: 2px;
+  --line-width-xxs: 0.06rem;
+  --line-width-xs: 0.13rem;
 
   /* margin space and width related */
-  --space-xxs: 5px;
-  --space-xs: 10px;
-  --space-s: 15px;
-  --space-m: 20px;
-  --space-l: 25px;
+  --space-xxs: 0.3rem;
+  --space-xs: 0.6rem;
+  --space-s: 0.9rem;
+  --space-m: 1.3rem;
+  --space-l: 1.6rem;
 
   /* font related */
-  --font-size-normal: 25px;
+  --font-size-normal: 1.6rem;
 }
 
 body, button {
@@ -63,7 +66,7 @@ body, button {
   flex-flow: row wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 2px;
+  gap: 0.13rem;
 }
 
 .top-bar .row1 .primary-buttons button.desktop-element {
@@ -79,24 +82,24 @@ body, button {
 .top-bar .logo {
   flex-grow: 1;
   margin-left: var(--space-xs);
-  padding-top: 5px;
+  padding-top: 0.3rem;
 }
 
 /* round button specific css */
 .round-button {
   border: none;
-  border-radius: 25px;
+  border-radius: 1.6rem;
   background: var(--theme-blue);
   color: var(--white);
-  min-height: 32px;
-  padding-top: 2px;
-  padding-bottom: 1px;
+  min-height: 2rem;
+  padding-top: 0.13rem;
+  padding-bottom: 0.06rem;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 11px;
+  font-size: 0.68rem;
   cursor: pointer;
-  margin-left: 5px;
+  margin-left: 0.3rem;
   list-style: none;
 }
 
@@ -115,29 +118,29 @@ body, button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 30px;
-  height: 20px;
+  width: 1.875rem;
+  height: 1.25rem;
   cursor: pointer;
-  margin-right: 5px;
-  padding-top: 10px;
+  margin-right: 0.3rem;
+  padding-top: 0.6rem;
 }
 
 .hamburger-menu div{
   width: var(--space-l);
-  height: 2px;
+  height: 0.13rem;
   background-color: var(--theme-blue);
-  margin: 2px 0;
+  margin: 0.13rem 0;
 }
 
 /* hamburger pannel related css */
 
 .sidepanel  {
-  width: 270px;
+  width: 16.875rem;
   position: fixed;
   z-index: 1;
   height: 100%;
   top: 0;
-  left: -270px;
+  left: -16.875rem;
   background-color: var(--white);
   overflow: hidden auto;
   transition: 0.4s;
@@ -148,7 +151,7 @@ body, button {
 
 .sidepanel.open {
   transform: translateX(100%);
-  box-shadow: 3px 0 10px -4px #000000bf;
+  box-shadow: 0.19rem 0 0.6rem -0.3rem #000000bf;
 }
 
 .sidepanel .top-area {
@@ -161,7 +164,7 @@ body, button {
 .sidepanel .top-area-logo {
   margin-left: var(--space-xs);
   align-self: center;
-  padding-top: 5px;
+  padding-top: 0.3rem;
 }
 
 .sidepanel .bottom-area {
@@ -175,21 +178,21 @@ body, button {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  padding-bottom: 25px;
-  border-bottom: 1px solid #415270;
+  gap: 0.6rem;
+  padding-bottom: 1.6rem;
+  border-bottom: 0.06rem solid #415270;
 }
 
 /* hamburger menu close button */
 .sidepanel .top-area-closebutton {
-  width: 35px;
-  height: 32px;
+  width: 2.188rem;
+  height: 2rem;
   align-self: center;
 }
 
 .hamburger-menu-close {
-  height: 25px;
-  width: 25px;
+  height: 1.563rem;
+  width: 1.563rem;
   display: flex;
   cursor: pointer;
   flex-direction: column;
@@ -200,7 +203,7 @@ body, button {
 
 .hamburger-menu-close .line {
   width: 100%;
-  height: 2px;
+  height: 0.13rem;
   background-color: var(--theme-blue);
 }
 
@@ -217,15 +220,15 @@ body, button {
   display: none;
   flex-direction: row;
   justify-content: center;
-  font-size: 11px;
+  font-size: 0.688rem;
   color: var(--dark-grey);
 }
 
 .search-bar .category-picker {
-  border: 1px solid var(--normal-grey2);
-  border-radius: 30px 0 0 30px;
+  border: 0.06rem solid var(--normal-grey2);
+  border-radius: 1.875rem 0 0 1.875rem;
   padding: var(--space-xs) 0 var(--space-xs) 0;
-  min-width: 115px;
+  min-width: 7.188rem;
   text-align: center;
   text-decoration: none;
   display: flex;
@@ -235,10 +238,10 @@ body, button {
 
 .search-bar .search-box {
   padding: var(--space-xs) 0 var(--space-xxs) 0;
-  border: 1px solid var(--normal-grey2);
+  border: 0.06rem solid var(--normal-grey2);
   border-left: none;
-  border-radius: 0 30px 30px 0;
-  min-width: 275px;
+  border-radius: 0 1.875rem 1.875rem 0;
+  min-width: 17.188rem;
   text-align: center;
   text-decoration: none;
   display: flex;
@@ -247,23 +250,23 @@ body, button {
 }
 
 .search-bar .category-picker .categories {
-  margin-left: 15px;
+  margin-left: 0.938rem;
 }
 
 .search-bar .category-picker .dropdown {
   font-family: icomoon, sans-serif;
-  margin-right: 10px;
+  margin-right: 0.625rem;
   font-weight: 800;
   color: var(--theme-dark-blue);
-  font-size: 12px;
+  font-size: 0.75rem;
 }
 
 .search-bar .search-box input, input::placeholder {
-  margin-left: 15px;
+  margin-left: 0.938rem;
   border: none;
   width: 100%;
   outline: none;
-  font-size: 14px;
+  font-size: 0.875rem;
   color: var(--light-grey);
 }
 
@@ -272,13 +275,13 @@ body, button {
 }
 
 .search-bar .search-box .search-icon {
-  margin-right: 15px;
+  margin-right: 0.938rem;
 }
 
 /* main content related css */
 .main-content {
-  margin-left: 15px;
-  margin-right: 15px;
+  margin-left: 0.938rem;
+  margin-right: 0.938rem;
 }
 
 h1,h2 {
@@ -287,14 +290,14 @@ h1,h2 {
 }
 
 p {
-  font: 400 16px/24px Poppins, sans-serif;
+  font: 400 1rem/1.5rem Poppins, sans-serif;
   color: #4a4a4a;
 }
 
 /* Main content breadcrumbs css */
 .breadcrumbs {
-  font-size: 16px;
-  margin: 20px 0;
+  font-size: 1rem;
+  margin: 1.25rem 0;
   color: var(--theme-blue);
 }
 
@@ -313,20 +316,20 @@ p {
 .global-navigator .container {
   display: none;
   overflow-x: auto;
-  font-size: 13px;
+  font-size: 0.813rem;
   color: var(--dark-grey);
   scrollbar-width: thin;
 }
 
 .global-navigator .global-section-item {
-  padding-top: 10px;
-  padding-bottom: 10px;
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
   flex: 0 0 auto;
 }
 
 .global-navigator .global-section-item a {
-  padding-left: 9px;
-  padding-right: 9px;
+  padding-left: 0.563rem;
+  padding-right: 0.563rem;
   text-decoration: none;
   color: inherit;
 }
@@ -342,7 +345,7 @@ p {
 /* Copied accordian collapsable from hlx */
 
 .accordion {
-  font-size: 13px;
+  font-size: 0.813rem;
   color: var(--normal-grey);
 }
 
@@ -366,15 +369,15 @@ p {
 }
 
 .accordion details .accordion-item-label {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rex;
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .accordion details a, .accordion-item-expand {
-  margin-left: 15px;
-  margin-right: 15px;
+  margin-left: 0.938rem;
+  margin-right: 0.938rem;
 }
 
 .accordion details .accordion-item-expand {
@@ -400,8 +403,8 @@ p {
 }
 
 .accordion details .accordion-subitem {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
   display: flex;
   flex-direction: row;
@@ -409,15 +412,15 @@ p {
 }
 
 .accordion details .accordion-subitem .new-item-logo{
-  width: 30px;
-  height: 20px;
-  margin-right: 10px;
+  width: 1.875rem;
+  height: 1.25rem;
+  margin-right: 0.625rem;
 }
 
 /* Media queries starts here */
 
-@media screen and (width >= 768px) {
-  /* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  /* CSS styles to apply when the screen width is more than 768px or 48rem */
   .sidepanel {
     display: none;
   }
@@ -428,7 +431,7 @@ p {
 
   /* global margin on the left and right side of full page */
   .container {
-    max-width: 1200px;
+    max-width: 75rem;
     width: 100%;
     margin: 0 auto;
   }
@@ -438,7 +441,7 @@ p {
   }
 
   .top-bar .logo img {
-    width: 250px;
+    width: 15.625rem;
     height: auto;
   }
 

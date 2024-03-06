@@ -53,7 +53,7 @@ export default async function decorate(block) {
   const logoImage = document.createElement('img');
   logoImage.src = './icicilogo.svg';
   logoImage.alt = 'ICICI Logo';
-  logoImage.width = '150px';
+  logoImage.width = '9.375rem';
   logoDiv.appendChild(logoImage);
 
   const primaryButtonsDiv = document.createElement('div');
@@ -95,7 +95,7 @@ export default async function decorate(block) {
   const primaryButtonItems = fragment.querySelectorAll('.section.primary-buttons li');
   primaryButtonItems.forEach((singleItem, index) => {
     const singleButton = document.createElement('button');
-    singleButton.classList.add('round-button', 'desktop-element');
+    singleButton.classList.add('round-button');
     if (index === 0) {
       singleButton.classList.add('gradient-orange');
     } else {
