@@ -92,8 +92,7 @@ body, button {
   background: var(--theme-blue);
   color: var(--white);
   min-height: 2rem;
-  padding-top: 0.13rem;
-  padding-bottom: 0.06rem;
+  padding: 0.13rem var(--space-xs) 0.06rem var(--space-xs);
   text-align: center;
   text-decoration: none;
   display: inline-block;

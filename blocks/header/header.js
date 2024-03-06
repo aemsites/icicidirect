@@ -51,7 +51,7 @@ export default async function decorate(block) {
   const logoDiv = document.createElement('div');
   logoDiv.className = 'logo';
   const logoImage = document.createElement('img');
-  logoImage.src = './icicilogo.svg';
+  logoImage.src = '../../icons/icicilogo.svg';
   logoImage.alt = 'ICICI Logo';
   logoImage.width = '9.375rem';
   logoDiv.appendChild(logoImage);
@@ -76,7 +76,7 @@ export default async function decorate(block) {
       </form>
     </div>
     <div>
-      <img class="search-icon" src="./icon-search.png" alt="Search">
+      <img class="search-icon" src="../../icons/icon-search.png" alt="Search">
     </div>
   `;
   searchBarDiv.appendChild(categoryPickerDiv);
@@ -174,13 +174,14 @@ export default async function decorate(block) {
       accordionSubitem.className = 'accordion-subitem';
       const subitemName = subitem.textContent;
       if (subitemName.includes('[new]')) {
+        const replacedSubitemName = subitemName.replace(/\[new\]/g, '').trim();
         accordionSubitem.innerHTML = `
-          <a href="">${subitem.textContent}</a>
-          <img class="new-item-logo" alt="new" src="./new-img.png" width="20px"></img>
+          <a href="">${replacedSubitemName}</a>
+          <img class="new-item-logo" alt="new" src="../../icons/new-img.png" width="20px"></img>
         `;
       } else {
         accordionSubitem.innerHTML = `
-          <a href="">${subitem.textContent}</a>
+          <a href="">${subitemName}</a>
         `;
       }
       accordionSubitemList.appendChild(accordionSubitem);
