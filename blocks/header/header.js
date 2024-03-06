@@ -206,7 +206,9 @@ export default async function decorate(block) {
    * expanded in the hamburger list
    */
   const detailsElements = document.querySelectorAll('.accordion details');
-  const sidePanelListExpandHandler = (detailsElement) => {
+  const sidePanelListExpandHandler = (event) => {
+    const targetElement = event.target;
+    const detailsElement = targetElement.closest('details');
     const expandIcon = detailsElement.querySelector('.accordion-item-expand');
     if (detailsElement.open && expandIcon) {
       expandIcon.innerHTML = '+';
