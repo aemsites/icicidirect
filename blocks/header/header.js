@@ -108,6 +108,131 @@ export default async function decorate(block) {
   row1Div.appendChild(hamburgerIconDiv);
   row1Div.appendChild(logoDiv);
   row1Div.appendChild(primaryButtonsDiv);
-
   block.append(topBarSection);
+
+  // side panel section starts here
+
+  const sidePanelDiv = document.createElement('div');
+  sidePanelDiv.className = 'sidepanel';
+  sidePanelDiv.id = 'hamburger-side-panel';
+
+  const sidePanelTopAreaDiv = document.createElement('div');
+  sidePanelTopAreaDiv.className = 'top-area';
+  const topAreaCloseButtonDiv = document.createElement('div');
+  topAreaCloseButtonDiv.className = 'top-area-closebutton';
+  topAreaCloseButtonDiv.innerHTML = `
+    <div class="hamburger-menu-close close-button" id="hamburger-menu-close-icon">
+      <div class="line line-1"></div>
+      <div class="line line-2"></div>
+    </div>
+  `;
+  sidePanelTopAreaDiv.appendChild(topAreaCloseButtonDiv);
+
+  const sidePanelBottomAreaDiv = document.createElement('div');
+  sidePanelBottomAreaDiv.className = 'bottom-area';
+
+  const bottomAreaPrimaryButtonsDiv = document.createElement('div');
+  bottomAreaPrimaryButtonsDiv.className = 'bottom-area-primary-actions';
+  const sidePanelPrimaryButtonItems = fragment.querySelectorAll('.section.side-panel-primary-actions li');
+  sidePanelPrimaryButtonItems.forEach((item) => {
+    const singleButton = document.createElement('button');
+    singleButton.className = 'round-button';
+    singleButton.type = 'button';
+    singleButton.innerText = item.textContent;
+    bottomAreaPrimaryButtonsDiv.appendChild(singleButton);
+  });
+  sidePanelBottomAreaDiv.appendChild(bottomAreaPrimaryButtonsDiv);
+
+  const sidePanelSecondaryItems = document.createElement('div');
+  sidePanelSecondaryItems.className = 'bottom-area-item-list';
+  const accordionWrapperDiv = document.createElement('div');
+  accordionWrapperDiv.className = 'accordion-wrapper';
+  const accordion = document.createElement('div');
+  accordion.className = 'accordion';
+
+  const sidePanelList = fragment.querySelector('.section.side-panel-secondary-actions ul');
+  const sidePanelItemsList = sidePanelList.children;
+  Array.from(sidePanelItemsList).forEach((item) => {
+    const accordionItemDetails = document.createElement('details');
+    accordionItemDetails.className = 'accordion-item';
+    const accordionItemLabel = document.createElement('summary');
+    accordionItemLabel.className = 'accordion-item-label';
+    const categoryName = item.firstChild.data;
+    accordionItemLabel.innerHTML = `
+      <div><a href="">${categoryName}</a></div>
+      <div class="accordion-item-expand">+</div>
+    `;
+
+    const accordionItemBody = document.createElement('div');
+    accordionItemBody.className = 'accordion-item-body';
+    const accordionSubitemList = document.createElement('div');
+    accordionSubitemList.className = 'accordion-subitem-list';
+
+    const subitemsList = item.querySelectorAll('li');
+    subitemsList.forEach((subitem) => {
+      const accordionSubitem = document.createElement('div');
+      accordionSubitem.className = 'accordion-subitem';
+      const subitemName = subitem.textContent;
+      if (subitemName.includes('[new]')) {
+        accordionSubitem.innerHTML = `
+          <a href="">${subitem.textContent}</a>
+          <img class="new-item-logo" alt="new" src="./new-img.png" width="20px"></img>
+        `;
+      } else {
+        accordionSubitem.innerHTML = `
+          <a href="">${subitem.textContent}</a>
+        `;
+      }
+      accordionSubitemList.appendChild(accordionSubitem);
+    });
+
+    accordionItemBody.appendChild(accordionSubitemList);
+    accordionItemDetails.appendChild(accordionItemLabel);
+    accordionItemDetails.appendChild(accordionItemBody);
+    accordion.appendChild(accordionItemDetails);
+  });
+
+  accordionWrapperDiv.appendChild(accordion);
+  sidePanelSecondaryItems.appendChild(accordionWrapperDiv);
+
+  sidePanelBottomAreaDiv.appendChild(sidePanelSecondaryItems);
+
+  sidePanelDiv.appendChild(sidePanelTopAreaDiv);
+  sidePanelDiv.appendChild(sidePanelBottomAreaDiv);
+  block.append(sidePanelDiv);
+
+  /**
+   * Handler for changing the plus icon to minus icon when sub items are
+   * expanded in the hamburger list
+   */
+  const detailsElements = document.querySelectorAll('.accordion details');
+  const sidePanelListExpandHandler = (detailsElement) => {
+    const expandIcon = detailsElement.querySelector('.accordion-item-expand');
+    if (detailsElement.open && expandIcon) {
+      expandIcon.innerHTML = '+';
+    } else {
+      expandIcon.innerHTML = '-';
+    }
+  };
+  detailsElements.forEach((detailsElement) => {
+    detailsElement.addEventListener('click', sidePanelListExpandHandler);
+  });
+
+  /**
+   * Handler for opening and closing hamburger side panel
+   */
+  const hamburgerMenuIcon = document.getElementById('hamburger-menu-icon');
+  const hamburgerMenuCloseIcon = document.getElementById('hamburger-menu-close-icon');
+  const hamburgerSidePanel = document.getElementById('hamburger-side-panel');
+  const hamburgerCloseHandler = (event) => {
+    const isOpenIconClicked = hamburgerMenuIcon?.contains(event.target);
+    const isCloseIconClicked = hamburgerMenuCloseIcon?.contains(event.target);
+    const isClickedOnSlidePanel = hamburgerSidePanel?.contains(event.target);
+    if (isOpenIconClicked) {
+      hamburgerSidePanel?.classList.add('open');
+    } else if (isCloseIconClicked || !isClickedOnSlidePanel) {
+      hamburgerSidePanel?.classList.remove('open');
+    }
+  };
+  document.addEventListener('click', hamburgerCloseHandler);
 }
