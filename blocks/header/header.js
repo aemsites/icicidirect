@@ -48,13 +48,14 @@ export default async function decorate(block) {
     <div></div>
   `;
 
+  // Main ICICI Logo decoration
   const logoDiv = document.createElement('div');
   logoDiv.className = 'logo';
-  const logoImage = document.createElement('img');
-  logoImage.src = '../../icons/icicilogo.svg';
-  logoImage.alt = 'ICICI Logo';
-  logoImage.width = '9.375rem';
-  logoDiv.appendChild(logoImage);
+  const headerLogoDetails = fragment.querySelector('.section.icici-logo');
+  const imageAltData = headerLogoDetails.getAttribute('data-image-alt');
+  const imageTag = headerLogoDetails.querySelector('img');
+  imageTag.alt = imageAltData;
+  logoDiv.appendChild(imageTag);
 
   const primaryButtonsDiv = document.createElement('div');
   primaryButtonsDiv.className = 'primary-buttons';
@@ -128,9 +129,17 @@ export default async function decorate(block) {
   `;
   sidePanelTopAreaDiv.appendChild(topAreaCloseButtonDiv);
 
+  const sidePanelTopAreaLogo = document.createElement('div');
+  sidePanelTopAreaLogo.className = 'top-area-logo';
+  const sidePanelLogoDetails = fragment.querySelector('.section.side-panel-icici-logo');
+  const sidePanelImageAltData = sidePanelLogoDetails.getAttribute('data-image-alt');
+  const sidePanelImageTag = sidePanelLogoDetails.querySelector('img');
+  sidePanelImageTag.alt = sidePanelImageAltData;
+  sidePanelTopAreaLogo.appendChild(sidePanelImageTag);
+  sidePanelTopAreaDiv.appendChild(sidePanelTopAreaLogo);
+
   const sidePanelBottomAreaDiv = document.createElement('div');
   sidePanelBottomAreaDiv.className = 'bottom-area';
-
   const bottomAreaPrimaryButtonsDiv = document.createElement('div');
   bottomAreaPrimaryButtonsDiv.className = 'bottom-area-primary-actions';
   const sidePanelPrimaryButtonItems = fragment.querySelectorAll('.section.side-panel-primary-actions li');

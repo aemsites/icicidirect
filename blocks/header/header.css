@@ -79,10 +79,11 @@ body, button {
   margin-left:  var(--space-xxs);
 }
 
-.top-bar .logo {
+.top-bar .logo img{
   flex-grow: 1;
   margin-left: var(--space-xs);
   padding-top: 0.3rem;
+  width: 9.375rem;
 }
 
 /* round button specific css */
@@ -164,6 +165,10 @@ body, button {
   margin-left: var(--space-xs);
   align-self: center;
   padding-top: 0.3rem;
+}
+
+.sidepanel .top-area-logo img {
+  width: 9.375rem;
 }
 
 .sidepanel .bottom-area {
