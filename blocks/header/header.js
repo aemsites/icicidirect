@@ -2,17 +2,10 @@ import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
 /**
- * decorates the header, mainly the nav
- * @param {Element} block The header block element
+ * Decorator for global navigation on top the page
+ * @param {*} fragment nav page fragment referenced for decoration of the current page
  */
-export default async function decorate(block) {
-  // load nav as fragment
-  const navMeta = getMetadata('nav');
-  // TODO: meta data in the document is not working
-  const navPath = navMeta ? new URL(navMeta).pathname : '/draft/vivesing/nav';
-  const fragment = await loadFragment(navPath);
-
-  // Global navigator  starts here
+const decorateGlobalNavigationBar = (fragment, block) => {
   const globalNavigator = document.createElement('div');
   globalNavigator.className = 'global-navigator';
   const containerDiv = document.createElement('div');
@@ -27,18 +20,28 @@ export default async function decorate(block) {
     containerDiv.appendChild(singleItemDiv);
   });
   block.append(globalNavigator);
+};
 
-  // Top bar section starts here
-  const topBarSection = document.createElement('div');
-  topBarSection.className = 'top-bar';
-  const topBarContainerDiv = document.createElement('div');
-  topBarContainerDiv.className = 'container';
-  topBarContainerDiv.id = 'top-bar';
-  topBarSection.append(topBarContainerDiv);
-  const row1Div = document.createElement('div');
-  row1Div.className = 'row1';
-  topBarContainerDiv.appendChild(row1Div);
+/**
+ * Build the main header logo section
+ * @returns the logo wrapped in div tag
+ */
+const decorateMainHeaderLogo = (fragment) => {
+  const logoDiv = document.createElement('div');
+  logoDiv.className = 'logo';
+  const headerLogoDetails = fragment.querySelector('.section.icici-logo');
+  const imageAltData = headerLogoDetails.getAttribute('data-image-alt');
+  const imageTag = headerLogoDetails.querySelector('img');
+  imageTag.alt = imageAltData;
+  logoDiv.appendChild(imageTag);
+  return logoDiv;
+};
 
+/**
+ * Build the hamburger icon for the side panel toggling
+ * @returns the hamburger icon wrapped in div
+ */
+const buildHamburgerIcon = () => {
   const hamburgerIconDiv = document.createElement('div');
   hamburgerIconDiv.className = 'hamburger-menu';
   hamburgerIconDiv.id = 'hamburger-menu-icon';
@@ -47,18 +50,14 @@ export default async function decorate(block) {
     <div></div>
     <div></div>
   `;
+  return hamburgerIconDiv;
+};
 
-  // Main ICICI Logo decoration
-  const logoDiv = document.createElement('div');
-  logoDiv.className = 'logo';
-  const headerLogoDetails = fragment.querySelector('.section.icici-logo');
-  const imageAltData = headerLogoDetails.getAttribute('data-image-alt');
-  const imageTag = headerLogoDetails.querySelector('img');
-  imageTag.alt = imageAltData;
-  logoDiv.appendChild(imageTag);
-
-  const primaryButtonsDiv = document.createElement('div');
-  primaryButtonsDiv.className = 'primary-buttons';
+/**
+ * Builds the top search bar section
+ * @returns the search bar wrapped in div
+ */
+const decorateTopSearchBar = () => {
   const searchBarDiv = document.createElement('div');
   searchBarDiv.className = 'search-bar';
   const searchBarContainer = document.createElement('div');
@@ -85,20 +84,38 @@ export default async function decorate(block) {
   searchBarContainer.appendChild(categoryPickerDiv);
   searchBarContainer.appendChild(searchBoxDiv);
   searchBarDiv.appendChild(searchBarContainer);
+  return searchBarDiv;
+};
 
+/**
+ * Builds the login button shown in the mobile view
+ * @returns the login button wrapped in div
+ */
+const buildLoginButton = () => {
   const loginButton = document.createElement('button');
   loginButton.classList.add('round-button', 'mobile-element');
   loginButton.innerHTML = 'LOGIN';
+  return loginButton;
+};
 
+/**
+ * Builds the mobile specific search icon
+ * @returns the plain search icon wrapped in div
+ */
+const buildSearchIcon = () => {
   const searchImageIcon = document.createElement('img');
   searchImageIcon.classList.add('search-icon', 'mobile-element');
   searchImageIcon.src = '../../icons/icon-search.svg';
   searchImageIcon.alt = 'Search';
+  return searchImageIcon;
+};
 
-  primaryButtonsDiv.appendChild(searchBarDiv);
-  primaryButtonsDiv.appendChild(loginButton);
-  primaryButtonsDiv.appendChild(searchImageIcon);
-
+/**
+ * Returns the list of primary buttons
+ * @returns the list of buttons;
+ */
+const getPrimaryButtonsList = (fragment) => {
+  const primaryButtonsList = [];
   const primaryButtonItems = fragment.querySelectorAll('.section.primary-buttons li');
   primaryButtonItems.forEach((singleItem, index) => {
     const singleButton = document.createElement('button');
@@ -109,20 +126,59 @@ export default async function decorate(block) {
       singleButton.classList.add('desktop-element');
     }
     singleButton.appendChild(singleItem);
+    primaryButtonsList.push(singleButton);
+  });
+  return primaryButtonsList;
+};
+
+/**
+ * Decorate the top bar with logo, search section and primary action button
+ * @param {*} fragment nav page fragment
+ */
+const decorateTopBarPanel = (fragment, block) => {
+  const topBarSection = document.createElement('div');
+  topBarSection.className = 'top-bar';
+  const topBarContainerDiv = document.createElement('div');
+  topBarContainerDiv.className = 'container';
+  topBarContainerDiv.id = 'top-bar';
+  topBarSection.append(topBarContainerDiv);
+  const row1Div = document.createElement('div');
+  row1Div.className = 'row1';
+  topBarContainerDiv.appendChild(row1Div);
+
+  // Hamburger logo creation
+  const hamburgerIconDiv = buildHamburgerIcon();
+  // Main ICICI Logo decoration
+  const logoDiv = decorateMainHeaderLogo(fragment);
+  // Build the search bar section
+  const searchBarDiv = decorateTopSearchBar();
+  // Add mobile specific login button
+  const loginButton = buildLoginButton();
+  // Add mobile specific search icon
+  const searchImageIcon = buildSearchIcon();
+  // Build Top Bar Primary action section
+  const primaryButtonsDiv = document.createElement('div');
+  primaryButtonsDiv.className = 'primary-buttons';
+  primaryButtonsDiv.appendChild(searchBarDiv);
+  primaryButtonsDiv.appendChild(loginButton);
+  primaryButtonsDiv.appendChild(searchImageIcon);
+  // Append primary buttons
+  const primaryButtonsList = getPrimaryButtonsList(fragment);
+  primaryButtonsList.forEach((singleButton) => {
     primaryButtonsDiv.appendChild(singleButton);
   });
-
   row1Div.appendChild(hamburgerIconDiv);
   row1Div.appendChild(logoDiv);
   row1Div.appendChild(primaryButtonsDiv);
   block.append(topBarSection);
+};
 
-  // side panel section starts here
-
-  const sidePanelDiv = document.createElement('div');
-  sidePanelDiv.className = 'sidepanel';
-  sidePanelDiv.id = 'hamburger-side-panel';
-
+/**
+ * Builds the side panel top section containing close button and logo
+ * @param {*} fragment nav fragment
+ * @returns the top section wrapped in div
+ */
+const buildSidePanelTopSection = (fragment) => {
   const sidePanelTopAreaDiv = document.createElement('div');
   sidePanelTopAreaDiv.className = 'top-area';
   const topAreaCloseButtonDiv = document.createElement('div');
@@ -143,7 +199,15 @@ export default async function decorate(block) {
   sidePanelImageTag.alt = sidePanelImageAltData;
   sidePanelTopAreaLogo.appendChild(sidePanelImageTag);
   sidePanelTopAreaDiv.appendChild(sidePanelTopAreaLogo);
+  return sidePanelTopAreaDiv;
+};
 
+/**
+ * Builds the side panel top area containing primary buttons
+ * @param {*} fragment nav fragment
+ * @returns the side panel primary buttons wrapped in div
+ */
+const buildSidePanelBottomSection = (fragment) => {
   const sidePanelBottomAreaDiv = document.createElement('div');
   sidePanelBottomAreaDiv.className = 'bottom-area';
   const bottomAreaPrimaryButtonsDiv = document.createElement('div');
@@ -157,7 +221,15 @@ export default async function decorate(block) {
     bottomAreaPrimaryButtonsDiv.appendChild(singleButton);
   });
   sidePanelBottomAreaDiv.appendChild(bottomAreaPrimaryButtonsDiv);
+  return sidePanelBottomAreaDiv;
+};
 
+/**
+ * Builds the side panel secondary items list in accordion
+ * @param {*} fragment nav fragment
+ * @returns the accordion wrapped in div
+ */
+const buildSidePanelAccordion = (fragment) => {
   const sidePanelSecondaryItems = document.createElement('div');
   sidePanelSecondaryItems.className = 'bottom-area-item-list';
   const accordionWrapperDiv = document.createElement('div');
@@ -210,13 +282,35 @@ export default async function decorate(block) {
 
   accordionWrapperDiv.appendChild(accordion);
   sidePanelSecondaryItems.appendChild(accordionWrapperDiv);
+  return sidePanelSecondaryItems;
+};
+
+/**
+ * build the hamburger side panel
+ * @param {*} fragment nav page fragment
+ * @param {*} block
+ */
+const decorateHamburgerPanel = (fragment, block) => {
+  const sidePanelDiv = document.createElement('div');
+  sidePanelDiv.className = 'sidepanel';
+  sidePanelDiv.id = 'hamburger-side-panel';
+  // build side panel top area
+  const sidePanelTopAreaDiv = buildSidePanelTopSection(fragment);
+  // build the side panel bottom area
+  const sidePanelBottomAreaDiv = buildSidePanelBottomSection(fragment);
+  // build the side panel accordion
+  const sidePanelSecondaryItems = buildSidePanelAccordion(fragment);
 
   sidePanelBottomAreaDiv.appendChild(sidePanelSecondaryItems);
-
   sidePanelDiv.appendChild(sidePanelTopAreaDiv);
   sidePanelDiv.appendChild(sidePanelBottomAreaDiv);
   block.append(sidePanelDiv);
+};
 
+/**
+ * Event handlers specific to header blocks
+ */
+const addHeaderEventHandlers = () => {
   /**
    * Handler for changing the plus icon to minus icon when sub items are
    * expanded in the hamburger list
@@ -253,4 +347,24 @@ export default async function decorate(block) {
     }
   };
   document.addEventListener('click', hamburgerCloseHandler);
+};
+
+/**
+ * decorates the header, mainly the nav
+ * @param {Element} block The header block element
+ */
+export default async function decorate(block) {
+  // load nav as fragment
+  const navMeta = getMetadata('nav');
+  // TODO: meta data in the document is not working
+  const navPath = navMeta ? new URL(navMeta).pathname : '/draft/vivesing/nav';
+  const fragment = await loadFragment(navPath);
+  // Global navigator  starts here
+  decorateGlobalNavigationBar(fragment, block);
+  // Top bar section starts here
+  decorateTopBarPanel(fragment, block);
+  // side panel section starts here
+  decorateHamburgerPanel(fragment, block);
+  // add header specific handlers
+  addHeaderEventHandlers();
 }
