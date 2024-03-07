@@ -1,0 +1,33 @@
+.block.faq {
+    margin-top: 1.5rem;
+}
+
+.block.faq .faq-title {
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.block.faq .faq-title::before {
+    content: "";
+    position: absolute;
+    border-bottom: 1px solid #E1E8EE;
+    height: 1px;
+    width: 100%;
+    top: 19.5%;
+    left: 0;
+    transform: translateY(-50%);
+}
+
+.block.faq .faq-title h2 {
+    font-size: 20px;
+    line-height: 20px;
+    color: #122E45;
+    line-height: 28px;
+    text-transform: uppercase;
+    background: #ffffff;
+    padding: 5px 15px;
+    margin: unset;
+    display: inline-block;
+    position: relative;
+    z-index: 1;
+}
