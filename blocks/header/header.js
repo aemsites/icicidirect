@@ -61,6 +61,8 @@ export default async function decorate(block) {
   primaryButtonsDiv.className = 'primary-buttons';
   const searchBarDiv = document.createElement('div');
   searchBarDiv.className = 'search-bar';
+  const searchBarContainer = document.createElement('div');
+  searchBarContainer.className = 'search-bar-container';
 
   const categoryPickerDiv = document.createElement('div');
   categoryPickerDiv.className = 'category-picker';
@@ -77,11 +79,12 @@ export default async function decorate(block) {
       </form>
     </div>
     <div>
-      <img class="search-icon" src="../../icons/icon-search.png" alt="Search">
+      <img class="search-icon" src="../../icons/icon-search.svg" alt="Search">
     </div>
   `;
-  searchBarDiv.appendChild(categoryPickerDiv);
-  searchBarDiv.appendChild(searchBoxDiv);
+  searchBarContainer.appendChild(categoryPickerDiv);
+  searchBarContainer.appendChild(searchBoxDiv);
+  searchBarDiv.appendChild(searchBarContainer);
 
   const loginButton = document.createElement('button');
   loginButton.classList.add('round-button', 'mobile-element');
@@ -89,9 +92,12 @@ export default async function decorate(block) {
 
   const searchImageIcon = document.createElement('img');
   searchImageIcon.classList.add('search-icon', 'mobile-element');
+  searchImageIcon.src = '../../icons/icon-search.svg';
+  searchImageIcon.alt = 'Search';
 
   primaryButtonsDiv.appendChild(searchBarDiv);
   primaryButtonsDiv.appendChild(loginButton);
+  primaryButtonsDiv.appendChild(searchImageIcon);
 
   const primaryButtonItems = fragment.querySelectorAll('.section.primary-buttons li');
   primaryButtonItems.forEach((singleItem, index) => {
@@ -186,7 +192,7 @@ export default async function decorate(block) {
         const replacedSubitemName = subitemName.replace(/\[new\]/g, '').trim();
         accordionSubitem.innerHTML = `
           <a href="">${replacedSubitemName}</a>
-          <img class="new-item-logo" alt="new" src="../../icons/new-img.png" width="20px"></img>
+          <img class="new-item-logo" alt="new" src="../../icons/new-img.svg" width="20px"></img>
         `;
       } else {
         accordionSubitem.innerHTML = `
