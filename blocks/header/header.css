@@ -1,8 +1,3 @@
-/*
-Cutpoint 1: 768px - hide hamburger
-
-*/
-
 :root {
   /* defaults for rem calculations */
   font-size: 16px;
@@ -23,22 +18,50 @@ Cutpoint 1: 768px - hide hamburger
   /* line main fine space related */
   --line-width-xxs: 0.06rem;
   --line-width-xs: 0.13rem;
+  --line-width-xs2: 0.19rem;
   --line-width-m: 1.25rem;
 
   /* margin space and width related */
   --space-xxs: 0.3rem;
+  --space-xxs2: 0.5rem;
   --space-xs: 0.6rem;
   --space-s: 0.9rem;
+  --space-1: 1rem;
   --space-m: 1.3rem;
   --space-l: 1.6rem;
+  --space-ll: 1.875rem;
+  --space-xl: 2rem;
+  --space-xxl: 2.125rem;
+
+  /* large layout spaces */
+  --layout-category-picker: 7.188rem;
+  --layout-size-1: 9.375rem;
+  --layout-size-side-panel: 16.875rem;
+  --layout-logo-main: 15.625rem;
+  --layout-seach-field: 17.188rem;
+  --layout-main-container: 75rem;
 
   /* font related */
-  --font-size-normal: 1.6rem;
+  --font-size-11px: 0.688rem;
+  --font-size-12px: 0.75rem;
+  --font-size-13px: 0.813rem;
+  --font-size-16px: 1rem;
+  --font-size-24px: 1.5rem;
+  --font-weight-400: 400;
+  --font-weight-600: 600;
+  --font-weight-800: 800;
+
+  /* transition timing */
+  --time-xxs: 0.2s;
+  --time-xs: 0.4s;
+
+  /* media breakpoints */
+  --media-mobile-width: 48rem;
 }
 
 body, button {
   font-family: Poppins, sans-serif;
-  font-weight: 400;
+  font-weight: var(--font-weight-400);
   font-style: normal;
   margin: 0;
 }
@@ -67,7 +90,7 @@ body, button {
   flex-flow: row wrap;
   align-items: center;
   justify-content: flex-end;
-  gap: 0.13rem;
+  gap: var(--line-width-xs);
 }
 
 .top-bar .row1 .primary-buttons button.desktop-element {
@@ -83,23 +106,23 @@ body, button {
 .top-bar .logo img{
   flex-grow: 1;
   margin-left: var(--space-xs);
-  width: 9.375rem;
+  width: var(--layout-size-1);
 }
 
 /* round button specific css */
 .round-button {
   border: none;
-  border-radius: 1.6rem;
+  border-radius: var(--space-l);
   background: var(--theme-blue);
   color: var(--white);
-  min-height: 2rem;
-  padding: 0.13rem var(--space-xs) 0.06rem var(--space-xs);
+  min-height: var(--space-xl);
+  padding: var(--line-width-xs) var(--space-xs) var(--line-width-xxs) var(--space-xs);
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 0.68rem;
+  font-size: var(--font-size-11px);
   cursor: pointer;
-  margin-left: 0.3rem;
+  margin-left: var(--space-xxs);
   list-style: none;
 }
 
@@ -118,32 +141,32 @@ body, button {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 1.875rem;
-  height: 1.25rem;
+  width: var(--space-ll);
+  height: var(--line-width-m);
   cursor: pointer;
-  margin-right: 0.3rem;
-  padding-top: 0.6rem;
+  margin-right: var(--space-xxs);
+  padding-top: var(--space-xs);
 }
 
 .hamburger-menu div{
   width: var(--space-l);
-  height: 0.13rem;
+  height: var(--line-width-xs);
   background-color: var(--theme-blue);
-  margin: 0.13rem 0;
+  margin: var(--line-width-xs) 0;
 }
 
 /* hamburger pannel related css */
 
 .sidepanel  {
-  width: 16.875rem;
+  width: var(--layout-size-side-panel);
   position: fixed;
   z-index: 1;
   height: 100%;
   top: 0;
-  left: -16.875rem;
+  left: calc((var(--layout-size-side-panel)) * -1);
   background-color: var(--white);
   overflow: hidden auto;
-  transition: 0.4s;
+  transition: var(--time-xs);
   box-shadow: none;
   display: flex;
   flex-direction: column;
@@ -151,7 +174,7 @@ body, button {
 
 .sidepanel.open {
   transform: translateX(100%);
-  box-shadow: 0.19rem 0 0.6rem -0.3rem #000000bf;
+  box-shadow: var(--line-width-xs2) 0 var(--space-xs) calc((var(--space-xxs)) * -1) #000000bf;
 }
 
 .sidepanel .top-area {
@@ -167,7 +190,7 @@ body, button {
 }
 
 .sidepanel .top-area-logo img {
-  width: 9.375rem;
+  width: var(--layout-size-1);
 }
 
 .sidepanel .bottom-area {
@@ -181,21 +204,21 @@ body, button {
   flex-flow: row wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.6rem;
-  padding-bottom: 1.6rem;
-  border-bottom: 0.06rem solid #415270;
+  gap: var(--space-xs);
+  padding-bottom: var(--space-l);
+  border-bottom: var(--line-width-xxs) solid #415270;
 }
 
 /* hamburger menu close button */
 .sidepanel .top-area-closebutton {
-  width: 2.188rem;
-  height: 2rem;
+  width: var(--space-xl);
+  height: var(--space-xl);
   align-self: center;
 }
 
 .hamburger-menu-close {
-  height: 1.563rem;
-  width: 1.563rem;
+  height: var(--space-l);
+  width: var(--space-l);
   display: flex;
   cursor: pointer;
   flex-direction: column;
@@ -206,7 +229,7 @@ body, button {
 
 .hamburger-menu-close .line {
   width: 100%;
-  height: 0.13rem;
+  height: var(--line-width-xs);
   background-color: var(--theme-blue);
 }
 
@@ -223,17 +246,17 @@ body, button {
   display: none;
   flex-direction: row;
   justify-content: center;
-  font-size: 0.688rem;
+  font-size: var(--font-size-11px);
   color: var(--dark-grey);
-  max-height: 2.125rem;
-  margin-left: 0.938rem;
+  max-height: var(--space-xxl);
+  margin-left: var(--space-1);
 }
 
 .search-bar .category-picker {
-  border: 0.06rem solid var(--normal-grey2);
-  border-radius: 1.875rem 0 0 1.875rem;
+  border: var(--line-width-xxs) solid var(--normal-grey2);
+  border-radius: var(--space-ll) 0 0 var(--space-ll);
   padding: var(--space-xs) 0 var(--space-xs) 0;
-  min-width: 7.188rem;
+  min-width: var(--layout-category-picker);
   text-align: center;
   text-decoration: none;
   display: flex;
@@ -242,11 +265,11 @@ body, button {
 }
 
 .search-bar .search-box {
-  padding: var(--space-xxs) 0 var(--space-xs) 0;
-  border: 0.06rem solid var(--normal-grey2);
+  padding: var(--space-xs) 0 var(--space-xs) 0;
+  border: var(--line-width-xxs) solid var(--normal-grey2);
   border-left: none;
-  border-radius: 0 1.875rem 1.875rem 0;
-  min-width: 17.188rem;
+  border-radius: 0 var(--space-ll) var(--space-ll) 0;
+  min-width: var(--layout-seach-field);
   text-align: center;
   text-decoration: none;
   display: flex;
@@ -255,24 +278,24 @@ body, button {
 }
 
 .search-bar .category-picker .categories {
-  margin-left: 0.938rem;
+  margin-left: var(--space-s);
 }
 
 .search-bar .category-picker .dropdown {
   font-family: icomoon, sans-serif;
-  margin-right: 0.625rem;
-  font-weight: 800;
+  margin-right: var(--space-xs);
+  font-weight: var(--font-weight-800);
   color: var(--theme-dark-blue);
-  font-size: 0.75rem;
+  font-size: var(--font-size-12px);
 }
 
 .search-bar .search-box input, input::placeholder {
-  margin-left: 0.938rem;
+  margin-left: var(--space-s);
   border: none;
   width: 100%;
   outline: none;
-  font-size: 0.875rem;
-  color: var(--light-grey);
+  font-size: var(--font-size-13px);
+  color: var(--normal-grey);
 }
 
 .search-bar .search-box input:focus{
@@ -280,13 +303,13 @@ body, button {
 }
 
 .search-bar .search-box .search-icon {
-  margin-right: 0.938rem;
+  margin-right: var(--space-s);
 }
 
 /* main content related css */
 .main-content {
-  margin-left: 0.938rem;
-  margin-right: 0.938rem;
+  margin-left: var(--space-s);
+  margin-right: var(--space-s);
 }
 
 h1,h2 {
@@ -295,21 +318,21 @@ h1,h2 {
 }
 
 p {
-  font: 400 1rem/1.5rem Poppins, sans-serif;
+  font: var(--font-weight-400) var(--font-size-16px)/var(--font-size-24px) Poppins, sans-serif;
   color: #4a4a4a;
 }
 
 /* Main content breadcrumbs css */
 .breadcrumbs {
-  font-size: 1rem;
-  margin: 1.25rem 0;
+  font-size: var( --font-size-16px);
+  margin: var(--line-width-m) 0;
   color: var(--theme-blue);
 }
 
 .breadcrumbs a {
   text-decoration: none;
   color: var(--theme-orange);
-  transition: color 0.3s;
+  transition: color var(--time-xxs);
 }
 
 /* Topmost grey navigator related css */
@@ -321,20 +344,20 @@ p {
 .global-navigator .container {
   display: none;
   overflow-x: auto;
-  font-size: 0.813rem;
+  font-size: var(--font-size-13px);
   color: var(--dark-grey);
   scrollbar-width: thin;
 }
 
 .global-navigator .global-section-item {
-  padding-top: 0.625rem;
-  padding-bottom: 0.625rem;
+  padding-top: var(--space-xs);
+  padding-bottom: var(--space-xs);
   flex: 0 0 auto;
 }
 
 .global-navigator .global-section-item a {
-  padding-left: 0.563rem;
-  padding-right: 0.563rem;
+  padding-left: var(--space-xs);
+  padding-right: var(--space-xs);
   text-decoration: none;
   color: inherit;
 }
@@ -350,7 +373,7 @@ p {
 /* Copied accordian collapsable from hlx */
 
 .accordion {
-  font-size: 0.813rem;
+  font-size: var(--font-size-13px);
   color: var(--normal-grey);
 }
 
@@ -370,23 +393,23 @@ p {
   cursor: pointer;
   list-style: none;
   overflow: auto;
-  transition: background-color 0.2s;
+  transition: background-color var(--time-xxs);
 }
 
 .accordion details .accordion-item-label {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rex;
+  padding-top: var(--space-xxs2);
+  padding-bottom: var(--space-xxs2);
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
 .accordion details a, .accordion-item-expand {
-  margin-left: 0.938rem;
-  margin-right: 0.938rem;
+  margin-left: var(--space-s);
+  margin-right: var(--space-s);
 }
 
 .accordion details .accordion-item-expand {
-  font-weight: 600;
+  font-weight: var(--font-weight-600);
   font-size: large;
   color: var(--theme-dark-blue);
 }
@@ -408,8 +431,8 @@ p {
 }
 
 .accordion details .accordion-subitem {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
+  padding-top: var(--space-xxs2);
+  padding-bottom: var(--space-xxs2);
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
   display: flex;
   flex-direction: row;
@@ -417,9 +440,9 @@ p {
 }
 
 .accordion details .accordion-subitem .new-item-logo{
-  width: 1.875rem;
-  height: 1.25rem;
-  margin-right: 0.625rem;
+  width: var(--space-ll);
+  height: var(--line-width-m);
+  margin-right: var(--space-xs);
 }
 
 /* Media queries starts here */
@@ -436,7 +459,7 @@ p {
 
   /* global margin on the left and right side of full page */
   .container {
-    max-width: 75rem;
+    max-width: var(--layout-main-container);
     width: 100%;
     margin: 0 auto;
   }
@@ -446,7 +469,7 @@ p {
   }
 
   .top-bar .logo img {
-    width: 15.625rem;
+    width: var(--layout-logo-main);
     height: auto;
   }
 
