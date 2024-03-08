@@ -19,7 +19,6 @@
   --line-width-xxs: 0.06rem;
   --line-width-xs: 0.13rem;
   --line-width-xs2: 0.19rem;
-  --line-width-m: 1.25rem;
 
   /* margin space and width related */
   --space-xxs: 0.3rem;
@@ -27,6 +26,7 @@
   --space-xs: 0.6rem;
   --space-s: 0.9rem;
   --space-1: 1rem;
+  --space-2: 1.25rem;
   --space-m: 1.3rem;
   --space-l: 1.6rem;
   --space-ll: 1.875rem;
@@ -104,8 +104,8 @@ a:hover {
 }
 
 .top-bar .search-icon {
-  width:  var(--line-width-m);
-  height:  var(--line-width-m);
+  width:  var(--space-2);
+  height:  var(--space-2);
   margin-left:  var(--space-xxs);
 }
 
@@ -148,7 +148,7 @@ a:hover {
   justify-content: center;
   align-items: center;
   width: var(--space-ll);
-  height: var(--line-width-m);
+  height: var(--space-2);
   cursor: pointer;
   margin-right: var(--space-xxs);
   padding-top: var(--space-xs);
@@ -336,7 +336,7 @@ p {
 /* Main content breadcrumbs css */
 .breadcrumbs {
   font-size: var( --font-size-16px);
-  margin: var(--line-width-m) 0;
+  margin: var(--space-2) 0;
   color: var(--theme-blue);
 }
 
@@ -455,7 +455,7 @@ p {
 
 .accordion details .accordion-subitem .new-item-logo{
   width: var(--space-ll);
-  height: var(--line-width-m);
+  height: var(--space-2);
   margin-right: var(--space-xs);
 }
 
@@ -480,6 +480,10 @@ p {
 
   .global-navigator .container{
     display: flex;
+  }
+
+  .top-bar .row1 {
+    margin-right: var(--space-2);
   }
 
   .top-bar .logo img {
