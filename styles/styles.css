@@ -45,7 +45,7 @@
   --link-hover-color: #0056b3;
   
   /* fonts */
-  --body-font-family: "Poppins", sans-serif;
+  --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
@@ -221,11 +221,11 @@ body {
   margin: 0;
   padding: 0;
   border: 0;
-  font-family: var(--font-family-sans-serif);
+  font-family: var(--body-font-family);
   font-weight: var(--font-weight-small);
   line-height: 1.5;
   color: var(--black);
-  background-color: var(--white);
+  background-color: var(--color-white);
   display: none;
   -webkit-font-smoothing: antialiased;
   text-align: left;
@@ -381,11 +381,4 @@ main .section > .section-container{
   h3 { font-size: var(--h3-font-size-desktop); }
   h4 { font-size: var(--h4-font-size-desktop); }
   h5 { font-size: var(--h5-font-size-desktop); }
-}
-
-
-/* section metadata */
-main .section.light,
-main .section.highlight {
-  background-color: var(--light-color);
 }
