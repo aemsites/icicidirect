@@ -462,6 +462,10 @@ function decorateSections(main) {
       });
       sectionMeta.parentNode.remove();
     }
+    const sectionContainer = document.createElement('div');
+    sectionContainer.classList.add('section-container');
+    sectionContainer.append(...section.children);
+    section.append(sectionContainer);
   });
 }
 
