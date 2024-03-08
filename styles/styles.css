@@ -12,12 +12,27 @@
 
 :root {
   /* colors */
-  --link-color: #035fe6;
-  --link-hover-color: #136ff6;
-  --background-color: white;
+  --background-color-light-grey: #FCFCFC;
+  --background-color-transparent: transparent;
+  --background-color-unset: unset;
+  --background-color-disable: unset;
+  --background-color-dark-grey: #D8D8D8;
+  --background-color-light-orange: #FAE4D1;
+  --background-color-light-blue: #EFF6FF;
+  --color-white: #fff;
+  --color-red: #da0000;
+  --color-green: #259702;
+  --color-orange: #E87817;
+  --color-blue: #053d6e;
+  --color-diable-element: #D1D1D1;
+  --color-disable-dot: #D1D1D1;
   --light-color: #eee;
   --dark-color: #ccc;
-  --text-color: black;
+  --text-color-normal: #212529;
+  --text-color-light: #4a4a4a;
+  --text-color-blue: #043C6D;
+  --link-color-blue: #4b9dff;
+  --link-color-dark-blue: #415270;
 
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -39,19 +54,20 @@
 
   /* nav height */
   --nav-height: 64px;
-}
 
-@font-face {
-  font-family: roboto-fallback;
-  size-adjust: 100.06%;
-  ascent-override: 95%;
-  src: local('Arial');
+  /* Font Weight */
+  --font-weight-small: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-bolder: 800;
 }
 
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -63,7 +79,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -75,7 +91,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 400;
+  font-weight: var(--font-weight-regular);
   src: local('Arial');
   ascent-override: 92.83%;
   descent-override: 30.94%;
@@ -87,7 +103,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -99,7 +115,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -111,7 +127,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   src: local('Arial');
   ascent-override: 91.82%;
   descent-override: 30.61%;
@@ -123,7 +139,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -135,7 +151,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -147,7 +163,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   src: local('Arial');
   ascent-override: 89.77%;
   descent-override: 29.92%;
@@ -155,7 +171,6 @@
   size-adjust: 116.97%;
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
-
 
 @media (width >= 900px) {
   :root {
@@ -169,13 +184,15 @@
 }
 
 body {
-  font-size: var(--body-font-size-m);
   margin: 0;
-  font-family: var(--body-font-family);
-  line-height: 1.6;
-  color: var(--text-color);
-  background-color: var(--background-color);
-  display: none;
+  font: var(--font-weight-regular) 0.9rem Poppins, "Poppins Fallback", sans-serif;
+  color: var(--text-color-normal);
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+  min-height: 100vh;
+  background-color: var(--color-white);
+  text-align: left;
+  line-height: 1.5;
 }
 
 body.appear {
@@ -186,41 +203,6 @@ header {
   height: var(--nav-height);
 }
 
-h1, h2, h3,
-h4, h5, h6 {
-  font-family: var(--heading-font-family);
-  font-weight: 600;
-  line-height: 1.25;
-  margin-top: 1em;
-  margin-bottom: .5em;
-  scroll-margin: calc(var(--nav-height) + 1em);
-}
-
-h1 { font-size: var(--heading-font-size-xxl) }
-h2 { font-size: var(--heading-font-size-xl) }
-h3 { font-size: var(--heading-font-size-l) }
-h4 { font-size: var(--heading-font-size-m) }
-h5 { font-size: var(--heading-font-size-s) }
-h6 { font-size: var(--heading-font-size-xs) }
-
-p, dl, ol, ul, pre, blockquote {
-  margin-top: 1em;
-  margin-bottom: 1em;
-}
-
-code, pre {
-  font-family: var(--fixed-font-family);
-  font-size: var(--body-font-size-s);
-}
-
-code {
-  padding: .125em;
-}
-
-pre {
-  overflow: scroll;
-}
-
 main pre {
   background-color: var(--light-color);
   padding: 1em;
@@ -229,70 +211,20 @@ main pre {
   white-space: pre;
 }
 
-/* links */
-a:any-link {
-  color: var(--link-color);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
-  color: var(--link-hover-color);
-}
-
-/* buttons */
-a.button:any-link, button {
-  font-family: var(--body-font-family);
-  display: inline-block;
-  box-sizing: border-box;
-  text-decoration: none;
-  border: 2px solid transparent;
-  padding: 5px 30px;
-  text-align: center;
-  font-style: normal;
-  font-weight: 600;
-  cursor: pointer;
-  color: var(--background-color);
-  background-color: var(--link-color);
-  margin: 16px 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  border-radius: 30px;
-}
-
-a.button:hover, a.button:focus, button:hover, button:focus  {
-  background-color: var(--link-hover-color);
-  cursor: pointer;
-}
-
 button:disabled, button:disabled:hover {
   background-color: var(--light-color);
   cursor: unset;
 }
 
 a.button.secondary, button.secondary {
-  background-color: unset;
+  background-color: var(--background-color-unset);
   border: 2px solid currentcolor;
-  color: var(--text-color)
+  color: var(--text-color-normal)
 }
 
-main img {
-  max-width: 100%;
-  width: auto;
-  height: auto;
-}
 
-.icon {
-  display: inline-block;
-  height: 24px;
-  width: 24px;
-}
 
-.icon img {
-  height: 100%;
-  width: 100%;
-}
+
 
 /* sections */
 main .section {
@@ -316,4 +248,92 @@ main .section {
 main .section.light,
 main .section.highlight {
   background-color: var(--light-color);
+}
+
+div, span, strong, p, a, i {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+h3 {
+  font-weight: var(--font-weight-semibold);
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--link-color-blue);
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.3s;
+  background-color: var(--background-color-transparent);
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-right: -0.9rem;
+  margin-left: -0.9rem;
+}
+
+.col {
+  position: relative;
+  width: 100%;
+  padding-right: 0.9rem;
+  padding-left: 0.9rem;
+}
+
+.icon {
+  font-family: icomoon, sans-serif;
+  speak: none;
+  font-style: normal;
+  font-weight: var(--font-weight-medium);
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+p {
+  font: var(--font-weight-regular) 1rem/1.5rem Poppins, "Poppins Fallback", sans-serif;
+  color: var(--text-color-light);
+  margin-bottom: 1.25rem;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+.link-color {
+  font-size: 1.3rem;
+  line-height: 1.5rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-orange);
+}
+
+.border-box {
+  box-sizing: border-box;
+  outline: none;
+}
+
+.positive {
+  color: var(--color-green);
+}
+
+.negative {
+  color: var(--color-red);
 }
