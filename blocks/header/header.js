@@ -94,7 +94,7 @@ const decorateTopSearchBar = () => {
 const buildLoginButton = () => {
   const loginButton = document.createElement('button');
   loginButton.classList.add('round-button', 'mobile-element');
-  loginButton.innerHTML = 'LOGIN';
+  loginButton.innerHTML = 'Login';
   return loginButton;
 };
 
@@ -118,15 +118,21 @@ const getPrimaryButtonsList = (fragment) => {
   const primaryButtonsList = [];
   const primaryButtonItems = fragment.querySelectorAll('.section.primary-buttons li');
   primaryButtonItems.forEach((singleItem, index) => {
+    const buttonName = singleItem.innerText;
+    const buttonLinkNode = singleItem.querySelector('a');
+    const url = buttonLinkNode?.getAttribute('href');
+    const linkTag = document.createElement('a');
+    linkTag.href = url || '';
     const singleButton = document.createElement('button');
+    singleButton.innerText = buttonName;
     singleButton.classList.add('round-button');
     if (index === 0) {
       singleButton.classList.add('gradient-orange');
     } else {
       singleButton.classList.add('desktop-element');
     }
-    singleButton.appendChild(singleItem);
-    primaryButtonsList.push(singleButton);
+    linkTag.appendChild(singleButton);
+    primaryButtonsList.push(linkTag);
   });
   return primaryButtonsList;
 };
@@ -214,11 +220,18 @@ const buildSidePanelBottomSection = (fragment) => {
   bottomAreaPrimaryButtonsDiv.className = 'bottom-area-primary-actions';
   const sidePanelPrimaryButtonItems = fragment.querySelectorAll('.section.side-panel-primary-actions li');
   sidePanelPrimaryButtonItems.forEach((item) => {
+    const buttonName = item.innerText;
+    const buttonLinkNode = item.querySelector('a');
+    const url = buttonLinkNode?.getAttribute('href');
+    const linkTag = document.createElement('a');
+    linkTag.href = url || '';
     const singleButton = document.createElement('button');
+    singleButton.innerText = buttonName;
     singleButton.className = 'round-button';
     singleButton.type = 'button';
     singleButton.innerText = item.textContent;
-    bottomAreaPrimaryButtonsDiv.appendChild(singleButton);
+    linkTag.appendChild(singleButton);
+    bottomAreaPrimaryButtonsDiv.appendChild(linkTag);
   });
   sidePanelBottomAreaDiv.appendChild(bottomAreaPrimaryButtonsDiv);
   return sidePanelBottomAreaDiv;
@@ -244,9 +257,11 @@ const buildSidePanelAccordion = (fragment) => {
     accordionItemDetails.className = 'accordion-item';
     const accordionItemLabel = document.createElement('summary');
     accordionItemLabel.className = 'accordion-item-label';
-    const categoryName = item.firstChild.data;
+    const categoryLinkNode = item.querySelector('a');
+    const categoryUrl = categoryLinkNode?.getAttribute('href') || '';
+    const categoryName = categoryLinkNode?.innerText || item.firstChild.data;
     accordionItemLabel.innerHTML = `
-      <div><a href="">${categoryName}</a></div>
+      <div><a href=${categoryUrl}>${categoryName}</a></div>
       <div class="accordion-item-expand">+</div>
     `;
 
@@ -257,18 +272,20 @@ const buildSidePanelAccordion = (fragment) => {
 
     const subitemsList = item.querySelectorAll('li');
     subitemsList.forEach((subitem) => {
+      const subItemLinkNode = subitem.querySelector('a');
+      const subItemUrl = subItemLinkNode?.getAttribute('href') || '';
+      const subitemName = subItemLinkNode?.innerText || subitem.textContent;
       const accordionSubitem = document.createElement('div');
       accordionSubitem.className = 'accordion-subitem';
-      const subitemName = subitem.textContent;
       if (subitemName.includes('[new]')) {
         const replacedSubitemName = subitemName.replace(/\[new\]/g, '').trim();
         accordionSubitem.innerHTML = `
-          <a href="">${replacedSubitemName}</a>
+          <a href=${subItemUrl}>${replacedSubitemName}</a>
           <img class="new-item-logo" alt="new" src="../../icons/new-img.svg" width="20px"></img>
         `;
       } else {
         accordionSubitem.innerHTML = `
-          <a href="">${subitemName}</a>
+          <a href=${subItemUrl}>${subitemName}</a>
         `;
       }
       accordionSubitemList.appendChild(accordionSubitem);

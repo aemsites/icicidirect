@@ -39,7 +39,7 @@
   --layout-size-side-panel: 16.875rem;
   --layout-logo-main: 15.625rem;
   --layout-seach-field: 17.188rem;
-  --layout-main-container: 75rem;
+  --layout-main-container: 81.25rem;
 
   /* font related */
   --font-size-11px: 0.688rem;
@@ -59,17 +59,23 @@
   --media-mobile-width: 48rem;
 }
 
-body, button {
+body, button, a {
   font-family: Poppins, sans-serif;
   font-weight: var(--font-weight-400);
   font-style: normal;
+  font-size: var(--font-size-12px);
   margin: 0;
+}
+
+a:hover {
+  text-decoration: none;
 }
 
 /* Page specific css starts */
 
 .top-bar {
-  border-bottom: var(--line-width-xxs) solid var(--light-grey) /* Adding a bottom border */
+  border-bottom: var(--line-width-xxs) solid var(--light-grey);
+  background-color: var(--white);
 }
 
 .top-bar .container{
@@ -170,6 +176,10 @@ body, button {
   box-shadow: none;
   display: flex;
   flex-direction: column;
+}
+
+.sidepanel::-webkit-scrollbar {
+  display: none;
 }
 
 .sidepanel.open {
@@ -303,6 +313,7 @@ body, button {
 }
 
 .search-bar .search-box .search-icon {
+  margin-top: calc(var(--line-width-xs2) * -1);
   margin-right: var(--space-s);
 }
 
@@ -346,7 +357,10 @@ p {
   overflow-x: auto;
   font-size: var(--font-size-13px);
   color: var(--dark-grey);
-  scrollbar-width: thin;
+}
+
+.global-navigator .container::-webkit-scrollbar {
+  display: none;
 }
 
 .global-navigator .global-section-item {
@@ -414,10 +428,6 @@ p {
   color: var(--theme-dark-blue);
 }
 
-.accordion details:not(:has(.accordion-subitem)) .accordion-item-label {
-  border-bottom: var(--line-width-xxs) solid var(--light-grey);
-}
-
 .accordion details:not(:has(.accordion-subitem)) .accordion-item-expand {
   display: none; /* for no sub items, hide the plus symbol */
 }
@@ -428,6 +438,10 @@ p {
   a {
     color: var(--theme-dark-blue);
   }
+}
+
+.accordion details:not(:has(.accordion-subitem)) .accordion-item-label {
+  border-bottom: var(--line-width-xxs) solid var(--light-grey);
 }
 
 .accordion details .accordion-subitem {
