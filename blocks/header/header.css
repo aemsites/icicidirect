@@ -73,25 +73,25 @@ a:hover {
 
 /* Page specific css starts */
 
-.header .top-bar {
+.top-bar {
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
   background-color: var(--white);
 }
 
-.header .top-bar .container{
+.top-bar .container{
   display: flex;
   flex-direction: column;
   padding: var(--space-xs) var(--space-s) var(--space-xxs) var(--space-s);
 }
 
-.header .top-bar .row1 {
+.top-bar .row1 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: flex-start;
 }
 
-.header .top-bar .row1 .primary-buttons {
+.top-bar .row1 .primary-buttons {
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -99,24 +99,24 @@ a:hover {
   gap: var(--line-width-xs);
 }
 
-.header .top-bar .row1 .primary-buttons button.desktop-element {
+.top-bar .row1 .primary-buttons button.desktop-element {
   display: none;
 }
 
-.header .top-bar .search-icon {
+.top-bar .search-icon {
   width:  var(--space-2);
   height:  var(--space-2);
   margin-left:  var(--space-xxs);
 }
 
-.header .top-bar .logo img{
+.top-bar .logo img{
   flex-grow: 1;
   margin-left: var(--space-xs);
   width: var(--layout-size-1);
 }
 
 /* round button specific css */
-.header .round-button {
+.round-button {
   border: none;
   border-radius: var(--space-l);
   background: var(--theme-blue);
@@ -132,17 +132,17 @@ a:hover {
   list-style: none;
 }
 
-.header .round-button:hover {
+.round-button:hover {
   background: var(--theme-dark-blue);
 }
 
-.header .round-button.gradient-orange {
+.round-button.gradient-orange {
   background-image: var(--linear-gradient-theme);
 }
 
 /* hamburger menu icon creation */
 
-.header .hamburger-menu {
+.hamburger-menu {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -154,7 +154,7 @@ a:hover {
   padding-top: var(--space-xs);
 }
 
-.header .hamburger-menu div{
+.hamburger-menu div{
   width: var(--space-l);
   height: var(--line-width-xs);
   background-color: var(--theme-blue);
@@ -163,7 +163,7 @@ a:hover {
 
 /* hamburger pannel related css */
 
-.header .sidepanel  {
+.sidepanel  {
   width: var(--layout-size-side-panel);
   position: fixed;
   z-index: 1;
@@ -178,38 +178,38 @@ a:hover {
   flex-direction: column;
 }
 
-.header .sidepanel::-webkit-scrollbar {
+.sidepanel::-webkit-scrollbar {
   display: none;
 }
 
-.header .sidepanel.open {
+.sidepanel.open {
   transform: translateX(100%);
   box-shadow: var(--line-width-xs2) 0 var(--space-xs) calc((var(--space-xxs)) * -1) #000000bf;
 }
 
-.header .sidepanel .top-area {
+.sidepanel .top-area {
   display: flex;
   flex-direction: row;
   margin-top: var(--space-xs);
   margin-left: var(--space-s);
 }
 
-.header .sidepanel .top-area-logo {
+.sidepanel .top-area-logo {
   margin-left: var(--space-xs);
   align-self: center;
 }
 
-.header .sidepanel .top-area-logo img {
+.sidepanel .top-area-logo img {
   width: var(--layout-size-1);
 }
 
-.header .sidepanel .bottom-area {
+.sidepanel .bottom-area {
   display: flex;
   flex-direction: column;
   margin-top:  var(--space-m);
 }
 
-.header .bottom-area-primary-actions{
+.bottom-area-primary-actions{
   display: flex;
   flex-flow: row wrap;
   align-items: center;
@@ -220,13 +220,13 @@ a:hover {
 }
 
 /* hamburger menu close button */
-.header .sidepanel .top-area-closebutton {
+.sidepanel .top-area-closebutton {
   width: var(--space-xl);
   height: var(--space-xl);
   align-self: center;
 }
 
-.header .hamburger-menu-close {
+.hamburger-menu-close {
   height: var(--space-l);
   width: var(--space-l);
   display: flex;
@@ -237,22 +237,22 @@ a:hover {
   margin-top: var(--space-xxs);
 }
 
-.header .hamburger-menu-close .line {
+.hamburger-menu-close .line {
   width: 100%;
   height: var(--line-width-xs);
   background-color: var(--theme-blue);
 }
 
-.header .hamburger-menu-close .line-1 {
+.hamburger-menu-close .line-1 {
   transform: rotate(45deg) translateY(50%);
 }
 
-.header .hamburger-menu-close .line-2 {
+.hamburger-menu-close .line-2 {
   transform: rotate(-45deg) translateY(-50%);
 }
 
 /* Search bar related css */
-.header .search-bar .search-bar-container{
+.search-bar .search-bar-container{
   display: none;
   flex-direction: row;
   justify-content: center;
@@ -262,7 +262,7 @@ a:hover {
   margin-left: var(--space-1);
 }
 
-.header .search-bar .category-picker {
+.search-bar .category-picker {
   border: var(--line-width-xxs) solid var(--normal-grey2);
   border-radius: var(--space-ll) 0 0 var(--space-ll);
   padding: var(--space-xs) 0 var(--space-xs) 0;
@@ -274,7 +274,7 @@ a:hover {
   justify-content: space-between;
 }
 
-.header .search-bar .search-box {
+.search-bar .search-box {
   padding: var(--space-xs) 0 var(--space-xs) 0;
   border: var(--line-width-xxs) solid var(--normal-grey2);
   border-left: none;
@@ -287,11 +287,11 @@ a:hover {
   justify-content: space-between;
 }
 
-.header .search-bar .category-picker .categories {
+.search-bar .category-picker .categories {
   margin-left: var(--space-s);
 }
 
-.header .search-bar .category-picker .dropdown {
+.search-bar .category-picker .dropdown {
   font-family: icomoon, sans-serif;
   margin-right: var(--space-xs);
   font-weight: var(--font-weight-800);
@@ -299,7 +299,7 @@ a:hover {
   font-size: var(--font-size-12px);
 }
 
-.header .search-bar .search-box input, input::placeholder {
+.search-bar .search-box input, input::placeholder {
   margin-left: var(--space-s);
   border: none;
   width: 100%;
@@ -308,68 +308,97 @@ a:hover {
   color: var(--normal-grey);
 }
 
-.header .search-bar .search-box input:focus{
+.search-bar .search-box input:focus{
   color: var(--theme-dark-blue);
 }
 
-.header .search-bar .search-box .search-icon {
+.search-bar .search-box .search-icon {
   margin-top: calc(var(--line-width-xs2) * -1);
   margin-right: var(--space-s);
 }
 
+/* main content related css */
+.main-content {
+  margin-left: var(--space-s);
+  margin-right: var(--space-s);
+}
+
+h1,h2 {
+  text-align: center;
+  color: #053D6E;
+}
+
+p {
+  font: var(--font-weight-400) var(--font-size-16px)/var(--font-size-24px) Poppins, sans-serif;
+  color: #4a4a4a;
+}
+
+/* Main content breadcrumbs css */
+.breadcrumbs {
+  font-size: var( --font-size-16px);
+  margin: var(--space-2) 0;
+  color: var(--theme-blue);
+}
+
+.breadcrumbs a {
+  text-decoration: none;
+  color: var(--theme-orange);
+  transition: color var(--time-xxs);
+}
+
 /* Topmost grey navigator related css */
 
-.header .global-navigator {
+.global-navigator {
   background-color: var(--lighter-grey);
 }
 
-.header .global-navigator .container {
+.global-navigator .container {
   display: none;
   overflow-x: auto;
   font-size: var(--font-size-13px);
   color: var(--dark-grey);
 }
 
-.header .global-navigator .container::-webkit-scrollbar {
+.global-navigator .container::-webkit-scrollbar {
   display: none;
 }
 
-.header .global-navigator .global-section-item {
+.global-navigator .global-section-item {
   padding-top: var(--space-xs);
   padding-bottom: var(--space-xs);
   flex: 0 0 auto;
 }
 
-.header .global-navigator .global-section-item a {
+.global-navigator .global-section-item a {
   padding-left: var(--space-xs);
   padding-right: var(--space-xs);
   text-decoration: none;
   color: inherit;
 }
 
-.header .global-navigator .global-section-item a:hover {
+.global-navigator .global-section-item a:hover {
   color: var(--theme-dark-blue);
 }
 
-.header .global-navigator .global-section-item:not(:last-child) a {
+.global-navigator .global-section-item:not(:last-child) a {
   border-right: var(--line-width-xxs) solid var(--normal-grey);
 }
 
 /* Copied accordian collapsable from hlx */
 
-.header .accordion {
+.accordion {
   font-size: var(--font-size-13px);
   color: var(--normal-grey);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-.header .accordion a {
+.accordion a {
   text-decoration: none; /* Remove underline */
   color: inherit; /* Inherit color from parent */
   user-select: none;
 }
 
-.header .accordion details summary {
+.accordion details summary {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -381,29 +410,29 @@ a:hover {
   transition: background-color var(--time-xxs);
 }
 
-.header .accordion details .accordion-item-label {
+.accordion details .accordion-item-label {
   padding-top: var(--space-xxs2);
   padding-bottom: var(--space-xxs2);
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
 }
 
 /* stylelint-disable-next-line no-descending-specificity */
-.header .accordion details a, .accordion-item-expand {
+.accordion details a, .accordion-item-expand {
   margin-left: var(--space-s);
   margin-right: var(--space-s);
 }
 
-.header .accordion details .accordion-item-expand {
+.accordion details .accordion-item-expand {
   font-weight: var(--font-weight-600);
   font-size: large;
   color: var(--theme-dark-blue);
 }
 
-.header .accordion details:not(:has(.accordion-subitem)) .accordion-item-expand {
+.accordion details:not(:has(.accordion-subitem)) .accordion-item-expand {
   display: none; /* for no sub items, hide the plus symbol */
 }
 
-.header .accordion details[open] .accordion-item-label {
+.accordion details[open] .accordion-item-label {
   border-bottom: none;
   
   a {
@@ -411,11 +440,11 @@ a:hover {
   }
 }
 
-.header .accordion details:not(:has(.accordion-subitem)) .accordion-item-label {
+.accordion details:not(:has(.accordion-subitem)) .accordion-item-label {
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
 }
 
-.header .accordion details .accordion-subitem {
+.accordion details .accordion-subitem {
   padding-top: var(--space-xxs2);
   padding-bottom: var(--space-xxs2);
   border-bottom: var(--line-width-xxs) solid var(--light-grey);
@@ -424,7 +453,7 @@ a:hover {
   justify-content: space-between;
 }
 
-.header .accordion details .accordion-subitem .new-item-logo{
+.accordion details .accordion-subitem .new-item-logo{
   width: var(--space-ll);
   height: var(--space-2);
   margin-right: var(--space-xs);
@@ -434,43 +463,43 @@ a:hover {
 
 @media screen and (width >= 48rem) {
   /* CSS styles to apply when the screen width is more than 768px or 48rem */
-  .header .sidepanel {
+  .sidepanel {
     display: none;
   }
 
-  .header .hamburger-menu {
+  .hamburger-menu {
     display: none;
   }
 
   /* global margin on the left and right side of full page */
-  .header .container {
+  .container {
     max-width: var(--layout-main-container);
     width: 100%;
     margin: 0 auto;
   }
 
-  .header .global-navigator .container{
+  .global-navigator .container{
     display: flex;
   }
 
-  .header .top-bar .row1 {
+  .top-bar .row1 {
     margin-right: var(--space-2);
   }
 
-  .header .top-bar .logo img {
+  .top-bar .logo img {
     width: var(--layout-logo-main);
     height: auto;
   }
 
-  .header .top-bar .row1 .primary-buttons button.desktop-element {
+  .top-bar .row1 .primary-buttons button.desktop-element {
     display: block;
   }
 
-  .header .top-bar .row1 .primary-buttons .search-bar .search-bar-container {
+  .top-bar .row1 .primary-buttons .search-bar .search-bar-container {
     display: flex;
   }
 
-  .header .top-bar .row1 .primary-buttons .mobile-element {
+  .top-bar .row1 .primary-buttons .mobile-element {
     display: none;
   }
 }
