@@ -55,7 +55,9 @@
   --background-color-disable: unset;
   --background-color-dark-grey: #D8D8D8;
   --background-color-light-orange: #FAE4D1;
-  --background-color-light-blue: #EFF6FF; 
+  --background-color-light-blue: #EFF6FF;
+  --border-color-light-gray: #E1E8EE;
+  --border-color-gray: #D1D1D1;
   
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -360,7 +362,7 @@ main .section {
   margin: 2rem 0;
 }
 
-main .section > .section-container{
+main .section.padded > .section-container {
   max-width: 81.25rem;
   width: 100%;
   padding: 0 1rem;
