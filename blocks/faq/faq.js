@@ -31,10 +31,13 @@ function decorateTitle(faqTitle) {
   faqTitle.append(titleTag);
 }
 
-function decorateContent(faqContent, block) {
-  [...faqContent.children].forEach((row) => {
-    const itemTitle = row.firstElementChild;
-    const itemContent = row.lastElementChild;
+function decorateContent(faqContents, block) {
+  [...faqContents.children].forEach((faqContent, index) => {
+    if (index > 4) {
+      faqContent.classList.add('no-visible');
+    }
+    const itemTitle = faqContent.firstElementChild;
+    const itemContent = faqContent.lastElementChild;
     if (itemTitle) {
       itemTitle.classList.add('faq-item-title');
       addEvent(itemTitle, block);
@@ -50,11 +53,27 @@ function decorateContent(faqContent, block) {
   });
 }
 
-function decorateButton(faqButton) {
+function decorateButton(faqButton, block) {
   const aLink = createDiv('a', 'button');
   aLink.href = '#';
-  aLink.textContent = 'Discover More';
+  aLink.textContent = 'DISCOVER MORE';
   faqButton.append(aLink);
+  faqButton.addEventListener('click', () => {
+    const faqContents = block.querySelectorAll('.faq .faq-content > div');
+    if (faqContents.length > 5) {
+      faqContents.forEach((faqContent, index) => {
+        if (index > 4) {
+          faqContent.classList.toggle('no-visible');
+        }
+      });
+      const showButtons = block.querySelectorAll('.no-visible');
+      if (showButtons.length > 0) {
+        aLink.textContent = 'DISCOVER MORE';
+      } else {
+        aLink.textContent = 'DISCOVER LESS';
+      }
+    }
+  });
 }
 
 export default async function decorate(block) {
@@ -65,7 +84,7 @@ export default async function decorate(block) {
   decorateTitle(faqTitle);
   faqContent.append(...block.childNodes);
   decorateContent(faqContent, block);
-  decorateButton(faqButton);
+  decorateButton(faqButton, block);
 
   block.replaceChildren(faqTitle);
   block.appendChild(faqContent);

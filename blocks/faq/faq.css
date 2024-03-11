@@ -1,30 +1,31 @@
 .block.faq {
     margin-top: 1.5rem;
+    position:relative;
 }
 
 .block.faq .faq-title {
-    margin-bottom: 18px;
+    margin-bottom: 1.125rem;
     text-align: center;
 }
 
 .block.faq .faq-title::before {
     content: "";
     position: absolute;
-    border-bottom: 1px solid #E1E8EE;
+    border-bottom: 1px solid var(--border-color-light-gray);
     height: 1px;
     width: 100%;
-    top: 29px;
+    top: 1.875rem;
     left: 0;
     transform: translateY(-50%);
 }
 
 .block.faq .faq-title h2 {
-    font-size: 20px;
-    line-height: 20px;
-    color: #122E45;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    color: var(--color-dark);
     text-transform: uppercase;
-    background: #ffffff;
-    padding: 5px 15px;
+    background: var(--color-white);
+    padding: 5px 1rem;
     margin: unset;
     display: inline-block;
     position: relative;
@@ -34,40 +35,38 @@
 }
 
 .block.faq .faq-title h2 img {
-    /* padding: 0 10px 0 0; */
-    height: 32px;
-    margin-right: 10px;
+    height: 2rem;
+    margin-right: 0.625rem;
 }
 
 .block.faq .faq-content > div {
     padding: 0;
-    margin-bottom: 15px;
-    background: #FFFFFF;
-    border: 1px solid #D1D1D1;
+    margin-bottom: 1rem;
+    background: var(--color-white);
+    border: 1px solid var(--border-color-gray);
     box-sizing: border-box;
     border-radius: 5px;
     overflow: hidden;
     position: relative;
     min-width: 0;
     word-wrap: break-word;
+    transition: all 0.2s ease-out;
 }
 
 .block.faq .faq-content .faq-item-title {
-    font-size: 15px;
-    line-height: 22px;
-    padding: 8px 30px 8px 15px;
-    background: #fbfbfb;
-    color: #122E45;
-    font-weight: 500;
+    font-size: 1rem;
+    line-height: 1.375rem;
+    padding: 0.5rem 1.875rem 8px 1rem;
+    color: var(--color-dark);
+    font-weight: var(--font-weight-medium);
 }
 
 .block.faq .faq-content .faq-item-title::after {
     content: "-";
-    right: 16px;
-    /* width: 10px; */
+    right: 1rem;
     position: absolute;
-    font-size: 20px;
-    font-weight: 600;
+    font-size: 1.25rem;
+    font-weight: var(--font-weight-semibold);
     display: inline-block;
 }
 
@@ -76,7 +75,7 @@
 }
 
 .block.faq .faq-content .faq-item-content {
-    color: #131415;
+    color: var(--color-dark);
     word-wrap: break-word; 
     display: grid;
     grid-template-rows: 0fr;
@@ -89,9 +88,9 @@
 
 .block.faq .faq-content .faq-item-content > div p {
     overflow: hidden;
-    font: 400 14px / 24px var(--body-font-family), sans-serif;
-    padding: 12px 15px;
-    margin-bottom: 18px;
+    font: 400 0.875rem / 1.5rem var(--body-font-family), sans-serif;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.125rem;
 }
 
 .block.faq .faq-content .faq-item-content.visible {
@@ -105,45 +104,57 @@
 
 .block.faq .more-button .button {
     display: inline-block;
-    font-size: 16px;
-    line-height: 38px;
-    min-height: 50px;
-    font-weight: 600;
-    min-width: 196px;
-    background: #E87817;
-    color: #ffffff;
+    font-size: 1rem;
+    line-height: 2.375rem;
+    min-height: 3.125rem;
+    font-weight: var(--font-weight-semibold);
+    min-width: 12.25rem;
+    background: var(--button-color-orange);
+    color: var(--color-white);
     text-transform: uppercase;
-    border-radius: 30px;
-    padding: 5px 20px;
+    border-radius: 1.875rem;
+    padding: 5px 1.25rem;
     border: 1px solid transparent;
     text-decoration: none;     
 }
 
+.block.faq .faq-content > div.no-visible {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+    border: 0;
+}
+
 @media (width >= 576px) {
     .block.faq .faq-title h2 {
-        font-size: 24px;
-        line-height: 28px;
+        font-size: 1.5rem;
+        line-height: 1.75rem;
+    }
+
+    .block.faq .faq-content .faq-item-title::after {
+        font-size: 2.375rem;
+        font-weight: var(--font-weight-regular);
     }
 
     .block.faq .faq-content .faq-item-content > div p {
-        font-size: 16px;
+        font-size: 1rem;
     }
 }
 
 @media (width >= 768px) {
     .block.faq .faq-content .faq-item-title {
-        font-size: 18px;
-        line-height: 25px;
-        padding: 20px 40px 20px 20px;
+        font-size: 1.125rem;
+        line-height: 1.5625rem;
+        padding: 1.25rem 2.5rem 1.25rem 1.25rem;
     }
     
     .block.faq .faq-content .faq-item-content > div p {
-        padding: 20px;
+        padding: 1.25rem;
     }
 }
 
 @media (width >= 992px) {
     .block.faq .faq-content .faq-item-title {
-        font-size: 24px;
+        font-size: 1.5rem;
     }
 }    
