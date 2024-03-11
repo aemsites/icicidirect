@@ -11,7 +11,44 @@
  */
 
 :root {
-  /* colors */
+  /* colors */  
+  --primary: #053D6E;
+  --color-orange: #DB620A;
+  --color-dark: #262B36;
+  --color-black: black;
+  --color-light-gray: #8F8F8F;
+  --color-gray: #6c757d;
+  --color-gray-dark: #4A4A4A;
+  --color-light-gray-dark: #979797;
+  --color-blue: #007bff;
+  --color-deep-blue: #004A80;
+  --color-light-blue: #4b9dff;
+  --color-blue-dark: #053C6D;
+  --color-deep-purple: #1A0D7C;
+  --color-white: #FFF;
+  --color-green: #259702;
+  --color-transparent-orange: #ffe3ce;
+  --color-text-orange: #D4622C;
+  --color-indigo: #6610f2;
+  --color-purple: #6f42c1;
+  --color-pink: #e83e8c;
+  --color-red: #dc3545;
+  --color-yellow: #ffc107;
+  --color-teal: #20c997;
+  --color-cyan: #17a2b8;
+  --color-success: #28a745;
+  --color-info: #17a2b8;
+  --color-warning: #ffc107;
+  --color-danger: #dc3545;
+  --color-light: #f8f9fa;
+  --link-color: var(--color-blue);
+  --link-hover-color: #0056b3;
+  --text-color-normal: #212529;
+  --text-color-light: #4a4a4a;
+  --text-color-blue: #043C6D;
+  --link-color-blue: #4b9dff;
+  --link-color-dark-blue: #415270;
+  --button-color-orange: #E87817;
   --background-color-light-grey: #FCFCFC;
   --background-color-transparent: transparent;
   --background-color-unset: unset;
@@ -19,41 +56,47 @@
   --background-color-dark-grey: #D8D8D8;
   --background-color-light-orange: #FAE4D1;
   --background-color-light-blue: #EFF6FF;
-  --color-white: #fff;
-  --color-red: #da0000;
-  --color-green: #259702;
-  --color-orange: #E87817;
-  --color-blue: #053d6e;
-  --color-diable-element: #D1D1D1;
-  --color-disable-dot: #D1D1D1;
-  --light-color: #eee;
-  --dark-color: #ccc;
-  --text-color-normal: #212529;
-  --text-color-light: #4a4a4a;
-  --text-color-blue: #043C6D;
-  --link-color-blue: #4b9dff;
-  --link-color-dark-blue: #415270;
-
+  --border-color-light-gray: #E1E8EE;
+  --border-color-gray: #D1D1D1;
+  
+  
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
   /* body sizes */
-  --body-font-size-m: 22px;
-  --body-font-size-s: 18px;
-  --body-font-size-xs: 16px;
+  --body-font-size-xxl: 22px;
+  --body-font-size-xl: 20px;
+  --body-font-size-l: 18px;
+  --body-font-size-m: 16px;
+  --body-font-size-s: 14px;
+  --body-font-size-xs: 12px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 48px;
-  --heading-font-size-xl: 40px;
-  --heading-font-size-l: 32px;
-  --heading-font-size-m: 24px;
-  --heading-font-size-s: 20px;
-  --heading-font-size-xs: 18px;
+  --heading-font-size-xxl: 40px;
+  --heading-font-size-xl: 36px;
+  --heading-font-size-xmxl: 32px;
+  --heading-font-size-mxl: 30px;
+  --heading-font-size-l: 28px;
+  --heading-font-size-ml: 24px;
+  --heading-font-size-m: 20px;
+  --heading-font-size-s: 18px;
+  --heading-font-size-ms: 16px;
+  --heading-font-size-xs: 14px;
+  --heading-font-size-mxs: 12px;
 
-  /* nav height */
-  --nav-height: 64px;
+  /* Heading Variables */
+  --h1-font-size-desktop: var(--heading-font-size-xxl);
+  --h1-font-size-mobile: var(--heading-font-size-ml);
+  --h2-font-size-desktop: var(--heading-font-size-xmxl);
+  --h2-font-size-mobile: var(--heading-font-size-m);
+  --h3-font-size-desktop: var(--heading-font-size-ml);
+  --h3-font-size-mobile: var(--heading-font-size-s);
+  --h4-font-size-desktop: var(--heading-font-size-ms);
+  --h4-font-size-mobile: var(--heading-font-size-xs);
+  --h5-font-size-desktop: var(--heading-font-size-xs);
+  --h5-font-size-mobile: var(--heading-font-size-mxs);
 
   /* Font Weight */
   --font-weight-small: 300;
@@ -64,10 +107,22 @@
   --font-weight-bolder: 800;
 }
 
+*, *::before, *::after { 
+  box-sizing: border-box;
+  outline: none;
+}
+
+@font-face {
+  font-family: roboto-fallback;
+  size-adjust: 100.06%;
+  ascent-override: 95%;
+  src: local('Arial');
+}
+
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-regular);
+  font-weight: 400;
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -79,7 +134,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-regular);
+  font-weight: 400;
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -91,7 +146,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-regular);
+  font-weight: 400;
   src: local('Arial');
   ascent-override: 92.83%;
   descent-override: 30.94%;
@@ -103,7 +158,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-medium);
+  font-weight: 500;
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -115,7 +170,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-medium);
+  font-weight: 500;
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -127,7 +182,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-medium);
+  font-weight: 500;
   src: local('Arial');
   ascent-override: 91.82%;
   descent-override: 30.61%;
@@ -139,7 +194,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -151,7 +206,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   src: local('Arial');
   ascent-override: 105.00%;
   descent-override: 35.00%;
@@ -163,7 +218,7 @@
 @font-face {
   font-family: 'Poppins Fallback';
   font-style: normal;
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   src: local('Arial');
   ascent-override: 89.77%;
   descent-override: 29.92%;
@@ -172,15 +227,10 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-@media (width >= 900px) {
-  :root {
-    --heading-font-size-xxl: 60px;
-    --heading-font-size-xl: 48px;
-    --heading-font-size-l: 36px;
-    --heading-font-size-m: 30px;
-    --heading-font-size-s: 24px;
-    --heading-font-size-xs: 22px;
-  }
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+  scroll-behavior: smooth;
 }
 
 body {
@@ -196,126 +246,103 @@ body {
 }
 
 body.appear {
-  display: block;
+  display: unset;
 }
 
-header {
-  height: var(--nav-height);
+h1, h2, h3,
+h4, h5, h6 {
+  color: var(--primary);
+  font-family: var(--heading-font-family);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.2;
+  margin-top: 0;
 }
 
-main pre {
-  background-color: var(--light-color);
-  padding: 1em;
-  border-radius: .25em;
-  overflow-x: auto;
-  white-space: pre;
+h1 {
+  font-size: var(--h1-font-size-mobile);
+  margin-bottom: 1rem;
 }
 
-button:disabled, button:disabled:hover {
-  background-color: var(--light-color);
-  cursor: unset;
-}
-
-a.button.secondary, button.secondary {
-  background-color: var(--background-color-unset);
-  border: 2px solid currentcolor;
-  color: var(--text-color-normal)
-}
-
-
-
-
-
-/* sections */
-main .section {
-  padding: 64px 16px;
-}
-
-@media (width >= 600px) {
-  main .section {
-    padding: 64px 32px;
-  }
-}
-
-@media (width >= 900px) {
-  .section > div {
-    max-width: 1200px;
-    margin: auto;
-  }
-}
-
-/* section metadata */
-main .section.light,
-main .section.highlight {
-  background-color: var(--light-color);
-}
-
-div, span, strong, p, a, i {
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  vertical-align: baseline;
+h2 {
+  font-size: var(--h2-font-size-mobile);
+  margin-bottom: 1rem;
 }
 
 h3 {
-  font-weight: var(--font-weight-semibold);
-  margin: 0;
-  padding: 0;
-  border: 0;
-  font-size: 100%;
-  vertical-align: baseline;
-  line-height: 1.2;
+  font-size: var(--h3-font-size-mobile);
 }
 
-a {
-  color: var(--link-color-blue);
-  text-decoration: none;
-  display: inline-block;
-  transition: 0.3s;
-  background-color: var(--background-color-transparent);
+h4 {
+  font-size: var(--h4-font-size-mobile);
 }
 
-.align-items-center {
-  align-items: center;
+h5 {
+  font-size: var(--h5-font-size-mobile);
 }
 
-.row {
-  display: flex;
-  flex-wrap: wrap;
-  margin-right: -0.9rem;
-  margin-left: -0.9rem;
+p, dl, ol, ul, pre, blockquote {
+  margin-top: 0;
+  margin-bottom: 1em;
 }
 
-.col {
+dt {
+  font-weight: 700;
+}
+
+dd {
+  margin-bottom: .5rem;
+  margin-left: 0;
+}
+
+blockquote {
+  margin: 0 0 1rem;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+small {
+  font-size: 80%;
+}
+
+sub,
+sup {
   position: relative;
-  width: 100%;
-  padding-right: 0.9rem;
-  padding-left: 0.9rem;
+  font-size: 75%;
+  line-height: 0;
+  vertical-align: baseline;
 }
 
-.icon {
-  font-family: icomoon, sans-serif;
-  speak: none;
-  font-style: normal;
-  font-weight: var(--font-weight-medium);
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  display: inline-block;
-  vertical-align: middle;
+sub {
+  bottom: -.25em;
 }
 
-p {
-  font: var(--font-weight-regular) 1rem/1.5rem Poppins, "Poppins Fallback", sans-serif;
-  color: var(--text-color-light);
-  margin-bottom: 1.25rem;
+sup {
+  top: -.5em;
 }
 
-p:last-child {
-  margin-bottom: 0;
+/* links */
+a:any-link {
+  color: var(--color-blue);
+  text-decoration: none;
+  background-color: transparent;
+}
+
+a:hover {
+  text-decoration: underline;
+  color: var(--link-hover-color);
+}
+
+a:not([href]) {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:not([href]):hover {
+  color: inherit;
+  text-decoration: none;
 }
 
 .link-color {
@@ -325,15 +352,33 @@ p:last-child {
   color: var(--color-orange);
 }
 
-.border-box {
-  box-sizing: border-box;
-  outline: none;
+main img {
+  max-width: 100%;
+  width: auto;
+  height: auto;
 }
 
-.positive {
-  color: var(--color-green);
+/* sections */
+main .section {
+  margin: 2rem 0;
 }
 
-.negative {
-  color: var(--color-red);
+main .section.padded > .section-container {
+  max-width: 81.25rem;
+  width: 100%;
+  padding: 0 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media (width >= 768px) {
+  main .section {
+    margin: 2.8rem 0;
+  }
+
+  h1 { font-size: var(--h1-font-size-desktop); }
+  h2 { font-size: var(--h2-font-size-desktop); }
+  h3 { font-size: var(--h3-font-size-desktop); }
+  h4 { font-size: var(--h4-font-size-desktop); }
+  h5 { font-size: var(--h5-font-size-desktop); }
 }
