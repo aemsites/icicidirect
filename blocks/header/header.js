@@ -9,7 +9,7 @@ const decorateGlobalNavigationBar = (fragment, block) => {
   const globalNavigator = document.createElement('div');
   globalNavigator.className = 'global-navigator';
   const containerDiv = document.createElement('div');
-  containerDiv.className = 'container';
+  containerDiv.className = 'section-container';
   globalNavigator.append(containerDiv);
   const navigationItems = fragment.querySelectorAll('.section.global-navigator li');
 
@@ -145,7 +145,7 @@ const decorateTopBarPanel = (fragment, block) => {
   const topBarSection = document.createElement('div');
   topBarSection.className = 'top-bar';
   const topBarContainerDiv = document.createElement('div');
-  topBarContainerDiv.className = 'container';
+  topBarContainerDiv.className = 'section-container';
   topBarContainerDiv.id = 'top-bar';
   topBarSection.append(topBarContainerDiv);
   const row1Div = document.createElement('div');
