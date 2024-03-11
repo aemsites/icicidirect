@@ -59,6 +59,7 @@
   --border-color-light-gray: #E1E8EE;
   --border-color-gray: #D1D1D1;
   
+  
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
