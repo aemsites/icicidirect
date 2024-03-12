@@ -27,6 +27,7 @@ function decorateTitle(faqTitle) {
   titleTag.textContent = 'FAQs';
   const image = createDiv('img', '');
   image.src = '../../icons/noun-faq.svg';
+  image.alt = 'noun-faq';
   titleTag.prepend(image);
   faqTitle.append(titleTag);
 }
