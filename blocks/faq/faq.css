@@ -48,7 +48,6 @@
     box-sizing: border-box;
     border-radius: 5px;
     overflow: hidden;
-    position: relative;
     min-width: 0;
     word-wrap: break-word;
     transition: all 0.2s ease-out;
@@ -60,18 +59,25 @@
     padding: 0.5rem 1.875rem 8px 1rem;
     color: var(--color-dark);
     font-weight: var(--font-weight-medium);
+    position: relative;
+    display:block;
 }
 
-.block.faq .faq-content .faq-item-title::after {
-    content: "-";
-    right: 0.625rem;
+.block.faq .faq-content .faq-item-title i {
     position: absolute;
-    font-size: 1.25rem;
+    right: 0.625rem;
+    font-style: normal;
     font-weight: var(--font-weight-semibold);
-    display: inline-block;
+    font-size: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
 }
 
-.block.faq .faq-content .faq-item-title.visible::after {
+.block.faq .faq-content .faq-item-title i::after {
+    content: "-";
+}
+
+.block.faq .faq-content .faq-item-title.visible i::after {
     content: "+";
 }
 
@@ -132,10 +138,10 @@
         line-height: 1.75rem;
     }
 
-    .block.faq .faq-content .faq-item-title::after {
-        font-size: 2.375rem;
+    .block.faq .faq-content .faq-item-title i {
         font-weight: var(--font-weight-regular);
-        right: 1.5rem;
+        font-size: 2.375rem;
+        right: 1.125rem;
     }
 
     .block.faq .faq-content .faq-item-content > div p {

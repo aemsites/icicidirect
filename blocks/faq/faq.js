@@ -40,6 +40,8 @@ function decorateContent(faqContents, block) {
     const itemContent = faqContent.lastElementChild;
     if (itemTitle) {
       itemTitle.classList.add('faq-item-title');
+      const i = createDiv('i', '');
+      itemTitle.append(i);
       addEvent(itemTitle, block);
     }
     if (itemContent) {
