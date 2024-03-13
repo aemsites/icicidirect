@@ -54,10 +54,83 @@ const buildHamburgerIcon = () => {
 };
 
 /**
+ * Utility method for extracting the text and ids from the strings with ids in the square brackets
+ * for example string like 'sample value [id123]'
+ * would return {itemID: 'id123', itemText: 'sample value'}
+ * @param {*} str with ids in square brackets
+ * @returns object with text and id
+ */
+const extractValues = (str) => {
+  // Regular expression to match the value inside square brackets
+  const insideBrackets = str.match(/\[(.*?)\]/);
+  const valueInside = insideBrackets ? insideBrackets[1] : '';
+
+  // Regular expression to match the value outside square brackets
+  const valueOutside = str.replace(/\[(.*?)\]/, '').trim() || '';
+
+  return {
+    itemID: valueInside,
+    itemText: valueOutside,
+  };
+};
+
+const updateCategorySelection = (targetElement) => {
+  if (!targetElement.classList.contains('selected')) {
+    targetElement.classList.add('selected');
+  }
+};
+
+const getSearchCategoryDropDown = (fragment) => {
+  const menuItems = [];
+  const rawMenuItems = fragment.querySelectorAll('.section.dropdown-menu li');
+  rawMenuItems.forEach((singleItem) => {
+    const singleMenuItem = extractValues(singleItem.innerText);
+    menuItems.push(singleMenuItem);
+  });
+
+  const dropdownSelectDiv = document.createElement('div');
+  dropdownSelectDiv.className = 'dropdown-select';
+
+  const dropdownDiv = document.createElement('div');
+  dropdownDiv.className = 'dropdown-toggle';
+  const dropdownText = menuItems[0].itemText;
+  dropdownDiv.innerHTML = `<span class="dropdown-text">${dropdownText}</span><span class="icon-down-arrow icon">&#xe905;</span>`;
+
+  const dropdownMenuContainer = document.createElement('div');
+  dropdownMenuContainer.className = 'dropdown-menu-container';
+
+  const ul = document.createElement('ul');
+  ul.className = 'dropdown-menu';
+
+  menuItems.forEach((item) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const span = document.createElement('span');
+    span.textContent = item.itemText;
+    a.appendChild(span);
+    li.appendChild(a);
+    li.addEventListener('click', (event) => {
+      updateCategorySelection(event.currentTarget);
+    });
+    li.id = item.itemID;
+    ul.appendChild(li);
+  });
+
+  dropdownMenuContainer.appendChild(ul);
+  dropdownSelectDiv.appendChild(dropdownDiv);
+  dropdownSelectDiv.appendChild(dropdownMenuContainer);
+  dropdownDiv.addEventListener('click', () => {
+    dropdownMenuContainer.classList.toggle('visible');
+  });
+
+  return dropdownSelectDiv;
+};
+
+/**
  * Builds the top search bar section
  * @returns the search bar wrapped in div
  */
-const decorateTopSearchBar = () => {
+const decorateTopSearchBar = (fragment) => {
   const searchBarDiv = document.createElement('div');
   searchBarDiv.className = 'search-bar';
   const searchBarContainer = document.createElement('div');
@@ -65,10 +138,8 @@ const decorateTopSearchBar = () => {
 
   const categoryPickerDiv = document.createElement('div');
   categoryPickerDiv.className = 'category-picker';
-  categoryPickerDiv.innerHTML = `
-    <div class="categories">All</div>
-    <div class="dropdown">&#xe905;</div>
-  `;
+  categoryPickerDiv.appendChild(getSearchCategoryDropDown(fragment));
+
   const searchBoxDiv = document.createElement('div');
   searchBoxDiv.className = 'search-box';
   searchBoxDiv.innerHTML = `
@@ -157,7 +228,7 @@ const decorateTopBarPanel = (fragment, block) => {
   // Main ICICI Logo decoration
   const logoDiv = decorateMainHeaderLogo(fragment);
   // Build the search bar section
-  const searchBarDiv = decorateTopSearchBar();
+  const searchBarDiv = decorateTopSearchBar(fragment);
   // Add mobile specific login button
   const loginButton = buildLoginButton();
   // Add mobile specific search icon

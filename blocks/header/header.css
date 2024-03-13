@@ -227,26 +227,69 @@
   align-items: center;
 }
 
-.block.header .search-bar .category-picker .categories {
+.block.header .search-bar .category-picker .dropdown-select {
   margin-left: 0.9rem;
+  min-width: inherit;
+  position: relative;
 }
 
-.block.header .search-bar .category-picker .dropdown {
+.block.header .search-bar .category-picker .dropdown-toggle {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.block.header .search-bar .category-picker .icon-down-arrow {
   font-family: icomoon, sans-serif;
   margin-right: 0.6rem;
   font-weight: var(--font-weight-bolder);
   color: var(--link-color-dark-blue);
   font-size: var(--heading-font-size-mxs);
+  user-select: none;
+}
+
+.block.header .search-bar .category-picker .dropdown-menu-container {
+  display: none;
+}
+
+.block.header .search-bar .category-picker .dropdown-menu-container.visible {
+  display: block;
+  position: absolute;
+  z-index: 1;
+  top: 25px;
+  right: 0;
+  user-select: none;
+}
+
+.block.header .search-bar .category-picker .dropdown-menu {
+  list-style: none;
+  padding: 8px 0;
+  text-align: left;
+  background-color: var(--color-white);
+  border: var(--line-width-hairline) solid var(--color-lighter-gray);
+  border-radius: 0.25rem;
+  min-width: 130px;
+}
+
+.block.header .search-bar .category-picker .dropdown-menu li {
+  padding: 5px 10px;
+  font-size: var(--heading-font-size-sxs);
+}
+
+.block.header .search-bar .category-picker .dropdown-menu li:hover, li.selected {
+  background-color: var(--background-color-dark-grey);
 }
 
 .block.header .search-bar .search-box input, input::placeholder {
   margin-left: 0.9rem;
+  min-width: 10rem;
   border: none;
   width: 100%;
   outline: none;
   font-size: var(--heading-font-size-xs);
   color: var(--color-light-gray);
-  font-family: inherit;
+  user-select: none;
 }
 
 .block.header .search-bar .search-box input:focus{
@@ -370,10 +413,8 @@
   margin-right: 0.6rem;
 }
 
-/* Media queries starts here */
-
-@media screen and (width >= 48rem) {
-  /* CSS styles to apply when the screen width is more than 768px or 48rem */
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 768px) {
   .block.header .sidepanel {
     display: none;
   }
