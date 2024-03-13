@@ -22,9 +22,9 @@ function addEvent(faqTitle, block) {
   });
 }
 
-function decorateTitle(faqTitle) {
+function decorateTitle(faqTitle, title) {
   const titleTag = createDiv('h2', '');
-  titleTag.textContent = 'FAQs';
+  titleTag.textContent = title;
   const image = createDiv('img', '');
   image.src = '../../icons/noun-faq.svg';
   image.alt = 'noun-faq';
@@ -56,11 +56,10 @@ function decorateContent(faqContents, block) {
   });
 }
 
-function decorateButton(faqButton, block) {
-  const aLink = createDiv('a', 'button');
-  aLink.href = '#';
-  aLink.textContent = 'DISCOVER MORE';
-  faqButton.append(aLink);
+function decorateButton(faqButton, block, buttonTitle, expendButtonTitle) {
+  const button = createDiv('button', 'button');
+  button.textContent = buttonTitle;
+  faqButton.append(button);
   faqButton.addEventListener('click', () => {
     const faqContents = block.querySelectorAll('.faq .faq-content > div');
     if (faqContents.length > 5) {
@@ -71,9 +70,9 @@ function decorateButton(faqButton, block) {
       });
       const showButtons = block.querySelectorAll('.no-visible');
       if (showButtons.length > 0) {
-        aLink.textContent = 'DISCOVER MORE';
+        button.textContent = buttonTitle;
       } else {
-        aLink.textContent = 'DISCOVER LESS';
+        button.textContent = expendButtonTitle;
       }
     }
   });
@@ -83,11 +82,26 @@ export default async function decorate(block) {
   const faqTitle = createDiv('div', 'faq-title');
   const faqContent = createDiv('div', 'faq-content');
   const faqButton = createDiv('div', 'more-button');
-
-  decorateTitle(faqTitle);
-  faqContent.append(...block.childNodes);
+  let title = '';
+  let buttonTitle = '';
+  let expendButtonTitle = '';
+  [...block.children].forEach((child, i) => {
+    if (i === 0) {
+      title = [...child.children][1].innerHTML;
+    } else if (i === 1) {
+      buttonTitle = [...child.children][1].innerHTML;
+    } else if (i === 2) {
+      expendButtonTitle = [...child.children][1].innerHTML;
+    } else {
+      if ([...child.children].length === 3) {
+        [...child.children][0].remove();
+      }
+      faqContent.append(child);
+    }
+  });
+  decorateTitle(faqTitle, title);
   decorateContent(faqContent, block);
-  decorateButton(faqButton, block);
+  decorateButton(faqButton, block, buttonTitle, expendButtonTitle);
 
   block.replaceChildren(faqTitle);
   block.appendChild(faqContent);

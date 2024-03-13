@@ -1,6 +1,6 @@
 .block.faq {
     margin-top: 1.5rem;
-    position:relative;
+    position: relative;
 }
 
 .block.faq .faq-title {
@@ -11,21 +11,21 @@
 .block.faq .faq-title::before {
     content: "";
     position: absolute;
-    border-bottom: 1px solid var(--border-color-light-gray);
-    height: 1px;
+    border-bottom: 0.0625rem solid var(--border-color-light-gray);
+    height: 0.0625rem;
     width: 100%;
-    top: 1.5rem;
+    top: 1.3rem;
     left: 0;
     transform: translateY(-50%);
 }
 
 .block.faq .faq-title h2 {
-    font-size: 1.25rem;
+    font-size: var(--heading-font-size-m);
     line-height: 1.25rem;
     color: var(--color-dark);
     text-transform: uppercase;
     background: var(--color-white);
-    padding: 5px 1rem;
+    padding: 0.3125rem 1rem;
     margin: unset;
     display: inline-block;
     position: relative;
@@ -44,9 +44,9 @@
     padding: 0;
     margin-bottom: 1rem;
     background: var(--color-white);
-    border: 1px solid var(--border-color-gray);
+    border: 0.0625rem solid var(--border-color-gray);
     box-sizing: border-box;
-    border-radius: 5px;
+    border-radius: 0.3125rem;
     overflow: hidden;
     min-width: 0;
     word-wrap: break-word;
@@ -54,13 +54,14 @@
 }
 
 .block.faq .faq-content .faq-item-title {
-    font-size: 0.9375rem;
+    font-size: var(--body-font-size-s);
     line-height: 1.375rem;
-    padding: 0.5rem 1.875rem 8px 1rem;
+    padding: 0.5rem 1.875rem 0.5rem 1rem;
     color: var(--color-dark);
     font-weight: var(--font-weight-medium);
     position: relative;
-    display:block;
+    display: block;
+    cursor: pointer;
 }
 
 .block.faq .faq-content .faq-item-title i {
@@ -68,7 +69,7 @@
     right: 0.625rem;
     font-style: normal;
     font-weight: var(--font-weight-semibold);
-    font-size: 1.25rem;
+    font-size: var(--heading-font-size-m);
     top: 50%;
     transform: translateY(-50%);
 }
@@ -95,7 +96,7 @@
 
 .block.faq .faq-content .faq-item-content > div p {
     overflow: hidden;
-    font: 400 0.875rem / 1.5rem var(--body-font-family), sans-serif;
+    font: var(--font-weight-regular) 0.875rem / 1.5rem var(--body-font-family), sans-serif;
     padding: 0.75rem 1rem;
     margin-bottom: 1.125rem;
 }
@@ -111,7 +112,7 @@
 
 .block.faq .more-button .button {
     display: inline-block;
-    font-size: 1rem;
+    font-size: var(--heading-font-size-ms);
     line-height: 2.375rem;
     min-height: 3.125rem;
     font-weight: var(--font-weight-semibold);
@@ -120,9 +121,10 @@
     color: var(--color-white);
     text-transform: uppercase;
     border-radius: 1.875rem;
-    padding: 5px 1.25rem;
-    border: 1px solid transparent;
-    text-decoration: none;     
+    padding: 0.3125rem 1.25rem;
+    border: 0.0625rem solid transparent;
+    text-decoration: none;
+    cursor: pointer;   
 }
 
 .block.faq .faq-content > div.no-visible {
@@ -134,24 +136,24 @@
 
 @media (width >= 576px) {
     .block.faq .faq-title h2 {
-        font-size: 1.5rem;
+        font-size: var(--heading-font-size-ml);
         line-height: 1.75rem;
     }
 
     .block.faq .faq-content .faq-item-title i {
         font-weight: var(--font-weight-regular);
-        font-size: 2.375rem;
+        font-size: var(--heading-font-size-xxl);
         right: 1.125rem;
     }
 
     .block.faq .faq-content .faq-item-content > div p {
-        font-size: 1rem;
+        font-size: var(--heading-font-size-ms);
     }
 }
 
 @media (width >= 768px) {
     .block.faq .faq-content .faq-item-title {
-        font-size: 1.125rem;
+        font-size: var(--heading-font-size-s);
         line-height: 1.5625rem;
         padding: 1.25rem 2.5rem 1.25rem 1.25rem;
     }
@@ -163,6 +165,6 @@
 
 @media (width >= 992px) {
     .block.faq .faq-content .faq-item-title {
-        font-size: 1.5rem;
+        font-size: var(--heading-font-size-ml);
     }
 }    
