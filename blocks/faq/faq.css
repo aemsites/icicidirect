@@ -74,11 +74,11 @@
 }
 
 .block.faq .faq-content .faq-item-title i::after {
-    content: "-";
+    content: "+";
 }
 
 .block.faq .faq-content .faq-item-title.visible i::after {
-    content: "+";
+    content: "-";
 }
 
 .block.faq .faq-content .faq-item-content {
