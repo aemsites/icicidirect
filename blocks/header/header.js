@@ -373,8 +373,7 @@ const addHeaderEventHandlers = () => {
 export default async function decorate(block) {
   // load nav as fragment
   const navMeta = getMetadata('nav');
-  // TODO: meta data in the document is not working
-  const navPath = navMeta ? new URL(navMeta).pathname : '/draft/vivesing/nav';
+  const navPath = navMeta ? new URL(navMeta).pathname : '/nav';
   const fragment = await loadFragment(navPath);
   // Global navigator  starts here
   decorateGlobalNavigationBar(fragment, block);
