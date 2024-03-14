@@ -75,9 +75,18 @@ const extractValues = (str) => {
 };
 
 const updateCategorySelection = (targetElement) => {
-  if (!targetElement.classList.contains('selected')) {
-    targetElement.classList.add('selected');
-  }
+  const searchCategories = document.querySelectorAll('#header-search-categories li');
+  searchCategories.forEach((singleItem) => {
+    singleItem.classList.remove('selected');
+  });
+  targetElement.classList.add('selected');
+  const newCategorySelectedText = targetElement.innerText;
+  const newCategorySelectedId = targetElement.id;
+  const selectedCategory = document.querySelector('.block.header .search-bar .category-picker .dropdown-toggle .selected-category');
+  selectedCategory.id = newCategorySelectedId;
+  selectedCategory.innerText = newCategorySelectedText;
+  // close the menuselector once items are clicked
+  document.querySelector('.block.header .search-bar .category-picker .dropdown-menu-container').classList.toggle('visible');
 };
 
 const getSearchCategoryDropDown = (fragment) => {
@@ -94,13 +103,15 @@ const getSearchCategoryDropDown = (fragment) => {
   const dropdownDiv = document.createElement('div');
   dropdownDiv.className = 'dropdown-toggle';
   const dropdownText = menuItems[0].itemText;
-  dropdownDiv.innerHTML = `<span class="dropdown-text">${dropdownText}</span><span class="icon-down-arrow icon">&#xe905;</span>`;
+  const dropdownId = menuItems[0].itemID;
+  dropdownDiv.innerHTML = `<span class="selected-category" id=${dropdownId}>${dropdownText}</span><span class="icon-down-arrow icon">&#xe905;</span>`;
 
   const dropdownMenuContainer = document.createElement('div');
   dropdownMenuContainer.className = 'dropdown-menu-container';
 
   const ul = document.createElement('ul');
   ul.className = 'dropdown-menu';
+  ul.id = 'header-search-categories';
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
@@ -403,7 +414,7 @@ const addHeaderEventHandlers = () => {
    * Handler for changing the plus icon to minus icon when sub items are
    * expanded in the hamburger list
    */
-  const detailsElements = document.querySelectorAll('.accordion details');
+  const detailsElements = document.querySelectorAll('.block.header .accordion details');
   const sidePanelListExpandHandler = (event) => {
     const targetElement = event.target;
     const detailsElement = targetElement.closest('details');
