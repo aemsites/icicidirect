@@ -343,7 +343,7 @@ function getRecommendationsCard(companies, type) {
   });
 }
 
-async function generateCardsView(type, carouselTrack) {
+async function generateCardsView(type, carouselTrack, carouselSlider) {
   fetchRecommendations(type).then((companies) => {
     if (companies) {
       const recommendationsCard = getRecommendationsCard(companies, type);
@@ -356,7 +356,7 @@ async function generateCardsView(type, carouselTrack) {
         }
       });
     }
-    // setCarouselView(type, carouselSlider);
+    setCarouselView(type, carouselSlider);
   });
 }
 
@@ -428,7 +428,7 @@ function addCarouselCards(carouselBody, type) {
   addPlaceholderCarouselCard(carouselTrack, type);
   addPlaceholderCarouselCard(carouselTrack, type);
   addPlaceholderCarouselCard(carouselTrack, type);
-  generateCardsView(type, carouselTrack);
+  generateCardsView(type, carouselTrack, carouselSlider);
 }
 
 function addDiscoverLink(carouselBody, discoverLink) {
