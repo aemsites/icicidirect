@@ -378,9 +378,9 @@ async function generateCardsView(type, carouselTrack) {
       const existingCards = carouselTrack.children;
       recommendationsCard.forEach((card, index) => {
         if (index < existingCards.length) {
-        //  carouselTrack.replaceChild(card, existingCards[index]);
+          carouselTrack.replaceChild(card, existingCards[index]);
         } else {
-        //  carouselTrack.appendChild(card);
+          carouselTrack.appendChild(card);
         }
       });
     }
