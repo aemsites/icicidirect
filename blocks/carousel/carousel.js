@@ -97,7 +97,7 @@ function setCarouselView(type, carouselSlider) {
     }
 
     updateCarouselView(dotsContainer.firstChild);
-    startUpdateCarousel(carouselSlider);
+   // startUpdateCarousel(carouselSlider);
   }
 }
 
@@ -300,7 +300,7 @@ function getRow(company) {
 // eslint-disable-next-line no-unused-vars
 function getPlaceholderCarouselCard(companies, type) {
   const cardDiv = document.createElement('div');
-  cardDiv.className = 'carousel-card border-box';
+  cardDiv.className = 'carousel-card carousel-card-placeholder border-box';
   return cardDiv;
 }
 
@@ -344,11 +344,15 @@ function getRecommendationsCard(companies, type) {
 }
 
 async function generateCardsView(type, carouselTrack, carouselSlider) {
+  const widthAvailable = carouselTrack.offsetWidth;
+  const allowedCards = allowedCardsCount();
+  const cardWidth = widthAvailable / allowedCards;
   fetchRecommendations(type).then((companies) => {
     if (companies) {
       const recommendationsCard = getRecommendationsCard(companies, type);
       const existingCards = carouselTrack.children;
       recommendationsCard.forEach((card, index) => {
+        card.style.width = `${cardWidth}px`;
         if (index < existingCards.length) {
           carouselTrack.replaceChild(card, existingCards[index]);
         } else {
@@ -457,7 +461,7 @@ function getHighlightIcon(block) {
   const iconElement = block.querySelector('picture');
   return iconElement;
 }
-export default function decorate(block) {
+export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const { type } = blockConfig;
   const { title } = blockConfig;

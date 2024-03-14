@@ -262,8 +262,15 @@
     min-height: 205px;
 }
 
+.block.carousel-section .carousel-slider .carousel-card.carousel-card-placeholder {
+    min-width: 320px;
+    min-height: 205px;
+}
+
+
+
 @media (width >= 48rem) {
-    .block.carousel-section .carousel-slider .carousel-card {
+    .block.carousel-section .carousel-slider .carousel-card.carousel-card-placeholder {
         min-width: 338px;
         min-height: 205px;
     }
@@ -271,11 +278,10 @@
 }
 
 @media (width >= 64rem) {
-    .block.carousel-section .carousel-slider .carousel-card {
+    .block.carousel-section .carousel-slider .carousel-card{
         min-width: 233px;
         min-height: 281px;
     }
-
 }
 
 .block.carousel-section .carousel-slider .carousel-card img {
