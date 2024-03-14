@@ -331,7 +331,7 @@ function getRecommendationsCard(companies, type) {
   });
 }
 
-async function generateCardsView(type, carouselTrack, carouselSlider) {
+function generateCardsView(type, carouselTrack, carouselSlider) {
   fetchRecommendations(type).then((companies) => {
     if (companies) {
       const recommendationsCard = getRecommendationsCard(companies, type);
