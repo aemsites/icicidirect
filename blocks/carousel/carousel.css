@@ -272,7 +272,7 @@
 
 @media (width >= 64rem) {
     .block.carousel-section .carousel-slider .carousel-card {
-        min-width: 270px;
+        min-width: 233px;
         min-height: 281px;
     }
 
