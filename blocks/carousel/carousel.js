@@ -83,8 +83,11 @@ function setCarouselView(type, carouselSlider) {
   const visibleCards = allowedCardsCount();
   const numberOfDots = cards.length - visibleCards + 1;
   if (numberOfDots > 1) {
-    const dotsContainer = document.createElement('div');
-    dotsContainer.className = 'dots-container border-box';
+    let dotsContainer = carouselSlider.querySelector('.dots-container');
+    if (!dotsContainer) {
+      dotsContainer = document.createElement('div');
+      dotsContainer.className = 'dots-container border-box';
+    }
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < numberOfDots; i++) {
       const dot = document.createElement('button');
@@ -97,8 +100,8 @@ function setCarouselView(type, carouselSlider) {
     }
 
     carouselSlider.appendChild(dotsContainer);
-    updateCarouselView(dotsContainer.firstChild);
-    startUpdateCarousel(carouselSlider);
+     updateCarouselView(dotsContainer.firstChild);
+    // startUpdateCarousel(carouselSlider);
   }
 }
 
@@ -171,36 +174,37 @@ function companyCardHeader(company) {
   headingWrap.className = 'heading-wrap border-box';
 
   const h4 = document.createElement('h4');
-  h4.title = company.name;
-  h4.textContent = company.name;
   headingWrap.appendChild(h4);
-
   const iconWrap = document.createElement('div');
   iconWrap.className = 'icon-wrap';
-
-  createIconLink(iconWrap, '../../icons/icon-bookmark.svg');
-  createIconLink(iconWrap, '../../icons/icon-share-2.svg');
-
+  if (company) {
+    h4.title = company.name;
+    h4.textContent = company.name;
+    createIconLink(iconWrap, '../../icons/icon-bookmark.svg');
+    createIconLink(iconWrap, '../../icons/icon-share-2.svg');
+  }
   headingWrap.appendChild(iconWrap);
   return headingWrap;
 }
 
 function addActionButton(boxFooter, company, type) {
-  const { action } = company;
   const btnWrap = document.createElement('div');
-  if (type === 'trading') {
+  if (type === undefined || type === 'trading') {
     btnWrap.className = 'btn-wrap border-box';
   }
-  const aSell = document.createElement('a');
-  aSell.href = getMarginActionUrl(action.toLowerCase());
-  aSell.className = `btn border-box btn-${action.toLowerCase()}`;
-  if (company.exit) {
-    aSell.classList.add('disabled');
+  if (company) {
+    const { action } = company;
+    const aSell = document.createElement('a');
+    aSell.href = getMarginActionUrl(action.toLowerCase());
+    aSell.className = `btn border-box btn-${action.toLowerCase()}`;
+    if (company.exit) {
+      aSell.classList.add('disabled');
+    }
+    aSell.target = '_blank';
+    aSell.tabIndex = 0;
+    aSell.textContent = `${action}`;
+    btnWrap.appendChild(aSell);
   }
-  aSell.target = '_blank';
-  aSell.tabIndex = 0;
-  aSell.textContent = `${action}`;
-  btnWrap.appendChild(aSell);
   boxFooter.appendChild(btnWrap);
 }
 
@@ -297,6 +301,45 @@ function getRow(company) {
   return rowDiv;
 }
 
+function getPlaceholderCarouselCard(companies, type) {
+  const cardDiv = document.createElement('div');
+  cardDiv.className = 'carousel-card border-box';
+  const boxDiv = document.createElement('div');
+  boxDiv.className = 'box border-box';
+  if (type === 'trading') {
+    boxDiv.classList.add('box-theme');
+  }
+
+  boxDiv.appendChild(companyCardHeader());
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'row border-box';
+  let colDiv = document.createElement('div');
+  colDiv.className = 'value-col col border-box';
+  colDiv.textContent = 'Loading...';
+  rowDiv.appendChild(colDiv);
+  colDiv = document.createElement('div');
+  colDiv.className = 'value-col col border-box';
+  colDiv.textContent = 'Loading...';
+  rowDiv.appendChild(colDiv);
+  colDiv = document.createElement('div');
+  colDiv.className = 'value-col col border-box';
+  colDiv.textContent = 'Loading...';
+  rowDiv.appendChild(colDiv);
+  boxDiv.appendChild(rowDiv);
+
+  const boxFooter = document.createElement('div');
+  boxFooter.className = 'box-footer border-box box-footer-theme';
+  addActionButton(boxFooter);
+  boxDiv.appendChild(boxFooter);
+  cardDiv.appendChild(boxDiv);
+  return cardDiv;
+}
+
+function addPlaceholderCarouselCard(carouselTrack, type) {
+  const companies = Array.from({ length: 4 }, () => ({ name: 'Loading...' }));
+  const placeholderCard = getPlaceholderCarouselCard(companies, type);
+  carouselTrack.appendChild(placeholderCard);
+}
 function getRecommendationsCard(companies, type) {
   return companies.map((company) => {
     const cardDiv = document.createElement('div');
@@ -402,7 +445,12 @@ function addCarouselCards(carouselBody, type) {
   const carouselTrack = document.createElement('div');
   carouselTrack.classList.add('carousel-track');
   carouselList.appendChild(carouselTrack);
+  const dotsContainer = document.createElement('div');
+  dotsContainer.className = 'dots-container border-box';
+  carouselSlider.appendChild(dotsContainer);
   carouselBody.appendChild(carouselSlider);
+
+ // addPlaceholderCarouselCard(carouselTrack, type);
   generateCardsView(type, carouselTrack, carouselSlider);
 }
 
