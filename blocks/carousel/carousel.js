@@ -297,37 +297,38 @@ function getRow(company) {
   return rowDiv;
 }
 
+// eslint-disable-next-line no-unused-vars
 function getPlaceholderCarouselCard(companies, type) {
   const cardDiv = document.createElement('div');
   cardDiv.className = 'carousel-card border-box';
-  const boxDiv = document.createElement('div');
-  boxDiv.className = 'box border-box';
-  if (type === 'trading') {
-    boxDiv.classList.add('box-theme');
-  }
-
-  boxDiv.appendChild(companyCardHeader());
-  const rowDiv = document.createElement('div');
-  rowDiv.className = 'row border-box';
-  let colDiv = document.createElement('div');
-  colDiv.className = 'value-col col border-box';
-  colDiv.textContent = 'Loading...';
-  rowDiv.appendChild(colDiv);
-  colDiv = document.createElement('div');
-  colDiv.className = 'value-col col border-box';
-  colDiv.textContent = 'Loading...';
-  rowDiv.appendChild(colDiv);
-  colDiv = document.createElement('div');
-  colDiv.className = 'value-col col border-box';
-  colDiv.textContent = 'Loading...';
-  rowDiv.appendChild(colDiv);
-  boxDiv.appendChild(rowDiv);
-
-  const boxFooter = document.createElement('div');
-  boxFooter.className = 'box-footer border-box box-footer-theme';
-  addActionButton(boxFooter);
-  boxDiv.appendChild(boxFooter);
-  cardDiv.appendChild(boxDiv);
+  // const boxDiv = document.createElement('div');
+  // boxDiv.className = 'box border-box';
+  // if (type === 'trading') {
+  //   boxDiv.classList.add('box-theme');
+  // }
+  //
+  // boxDiv.appendChild(companyCardHeader());
+  // const rowDiv = document.createElement('div');
+  // rowDiv.className = 'row border-box';
+  // let colDiv = document.createElement('div');
+  // colDiv.className = 'value-col col border-box';
+  // colDiv.textContent = 'Loading...';
+  // rowDiv.appendChild(colDiv);
+  // colDiv = document.createElement('div');
+  // colDiv.className = 'value-col col border-box';
+  // colDiv.textContent = 'Loading...';
+  // rowDiv.appendChild(colDiv);
+  // colDiv = document.createElement('div');
+  // colDiv.className = 'value-col col border-box';
+  // colDiv.textContent = 'Loading...';
+  // rowDiv.appendChild(colDiv);
+  // boxDiv.appendChild(rowDiv);
+  //
+  // const boxFooter = document.createElement('div');
+  // boxFooter.className = 'box-footer border-box box-footer-theme';
+  // addActionButton(boxFooter);
+  // boxDiv.appendChild(boxFooter);
+  // cardDiv.appendChild(boxDiv);
   return cardDiv;
 }
 
