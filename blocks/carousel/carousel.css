@@ -237,7 +237,6 @@
 .block.carousel-section .carousel-slider .carousel-list {
     overflow: hidden;
     margin-left: 2rem;
-    height: 282px;
 }
 
 .block.carousel-section .carousel-slider .carousel-track {
@@ -259,6 +258,24 @@
 .block.carousel-section .carousel-slider .carousel-card {
     transition: opacity 0.5s ease;
     padding: 0.5rem;
+    min-width: 320px;
+    min-height: 205px;
+}
+
+@media (width >= 48rem) {
+    .block.carousel-section .carousel-slider .carousel-card {
+        min-width: 338px;
+        min-height: 205px;
+    }
+
+}
+
+@media (width >= 64rem) {
+    .block.carousel-section .carousel-slider .carousel-card {
+        min-width: 270px;
+        min-height: 281px;
+    }
+
 }
 
 .block.carousel-section .carousel-slider .carousel-card img {

@@ -77,17 +77,14 @@ function startUpdateCarousel(carouselSlider) {
   }, 2000);
 }
 
+// eslint-disable-next-line no-unused-vars
 function setCarouselView(type, carouselSlider) {
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
   const cards = Array.from(carouselTrack.children);
   const visibleCards = allowedCardsCount();
   const numberOfDots = cards.length - visibleCards + 1;
   if (numberOfDots > 1) {
-    let dotsContainer = carouselSlider.querySelector('.dots-container');
-    if (!dotsContainer) {
-      dotsContainer = document.createElement('div');
-      dotsContainer.className = 'dots-container border-box';
-    }
+    const dotsContainer = carouselSlider.querySelector('.dots-container');
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < numberOfDots; i++) {
       const dot = document.createElement('button');
@@ -99,9 +96,8 @@ function setCarouselView(type, carouselSlider) {
       });
     }
 
-    carouselSlider.appendChild(dotsContainer);
-     updateCarouselView(dotsContainer.firstChild);
-    // startUpdateCarousel(carouselSlider);
+    updateCarouselView(dotsContainer.firstChild);
+    startUpdateCarousel(carouselSlider);
   }
 }
 
@@ -374,15 +370,20 @@ function getRecommendationsCard(companies, type) {
   });
 }
 
-async function generateCardsView(type, carouselTrack, carouselSlider) {
+async function generateCardsView(type, carouselTrack) {
   fetchRecommendations(type).then((companies) => {
     if (companies) {
       const recommendationsCard = getRecommendationsCard(companies, type);
-      recommendationsCard.forEach((div) => {
-        carouselTrack.appendChild(div);
+      const existingCards = carouselTrack.children;
+      recommendationsCard.forEach((card, index) => {
+        if (index < existingCards.length) {
+        //  carouselTrack.replaceChild(card, existingCards[index]);
+        } else {
+        //  carouselTrack.appendChild(card);
+        }
       });
-      setCarouselView(type, carouselSlider);
     }
+    // setCarouselView(type, carouselSlider);
   });
 }
 
@@ -450,8 +451,11 @@ function addCarouselCards(carouselBody, type) {
   carouselSlider.appendChild(dotsContainer);
   carouselBody.appendChild(carouselSlider);
 
- // addPlaceholderCarouselCard(carouselTrack, type);
-  generateCardsView(type, carouselTrack, carouselSlider);
+  addPlaceholderCarouselCard(carouselTrack, type);
+  addPlaceholderCarouselCard(carouselTrack, type);
+  addPlaceholderCarouselCard(carouselTrack, type);
+  addPlaceholderCarouselCard(carouselTrack, type);
+  generateCardsView(type, carouselTrack);
 }
 
 function addDiscoverLink(carouselBody, discoverLink) {
