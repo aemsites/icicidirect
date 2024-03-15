@@ -85,9 +85,7 @@
 }
 
 .block.header .share-index-bar .big-menu {
-  display: flex;
-  flex-flow: row nowrap;
-  width: 52%;
+  display: none;
 }
 
 .block.header .share-index-bar .big-menu a {
@@ -95,6 +93,7 @@
   color: var(--color-gray-dark);
   padding-top: 8px;
   padding-bottom: 8px;
+  cursor: pointer;
 }
 
 .block.header .share-index-bar .big-menu a.selected {
@@ -494,8 +493,22 @@
   margin-right: 0.6rem;
 }
 
+/* CSS styles to apply when the screen width is more than 576 px and less than 768px */
+@media screen and (width >= 36rem) and  (width < 48rem) {
+  .block.header .share-index-bar {
+    display: block;
+    border-bottom: var(--line-width-hairline) solid var(--background-color-dark-grey);
+  }
+
+  .block.header .share-index-bar .section-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+}
+
 /* CSS styles to apply when the screen width is more than 768px */
-@media screen and (width >= 768px) {
+@media screen and (width >= 48rem) {
   .block.header .sidepanel {
     display: none;
   }
@@ -541,5 +554,12 @@
   .block.header .share-index-bar {
     display: block;
     border-bottom: var(--line-width-hairline) solid var(--background-color-dark-grey);
+  }
+
+  .block.header .share-index-bar .big-menu {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: flex-start;
+    width: 52%;
   }
 }
