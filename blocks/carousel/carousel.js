@@ -336,7 +336,7 @@ async function generateCardsView(type, carouselTrack, carouselSlider) {
     if (companies) {
       const recommendationsCard = getRecommendationsCard(companies, type);
       recommendationsCard.forEach((div) => {
-       // carouselTrack.appendChild(div);
+        carouselTrack.appendChild(div);
       });
       // setCarouselView(type, carouselSlider);
     }
