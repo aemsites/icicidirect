@@ -64,8 +64,26 @@ function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
 
+const fetchDynamicStockIndexData = () => [
+  {
+    id: 'spnNifty_n',
+    indexName: 'NIFTY',
+    stockValue: 22415.15,
+    change: 104.13,
+    changePercentage: 0.35,
+  },
+  {
+    id: 'spnSensex_s',
+    indexName: 'SENSEX',
+    stockValue: 73038.14,
+    change: -145.78,
+    changePercentage: -0.45,
+  },
+];
+
 export {
   fetchRecommendations,
   getMarginActionUrl,
   mockPredicationConstant,
+  fetchDynamicStockIndexData,
 };

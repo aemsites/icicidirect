@@ -179,7 +179,7 @@
 .block.header .sidepanel  {
   width: 16.875rem;
   position: fixed;
-  z-index: 1;
+  z-index: 10;
   height: 100%;
   top: 0;
   left: -16.875rem;
@@ -451,6 +451,8 @@
 
 /* stylelint-disable-next-line no-descending-specificity */
 .block.header .accordion details a, .accordion-item-expand {
+  font-size: var(--heading-font-size-sxs);
+  color: var(--color-light-gray);
   margin-left: 0.9rem;
   margin-right: 0.9rem;
 }
@@ -561,5 +563,10 @@
     flex-flow: row nowrap;
     align-items: flex-start;
     width: 52%;
+  }
+
+  .block.header .share-index-bar .dynamic-stock-index .stock-item .spn-date-time {
+    padding-right: 8px;
+    border-right: var(--line-width-hairline) solid var(--color-blue-dark);
   }
 }

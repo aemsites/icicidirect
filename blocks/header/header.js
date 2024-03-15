@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
 
 /**
  * Decorator for global navigation on top the page
@@ -406,6 +407,20 @@ const decorateHamburgerPanel = (fragment, block) => {
   block.append(sidePanelDiv);
 };
 
+/**
+ * Formats the date time in the format 'Mar 15, 2024 03:09 PM'
+ * @param {*} date input date to be formatted
+ * @returns formatted date and time
+ */
+const formattedDateTime = (date) => date.toLocaleString('en-US', {
+  month: 'short',
+  day: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+});
+
 const decorateShareIndexPanel = (fragment, block) => {
   const shareIndexPanelDiv = document.createElement('div');
   shareIndexPanelDiv.className = 'share-index-bar';
@@ -431,23 +446,16 @@ const decorateShareIndexPanel = (fragment, block) => {
   });
   const dynamicStockIndexDiv = document.createElement('div');
   dynamicStockIndexDiv.className = 'dynamic-stock-index';
-  // TODO: Get this dynamic data from the API
-  const dynamicStockData = [
-    {
-      id: 'spnNifty_n',
-      indexName: 'NIFTY',
-      stockValue: 22415.15,
-      change: 104.13,
-      changePercentage: 0.35,
-    },
-    {
-      id: 'spnSensex_s',
-      indexName: 'SENSEX',
-      stockValue: 73038.14,
-      change: -145.78,
-      changePercentage: -0.45,
-    },
-  ];
+  const stockItemDiv = document.createElement('div');
+  stockItemDiv.className = 'stock-item';
+  const dateTimeSpan = document.createElement('span');
+  dateTimeSpan.className = 'spn-date-time';
+  dateTimeSpan.innerText = formattedDateTime(new Date());
+  stockItemDiv.appendChild(dateTimeSpan);
+  dynamicStockIndexDiv.appendChild(stockItemDiv);
+
+  // TODO: Get this dynamic data from the web socket API
+  const dynamicStockData = fetchDynamicStockIndexData();
   dynamicStockData.forEach((singleStock) => {
     const stockDiv = document.createElement('div');
     stockDiv.className = 'stock-item';
