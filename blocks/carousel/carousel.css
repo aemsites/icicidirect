@@ -245,7 +245,7 @@
     top: 0;
     display: flex;
     transition: transform 0.5s ease;
-    /*min-height: 282px;*/
+    min-height: 282px;
 }
 
 .block.carousel-section .carousel-slider .carousel-track > * {
