@@ -3,15 +3,12 @@ Please always provide the [GitHub issue(s)](../issues) your PR is for, as well a
 Fix #<gh-issue-id>
 
 Test URLs:
-- Before: https://main--{repo}--{owner}.hlx.live/
-- After: https://<branch>--{repo}--{owner}.hlx.live/
+- Before: https://main--icicidirect--aemsites.hlx.live/research/equity
+- After: https://<branch>--icicidirect--aemsites.hlx.live/research/equity
 
 - [ ] New Blocks introduced in this PR
       If yes, please provide details below
-**Block Name** : For e.g. _cards_
-- [ ] Documented in sidekick library
 
-
-- [ ] New variations introduced in this PR
-**Variation Name** :  For e.g. _cards (grid)_
-- [ ] Documented in sidekick library
+Block Name    | Documentation
+------------- | -------------
+ For e.g. carousel | [doc-link](https://main--icicidirect--aemsites.hlx.page/tools/sidekick/library.html?plugin=blocks&path=/sidekick/blocks/carousel&index=0)
