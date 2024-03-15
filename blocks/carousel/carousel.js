@@ -77,7 +77,6 @@ function startUpdateCarousel(carouselSlider) {
   }, 2000);
 }
 
-// eslint-disable-next-line no-unused-vars
 function setCarouselView(type, carouselSlider) {
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
   const cards = Array.from(carouselTrack.children);
@@ -97,7 +96,7 @@ function setCarouselView(type, carouselSlider) {
     }
 
     updateCarouselView(dotsContainer.firstChild);
-   // startUpdateCarousel(carouselSlider);
+    startUpdateCarousel(carouselSlider);
   }
 }
 
@@ -170,37 +169,36 @@ function companyCardHeader(company) {
   headingWrap.className = 'heading-wrap border-box';
 
   const h4 = document.createElement('h4');
+  h4.title = company.name;
+  h4.textContent = company.name;
   headingWrap.appendChild(h4);
+
   const iconWrap = document.createElement('div');
   iconWrap.className = 'icon-wrap';
-  if (company) {
-    h4.title = company.name;
-    h4.textContent = company.name;
-    createIconLink(iconWrap, '../../icons/icon-bookmark.svg');
-    createIconLink(iconWrap, '../../icons/icon-share-2.svg');
-  }
+
+  createIconLink(iconWrap, '../../icons/icon-bookmark.svg');
+  createIconLink(iconWrap, '../../icons/icon-share-2.svg');
+
   headingWrap.appendChild(iconWrap);
   return headingWrap;
 }
 
 function addActionButton(boxFooter, company, type) {
+  const { action } = company;
   const btnWrap = document.createElement('div');
-  if (type === undefined || type === 'trading') {
+  if (type === 'trading') {
     btnWrap.className = 'btn-wrap border-box';
   }
-  if (company) {
-    const { action } = company;
-    const aSell = document.createElement('a');
-    aSell.href = getMarginActionUrl(action.toLowerCase());
-    aSell.className = `btn border-box btn-${action.toLowerCase()}`;
-    if (company.exit) {
-      aSell.classList.add('disabled');
-    }
-    aSell.target = '_blank';
-    aSell.tabIndex = 0;
-    aSell.textContent = `${action}`;
-    btnWrap.appendChild(aSell);
+  const aSell = document.createElement('a');
+  aSell.href = getMarginActionUrl(action.toLowerCase());
+  aSell.className = `btn border-box btn-${action.toLowerCase()}`;
+  if (company.exit) {
+    aSell.classList.add('disabled');
   }
+  aSell.target = '_blank';
+  aSell.tabIndex = 0;
+  aSell.textContent = `${action}`;
+  btnWrap.appendChild(aSell);
   boxFooter.appendChild(btnWrap);
 }
 
@@ -297,17 +295,18 @@ function getRow(company) {
   return rowDiv;
 }
 
-// eslint-disable-next-line no-unused-vars
-function getPlaceholderCarouselCard(companies, type) {
+function getPlaceholderCarouselCard() {
   const cardDiv = document.createElement('div');
   cardDiv.className = 'carousel-card carousel-card-placeholder border-box';
   return cardDiv;
 }
 
-function addPlaceholderCarouselCard(carouselTrack, type) {
-  const companies = Array.from({ length: 4 }, () => ({ name: 'Loading...' }));
-  const placeholderCard = getPlaceholderCarouselCard(companies, type);
-  carouselTrack.appendChild(placeholderCard);
+function addPlaceholderCarouselCards(carouselTrack) {
+  const numOfCard = allowedCardsCount();
+  for (let i = 0; i < numOfCard; i += 1) {
+    const placeholderCard = getPlaceholderCarouselCard();
+    carouselTrack.appendChild(placeholderCard);
+  }
 }
 function getRecommendationsCard(companies, type) {
   return companies.map((company) => {
@@ -344,15 +343,11 @@ function getRecommendationsCard(companies, type) {
 }
 
 async function generateCardsView(type, carouselTrack, carouselSlider) {
-  const widthAvailable = carouselTrack.offsetWidth;
-  const allowedCards = allowedCardsCount();
-  const cardWidth = widthAvailable / allowedCards;
   fetchRecommendations(type).then((companies) => {
     if (companies) {
       const recommendationsCard = getRecommendationsCard(companies, type);
       const existingCards = carouselTrack.children;
       recommendationsCard.forEach((card, index) => {
-        card.style.width = `${cardWidth}px`;
         if (index < existingCards.length) {
           carouselTrack.replaceChild(card, existingCards[index]);
         } else {
@@ -428,10 +423,7 @@ function addCarouselCards(carouselBody, type) {
   carouselSlider.appendChild(dotsContainer);
   carouselBody.appendChild(carouselSlider);
 
-  addPlaceholderCarouselCard(carouselTrack, type);
-  addPlaceholderCarouselCard(carouselTrack, type);
-  addPlaceholderCarouselCard(carouselTrack, type);
-  addPlaceholderCarouselCard(carouselTrack, type);
+  addPlaceholderCarouselCards(carouselTrack);
   generateCardsView(type, carouselTrack, carouselSlider);
 }
 
