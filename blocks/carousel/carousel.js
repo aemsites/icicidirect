@@ -343,20 +343,21 @@ function getRecommendationsCard(companies, type) {
 }
 
 async function generateCardsView(type, carouselTrack, carouselSlider) {
-  fetchRecommendations(type).then((companies) => {
-    if (companies) {
-      const recommendationsCard = getRecommendationsCard(companies, type);
-      const existingCards = carouselTrack.children;
-      recommendationsCard.forEach((card, index) => {
-        if (index < existingCards.length) {
-          carouselTrack.replaceChild(card, existingCards[index]);
-        } else {
-          carouselTrack.appendChild(card);
-        }
-      });
-    }
-    setCarouselView(type, carouselSlider);
-  });
+  // fetchRecommendations(type).then((companies) => {
+  //   if (companies) {
+  //     const recommendationsCard = getRecommendationsCard(companies, type);
+  //     const existingCards = carouselTrack.children;
+  //     recommendationsCard.forEach((card, index) => {
+  //       if (index < existingCards.length) {
+  //         carouselTrack.replaceChild(card, existingCards[index]);
+  //       } else {
+  //         carouselTrack.appendChild(card);
+  //       }
+  //     });
+  //   }
+  //
+  // });
+  setCarouselView(type, carouselSlider);
 }
 
 function addHighLightSection(carouselSection, highLightDiv, highLightIcon) {
