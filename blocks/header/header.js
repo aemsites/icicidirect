@@ -406,6 +406,86 @@ const decorateHamburgerPanel = (fragment, block) => {
   block.append(sidePanelDiv);
 };
 
+const decorateShareIndexPanel = (fragment, block) => {
+  const shareIndexPanelDiv = document.createElement('div');
+  shareIndexPanelDiv.className = 'share-index-bar';
+  const shareIndexContainer = document.createElement('div');
+  shareIndexContainer.className = 'section-container';
+  const bigMenuDiv = document.createElement('div');
+  bigMenuDiv.className = 'big-menu';
+  const bigMenuItems = fragment.querySelectorAll('.section.share-index-bar li');
+  bigMenuItems.forEach((singleItem, index) => {
+    const menuItemName = singleItem.innerText;
+    const menuLinkNode = singleItem.querySelector('a');
+    const url = menuLinkNode?.getAttribute('href');
+    const linkTag = document.createElement('a');
+    linkTag.className = 'big-menu-item';
+    linkTag.href = url || '';
+    if (index === 1) {
+      linkTag.classList.add('selected');
+    }
+    const singleMenuItem = document.createElement('div');
+    singleMenuItem.innerText = menuItemName;
+    linkTag.appendChild(singleMenuItem);
+    bigMenuDiv.appendChild(linkTag);
+  });
+  const dynamicStockIndexDiv = document.createElement('div');
+  dynamicStockIndexDiv.className = 'dynamic-stock-index';
+  // TODO: Get this dynamic data from the API
+  const dynamicStockData = [
+    {
+      id: 'spnNifty_n',
+      indexName: 'NIFTY',
+      stockValue: 22415.15,
+      change: 104.13,
+      changePercentage: 0.35,
+    },
+    {
+      id: 'spnSensex_s',
+      indexName: 'SENSEX',
+      stockValue: 73038.14,
+      change: -145.78,
+      changePercentage: -0.45,
+    },
+  ];
+  dynamicStockData.forEach((singleStock) => {
+    const stockDiv = document.createElement('div');
+    stockDiv.className = 'stock-item';
+    const stockNameSpan = document.createElement('span');
+    stockNameSpan.innerText = `${singleStock.indexName}: `;
+    stockDiv.appendChild(stockNameSpan);
+
+    const shareValueSpan = document.createElement('span');
+    shareValueSpan.className = 'share-value';
+    if (singleStock.change >= 0) {
+      shareValueSpan.classList.remove('negative');
+      shareValueSpan.classList.add('positive');
+    } else {
+      shareValueSpan.classList.remove('positive');
+      shareValueSpan.classList.add('negative');
+    }
+    shareValueSpan.innerText = `${singleStock.stockValue.toLocaleString()} `;
+    stockDiv.appendChild(shareValueSpan);
+
+    const shareChangeSpan = document.createElement('span');
+    shareChangeSpan.className = 'share-change';
+    shareChangeSpan.innerText = `${singleStock.change.toLocaleString()}(${singleStock.changePercentage}%)`;
+    if (singleStock.change >= 0) {
+      shareChangeSpan.classList.remove('share-down');
+      shareChangeSpan.classList.add('share-up');
+    } else {
+      shareChangeSpan.classList.remove('share-up');
+      shareChangeSpan.classList.add('share-down');
+    }
+    stockDiv.appendChild(shareChangeSpan);
+    dynamicStockIndexDiv.appendChild(stockDiv);
+  });
+  shareIndexContainer.appendChild(bigMenuDiv);
+  shareIndexContainer.appendChild(dynamicStockIndexDiv);
+  shareIndexPanelDiv.appendChild(shareIndexContainer);
+  block.appendChild(shareIndexPanelDiv);
+};
+
 /**
  * Event handlers specific to header blocks
  */
@@ -455,12 +535,14 @@ const addHeaderEventHandlers = () => {
 export default async function decorate(block) {
   // load nav as fragment
   const navMeta = getMetadata('nav');
-  const navPath = navMeta ? new URL(navMeta).pathname : '/nav';
+  const navPath = navMeta ? new URL(navMeta).pathname : '/draft/vivesing/nav';
   const fragment = await loadFragment(navPath);
   // Global navigator  starts here
   decorateGlobalNavigationBar(fragment, block);
   // Top bar section starts here
   decorateTopBarPanel(fragment, block);
+  // Decorate Share index section
+  decorateShareIndexPanel(fragment, block);
   // side panel section starts here
   decorateHamburgerPanel(fragment, block);
   // add header specific handlers
