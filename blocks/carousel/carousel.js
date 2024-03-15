@@ -338,7 +338,7 @@ async function generateCardsView(type, carouselTrack, carouselSlider) {
       recommendationsCard.forEach((div) => {
         carouselTrack.appendChild(div);
       });
-      // setCarouselView(type, carouselSlider);
+      setCarouselView(type, carouselSlider);
     }
   });
 }
