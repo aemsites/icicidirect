@@ -255,6 +255,10 @@ html {
   scroll-behavior: smooth;
 }
 
+header {
+  min-height: 5rem;
+}
+
 body {
   margin: 0;
   font: var(--font-weight-regular) 0.9rem Poppins, "Poppins Fallback", sans-serif;
@@ -388,6 +392,10 @@ main .section.padded > .section-container {
 }
 
 @media (width >= 768px) {
+  header {
+    min-height: 8rem;
+  }
+
   main .section {
     margin: 2.8rem 0;
   }
