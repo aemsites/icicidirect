@@ -264,7 +264,7 @@ html {
 }
 
 header {
-  min-height: 5rem;
+  min-height: 5.2rem;
 }
 
 body {
@@ -401,7 +401,7 @@ main .section.padded > .section-container {
 
 @media (width >= 768px) {
   header {
-    min-height: 8rem;
+    min-height: 8.4rem;
   }
 
   main .section {

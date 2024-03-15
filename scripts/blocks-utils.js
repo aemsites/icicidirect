@@ -46,7 +46,22 @@ const Viewport = (function initializeViewport() {
   };
 }());
 
+/**
+ * Formats the date time in the format 'Mar 15, 2024 03:09 PM'
+ * @param {*} date input date to be formatted
+ * @returns formatted date and time
+ */
+const formatDateTime = (date) => date && date.toLocaleString('en-US', {
+  month: 'short',
+  day: '2-digit',
+  year: 'numeric',
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: true,
+});
+
 export {
   isInViewport,
   Viewport,
+  formatDateTime,
 };

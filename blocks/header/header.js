@@ -1,6 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
+import { formatDateTime } from '../../scripts/blocks-utils.js';
 
 /**
  * Decorator for global navigation on top the page
@@ -407,20 +408,6 @@ const decorateHamburgerPanel = (fragment, block) => {
   block.append(sidePanelDiv);
 };
 
-/**
- * Formats the date time in the format 'Mar 15, 2024 03:09 PM'
- * @param {*} date input date to be formatted
- * @returns formatted date and time
- */
-const formattedDateTime = (date) => date.toLocaleString('en-US', {
-  month: 'short',
-  day: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: true,
-});
-
 const decorateShareIndexPanel = (fragment, block) => {
   const shareIndexPanelDiv = document.createElement('div');
   shareIndexPanelDiv.className = 'share-index-bar';
@@ -450,7 +437,7 @@ const decorateShareIndexPanel = (fragment, block) => {
   stockItemDiv.className = 'stock-item';
   const dateTimeSpan = document.createElement('span');
   dateTimeSpan.className = 'spn-date-time';
-  dateTimeSpan.innerText = formattedDateTime(new Date());
+  dateTimeSpan.innerText = formatDateTime(new Date());
   stockItemDiv.appendChild(dateTimeSpan);
   dynamicStockIndexDiv.appendChild(stockItemDiv);
 
