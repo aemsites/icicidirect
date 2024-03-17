@@ -1,5 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
+import { formatDateTime } from '../../scripts/blocks-utils.js';
 
 /**
  * Decorator for global navigation on top the page
@@ -9,7 +11,7 @@ const decorateGlobalNavigationBar = (fragment, block) => {
   const globalNavigator = document.createElement('div');
   globalNavigator.className = 'global-navigator';
   const containerDiv = document.createElement('div');
-  containerDiv.className = 'container';
+  containerDiv.className = 'section-container';
   globalNavigator.append(containerDiv);
   const navigationItems = fragment.querySelectorAll('.section.global-navigator li');
 
@@ -54,10 +56,94 @@ const buildHamburgerIcon = () => {
 };
 
 /**
+ * Utility method for extracting the text and ids from the strings with ids in the square brackets
+ * for example string like 'sample value [id123]'
+ * would return {itemID: 'id123', itemText: 'sample value'}
+ * @param {*} str with ids in square brackets
+ * @returns object with text and id
+ */
+const extractValues = (str) => {
+  // Regular expression to match the value inside square brackets
+  const insideBrackets = str.match(/\[(.*?)\]/);
+  const valueInside = insideBrackets ? insideBrackets[1] : '';
+
+  // Regular expression to match the value outside square brackets
+  const valueOutside = str.replace(/\[(.*?)\]/, '').trim() || '';
+
+  return {
+    itemID: valueInside,
+    itemText: valueOutside,
+  };
+};
+
+const updateCategorySelection = (targetElement) => {
+  const searchCategories = document.querySelectorAll('#header-search-categories li');
+  searchCategories.forEach((singleItem) => {
+    singleItem.classList.remove('selected');
+  });
+  targetElement.classList.add('selected');
+  const newCategorySelectedText = targetElement.innerText;
+  const newCategorySelectedId = targetElement.id;
+  const selectedCategory = document.querySelector('.block.header .search-bar .category-picker .dropdown-toggle .selected-category');
+  selectedCategory.id = newCategorySelectedId;
+  selectedCategory.innerText = newCategorySelectedText;
+  // close the menuselector once items are clicked
+  document.querySelector('.block.header .search-bar .category-picker .dropdown-menu-container').classList.toggle('visible');
+};
+
+const getSearchCategoryDropDown = (fragment) => {
+  const menuItems = [];
+  const rawMenuItems = fragment.querySelectorAll('.section.dropdown-menu li');
+  rawMenuItems.forEach((singleItem) => {
+    const singleMenuItem = extractValues(singleItem.innerText);
+    menuItems.push(singleMenuItem);
+  });
+
+  const dropdownSelectDiv = document.createElement('div');
+  dropdownSelectDiv.className = 'dropdown-select';
+
+  const dropdownDiv = document.createElement('div');
+  dropdownDiv.className = 'dropdown-toggle';
+  const dropdownText = menuItems[0].itemText;
+  const dropdownId = menuItems[0].itemID;
+  dropdownDiv.innerHTML = `<span class="selected-category" id=${dropdownId}>${dropdownText}</span><span class="icon-down-arrow icon">&#xe905;</span>`;
+
+  const dropdownMenuContainer = document.createElement('div');
+  dropdownMenuContainer.className = 'dropdown-menu-container';
+
+  const ul = document.createElement('ul');
+  ul.className = 'dropdown-menu';
+  ul.id = 'header-search-categories';
+
+  menuItems.forEach((item) => {
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    const span = document.createElement('span');
+    span.textContent = item.itemText;
+    a.appendChild(span);
+    li.appendChild(a);
+    li.addEventListener('click', (event) => {
+      updateCategorySelection(event.currentTarget);
+    });
+    li.id = item.itemID;
+    ul.appendChild(li);
+  });
+
+  dropdownMenuContainer.appendChild(ul);
+  dropdownSelectDiv.appendChild(dropdownDiv);
+  dropdownSelectDiv.appendChild(dropdownMenuContainer);
+  dropdownDiv.addEventListener('click', () => {
+    dropdownMenuContainer.classList.toggle('visible');
+  });
+
+  return dropdownSelectDiv;
+};
+
+/**
  * Builds the top search bar section
  * @returns the search bar wrapped in div
  */
-const decorateTopSearchBar = () => {
+const decorateTopSearchBar = (fragment) => {
   const searchBarDiv = document.createElement('div');
   searchBarDiv.className = 'search-bar';
   const searchBarContainer = document.createElement('div');
@@ -65,10 +151,8 @@ const decorateTopSearchBar = () => {
 
   const categoryPickerDiv = document.createElement('div');
   categoryPickerDiv.className = 'category-picker';
-  categoryPickerDiv.innerHTML = `
-    <div class="categories">All</div>
-    <div class="dropdown">&#xe905;</div>
-  `;
+  categoryPickerDiv.appendChild(getSearchCategoryDropDown(fragment));
+
   const searchBoxDiv = document.createElement('div');
   searchBoxDiv.className = 'search-box';
   searchBoxDiv.innerHTML = `
@@ -145,7 +229,7 @@ const decorateTopBarPanel = (fragment, block) => {
   const topBarSection = document.createElement('div');
   topBarSection.className = 'top-bar';
   const topBarContainerDiv = document.createElement('div');
-  topBarContainerDiv.className = 'container';
+  topBarContainerDiv.className = 'section-container';
   topBarContainerDiv.id = 'top-bar';
   topBarSection.append(topBarContainerDiv);
   const row1Div = document.createElement('div');
@@ -157,7 +241,7 @@ const decorateTopBarPanel = (fragment, block) => {
   // Main ICICI Logo decoration
   const logoDiv = decorateMainHeaderLogo(fragment);
   // Build the search bar section
-  const searchBarDiv = decorateTopSearchBar();
+  const searchBarDiv = decorateTopSearchBar(fragment);
   // Add mobile specific login button
   const loginButton = buildLoginButton();
   // Add mobile specific search icon
@@ -324,6 +408,79 @@ const decorateHamburgerPanel = (fragment, block) => {
   block.append(sidePanelDiv);
 };
 
+const decorateShareIndexPanel = (fragment, block) => {
+  const shareIndexPanelDiv = document.createElement('div');
+  shareIndexPanelDiv.className = 'share-index-bar';
+  const shareIndexContainer = document.createElement('div');
+  shareIndexContainer.className = 'section-container';
+  const bigMenuDiv = document.createElement('div');
+  bigMenuDiv.className = 'big-menu';
+  const bigMenuItems = fragment.querySelectorAll('.section.share-index-bar li');
+  bigMenuItems.forEach((singleItem, index) => {
+    const menuItemName = singleItem.innerText;
+    const menuLinkNode = singleItem.querySelector('a');
+    const url = menuLinkNode?.getAttribute('href');
+    const linkTag = document.createElement('a');
+    linkTag.className = 'big-menu-item';
+    linkTag.href = url || '';
+    if (index === 1) {
+      linkTag.classList.add('selected');
+    }
+    const singleMenuItem = document.createElement('div');
+    singleMenuItem.innerText = menuItemName;
+    linkTag.appendChild(singleMenuItem);
+    bigMenuDiv.appendChild(linkTag);
+  });
+  const dynamicStockIndexDiv = document.createElement('div');
+  dynamicStockIndexDiv.className = 'dynamic-stock-index';
+  const stockItemDiv = document.createElement('div');
+  stockItemDiv.className = 'stock-item';
+  const dateTimeSpan = document.createElement('span');
+  dateTimeSpan.className = 'spn-date-time';
+  dateTimeSpan.innerText = formatDateTime(new Date());
+  stockItemDiv.appendChild(dateTimeSpan);
+  dynamicStockIndexDiv.appendChild(stockItemDiv);
+
+  // TODO: Get this dynamic data from the web socket API
+  const dynamicStockData = fetchDynamicStockIndexData();
+  dynamicStockData.forEach((singleStock) => {
+    const stockDiv = document.createElement('div');
+    stockDiv.className = 'stock-item';
+    const stockNameSpan = document.createElement('span');
+    stockNameSpan.innerText = `${singleStock.indexName}: `;
+    stockDiv.appendChild(stockNameSpan);
+
+    const shareValueSpan = document.createElement('span');
+    shareValueSpan.className = 'share-value';
+    if (singleStock.change >= 0) {
+      shareValueSpan.classList.remove('negative');
+      shareValueSpan.classList.add('positive');
+    } else {
+      shareValueSpan.classList.remove('positive');
+      shareValueSpan.classList.add('negative');
+    }
+    shareValueSpan.innerText = `${singleStock.stockValue.toLocaleString()} `;
+    stockDiv.appendChild(shareValueSpan);
+
+    const shareChangeSpan = document.createElement('span');
+    shareChangeSpan.className = 'share-change';
+    shareChangeSpan.innerText = `${singleStock.change.toLocaleString()}(${singleStock.changePercentage}%)`;
+    if (singleStock.change >= 0) {
+      shareChangeSpan.classList.remove('share-down');
+      shareChangeSpan.classList.add('share-up');
+    } else {
+      shareChangeSpan.classList.remove('share-up');
+      shareChangeSpan.classList.add('share-down');
+    }
+    stockDiv.appendChild(shareChangeSpan);
+    dynamicStockIndexDiv.appendChild(stockDiv);
+  });
+  shareIndexContainer.appendChild(bigMenuDiv);
+  shareIndexContainer.appendChild(dynamicStockIndexDiv);
+  shareIndexPanelDiv.appendChild(shareIndexContainer);
+  block.appendChild(shareIndexPanelDiv);
+};
+
 /**
  * Event handlers specific to header blocks
  */
@@ -332,7 +489,7 @@ const addHeaderEventHandlers = () => {
    * Handler for changing the plus icon to minus icon when sub items are
    * expanded in the hamburger list
    */
-  const detailsElements = document.querySelectorAll('.accordion details');
+  const detailsElements = document.querySelectorAll('.block.header .accordion details');
   const sidePanelListExpandHandler = (event) => {
     const targetElement = event.target;
     const detailsElement = targetElement.closest('details');
@@ -379,6 +536,8 @@ export default async function decorate(block) {
   decorateGlobalNavigationBar(fragment, block);
   // Top bar section starts here
   decorateTopBarPanel(fragment, block);
+  // Decorate Share index section
+  decorateShareIndexPanel(fragment, block);
   // side panel section starts here
   decorateHamburgerPanel(fragment, block);
   // add header specific handlers

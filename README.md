@@ -2,8 +2,8 @@
 Your project's description...
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.hlx.page/
-- Live: https://main--{repo}--{owner}.hlx.live/
+- Preview: https://main--icicidirect--aemsites.hlx.page/research/equity
+- Live: https://main--icicidirect--aemsites.hlx.live/research/equity
 
 ## Installation
 

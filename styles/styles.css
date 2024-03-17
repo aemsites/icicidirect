@@ -17,6 +17,7 @@
   --color-dark: #262B36;
   --color-black: black;
   --color-light-gray: #8F8F8F;
+  --color-lighter-gray: #E1E1E1;
   --color-gray: #6c757d;
   --color-gray-dark: #4A4A4A;
   --color-light-gray-dark: #979797;
@@ -33,6 +34,7 @@
   --color-purple: #6f42c1;
   --color-pink: #e83e8c;
   --color-red: #da0000;
+  --color-maroon: #97291e;
   --color-yellow: #ffc107;
   --color-teal: #20c997;
   --color-cyan: #17a2b8;
@@ -62,7 +64,6 @@
   --color-diable-element: #D1D1D1;
   --color-disable-dot: #D1D1D1;
   
-  
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
@@ -88,7 +89,9 @@
   --heading-font-size-s: 18px;
   --heading-font-size-ms: 16px;
   --heading-font-size-xs: 14px;
+  --heading-font-size-sxs: 13px;
   --heading-font-size-mxs: 12px;
+  --heading-font-size-xxs: 11px;
 
   /* Heading Variables */
   --h1-font-size-desktop: var(--heading-font-size-xxl);
@@ -109,6 +112,29 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
   --font-weight-bolder: 800;
+
+  /* Line Width */
+  --line-width-hairline: 1px;
+  --line-width-thin: 2px;
+  --line-width-extra-light: 3px;
+
+  /* margin and fine spaces */
+  --space-1px: 0.006rem;
+  --space-2px: 0.13rem;
+  --space-3px: 0.19rem;
+  --space-4px: 0.25rem;
+  --space-5px: 0.313rem;
+  --space-6px: 0.375rem;
+  --space-7px: 0.438rem;
+  --space-8px: 0.5rem;
+  --space-9px: 0.563rem;
+  --space-10px: 0.625rem;
+  --space-11px: 0.688rem;
+  --space-12px: 0.75rem;
+  --space-13px: 0.813rem;
+  --space-14px: 0.875rem;
+  --space-15px: 0.938rem;
+  
 }
 
 *, *::before, *::after { 
@@ -235,6 +261,10 @@ html {
   font-family: sans-serif;
   line-height: 1.15;
   scroll-behavior: smooth;
+}
+
+header {
+  min-height: 5.2rem;
 }
 
 body {
@@ -420,6 +450,10 @@ main .section.padded > .section-container {
 }
 
 @media (width >= 768px) {
+  header {
+    min-height: 8.4rem;
+  }
+
   main .section {
     margin: 2.8rem 0;
   }

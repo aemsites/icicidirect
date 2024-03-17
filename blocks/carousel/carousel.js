@@ -432,7 +432,7 @@ function getHighlightIcon(block) {
   const iconElement = block.querySelector('picture');
   return iconElement;
 }
-export default function decorate(block) {
+export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const { type } = blockConfig;
   const { title } = blockConfig;
