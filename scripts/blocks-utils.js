@@ -46,7 +46,16 @@ const Viewport = (function initializeViewport() {
   };
 }());
 
+function createDiv(tagname, className) {
+  const div = document.createElement(tagname);
+  if (className) {
+    div.classList.add(className);
+  }
+  return div;
+}
+
 export {
   isInViewport,
   Viewport,
+  createDiv,
 };

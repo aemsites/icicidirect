@@ -1,18 +1,41 @@
-import { createOptimizedPicture } from '../../scripts/aem.js';
+import { createDiv } from '../../scripts/blocks-utils.js';
 
 export default function decorate(block) {
   /* change to ul, li */
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
     const li = document.createElement('li');
-    while (row.firstElementChild) li.append(row.firstElementChild);
-    [...li.children].forEach((div) => {
-      if (div.children.length === 1 && div.querySelector('picture')) div.className = 'cards-card-image';
-      else div.className = 'cards-card-body';
+    [...row.children].forEach((col, index) => {
+      if (index === 0) {
+        col.className = 'cards-title';
+      } else if (index === 1) {
+        col.className = 'cards-description';
+      } else if (index === 2) {
+        col.className = 'cards-powerby';
+        const powerbyContent = createDiv('div', '');
+        const powerbyIcon = createDiv('div', 'socialshare');
+        powerbyContent.append(...col.childNodes);
+        const button = createDiv('button', '');
+        const image = createDiv('img', '');
+        image.src = '../../icons/gray-share-icon.svg';
+        image.alt = 'gray-share-icon';
+        button.append(image);
+        powerbyIcon.append(button);
+        // [...col.children].forEach((liItem) => {
+        //   const icon = liItem.querySelector('a');
+        //   if (icon) {
+        //     powerbyIcon.append(liItem);
+        //   } else {
+        //     powerbyContent.append(liItem);
+        //   }
+        // });
+        col.append(powerbyContent);
+        col.append(powerbyIcon);
+      }
+      li.append(col);
     });
     ul.append(li);
   });
-  ul.querySelectorAll('img').forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
   block.textContent = '';
   block.append(ul);
 }

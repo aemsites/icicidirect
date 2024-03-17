@@ -1,31 +1,110 @@
-.cards > ul {
+.block.cards > ul {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(278px, 1fr));
-  grid-gap: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
 
-.cards > ul > li {
-  border: 1px solid var(--dark-color);
-  background-color: var(--color-white)
+.block.cards > ul > li {
+  flex: 0 0 100%;
+  max-width: 100%;
+  background: #FCFCFC;
+  padding: 20px;
+  border: 1px solid #D1D1D1;
+  height: 100%;
+  position: relative;
 }
 
-.cards .cards-card-body {
-  margin: 16px;
+.block.cards .cards-title h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4A4A4A;
+  margin-bottom: 15px;
+  height: 46px;
+  overflow: hidden;
 }
 
-.cards .cards-card-image {
-  line-height: 0;
+.block.cards .cards-title h3 a {
+  font-size: 18px;
+  font-weight: 600;
+  color: #4A4A4A;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.cards .cards-card-body > *:first-child {
-  margin-top: 0;
+.block.cards .cards-description {
+  font-size: 15px;
+  line-height: 20px;
+  color: #4A4A4A;
+  word-break: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  height: 60px;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  margin-bottom: 40px;
 }
 
-.cards > ul > li img {
+.block.cards .cards-description ul li {
+  text-align: justify;
+  list-style-type: disc;
+}
+
+.block.cards .cards-description li::marker {
+  color: var(--color-gray-dark);
+}
+
+.block.cards .cards-powerby {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
+  left: 0;
+  padding: 5px 20px;
+  bottom: 10px;
+  margin: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+.block.cards .cards-powerby p {
+  margin-bottom: 0;
+  font-size: 11px;
+  line-height: normal;
+  color: #9B9B9B;
+}
+
+.block.cards .cards-powerby .socialshare {
+  width: 74px;
+}
+
+.block.cards .cards-powerby .socialshare button {
+  border: unset;
+  background-color: unset;
+  cursor: pointer;
+}
+
+
+@media (width >= 576px) {
+  .block.cards > ul > li {
+    flex: 0 0 50%;
+    max-width: 48%;
+  }
+
+  .block.cards .cards-powerby .socialshare {
+    width: unset;
+  }
+}
+
+@media (width >= 992px) {
+  .block.cards > ul > li {
+    flex: 0 0 33.3333%;
+    max-width: 31.5%;
+  }
 }

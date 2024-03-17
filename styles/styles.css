@@ -285,8 +285,22 @@ h5 {
 }
 
 p, dl, ol, ul, pre, blockquote {
-  margin-top: 0;
-  margin-bottom: 1em;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+}
+
+p {
+  font: var(--font-weight-regular) var(--font-size-16px) / var(--font-size-24px) Poppins, "Poppins Fallback", sans-serif;
+  color: var(--text-color-light);
+  margin-bottom: 1.25rem;
+}
+
+ul li, ol li {
+  font: var(--font-weight-regular) 1rem / 1.25rem Poppins, "Poppins Fallback", sans-serif;
+  list-style-position: inside;
 }
 
 dt {
@@ -350,6 +364,23 @@ a:not([href]):hover {
   text-decoration: none;
 }
 
+a.button:any-link {
+  display: inline-block;
+  font-size: var(--heading-font-size-ms);
+  line-height: 2.375rem;
+  min-height: 3.125rem;
+  font-weight: var(--font-weight-semibold);
+  min-width: 12.25rem;
+  background: var(--button-color-orange);
+  color: var(--color-white);
+  text-transform: uppercase;
+  border-radius: 1.875rem;
+  padding: 0.3125rem 1.25rem;
+  border: 0.0625rem solid transparent;
+  text-decoration: none;
+  cursor: pointer;   
+}
+
 main img {
   max-width: 100%;
   width: auto;
@@ -367,6 +398,25 @@ main .section.padded > .section-container {
   padding: 0 1rem;
   margin-right: auto;
   margin-left: auto;
+}
+
+/* cards sections */
+.section.cards-container {
+  padding: 25px 0;
+  box-shadow: inset 0px 20px 40px rgba(151, 151, 151, 0.2);
+  margin: unset;
+}
+
+.section.cards-container .button-container {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+@media (width >= 576px) {
+  /* cards sections */
+  .section.cards-container {
+    padding: 40px 0;
+  }
 }
 
 @media (width >= 768px) {

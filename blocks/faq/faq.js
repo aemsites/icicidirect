@@ -1,10 +1,4 @@
-function createDiv(tagname, className) {
-  const div = document.createElement(tagname);
-  if (className) {
-    div.classList.add(className);
-  }
-  return div;
-}
+import { createDiv } from '../../scripts/blocks-utils.js';
 
 function addEvent(faqTitle, block) {
   faqTitle.addEventListener('click', () => {
