@@ -51,6 +51,7 @@
   --text-color-blue: #043C6D;
   --link-color-blue: #4b9dff;
   --link-color-dark-blue: #415270;
+  --link-color-dark-gray : #3d3d3d;
   --button-color-orange: #E87817;
   --background-color-light-grey: #FCFCFC;
   --background-color-transparent: transparent;
@@ -63,6 +64,11 @@
   --border-color-gray: #D1D1D1;
   --color-diable-element: #D1D1D1;
   --color-disable-dot: #D1D1D1;
+  --color-footer-top-note-blue: #0e1f35;
+  --color-footer-top-number-blue: #004c84;
+  --color-footer-gray: #a3a3a3;
+  --box-shadow-footer-top-gray: #0e1f354d;
+  --veritcal-line-footer-top-gray: #9797974d;
   
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -70,6 +76,7 @@
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
   /* body sizes */
+  --body-font-size-xxxl: 26px;
   --body-font-size-xxl: 22px;
   --body-font-size-xl: 20px;
   --body-font-size-l: 18px;
@@ -119,7 +126,7 @@
   --line-width-extra-light: 3px;
 
   /* margin and fine spaces */
-  --space-1px: 0.006rem;
+  --space-1px: 0.06rem;
   --space-2px: 0.13rem;
   --space-3px: 0.19rem;
   --space-4px: 0.25rem;
