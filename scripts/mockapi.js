@@ -23,6 +23,7 @@ const apiEndPoints = {
   investing: '/draft/anagarwa/investingideas.json',
   oneclickportfolio: '/draft/anagarwa/oneclickportfolio.json',
   muhratpicks: '/draft/anagarwa/muhratpicks.json',
+  marketinsight: '/draft/jiang/marketinsight.json',
 };
 
 async function fetchRecommendations(type) {
@@ -53,6 +54,10 @@ async function fetchRecommendations(type) {
       minAmount: company.minAmount,
       riskProfile: company.riskProfile,
       buyingRange: company.buyingRange,
+      title: company.title,
+      description: company.description,
+      link: company.link,
+      publishedon: company.publishedon,
     }));
     return companies;
   } catch (error) {

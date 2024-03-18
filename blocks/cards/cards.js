@@ -21,14 +21,6 @@ export default function decorate(block) {
         image.alt = 'gray-share-icon';
         button.append(image);
         powerbyIcon.append(button);
-        // [...col.children].forEach((liItem) => {
-        //   const icon = liItem.querySelector('a');
-        //   if (icon) {
-        //     powerbyIcon.append(liItem);
-        //   } else {
-        //     powerbyContent.append(liItem);
-        //   }
-        // });
         col.append(powerbyContent);
         col.append(powerbyIcon);
       }

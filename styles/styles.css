@@ -49,6 +49,7 @@
   --text-color-normal: #212529;
   --text-color-light: #4a4a4a;
   --text-color-blue: #043C6D;
+  --text-color-gray: #9B9B9B;
   --link-color-blue: #4b9dff;
   --link-color-dark-blue: #415270;
   --button-color-orange: #E87817;
@@ -57,6 +58,7 @@
   --background-color-unset: unset;
   --background-color-disable: unset;
   --background-color-dark-grey: #D8D8D8;
+  --background-color-grey: #97979733;
   --background-color-light-orange: #FAE4D1;
   --background-color-light-blue: #EFF6FF;
   --border-color-light-gray: #E1E8EE;
@@ -432,9 +434,13 @@ main .section.padded > .section-container {
 
 /* cards sections */
 .section.cards-container {
-  padding: 25px 0;
-  box-shadow: inset 0px 20px 40px rgba(151, 151, 151, 0.2);
+  padding: 1.5625rem 0;
+  box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
   margin: unset;
+}
+
+.section.cards-container h2 {
+  text-align: center;
 }
 
 .section.cards-container .button-container {
@@ -442,14 +448,14 @@ main .section.padded > .section-container {
   margin-top: 1.5rem;
 }
 
-@media (width >= 576px) {
+@media (width >= 36rem) {
   /* cards sections */
   .section.cards-container {
-    padding: 40px 0;
+    padding: 2.5rem 0;
   }
 }
 
-@media (width >= 768px) {
+@media (width >= 48rem) {
   header {
     min-height: 8.4rem;
   }
