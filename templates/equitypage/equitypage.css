@@ -5,19 +5,38 @@
 .equitypage h1 {
   color: var(--primary);
   text-align: center;
-  font-size: var(--heading-font-size-xxxl);
+  font-size: var(--heading-font-size-ml);
   font-weight: var(--font-weight-semibold);
-  margin-bottom: 2rem;
+  margin-bottom: 1.125rem;
 } 
 
 .equitypage h2 {
   color: var(--primary);
   text-align: center;
-  font-size: var(--heading-font-size-xmxl);
+  font-size: var(--heading-font-size-m);
   font-weight: var(--font-weight-bold);
-  margin-bottom: 2rem;
+  margin-bottom: 1.125rem;
 }
 
 .equitypage p {
   font-size: var(--heading-font-size-ms);
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .equitypage h1 {
+    color: var(--primary);
+    text-align: center;
+    font-size: var(--heading-font-size-xxxl);
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: 2rem;
+  } 
+  
+  .equitypage h2 {
+    color: var(--primary);
+    text-align: center;
+    font-size: var(--heading-font-size-xmxl);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: 2rem;
+  }
 }

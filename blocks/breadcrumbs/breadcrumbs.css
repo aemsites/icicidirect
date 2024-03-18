@@ -1,0 +1,65 @@
+.section.breadcrumbs-container {
+  margin-top: 0;
+  margin-bottom: 0;
+  min-height: 56px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.block.breadcrumbs a {
+  text-decoration: none;
+}
+
+.block.breadcrumbs .breadcrumbs-list {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+
+}
+
+.block.breadcrumbs .breadcrumbs-list a:not(:first-of-type) {
+  margin-left: 8px;
+}
+
+.block.breadcrumbs .breadcrumbs-list div {
+  font-size: 13px;
+  color: var(--link-color-orange);
+  padding-right: 8px;
+  line-height: 16px;
+}
+
+.block.breadcrumbs .breadcrumbs-list .active div {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.block.breadcrumbs .breadcrumbs-list a:not(.active) div {
+  border-right: 2px solid var(--color-footer-gray);
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .section.breadcrumbs-container {
+    margin-top: 0;
+    margin-bottom: 0;
+    min-height: 60px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+  }
+
+  .block.breadcrumbs .breadcrumbs-list div {
+    font-size: 22px;
+    color: var(--link-color-orange);
+    padding-right: 14px;
+    line-height: 16px;
+  }
+
+  .block.breadcrumbs .breadcrumbs-list a {
+    margin-left: 14px;
+  }
+}
