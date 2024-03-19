@@ -1,7 +1,7 @@
 .section.breadcrumbs-container {
   margin-top: 0;
   margin-bottom: 0;
-  min-height: 56px;
+  min-height: 3.5rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -21,23 +21,23 @@
 }
 
 .block.breadcrumbs .breadcrumbs-list a:not(:first-of-type) {
-  margin-left: 8px;
+  margin-left: var(--space-8px);
 }
 
 .block.breadcrumbs .breadcrumbs-list div {
-  font-size: 13px;
+  font-size: var(--space-13px);
   color: var(--link-color-orange);
-  padding-right: 8px;
-  line-height: 16px;
+  padding-right: var(--space-8px);
+  line-height: 1rem;
 }
 
 .block.breadcrumbs .breadcrumbs-list .active div {
   color: var(--primary);
-  font-weight: 600;
+  font-weight: var(--font-weight-semibold);
 }
 
 .block.breadcrumbs .breadcrumbs-list a:not(.active) div {
-  border-right: 2px solid var(--color-footer-gray);
+  border-right: var(--line-width-thin) solid var(--color-footer-gray);
 }
 
 /* CSS styles to apply when the screen width is more than 768px */
@@ -45,7 +45,7 @@
   .section.breadcrumbs-container {
     margin-top: 0;
     margin-bottom: 0;
-    min-height: 60px;
+    min-height: 3.75rem;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -53,13 +53,13 @@
   }
 
   .block.breadcrumbs .breadcrumbs-list div {
-    font-size: 22px;
+    font-size: var(--body-font-size-xxl);
     color: var(--link-color-orange);
-    padding-right: 14px;
-    line-height: 16px;
+    padding-right: var(--space-14px);
+    line-height: 1rem;
   }
 
   .block.breadcrumbs .breadcrumbs-list a {
-    margin-left: 14px;
+    margin-left: var(--space-14px);
   }
 }
