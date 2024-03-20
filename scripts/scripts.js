@@ -11,7 +11,6 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  getMetadata,
 } from './aem.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -57,42 +56,6 @@ function buildAutoBlocks(main) {
 }
 
 /**
- * Decorates per the template.
- */
-export async function loadTemplate(doc, templateName) {
-  try {
-    const cssLoaded = new Promise((resolve) => {
-      loadCSS(`${window.hlx.codeBasePath}/templates/${templateName}/${templateName}.css`).then((resolve)).catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error(`failed to load css module for ${templateName}`, err.target.href);
-        resolve();
-      });
-    });
-    const decorationComplete = new Promise((resolve) => {
-      (async () => {
-        try {
-          const mod = await import(`../templates/${templateName}/${templateName}.js`);
-          if (mod.default) {
-            await mod.default(doc);
-          }
-        } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log(`failed to load module for ${templateName}`, error);
-        }
-        resolve();
-      })();
-    });
-
-    document.body.classList.add(`${templateName}-template`);
-
-    await Promise.all([cssLoaded, decorationComplete]);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log(`failed to load block ${templateName}`, error);
-  }
-}
-
-/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -112,14 +75,10 @@ export function decorateMain(main) {
  */
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
-  const templateName = getMetadata('template');
-  decorateTemplateAndTheme(templateName);
+  decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
-    if (templateName) {
-      await loadTemplate(doc, templateName);
-    }
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
   }
