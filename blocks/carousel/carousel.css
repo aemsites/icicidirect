@@ -9,7 +9,12 @@
     vertical-align: baseline;
 }
 
-.block.carousel-section div, span, strong, p, a , i {
+.block.carousel-section div,
+.block.carousel-section span,
+.block.carousel-section strong,
+.block.carousel-section p,
+.block.carousel-section a,
+.block.carousel-section i {
     margin: 0;
     padding: 0;
     border: 0;
