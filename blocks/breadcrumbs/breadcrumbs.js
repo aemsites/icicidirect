@@ -1,8 +1,8 @@
 /**
- * decorates the breadcrumbs
+ * decorates the breadcrumbs, mainly the body's top breadcrumbs
  * @param {Element} block The breadcrumbs block element
  */
-const decorateBreadCrumbs = (block) => {
+export default async function decorate(block) {
   [...block.children].forEach((singleItem, index, arr) => {
     const linkTag = singleItem.querySelector('a');
     linkTag.classList.add('breadcrumb-link');
@@ -17,12 +17,4 @@ const decorateBreadCrumbs = (block) => {
     breadcrumbItemDiv.innerText = breadcrumbTitle;
     linkTag.appendChild(breadcrumbItemDiv);
   });
-};
-
-/**
- * decorates the breadcrumbs, mainly the body's top breadcrumbs
- * @param {Element} block The breadcrumbs block element
- */
-export default async function decorate(block) {
-  decorateBreadCrumbs(block);
 }
