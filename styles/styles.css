@@ -101,7 +101,7 @@
   --heading-font-size-xxs: 11px;
 
   /* Heading Variables */
-  --h1-font-size-desktop: var(--heading-font-size-xxl);
+  --h1-font-size-desktop: var(--heading-font-size-xxxl);
   --h1-font-size-mobile: var(--heading-font-size-ml);
   --h2-font-size-desktop: var(--heading-font-size-xmxl);
   --h2-font-size-mobile: var(--heading-font-size-m);
@@ -301,12 +301,15 @@ h4, h5, h6 {
 
 h1 {
   font-size: var(--h1-font-size-mobile);
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 h2 {
   font-size: var(--h2-font-size-mobile);
+  font-weight: var(--font-weight-bold);
   margin-bottom: 1rem;
+  text-align: center;
 }
 
 h3 {
@@ -319,6 +322,11 @@ h4 {
 
 h5 {
   font-size: var(--h5-font-size-mobile);
+}
+
+p {
+  font-size: var(--body-font-size-m);
+  color: var(--color-gray-dark);
 }
 
 p, dl, ol, ul, pre, blockquote {
@@ -406,7 +414,7 @@ main .section.padded > .section-container {
   margin-left: auto;
 }
 
-@media (width >= 768px) {
+@media (width >= 48rem) {
   header {
     min-height: 8.4rem;
   }
@@ -415,8 +423,16 @@ main .section.padded > .section-container {
     margin: 2.8rem 0;
   }
 
-  h1 { font-size: var(--h1-font-size-desktop); }
-  h2 { font-size: var(--h2-font-size-desktop); }
+  h1 {
+    font-size: var(--h1-font-size-desktop);
+    margin-bottom: 3rem;
+  } 
+
+  h2 {
+    font-size: var(--h2-font-size-desktop);
+    line-height: 2.813rem;
+    margin-bottom: 2rem;
+  }
   h3 { font-size: var(--h3-font-size-desktop); }
   h4 { font-size: var(--h4-font-size-desktop); }
   h5 { font-size: var(--h5-font-size-desktop); }

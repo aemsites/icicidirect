@@ -1,0 +1,49 @@
+.block.breadcrumbs {
+  margin-top: -2rem;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 3.5rem;
+}
+
+.block.breadcrumbs a {
+  text-decoration: none;
+}
+
+.block.breadcrumbs div:not(:first-child) {
+  margin-left: var(--space-8px);
+}
+
+.block.breadcrumbs .button-container .breadcrumb-title {
+  font-size: var(--heading-font-size-sxs);
+  color: var(--link-color-orange);
+  padding-right: var(--space-8px);
+  line-height: 1rem;
+}
+
+.block.breadcrumbs .button-container .active .breadcrumb-title {
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.block.breadcrumbs .button-container a:not(.active) .breadcrumb-title {
+  border-right: var(--line-width-thin) solid var(--color-footer-gray);
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .block.breadcrumbs {
+    margin-top: -3rem;
+    min-height: 3.75rem;
+  }
+
+  .block.breadcrumbs > div {
+    margin-left: var(--space-14px);
+  }
+
+  .block.breadcrumbs .button-container .breadcrumb-title {
+    font-size: var(--body-font-size-xxl);
+    padding-right: var(--space-14px);
+    line-height: 1.25rem;
+  }
+}
