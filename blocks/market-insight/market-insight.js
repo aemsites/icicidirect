@@ -51,7 +51,7 @@ function createSocialButton(button, block) {
   const encodeTitle = encodeURIComponent(document.title);
   const socialMap = new Map([
     ['whatsapp', `https://api.whatsapp.com/send?text=Hey! Check out this: ${encodeLink}`],
-    ['facebook', `http://www.facebook.com/sharer.php?u="${encodeLink}&t=${encodeTitle},'sharer', 'toolbar=0,status=0,width=626,height=436`],
+    ['facebook', `http://www.facebook.com/sharer.php?u=${encodeLink}&t=${encodeTitle},'sharer',toolbar=0,status=0,width=626,height=436`],
     ['linkedin', `https://www.linkedin.com/sharing/share-offsite/?url=${link}`],
     ['twitter', `https://twitter.com/intent/tweet?url=${link}`],
   ]);
