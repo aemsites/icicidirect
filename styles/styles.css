@@ -60,6 +60,7 @@
   --background-color-dark-grey: #D8D8D8;
   --background-color-light-orange: #FAE4D1;
   --background-color-light-blue: #EFF6FF;
+  --background-color-blue-dark: #183B6A;
   --border-color-light-gray: #E1E8EE;
   --border-color-gray: #D1D1D1;
   --color-diable-element: #D1D1D1;
@@ -99,6 +100,7 @@
   --heading-font-size-sxs: 13px;
   --heading-font-size-mxs: 12px;
   --heading-font-size-xxs: 11px;
+  --heading-font-size-xxxs: 10px;
 
   /* Heading Variables */
   --h1-font-size-desktop: var(--heading-font-size-xxxl);
