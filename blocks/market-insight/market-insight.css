@@ -187,6 +187,7 @@
 .block.market-insight .modal .modal-dislog .modal-body ul li img {
   height: 2.375rem;
   width: 2.375rem;
+  max-width: unset;
   position: static;
   border: 0;
 }
