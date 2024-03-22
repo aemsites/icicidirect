@@ -71,6 +71,7 @@
   --color-footer-gray: #a3a3a3;
   --box-shadow-footer-top-gray: #0e1f354d;
   --veritcal-line-footer-top-gray: #9797974d;
+  --modal-background-color: #000000BF;
   
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -403,7 +404,7 @@ a:not([href]):hover {
   text-decoration: none;
 }
 
-a.button:any-link {
+a.discover-more-button:any-link {
   display: inline-block;
   font-size: var(--heading-font-size-ms);
   line-height: 2.375rem;
@@ -427,48 +428,35 @@ main img {
 }
 
 /* sections */
-main .section {
-  margin: 2rem 0;
-}
 
 main .section.padded > .section-container {
   max-width: 81.25rem;
   width: 100%;
-  padding: 0 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   margin-right: auto;
   margin-left: auto;
 }
 
-/* cards sections */
-.section.cards-container {
-  padding: 1.5625rem 0;
+main .section.top-bottom-padded > .section-container {
+  padding-top: 1.5625rem;
+  padding-bottom: 1.5625rem ;
+}
+
+main .section.background-gray {
   box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
-  margin: unset;
-}
-
-.section.cards-container h2 {
-  text-align: center;
-}
-
-.section.cards-container .button-container {
-  text-align: center;
-  margin-top: 1.5rem;
 }
 
 @media (width >= 36rem) {
-  /* cards sections */
-  .section.cards-container {
-    padding: 2.5rem 0;
+  main .section.top-bottom-padded > .section-container {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
   }
 }
 
 @media (width >= 48rem) {
   header {
     min-height: 8.4rem;
-  }
-
-  main .section {
-    margin: 2.8rem 0;
   }
 
   h1 { font-size: var(--h1-font-size-desktop); }
