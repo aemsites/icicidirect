@@ -59,6 +59,6 @@
     font-size: var(--space-15px);
     padding-right: var(--space-15px);
     line-height: 1;
-    margin: var(--space-5px) 0 var(--space-5px) var(--space-10px)x;
+    margin: var(--space-5px) 0 var(--space-5px) var(--space-10px);
   }
 }
