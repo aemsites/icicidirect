@@ -104,7 +104,8 @@ function decorateCards(results, blockCfg, block) {
     const powerbyContent = createDiv('p', '');
     powerbyContent.textContent = powerBy;
     const publishedOnContent = createDiv('p', '');
-    publishedOnContent.textContent = `${publishedOn} ${result.publishedon}`;
+    const publishedon = result.publishedon.replaceAll(' ', '-');
+    publishedOnContent.textContent = `${publishedOn} ${publishedon}`;
     powerbyDiv.append(powerbyContent);
     powerbyDiv.append(publishedOnContent);
     powerby.append(powerbyDiv);

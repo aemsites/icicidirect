@@ -37,25 +37,41 @@
 }
 
 .block.market-insight .cards-description {
-  font-size: var(--heading-font-size-xs);
   line-height: 1.25rem;
   color: var(--color-gray-dark);
   word-break: break-word;
   overflow: hidden;
   text-overflow: ellipsis;
+  display: -webkit-box;
   height: 3.75rem;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
-  margin-bottom: 2.5rem;
+  margin-bottom: 3.75rem;
+}
+
+.block.market-insight .cards-description ul {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    vertical-align: baseline;
 }
 
 .block.market-insight .cards-description ul li {
   text-align: justify;
   list-style-type: disc;
+  list-style-position: inside;
+  color: var(--text-color-light);
+  margin-bottom: 1.25rem;
+  font: var(--font-weight-regular) var(--heading-font-size-ms) / var(--heading-font-size-m) Poppins, "Poppins Fallback", sans-serif;
 }
 
 .block.market-insight .cards-description li::marker {
   color: var(--color-gray-dark);
+}
+
+.block.market-insight .cards-description p {
+  font: var(--font-weight-regular) var(--heading-font-size-ms) / var(--heading-font-size-m) Poppins, "Poppins Fallback", sans-serif;
 }
 
 .block.market-insight .cards-powerby {
