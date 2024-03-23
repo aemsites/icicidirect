@@ -1,5 +1,5 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
-import { createElement, observe} from '../../scripts/blocks-utils.js';
+import { createElement, observe } from '../../scripts/blocks-utils.js';
 
 // TODO: This is dummy function that fetch sample data from EDS json.
 // It will be replaced when API call is available.
