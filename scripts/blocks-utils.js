@@ -1,3 +1,5 @@
+import { createOptimizedPicture } from './aem.js';
+
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
@@ -68,9 +70,45 @@ const formatDateTime = (date) => date && date.toLocaleString('en-US', {
   hour12: true,
 });
 
+function createPictureElement(
+  src,
+  alt = '',
+  eager = false,
+  breakpoints = [{ media: '(min-width: 600px)', width: '2000' }, { width: '750' }],
+) {
+  if (src.indexOf('http://') === -1 && src.indexOf('https://') === -1) {
+    return createOptimizedPicture(src, alt, eager, breakpoints);
+  }
+  const picture = document.createElement('picture');
+  const image = document.createElement('img');
+  image.setAttribute('src', src);
+  image.setAttribute('alt', alt);
+  image.setAttribute('loading', eager ? 'eager' : 'lazy');
+  picture.appendChild(image);
+  return picture;
+}
+
+function observe(elementToObserve, callback, threshold = 0.1) {
+  const observer = new IntersectionObserver((entries, observerInstance) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        callback(elementToObserve);
+        observerInstance.disconnect();
+      }
+    });
+  }, {
+    root: null,
+    threshold,
+  });
+
+  observer.observe(elementToObserve);
+}
+
 export {
   isInViewport,
   Viewport,
   createElement,
   formatDateTime,
+  createPictureElement,
+  observe,
 };

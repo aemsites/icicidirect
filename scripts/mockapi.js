@@ -25,12 +25,17 @@ const apiEndPoints = {
   muhratpicks: '/draft/anagarwa/muhratpicks.json',
 };
 
-async function fetchRecommendations(type) {
+function getHostUrl() {
   let hostUrl = window.location.origin;
   if (!hostUrl || hostUrl === 'null') {
     // eslint-disable-next-line prefer-destructuring
     hostUrl = window.location.ancestorOrigins[0];
   }
+  return hostUrl;
+}
+
+async function fetchRecommendations(type) {
+  const hostUrl = getHostUrl();
   const apiUrl = `${hostUrl}${apiEndPoints[type]}`;
   try {
     const response = await fetch(apiUrl);
@@ -60,6 +65,19 @@ async function fetchRecommendations(type) {
   }
 }
 
+async function callMockBlogAPI() {
+  try {
+    const response = await fetch(`${getHostUrl()}/scripts/mock-blogdata.json`);
+    if (!response.ok) { // Check if response is OK (status in the range 200-299)
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json(); // Parse the JSON from the response
+    return data; // Return the data so it can be used by whoever calls this function
+  } catch (error) {
+    return null; // Return null or appropriate error handling
+  }
+}
+
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -86,4 +104,5 @@ export {
   getMarginActionUrl,
   mockPredicationConstant,
   fetchDynamicStockIndexData,
+  callMockBlogAPI,
 };
