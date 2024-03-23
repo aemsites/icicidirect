@@ -46,12 +46,12 @@ const Viewport = (function initializeViewport() {
   };
 }());
 
-function createDiv(tagname, className) {
-  const div = document.createElement(tagname);
+function createElement(tagname, className) {
+  const element = document.createElement(tagname);
   if (className) {
-    div.classList.add(className);
+    element.classList.add(className);
   }
-  return div;
+  return element;
 }
 
 /**
@@ -71,6 +71,6 @@ const formatDateTime = (date) => date && date.toLocaleString('en-US', {
 export {
   isInViewport,
   Viewport,
-  createDiv,
+  createElement,
   formatDateTime,
 };

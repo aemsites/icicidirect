@@ -1,5 +1,5 @@
-import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
-import { createDiv } from '../../scripts/blocks-utils.js';
+import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
+import { createElement } from '../../scripts/blocks-utils.js';
 
 // TODO: This is dummy function that fetch sample data from EDS json.
 // It will be replaced when API call is available.
@@ -20,14 +20,16 @@ async function fetchMarketInsightMockData() {
     }));
     return results;
   } catch (error) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to get API data: ', error);
     return [];
   }
 }
 
 function decorateTitle(blockCfg) {
   const { title } = blockCfg;
-  const blockTitleDiv = createDiv('div', 'title');
-  const blockTitle = createDiv('h2', '');
+  const blockTitleDiv = createElement('div', 'title');
+  const blockTitle = createElement('h2', '');
   blockTitle.textContent = title;
   blockTitleDiv.append(blockTitle);
   return blockTitleDiv;
@@ -35,8 +37,8 @@ function decorateTitle(blockCfg) {
 
 function decorateDiscoverMore(blockCfg, placeholders) {
   const discoverMore = blockCfg['discover-more-link'];
-  const discoverMoreDiv = createDiv('div', 'discover-more');
-  const aLink = createDiv('a', '');
+  const discoverMoreDiv = createElement('div', 'discover-more');
+  const aLink = createElement('a', '');
   aLink.target = '_blank';
   aLink.href = discoverMore;
   aLink.textContent = placeholders.discovermore;
@@ -78,20 +80,20 @@ function addSocialButtonEvent(button, block) {
   });
 }
 
-function decorateCards(results, blockCfg, block) {
-  const powerBy = (blockCfg['power-by'] ?? '').trim().toLowerCase();
-  const publishedOn = (blockCfg['published-on'] ?? '').trim().toLowerCase();
-  const ul = createDiv('ul', '');
+function decorateCards(results, placeholders, block) {
+  const powerBy = (placeholders.powerby ?? '').trim();
+  const publishedOn = (placeholders.publishedon ?? '').trim();
+  const ul = createElement('ul', '');
   // show 3 cards by default
   for (let index = 0; index < (results.length > 3 ? 3 : results.length); index += 1) {
     const result = results[index];
-    const li = createDiv('li', '');
-    const title = createDiv('div', 'cards-title');
-    const description = createDiv('div', 'cards-description');
-    const powerby = createDiv('div', 'cards-powerby');
+    const li = createElement('li', '');
+    const title = createElement('div', 'cards-title');
+    const description = createElement('div', 'cards-description');
+    const powerby = createElement('div', 'cards-powerby');
     // Cards title
-    const h3 = createDiv('h3', '');
-    const aLink = createDiv('a', '');
+    const h3 = createElement('h3', '');
+    const aLink = createElement('a', '');
     aLink.href = result.link;
     aLink.target = '_blank';
     aLink.append(result.title);
@@ -100,22 +102,22 @@ function decorateCards(results, blockCfg, block) {
     // Cards description
     description.innerHTML = decodeURIComponent(result.description);
     // Cards powerby
-    const powerbyDiv = createDiv('div', '');
-    const powerbyContent = createDiv('p', '');
+    const powerbyDiv = createElement('div', '');
+    const powerbyContent = createElement('p', '');
     powerbyContent.textContent = powerBy;
-    const publishedOnContent = createDiv('p', '');
+    const publishedOnContent = createElement('p', '');
     const publishedon = result.publishedon.replaceAll(' ', '-');
     publishedOnContent.textContent = `${publishedOn} ${publishedon}`;
     powerbyDiv.append(powerbyContent);
     powerbyDiv.append(publishedOnContent);
     powerby.append(powerbyDiv);
     // Social share button
-    const socialShare = createDiv('div', 'socialshare');
-    const button = createDiv('button', '');
-    const image = createDiv('img', '');
-    image.src = '../../icons/gray-share-icon.svg';
-    image.alt = 'gray-share-icon';
-    button.append(image);
+    const socialShare = createElement('div', 'socialshare');
+    const button = createElement('button', '');
+    const iconSpan = createElement('span', 'icon');
+    iconSpan.classList.add('icon-gray-share-icon');
+    button.append(iconSpan);
+    decorateIcons(button);
     addSocialButtonEvent(button, block);
     socialShare.append(button);
     powerby.append(socialShare);
@@ -146,15 +148,15 @@ function addModalOuterCloseEvent(modal) {
 }
 
 function createSocialIcons(modalBody) {
-  const div = createDiv('div', '');
-  const ul = createDiv('ul', '');
+  const div = createElement('div', '');
+  const ul = createElement('ul', '');
   const socialList = ['whatsapp', 'facebook', 'linkedin', 'twitter', 'copy-link'];
   [...socialList].forEach((item) => {
-    const li = createDiv('li', '');
-    const link = createDiv('a', '');
+    const li = createElement('li', '');
+    const link = createElement('a', '');
     link.target = '_blank';
     link.classList.add(item);
-    const img = createDiv('img', '');
+    const img = createElement('img', '');
     img.src = `../../icons/${item}-icon.png`;
     img.alt = `${item}`;
     link.append(img);
@@ -165,20 +167,20 @@ function createSocialIcons(modalBody) {
   modalBody.append(div);
 }
 
-function decorateModal(blockCfg) {
-  const modalTitleContent = (blockCfg['modal-title'] ?? '');
-  const modal = createDiv('div', 'modal');
-  const modalDislog = createDiv('div', 'modal-dislog');
-  const modalContent = createDiv('div', 'modal-content');
-  const modalBody = createDiv('div', 'modal-body');
-  const closeButton = createDiv('button', 'close-button');
-  const closeIcon = createDiv('span', '');
+function decorateModal(placeholders) {
+  const modalTitleContent = (placeholders.modaltitle ?? '').trim();
+  const modal = createElement('div', 'modal');
+  const modaldialog = createElement('div', 'modal-dialog');
+  const modalContent = createElement('div', 'modal-content');
+  const modalBody = createElement('div', 'modal-body');
+  const closeButton = createElement('button', 'close-button');
+  const closeIcon = createElement('span', '');
   closeIcon.innerHTML = '&times;';
   closeButton.append(closeIcon);
   addModalCloseEvent(closeButton, modal);
-  const modalTitle = createDiv('div', '');
-  const h3 = createDiv('h3', '');
-  const strongTag = createDiv('strong', '');
+  const modalTitle = createElement('div', '');
+  const h3 = createElement('h3', '');
+  const strongTag = createElement('strong', '');
   strongTag.append(modalTitleContent);
   h3.append(strongTag);
   modalTitle.append(h3);
@@ -186,8 +188,8 @@ function decorateModal(blockCfg) {
   createSocialIcons(modalBody);
   modalContent.append(modalBody);
   modalContent.append(closeButton);
-  modalDislog.append(modalContent);
-  modal.append(modalDislog);
+  modaldialog.append(modalContent);
+  modal.append(modaldialog);
   addModalOuterCloseEvent(modal);
 
   return modal;
@@ -199,8 +201,8 @@ export default async function decorate(block) {
   const title = decorateTitle(blockCfg);
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
   const results = await fetchMarketInsightMockData();
-  const mainContent = decorateCards(results, blockCfg, block);
-  const modal = decorateModal(blockCfg);
+  const mainContent = decorateCards(results, placeholders, block);
+  const modal = decorateModal(placeholders);
   block.textContent = '';
   block.append(title);
   block.append(mainContent);
