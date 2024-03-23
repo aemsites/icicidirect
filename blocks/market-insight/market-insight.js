@@ -1,5 +1,5 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
-import { createElement } from '../../scripts/blocks-utils.js';
+import { createElement, observe} from '../../scripts/blocks-utils.js';
 
 // TODO: This is dummy function that fetch sample data from EDS json.
 // It will be replaced when API call is available.
@@ -80,7 +80,8 @@ function addSocialButtonEvent(button, block) {
   });
 }
 
-function decorateCards(results, placeholders, block) {
+async function decorateCards(block, placeholders, previousNode) {
+  const results = await fetchMarketInsightMockData();
   const powerBy = (placeholders.powerby ?? '').trim();
   const publishedOn = (placeholders.publishedon ?? '').trim();
   const ul = createElement('ul', '');
@@ -126,7 +127,8 @@ function decorateCards(results, placeholders, block) {
     li.append(powerby);
     ul.append(li);
   }
-  return ul;
+  const parentDiv = previousNode.parentNode;
+  parentDiv.insertBefore(ul, previousNode);
 }
 
 function addModalCloseEvent(closeItem, modal) {
@@ -200,12 +202,10 @@ export default async function decorate(block) {
   const blockCfg = readBlockConfig(block);
   const title = decorateTitle(blockCfg);
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
-  const results = await fetchMarketInsightMockData();
-  const mainContent = decorateCards(results, placeholders, block);
   const modal = decorateModal(placeholders);
   block.textContent = '';
   block.append(title);
-  block.append(mainContent);
   block.append(discoverMoreButton);
   block.append(modal);
+  observe(block, decorateCards, placeholders, discoverMoreButton);
 }

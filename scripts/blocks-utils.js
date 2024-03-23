@@ -88,17 +88,17 @@ function createPictureElement(
   return picture;
 }
 
-function observe(elementToObserve, callback, threshold = 0.1) {
+function observe(elementToObserve, callback, ...args) {
   const observer = new IntersectionObserver((entries, observerInstance) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        callback(elementToObserve);
+        callback(elementToObserve, ...args);
         observerInstance.disconnect();
       }
     });
   }, {
     root: null,
-    threshold,
+    threshold: 0.1,
   });
 
   observer.observe(elementToObserve);
