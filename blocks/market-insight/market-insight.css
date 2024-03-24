@@ -234,20 +234,25 @@
   }
 }
 
-@media (width >= 62rem) {
-  .block.market-insight > ul > li {
+@media (width >=62rem) {
+  .block.market-insight>ul>li {
     flex: 0 0 33.33%;
     max-width: 31.5%;
   }
 }
 
 @keyframes fade-in {
-  0% {opacity: 0;}
-100% {opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
 }
 
 @keyframes move-in {
   from {
     transform: translate(0, -3.125rem);
-    }
+  }
 }
