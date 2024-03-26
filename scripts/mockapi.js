@@ -23,6 +23,7 @@ const apiEndPoints = {
   investing: '/draft/anagarwa/investingideas.json',
   oneclickportfolio: '/draft/anagarwa/oneclickportfolio.json',
   muhratpicks: '/draft/anagarwa/muhratpicks.json',
+  recentreports: '/draft/sneh/recentreports.json',
 };
 
 async function fetchRecommendations(type) {
@@ -60,6 +61,34 @@ async function fetchRecommendations(type) {
   }
 }
 
+
+async function fetchReports() {
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
+  const apiUrl = `${hostUrl}${apiEndPoints['recentreports']}`;
+  try {
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const data = await response.json();
+    // Transform the API response to the desired companies array format
+    const companies = data.data.map((company) => ({
+      title: company.title,
+      targetPrice: company.targetPrice,
+      rating: company.rating,
+      date: company.date,
+      reportLink: company.reportLink
+    }));
+    return companies;
+  } catch (error) {
+    return [];
+  }
+}
+
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -86,4 +115,5 @@ export {
   getMarginActionUrl,
   mockPredicationConstant,
   fetchDynamicStockIndexData,
+  fetchReports,
 };
