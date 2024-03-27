@@ -1,5 +1,4 @@
 .block.breadcrumbs {
-  margin-top: -2rem;
   display: flex;
   justify-content: flex-start;
   align-items: center;
@@ -33,7 +32,6 @@
 /* CSS styles to apply when the screen width is more than 768px */
 @media screen and (width >= 48rem) {
   .block.breadcrumbs {
-    margin-top: -3rem;
     min-height: 3.75rem;
   }
 

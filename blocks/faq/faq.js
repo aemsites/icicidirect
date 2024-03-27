@@ -1,10 +1,4 @@
-function createDiv(tagname, className) {
-  const div = document.createElement(tagname);
-  if (className) {
-    div.classList.add(className);
-  }
-  return div;
-}
+import { createElement } from '../../scripts/blocks-utils.js';
 
 function addEvent(faqTitle, block) {
   faqTitle.addEventListener('click', () => {
@@ -23,9 +17,9 @@ function addEvent(faqTitle, block) {
 }
 
 function decorateTitle(faqTitle, title) {
-  const titleTag = createDiv('h2', '');
+  const titleTag = createElement('h2', '');
   titleTag.textContent = title;
-  const image = createDiv('img', '');
+  const image = createElement('img', '');
   image.src = '../../icons/noun-faq.svg';
   image.alt = 'noun-faq';
   titleTag.prepend(image);
@@ -41,14 +35,14 @@ function decorateContent(faqContents, block) {
     const itemContent = faqContent.lastElementChild;
     if (itemTitle) {
       itemTitle.classList.add('faq-item-title');
-      const i = createDiv('i', '');
+      const i = createElement('i', '');
       itemTitle.append(i);
       addEvent(itemTitle, block);
     }
     if (itemContent) {
       itemContent.classList.add('faq-item-content');
-      const div = createDiv('div', '');
-      const p = createDiv('p', '');
+      const div = createElement('div', '');
+      const p = createElement('p', '');
       p.append(...itemContent.childNodes);
       div.append(p);
       itemContent.replaceChildren(div);
@@ -57,7 +51,7 @@ function decorateContent(faqContents, block) {
 }
 
 function decorateButton(faqButton, block, buttonTitle, expendButtonTitle) {
-  const button = createDiv('button', 'button');
+  const button = createElement('button', 'button');
   button.textContent = buttonTitle;
   faqButton.append(button);
   faqButton.addEventListener('click', () => {
@@ -79,9 +73,9 @@ function decorateButton(faqButton, block, buttonTitle, expendButtonTitle) {
 }
 
 export default async function decorate(block) {
-  const faqTitle = createDiv('div', 'faq-title');
-  const faqContent = createDiv('div', 'faq-content');
-  const faqButton = createDiv('div', 'more-button');
+  const faqTitle = createElement('div', 'faq-title');
+  const faqContent = createElement('div', 'faq-content');
+  const faqButton = createElement('div', 'more-button');
   let title = '';
   let buttonTitle = '';
   let expendButtonTitle = '';

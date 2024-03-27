@@ -48,6 +48,14 @@ const Viewport = (function initializeViewport() {
   };
 }());
 
+function createElement(tagname, className) {
+  const element = document.createElement(tagname);
+  if (className) {
+    element.classList.add(className);
+  }
+  return element;
+}
+
 /**
  * Formats the date time in the format 'Mar 15, 2024 03:09 PM'
  * @param {*} date input date to be formatted
@@ -80,17 +88,17 @@ function createPictureElement(
   return picture;
 }
 
-function observe(elementToObserve, callback, threshold = 0.1) {
+function observe(elementToObserve, callback, ...args) {
   const observer = new IntersectionObserver((entries, observerInstance) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        callback(elementToObserve);
+        callback(elementToObserve, ...args);
         observerInstance.disconnect();
       }
     });
   }, {
     root: null,
-    threshold,
+    threshold: 0.1,
   });
 
   observer.observe(elementToObserve);
@@ -99,6 +107,7 @@ function observe(elementToObserve, callback, threshold = 0.1) {
 export {
   isInViewport,
   Viewport,
+  createElement,
   formatDateTime,
   createPictureElement,
   observe,
