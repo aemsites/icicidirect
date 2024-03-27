@@ -1,0 +1,119 @@
+
+.block.market-commentary .market-commentary-container {
+    display: flex;
+    flex-direction: row;
+}
+
+.block.market-commentary .card {
+    display: block;
+    width:365px;
+    height: 496px;
+}
+
+.block.market-commentary .card a {
+    position: relative;
+    box-shadow: 0 10px 10px rgba(232, 120, 23, 0.8);
+    background: none;
+    border-radius: 0;
+    width: 90%;
+    margin: 0 5%;
+    transition: 0s;
+}
+
+.block.market-commentary .card a::after {
+    content: "";
+    width: 30px;
+    height: 30px;
+    transform: rotate(-45deg);
+    background: #fff;
+    position: absolute;
+    box-shadow: -9px 9px 9px rgba(232, 120, 23, 0.8);
+    z-index: 99;
+    bottom: -15px;
+    left: calc(60%);
+    border-left: 1px solid #ABABAB;
+    border-bottom: 1px solid #ABABAB;
+}
+
+.block.market-commentary .card .content {
+    padding: 20px;
+    padding-bottom: 70px;
+    background: #fff;
+    border: 1px solid #ABABAB;
+    border-radius: 0;
+    height: 295px;
+}
+.block.market-commentary .card h4 {
+    font-size: 15px;
+    margin-bottom: 10px;
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.block.market-commentary .card .description {
+    font-size: 14px;
+    margin-bottom: 10px;
+    line-height: 1.4;
+    max-height: 118px;
+    min-height: 118px;
+    overflow: hidden;
+}
+
+.block.market-commentary .card .info {
+    border-top: 1px solid #ABABAB;
+    padding-top: 10px;
+    position: relative;
+    z-index: 2;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 85%;
+}
+
+.block.market-commentary .card .info p {
+    margin-bottom: 0;
+    font-size: 11px;
+    line-height: normal;
+    color: #9B9B9B;
+}
+
+.block.market-commentary .card .footer-row {
+    position: relative;
+    z-index: 99;
+}
+
+.block.market-commentary .card .footer-row::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 8px;
+    background: #e87817;
+    bottom: 15px;
+    z-index: -1;
+}
+
+.block.market-commentary .card .footer-circle {
+    width: 35px;
+    height: 35px;
+    display: block;
+    border: 5px solid rgba(232, 120, 23, 0.8);
+    border-radius: 50%;
+    background: #fff;
+    text-align: center;
+    margin: 50px auto 30px;
+    position: relative;
+    z-index: 99;
+    box-shadow: 0px 4px 12px #000;
+}
+
+.block.market-commentary .card .footer-time {
+    text-align: center;
+    color: #053D6E;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 50px;
+}
