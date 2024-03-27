@@ -15,8 +15,8 @@ function renderImageLinkVariant({ data }, carouselItems) {
                         <h3><a href="${item.finLink}">${item.finTitle}</a></h3>
                         <div class="carousel-slide-content-footer copyright">
                         <div>
-                            <div>Powered By ICICI Securities</div>
-                            <div>Published on 22-Mar-2024</div>
+                            <div>${item.finPoweredBy}</div>
+                            <div>$item.finPoweredOn}</div>
                         </div>
                         <div class="socialshare">
                             <a class="social-share">
