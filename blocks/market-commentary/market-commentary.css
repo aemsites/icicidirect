@@ -1,13 +1,31 @@
+.block.market-commentary .title {
+   text-transform: uppercase;
+}
+
 
 .block.market-commentary .market-commentary-container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    margin-left: 1%;
+    overflow: hidden;
 }
 
+.block.market-commentary .market-commentary-track {
+    display: flex;
+    flex-direction: row;
+    /*overflow: hidden;*/
+}
 .block.market-commentary .card {
     display: block;
-    width:365px;
-    height: 496px;
+    min-width: 235px;
+    /*margin-left: 1%;*/
+
+}
+
+@media (width >= 48rem) {
+    .block.market-commentary .card {
+        min-width: 354px;
+    }
 }
 
 .block.market-commentary .card a {
@@ -17,32 +35,36 @@
     background: none;
     border-radius: 0;
     width: 90%;
-    margin: 0 5%;
+    /*margin: 0 5%;*/
     transition: 0s;
 }
+@media (width >= 48rem) {
+    .block.market-commentary .card a {
 
-/*.block.market-commentary .card a::after {*/
-/*    content: "";*/
-/*    width: 30px;*/
-/*    height: 30px;*/
-/*    transform: rotate(-45deg);*/
-/*    background: #fff;*/
-/*    position: absolute;*/
-/*    box-shadow: -9px 9px 9px rgba(232, 120, 23, 0.8);*/
-/*    z-index: 99;*/
-/*    bottom: -15px;*/
-/*    left: calc(50% - 20px);*/
-/*    border-left: 1px solid #ABABAB;*/
-/*    border-bottom: 1px solid #ABABAB;*/
-/*}*/
+    }
+}
+
+    .block.market-commentary .card a::after {
+        content: "";
+        width: 30px;
+        height: 30px;
+        transform: rotate(-45deg);
+        background: #fff;
+        position: absolute;
+        box-shadow: -9px 9px 9px rgba(232, 120, 23, 0.8);
+        z-index: 99;
+        bottom: -15px;
+        left: calc(50%);
+        border-left: 1px solid #ABABAB;
+        border-bottom: 1px solid #ABABAB;
+    }
 
 .block.market-commentary .card .content {
     padding: 20px;
-    padding-bottom: 70px;
     background: #fff;
     border: 1px solid #ABABAB;
     border-radius: 0;
-    height: 295px;
+    /*height: 295px;*/
 }
 .block.market-commentary .card h4 {
     font-size: 15px;
@@ -72,7 +94,7 @@
     bottom: 14px;
     left: 50%;
     transform: translateX(-50%);
-    width: 85%;
+    /*width: 85%;*/
 }
 
 .block.market-commentary .card .info p {
@@ -117,4 +139,23 @@
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 50px;
+}
+
+.block.market-commentary .dots-container {
+    text-align: center;
+}
+
+.block.market-commentary .dots-container .dot {
+    height: 0.9rem;
+    width: 0.9rem;
+    margin: 0 0.3rem;
+    padding: 0;
+    cursor: pointer;
+    background: var(--background-color-dark-grey);
+    border-radius: 3rem;
+    border: 0;
+}
+
+.block.market-commentary .dots-container .dot.active {
+    background-color: var(--color-orange);
 }

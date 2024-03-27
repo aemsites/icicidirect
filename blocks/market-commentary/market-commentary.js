@@ -1,5 +1,5 @@
 import { getTrendingNews } from '../../scripts/mockapi.js';
-import { Viewport, createPictureElement } from '../../scripts/blocks-utils.js';
+import { Viewport, createPictureElement, isInViewport } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
 const placeholders = await fetchPlaceholders();
@@ -73,9 +73,40 @@ function createMarketCommentaryCard() {
   return mainDiv;
 }
 
+function isElementInViewport(el) {
+  var rect = el.getBoundingClientRect();
+  return (
+      rect.top >= 0 &&
+      rect.left >= 0 &&
+      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+  );
+}
+
+function updateDots(block) {
+  const track = block.querySelector('.market-commentary-track');
+  const dotsContainer = block.querySelector('.dots-container');
+  const cards = track.querySelectorAll('.card');
+  let nonVisibleCount = 0;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0; i < cards.length; i++) {
+    if (!isElementInViewport(cards[i])) {
+      if (nonVisibleCount === 0) {
+        const dot = document.createElement('button');
+        dot.className = 'dot active';
+        dot.dataset.index = nonVisibleCount;
+        dotsContainer.appendChild(dot);
+      }
+      nonVisibleCount += 1;
+      const dot = document.createElement('button');
+      dot.className = 'dot';
+      dot.dataset.index = nonVisibleCount;
+      dotsContainer.appendChild(dot);
+    }
+  }
+}
+
 export default function decorate(block) {
-  const blockConfig = readBlockConfig(block);
-  const newsData = getTrendingNews();
   block.textContent = '';
 
   const container = document.createElement('div');
@@ -88,14 +119,29 @@ export default function decorate(block) {
   titleWrap.appendChild(h2);
   container.appendChild(titleWrap);
 
-  const body = document.createElement('div');
-  body.className = 'market-commentary-container';
-  body.appendChild(createMarketCommentaryCard());
-  body.appendChild(createMarketCommentaryCard());
-  body.appendChild(createMarketCommentaryCard());
-  // body.appendChild(createMarketCommentaryCard());
-  // body.appendChild(createMarketCommentaryCard());
-  // body.appendChild(createMarketCommentaryCard());
-  container.appendChild(body);
+  const containerlist = document.createElement('div');
+  containerlist.className = 'market-commentary-container';
+
+  const containerTrack = document.createElement('div');
+  containerTrack.className = 'market-commentary-track';
+
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerTrack.appendChild(createMarketCommentaryCard());
+  containerlist.appendChild(containerTrack);
+
+  const dotsContainer = document.createElement('div');
+  dotsContainer.className = 'dots-container';
+  // const dot = document.createElement('button');
+  // dot.className = 'dot border-box';
+  // dotsContainer.appendChild(dot);
+  containerlist.appendChild(dotsContainer);
+  container.appendChild(containerlist);
   block.appendChild(container);
+  updateDots(block);
 }
