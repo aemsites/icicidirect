@@ -23,6 +23,7 @@ const apiEndPoints = {
   investing: '/draft/anagarwa/investingideas.json',
   oneclickportfolio: '/draft/anagarwa/oneclickportfolio.json',
   muhratpicks: '/draft/anagarwa/muhratpicks.json',
+  finace: '/draft/shroti/finace.json',
 };
 
 function getHostUrl() {
@@ -34,48 +35,55 @@ function getHostUrl() {
   return hostUrl;
 }
 
-async function fetchRecommendations(type) {
-  const hostUrl = getHostUrl();
-  const apiUrl = `${hostUrl}${apiEndPoints[type]}`;
+async function fetchDataFromAPI(url) {
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    // Transform the API response to the desired companies array format
-    const companies = data.data.map((company) => ({
-      action: company.action,
-      name: company.company,
-      recoPrice: company.recoPrice,
-      cmp: company.cmp,
-      targetPrice: company.targetPrice,
-      stopLoss: company.stopLoss,
-      exit: company.exit,
-      reportLink: company.reportLink,
-      profitPotential: company.profitPotential,
-      returns: company.returns,
-      minAmount: company.minAmount,
-      riskProfile: company.riskProfile,
-      buyingRange: company.buyingRange,
-    }));
-    return companies;
+    return await response.json();
   } catch (error) {
-    return [];
+    console.error(error.message);
+    return null;
   }
 }
 
-async function callMockBlogAPI() {
-  try {
-    const response = await fetch(`${getHostUrl()}/scripts/mock-blogdata.json`);
-    if (!response.ok) { // Check if response is OK (status in the range 200-299)
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json(); // Parse the JSON from the response
-    return data; // Return the data so it can be used by whoever calls this function
-  } catch (error) {
-    return null; // Return null or appropriate error handling
+async function fetchRecommendations(type) {
+  const hostUrl = getHostUrl();
+  const apiUrl = `${hostUrl}${apiEndPoints[type]}`;
+  const data = await fetchDataFromAPI(apiUrl);
+  if (!data) {
+    return [];
   }
+  // Transform the API response to the desired companies array format
+  return data.data.map((company) => ({
+    action: company.action,
+    name: company.company,
+    recoPrice: company.recoPrice,
+    cmp: company.cmp,
+    targetPrice: company.targetPrice,
+    stopLoss: company.stopLoss,
+    exit: company.exit,
+    reportLink: company.reportLink,
+    profitPotential: company.profitPotential,
+    returns: company.returns,
+    minAmount: company.minAmount,
+    riskProfile: company.riskProfile,
+    buyingRange: company.buyingRange,
+  }));
+}
+
+async function callMockBlogAPI() {
+  return await fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
+}
+
+async function callFinACEAPI(apiName) {
+  const endpoint = apiEndPoints['finace'];
+  if (!endpoint) {
+    console.error(`API endpoint not found for API: ${apiName}`);
+    return null;
+  }
+  return await fetchDataFromAPI(endpoint);
 }
 
 function getMarginActionUrl(actionName) {
@@ -105,4 +113,5 @@ export {
   mockPredicationConstant,
   fetchDynamicStockIndexData,
   callMockBlogAPI,
+  callFinACEAPI,
 };

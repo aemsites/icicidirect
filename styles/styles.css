@@ -11,7 +11,7 @@
  */
 
 :root {
-  /* colors */  
+  /* colors */
   --primary: #053D6E;
   --color-orange: #DB620A;
   --color-dark: #262B36;
@@ -51,11 +51,13 @@
   --text-color-normal: #212529;
   --text-color-light: #4a4a4a;
   --text-color-blue: #043C6D;
+  --text-color-gray :#9b9b9b;
   --link-color-blue: #4b9dff;
   --link-color-dark-blue: #415270;
   --link-color-dark-gray : #3d3d3d;
   --button-color-orange: #E87817;
   --background-color-light-grey: #FCFCFC;
+  --background-color-gray-scale: #F9F9F9;
   --background-color-transparent: transparent;
   --background-color-unset: unset;
   --background-color-disable: unset;
@@ -74,7 +76,7 @@
   --color-footer-gray: #a3a3a3;
   --box-shadow-footer-top-gray: #0e1f354d;
   --veritcal-line-footer-top-gray: #9797974d;
-  
+
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
@@ -159,10 +161,10 @@
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
   --space-15px: 0.938rem;
-  
+
 }
 
-*, *::before, *::after { 
+*, *::before, *::after {
   box-sizing: border-box;
   outline: none;
 }
@@ -398,7 +400,6 @@ a:any-link {
   color: var(--color-blue);
   text-decoration: none;
   background-color: transparent;
-  font-size: 1rem;
 }
 
 a:hover {
@@ -427,12 +428,39 @@ main .section {
   margin: 2rem 0;
 }
 
+main .section .section-container {
+  max-width: 81.25rem;
+  margin-inline: auto;
+  padding-left: 16px;
+  padding-right: 16px;
+}
+
 main .section.padded > .section-container {
   max-width: 81.25rem;
   width: 100%;
   padding: 0 1rem;
   margin-right: auto;
   margin-left: auto;
+}
+
+/* section - gray-scale */
+main .section.gray-scale > .section-container {
+  background: var(--background-color-gray-scale);
+}
+
+/* section - padding */
+main .section.padding > .section-container{
+  padding: 2rem;
+}
+
+/* section - three quarter width */
+main .section.three-quarter-width > .section-container{
+  width: 75%;
+}
+
+/* section - quarter width */
+main .section.quarter-width > .section-container{
+  width: 25%;
 }
 
 @media (width >= 48rem) {
@@ -447,7 +475,7 @@ main .section.padded > .section-container {
   h1 {
     font-size: var(--h1-font-size-desktop);
     margin-bottom: 3rem;
-  } 
+  }
 
   h2 {
     font-size: var(--h2-font-size-desktop);
