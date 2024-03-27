@@ -91,6 +91,11 @@ export default function decorate(block) {
   const body = document.createElement('div');
   body.className = 'market-commentary-container';
   body.appendChild(createMarketCommentaryCard());
+  body.appendChild(createMarketCommentaryCard());
+  body.appendChild(createMarketCommentaryCard());
+  // body.appendChild(createMarketCommentaryCard());
+  // body.appendChild(createMarketCommentaryCard());
+  // body.appendChild(createMarketCommentaryCard());
   container.appendChild(body);
   block.appendChild(container);
 }

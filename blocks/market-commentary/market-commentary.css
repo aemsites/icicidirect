@@ -11,6 +11,7 @@
 }
 
 .block.market-commentary .card a {
+    display: block;
     position: relative;
     box-shadow: 0 10px 10px rgba(232, 120, 23, 0.8);
     background: none;
@@ -20,20 +21,20 @@
     transition: 0s;
 }
 
-.block.market-commentary .card a::after {
-    content: "";
-    width: 30px;
-    height: 30px;
-    transform: rotate(-45deg);
-    background: #fff;
-    position: absolute;
-    box-shadow: -9px 9px 9px rgba(232, 120, 23, 0.8);
-    z-index: 99;
-    bottom: -15px;
-    left: calc(60%);
-    border-left: 1px solid #ABABAB;
-    border-bottom: 1px solid #ABABAB;
-}
+/*.block.market-commentary .card a::after {*/
+/*    content: "";*/
+/*    width: 30px;*/
+/*    height: 30px;*/
+/*    transform: rotate(-45deg);*/
+/*    background: #fff;*/
+/*    position: absolute;*/
+/*    box-shadow: -9px 9px 9px rgba(232, 120, 23, 0.8);*/
+/*    z-index: 99;*/
+/*    bottom: -15px;*/
+/*    left: calc(50% - 20px);*/
+/*    border-left: 1px solid #ABABAB;*/
+/*    border-bottom: 1px solid #ABABAB;*/
+/*}*/
 
 .block.market-commentary .card .content {
     padding: 20px;
