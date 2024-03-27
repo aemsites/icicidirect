@@ -74,16 +74,16 @@ async function fetchRecommendations(type) {
 }
 
 async function callMockBlogAPI() {
-  return await fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
+  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
 }
 
 async function callFinACEAPI(apiName) {
-  const endpoint = apiEndPoints['finace'];
+  const endpoint = apiEndPoints[apiName];
   if (!endpoint) {
     console.error(`API endpoint not found for API: ${apiName}`);
     return null;
   }
-  return await fetchDataFromAPI(endpoint);
+  return fetchDataFromAPI(endpoint);
 }
 
 function getMarginActionUrl(actionName) {

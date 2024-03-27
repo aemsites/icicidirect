@@ -94,10 +94,10 @@ export function handleSocialShareClick(anchor) {
       { name: 'Facebook', icon: '/icons/facebook-icon.png', shareUrl: `http://www.facebook.com/sharer.php?u=${encodeLink}&t=${encodeTitle},'sharer',toolbar=0,status=0,width=626,height=436` },
       { name: 'WhatsApp', icon: '/icons/whatsapp-icon.png', shareUrl: `https://api.whatsapp.com/send?text=Hey! Check out this: ${encodeLink}` },
       { name: 'LinkedIn', icon: '/icons/linkedin-icon.png', shareUrl: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeLink}` },
-      { name: 'CopyLink', icon: '/icons/copy-link-icon.png' }
+      { name: 'CopyLink', icon: '/icons/copy-link-icon.png' },
     ];
 
-    socialPlatforms.forEach(platform => {
+    socialPlatforms.forEach((platform) => {
       const icon = document.createElement('img');
       icon.src = platform.icon;
       icon.alt = platform.name;
@@ -118,7 +118,8 @@ export function handleSocialShareClick(anchor) {
 }
 
 /**
- * Decorates the specified anchor elements with the 'social-share' class if they contain icon 'gray-share-icon.svg'.
+ * Decorates the specified anchor elements with the 'social-share' class
+ * if they contain icon 'gray-share-icon.svg'.
  * Adds a click event listener to each decorated anchor element.
  * @param {Array<Element>} anchorElements - The anchor elements to decorate.
  * @param {Element} block - The block element containing the modal.
@@ -126,19 +127,20 @@ export function handleSocialShareClick(anchor) {
  * @returns {void}
  */
 function decorateSocialShare(anchorElements) {
-  anchorElements.forEach(anchor => {
+  anchorElements.forEach((anchor) => {
     anchor.classList.add('social-share');
     anchor.addEventListener('click', () => handleSocialShareClick(anchor));
   });
 }
 
 /**
- * Adds the 'discover-more' class to the specified anchor elements if their text content contains "Discover More".
+ * Adds the 'discover-more' class to the specified anchor elements
+ * if their text content contains "Discover More".
  * @param {Array<Element>} anchorElements - The anchor elements to decorate.
  * @returns {void}
  */
 function decorateDiscoverMore(anchorElements) {
-  anchorElements.forEach(anchor => {
+  anchorElements.forEach((anchor) => {
     anchor.classList.add('discover-more');
   });
 }
@@ -150,15 +152,13 @@ function decorateDiscoverMore(anchorElements) {
  */
 function decorateAnchors(element = document) {
   const anchors = Array.from(element.getElementsByTagName('a'));
-  const discoverMoreAnchors = anchors.filter(anchor => {
-    return anchor.textContent.includes('DISCOVER MORE') && anchor.childElementCount === 0;
-  });
+  const discoverMoreAnchors = anchors.filter((anchor) => anchor.textContent.includes('DISCOVER MORE') && anchor.childElementCount === 0);
 
   if (discoverMoreAnchors.length > 0) {
     decorateDiscoverMore(discoverMoreAnchors);
   }
 
-  const socialShareAnchors = anchors.filter(anchor => {
+  const socialShareAnchors = anchors.filter((anchor) => {
     const img = anchor.querySelector('img');
     return img && img.src.includes('/icons/gray-share-icon.svg');
   });
