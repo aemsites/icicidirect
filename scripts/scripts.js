@@ -17,6 +17,7 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
+let isSocialShareDialogInitializing = false;
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
@@ -67,7 +68,8 @@ export async function handleSocialShareClick(anchor) {
   let dialog = document.querySelector('dialog.social-share');
   const placeholders = await fetchPlaceholders();
 
-  if (!dialog) {
+  if (!dialog && !isSocialShareDialogInitializing) {
+    isSocialShareDialogInitializing = true;
     dialog = document.createElement('dialog');
     dialog.classList.add('social-share');
 
@@ -87,7 +89,7 @@ export async function handleSocialShareClick(anchor) {
     const dialogContent = document.createElement('div');
     dialogContent.classList.add('modal-body');
 
-    const link = anchor.closest('li').querySelector('a').href;
+    const link = anchor.closest('li')?.querySelector('a').href ?? anchor?.href;
     const encodeLink = encodeURIComponent(link);
     const encodeTitle = encodeURIComponent(document.title);
 
@@ -147,6 +149,10 @@ export async function handleSocialShareClick(anchor) {
 function decorateSocialShare(anchorElements) {
   anchorElements.forEach((anchor) => {
     anchor.classList.add('social-share');
+    if (anchor.href) {
+      anchor.dataset.href = anchor.href;
+      anchor.removeAttribute('href');
+    }
     anchor.addEventListener('click', () => handleSocialShareClick(anchor));
   });
 }
@@ -194,7 +200,7 @@ function decorateAnchors(element = document) {
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
-  decorateAnchors(main);
+  decorateAnchors(document);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
