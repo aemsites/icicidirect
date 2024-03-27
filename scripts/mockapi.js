@@ -149,5 +149,4 @@ export {
   callMockBlogAPI,
   callAPI,
   getTrendingNews,
-  getTrendingNews,
 };
