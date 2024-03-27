@@ -108,6 +108,8 @@ function decorateDiscoverMore(blockCfg, placeholders) {
   aLink.href = discoverMoreLink;
   aLink.textContent = placeholders.discovermore;
   aLink.classList.add('discover-more-link');
+  const icon = createElement('icon', 'discover-more-icon');
+  aLink.append(icon);
   discoverMore.append(aLink);
   return discoverMore;
 }

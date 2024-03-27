@@ -3,6 +3,11 @@
     padding-bottom: 10px;
 }
 
+.block.rapid-result .title h2 {
+    margin-bottom: unset;
+}
+
+
 .block.rapid-result .main-wrapper {
     margin: 0 2px;
     background: #fff;
@@ -16,58 +21,69 @@
     border-bottom: 1px solid rgba(14, 31, 53, 0.2);
 }
 
-.block.rapid-result .main-wrapper .title h2 {
-    margin-bottom: unset;
-}
-
-.block.rapid-result .main-wrapper ul {
+.block.rapid-result .main-wrapper > ul {
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-between;
     gap: 1.25rem;
     padding-left: 0;
     list-style-type: none;
 }
 
-.block.rapid-result .main-wrapper ul li {
-    /* padding: 15px; */
+.block.rapid-result .main-wrapper > ul > li {
     position: relative;
     width: 100%;
 }
 
-.block.rapid-result .main-wrapper ul li::marker {
+.block.rapid-result .main-wrapper > ul > li .company-result {
     border: 1px solid #D1D1D1;
     padding: 15px;
-    padding-bottom: 50px;
+    padding-bottom: 65px;
     position: relative;
     background: #FCFCFC;
 }
 
-.block.rapid-result .main-wrapper ul li .company-result {
-    border: 1px solid #D1D1D1;
-    padding: 15px;
-    padding-bottom: 65px;
-    /* position: relative; */
-    background: #FCFCFC;
+.block.rapid-result .main-wrapper .discover-more {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.block.rapid-result .main-wrapper .discover-more a {
+    font-size: 16px;
+    line-height: 19px;
+    font-weight: 700;
+    color: #E87817;
+    text-decoration: none;
+}
+
+.block.rapid-result .main-wrapper .discover-more a .discover-more-icon {
+    transform: rotate(90deg);
+    vertical-align: middle;
+    display: inline-block;
+}
+
+.block.rapid-result .main-wrapper .discover-more a .discover-more-icon::after {
+    content: "\e900";
+    font-family: icomoon, sans-serif;
+    font-weight: 500;
+    text-transform: none;
+    line-height: 1;
 }
 
 .block.rapid-result .company-result .cards-title {
     margin-bottom: 15px;
-    text-align: inherit;
     display: flex;
     align-items: center;
-    border-bottom: 0;
-    padding-bottom: 0;
+    /* border-bottom: 0;
+    padding-bottom: 0; */
 }
 
 .block.rapid-result .company-result .cards-title .title-icon {
     width: 48px;
     height: 48px;
-    overflow: hidden;
     border: 1px solid #EBEBEB;
     border-radius: 10px;
     padding: 5px;
-    display: inline-block;
-    vertical-align: top;
     margin-right: 10px;
 }
 
@@ -75,14 +91,13 @@
     max-width: 40px;
 }
 
-.block.rapid-result .company-result .cards-title h3,
 .block.rapid-result .company-result .cards-title h3 a {
     max-width: 70%;
     font-size: 18px;
     line-height: 24px;
-    font-weight: 600;
     color: #304266;
     width: 80%;
+    text-decoration: none; 
 }
 
 .block.rapid-result .company-result .cards-title h3 p {
@@ -90,11 +105,11 @@
     line-height: 14px;
     color: #000;
     font-weight: 400;
+    margin: 0;
 }
 
 .block.rapid-result .company-result .cards-description {
     font-size: 16px;
-    line-height: 24px;
     color: #000;
     word-break: break-word;
     overflow: hidden;
@@ -112,16 +127,15 @@
     position: absolute;
     width: 100%;
     left: 0;
-    padding: 0px 15px;
+    padding: 0 15px;
     bottom: 10px;
 }
 
 .block.rapid-result .company-result .cards-powerby .view-more-link {
-    font-size: 16px;
     line-height: 19px;
     font-weight: 700;
     color: #E87817;
-    display: inline-block;
+    text-decoration: none; 
 }
 
 .block.rapid-result .company-result .cards-powerby .social-share {
@@ -137,4 +151,40 @@
     vertical-align: middle;
     max-width: 100%;
     cursor: pointer;
+}
+
+@media (width >= 36rem) {
+    .block.rapid-result .main-wrapper > ul > li {
+        flex: 0 0 50%;
+        max-width: 48%;
+    }
+
+    .block.rapid-result .main-wrapper .discover-more a {
+        font-size: 21px;
+        line-height: 24px;
+    }
+
+    .block.rapid-result .company-result .cards-powerby .social-share {
+        width: unset;
+    }
+}
+
+@media (width >= 48rem) {
+    .block.rapid-result .company-result .cards-powerby .view-more-link {
+        font-size: 21px;
+        line-height: 24px;
+    }
+}
+
+@media (width >=62rem) {
+    .block.rapid-result .main-wrapper > ul {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+    }
+
+    .block.rapid-result .main-wrapper > ul > li {
+        flex: 0 0 25%;
+        max-width: 23%;
+    }
 }
