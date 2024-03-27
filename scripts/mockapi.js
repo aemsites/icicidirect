@@ -43,7 +43,6 @@ async function fetchDataFromAPI(url) {
     }
     return await response.json();
   } catch (error) {
-    console.error(error.message);
     return null;
   }
 }
@@ -80,7 +79,6 @@ async function callMockBlogAPI() {
 async function callAPI(apiName) {
   const endpoint = apiEndPoints[apiName];
   if (!endpoint) {
-    console.error(`API endpoint not found for API: ${apiName}`);
     return null;
   }
   return fetchDataFromAPI(endpoint);

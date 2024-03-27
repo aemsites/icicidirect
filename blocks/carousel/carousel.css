@@ -61,7 +61,7 @@
 }
 
 .carousel.image-link .carousel-slide .carousel-slide-image img {
-    box-shadow: 0 7px 15px 0 rgba(14, 31, 53, 0.2);
+    box-shadow: 0 7px 15px 0 rgb(14 31 53 / 20%);
     padding: 1rem;
 }
 
@@ -162,6 +162,7 @@
     background-color: rgba(0 0 0 / 25%);
 }
 
+/* stylelint-disable-next-line no-descending-specificity */
 .carousel .carousel-navigation-buttons button:hover,
 .carousel .carousel-navigation-buttons button:focus-visible {
     background-color: rgba(0 0 0 / 80%);
