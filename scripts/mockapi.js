@@ -77,7 +77,7 @@ async function callMockBlogAPI() {
   return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
 }
 
-async function callFinACEAPI(apiName) {
+async function callAPI(apiName) {
   const endpoint = apiEndPoints[apiName];
   if (!endpoint) {
     console.error(`API endpoint not found for API: ${apiName}`);
@@ -113,5 +113,5 @@ export {
   mockPredicationConstant,
   fetchDynamicStockIndexData,
   callMockBlogAPI,
-  callFinACEAPI,
+  callAPI,
 };

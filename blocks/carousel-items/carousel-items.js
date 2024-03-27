@@ -1,7 +1,7 @@
 // Map of API names and their respective endpoint URLs
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
 import { handleSocialShareClick } from '../../scripts/scripts.js';
-import { callFinACEAPI } from '../../scripts/mockapi.js';
+import { callAPI } from '../../scripts/mockapi.js';
 
 function renderImageLinkVariant({ data }, carouselItems) {
   data.forEach((item) => {
@@ -62,7 +62,7 @@ export default async function decorate(block) {
   if (apiElement.textContent.trim().toLowerCase() === 'api') {
     const apiName = apiElement.nextElementSibling.textContent.trim();
     // const data = await callSpecificAPI(apiName);
-    const data = await callFinACEAPI(apiName);
+    const data = await callAPI(apiName);
 
     if (block.classList.contains('image-link')) {
       // create Carousel Items with Image & Heading
