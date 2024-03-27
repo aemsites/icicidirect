@@ -16,6 +16,10 @@
     overflow: scroll clip;
 }
 
+.carousel.block-padded {
+    padding: 1rem 0;
+}
+
 .carousel .carousel-slides::-webkit-scrollbar {
     display: none;
 }

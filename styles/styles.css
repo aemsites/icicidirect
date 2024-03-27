@@ -417,6 +417,24 @@ a:not([href]):hover {
   text-decoration: none;
 }
 
+a.discover-more {
+  display: inline-block;
+  font-size: var(--heading-font-size-ms);
+  line-height: 2.375rem;
+  min-height: 3.125rem;
+  font-weight: var(--font-weight-semibold);
+  min-width: 12.25rem;
+  background: var(--button-color-orange);
+  color: var(--color-white);
+  text-transform: uppercase;
+  border-radius: 1.875rem;
+  padding: 0.3125rem 1.25rem;
+  border: 0.0625rem solid transparent;
+  text-decoration: none;
+  cursor: pointer;
+  text-align: center;
+}
+
 main img {
   max-width: 100%;
   width: auto;
@@ -461,6 +479,10 @@ main .section.three-quarter-width > .section-container{
 /* section - quarter width */
 main .section.quarter-width > .section-container{
   width: 25%;
+}
+
+main .section.align-button-center .button-container {
+  text-align: center;
 }
 
 @media (width >= 48rem) {
