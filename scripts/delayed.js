@@ -6,6 +6,7 @@ function includeExternalScripts() {
     'https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1',
     'https://bat.bing.com/p/insights/s/0.7.24',
     'https://bat.bing.com/p/insights/t/20131149',
+    'https://bat.bing.com/p/action/20131149.js',
     'https://bat.bing.com/bat.js',
     'https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js',
     'https://snap.licdn.com/li.lms-analytics/insight.min.js',
