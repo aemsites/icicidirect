@@ -19,7 +19,7 @@ function connectWebSocket(block) {
   websocket.addEventListener('close', (event) => {
     block.textContent = 'WebSocket connection closed, attempting to reconnect...';
     console.log('WebSocket connection closed, attempting to reconnect...');
-    setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 second
+    setTimeout(() => connectWebSocket(block), 1000); // Attempt to reconnect after 1 second
   });
 
   websocket.addEventListener('error', (event) => {
