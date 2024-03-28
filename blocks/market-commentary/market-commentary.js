@@ -3,7 +3,17 @@ import { Viewport, createPictureElement, isInViewport } from '../../scripts/bloc
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
 const placeholders = await fetchPlaceholders();
-
+function allowedCardsCount() {
+  const deviceType = Viewport.getDeviceType();
+  switch (deviceType) {
+    case 'Desktop':
+      return 4;
+    case 'Tablet':
+      return 2;
+    default:
+      return 1;
+  }
+}
 function createMarketCommentaryCard() {
   const mainDiv = document.createElement('div');
   mainDiv.className = 'card';
@@ -73,36 +83,41 @@ function createMarketCommentaryCard() {
   return mainDiv;
 }
 
-function isElementInViewport(el) {
-  var rect = el.getBoundingClientRect();
-  return (
-      rect.top >= 0 &&
-      rect.left >= 0 &&
-      rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
-      rect.right <= (window.innerWidth || document.documentElement.clientWidth)
-  );
+function updateCarouselView(activeDot) {
+  const dotIndex = parseInt(activeDot.dataset.index, 10);
+
+  const commentaryContainer = activeDot.closest('.market-commentary-container');
+  const dots = commentaryContainer.querySelectorAll('.dot');
+  const currentActiveDot = commentaryContainer.querySelector('.dot.active');
+  if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
+    return;
+  }
+  const commentaryTrack = commentaryContainer.querySelector('.market-commentary-track');
+  const cards = Array.from(commentaryTrack.children);
+  const moveDistance = dotIndex * cards[0].offsetWidth;
+  commentaryTrack.style.transform = `translateX(-${moveDistance}px)`;
+  dots.forEach((dot) => dot.classList.remove('active'));
+  dots[dotIndex].classList.add('active');
 }
 
 function updateDots(block) {
   const track = block.querySelector('.market-commentary-track');
   const dotsContainer = block.querySelector('.dots-container');
   const cards = track.querySelectorAll('.card');
-  let nonVisibleCount = 0;
+  const dotsCont = cards.length - allowedCardsCount() + 1;
   // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < cards.length; i++) {
-    if (!isElementInViewport(cards[i])) {
-      if (nonVisibleCount === 0) {
-        const dot = document.createElement('button');
-        dot.className = 'dot active';
-        dot.dataset.index = nonVisibleCount;
-        dotsContainer.appendChild(dot);
-      }
-      nonVisibleCount += 1;
-      const dot = document.createElement('button');
+  for (let i = 0; i < dotsCont; i++) {
+    const dot = document.createElement('button');
+    if (i === 0) {
+      dot.className = 'dot active';
+    } else {
       dot.className = 'dot';
-      dot.dataset.index = nonVisibleCount;
-      dotsContainer.appendChild(dot);
     }
+    dot.dataset.index = i;
+    dotsContainer.appendChild(dot);
+    dot.addEventListener('click', (event) => {
+      updateCarouselView(event.currentTarget);
+    });
   }
 }
 
