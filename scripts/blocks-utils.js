@@ -4,9 +4,9 @@ function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
     rect.top >= 0
-        && rect.left >= 0
-        && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
-        && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+    && rect.left >= 0
+    && rect.bottom <= (window.innerHeight || document.documentElement.clientHeight)
+    && rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
 
@@ -104,6 +104,19 @@ function observe(elementToObserve, callback, ...args) {
   observer.observe(elementToObserve);
 }
 
+/*
+  * Returns the environment type based on the hostname.
+*/
+function getEnvType(hostname = window.location.hostname) {
+  const fqdnToEnvType = {
+    'www.icicidirect.com': 'prod',
+    'icicidirect.com': 'prod',
+    'main--icicidirect--aemsites.hlx.page': 'preview',
+    'main--icicidirect--aemsites.hlx.live': 'live',
+  };
+  return fqdnToEnvType[hostname] || 'dev';
+}
+
 export {
   isInViewport,
   Viewport,
@@ -111,4 +124,5 @@ export {
   formatDateTime,
   createPictureElement,
   observe,
+  getEnvType,
 };
