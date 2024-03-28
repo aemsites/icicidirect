@@ -474,6 +474,20 @@ main .section.background-gray {
   box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
 }
 
+main .section.child-adjacent .section-container {
+  display: flex;
+  flex-direction: row;
+}
+
+main .section.child-adjacent .section-container > :first-child {
+  flex: 0 0 75%; /* 75% width */
+}
+
+main .section.child-adjacent .section-container > :last-child {
+  flex: 0 0 25%; /* 25% width */
+}
+
+
 @media (width >= 36rem) {
   main .section.top-bottom-padded {
     padding: 2.5rem 0;

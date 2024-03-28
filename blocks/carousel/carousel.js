@@ -3,15 +3,16 @@ import { fetchRecommendations, getMarginActionUrl, mockPredicationConstant } fro
 import { observe, Viewport } from '../../scripts/blocks-utils.js';
 
 function allowedCardsCount() {
-  const deviceType = Viewport.getDeviceType();
-  switch (deviceType) {
-    case 'Desktop':
-      return 4;
-    case 'Tablet':
-      return 2;
-    default:
-      return 1;
-  }
+  return 2;
+  // const deviceType = Viewport.getDeviceType();
+  // switch (deviceType) {
+  //   case 'Desktop':
+  //     return 4;
+  //   case 'Tablet':
+  //     return 2;
+  //   default:
+  //     return 1;
+  // }
 }
 function updateCarouselView(activeDot) {
   const dotIndex = parseInt(activeDot.dataset.index, 10);
