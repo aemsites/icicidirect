@@ -38,7 +38,8 @@ function decorateTitle(titleContent) {
   return title;
 }
 
-function decorateCards(block, placeholders, results) {
+async function decorateCards(block, placeholders, previousNode) {
+  const results = await fetchRapidResultMockData();
   const ul = createElement('ul', '');
   // show 4 cards by default
   for (let index = 0; index < (results.length > 4 ? 4 : results.length); index += 1) {
@@ -88,9 +89,10 @@ function decorateCards(block, placeholders, results) {
     iconSpan.classList.add('icon-gray-share-icon');
     button.append(iconSpan);
     decorateIcons(button);
-    if (result.link) {
+    // TODO: Wait for #57 commit, will address in a new PR.
+    // if (result.link) {
     //   addSocialButtonEvent(button, block);
-    }
+    // }
     socialShare.append(button);
     powerby.append(socialShare);
     liWrapper.append(title);
@@ -99,9 +101,8 @@ function decorateCards(block, placeholders, results) {
     li.append(liWrapper);
     ul.append(li);
   }
-  return ul;
-  // const parentDiv = previousNode.parentNode;
-  // parentDiv.insertBefore(ul, previousNode);
+  const parentDiv = previousNode.parentNode;
+  parentDiv.insertBefore(ul, previousNode);
 }
 
 function decorateDiscoverMore(blockCfg, placeholders) {
@@ -125,24 +126,14 @@ export default async function decorate(block) {
   const { subtitle } = blockCfg;
   const topTitle = decorateTitle(title);
   const mainContent = createElement('div', 'main-content');
-
   const mainWrapper = createElement('div', 'main-wrapper');
   const contentTitle = decorateTitle(subtitle);
-  const results = await fetchRapidResultMockData();
-  const contentCards = decorateCards(block, placeholders, results);
-
-  // Discover More
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
-
   mainWrapper.append(contentTitle);
-  mainWrapper.append(contentCards);
   mainWrapper.append(discoverMoreButton);
   mainContent.append(mainWrapper);
-
-//   const modal = decorateModal(placeholders);
   block.textContent = '';
   block.append(topTitle);
   block.append(mainContent);
-//   block.append(modal);
-//   observe(block, decorateCards, placeholders, discoverMoreButton);
+  observe(block, decorateCards, placeholders, discoverMoreButton);
 }
