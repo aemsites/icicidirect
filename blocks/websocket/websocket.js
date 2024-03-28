@@ -4,18 +4,20 @@ function connectWebSocket(block) {
 
   websocket.addEventListener('open', (event) => {
     block.textContent = `Connected to the WebSocket server ${event.data}`;
+    console.log('Connected to the WebSocket server:', event.data);
   });
 
   // Listen for incoming messages from the server
   websocket.addEventListener('message', (event) => {
     // Handle the incoming message here
-    console.log('Message from server:', event.data);
     // Update block content with the received message
-    block.textContent = event.data;
+    block.textContent = `Message from server: ${event.data}`;
+    console.log('Message from server:', event.data);
   });
 
   // eslint-disable-next-line no-unused-vars
   websocket.addEventListener('close', (event) => {
+    block.textContent = 'WebSocket connection closed, attempting to reconnect...';
     console.log('WebSocket connection closed, attempting to reconnect...');
     setTimeout(connectWebSocket, 1000); // Attempt to reconnect after 1 second
   });

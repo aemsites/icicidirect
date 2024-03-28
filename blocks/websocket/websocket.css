@@ -1,4 +1,6 @@
 .block.websocket {
     font-size: 24px;
     font-weight: 700;
+    min-height: 6.5rem;
+    text-align: center;
 }
