@@ -16,7 +16,7 @@ function renderImageLinkVariant({ data }, carouselItems) {
                         <div class="carousel-slide-content-footer copyright">
                         <div>
                             <div>${item.finPoweredBy}</div>
-                            <div>$item.finPoweredOn}</div>
+                            <div>${item.finPoweredOn}</div>
                         </div>
                         <div class="socialshare">
                             <a class="social-share">
@@ -61,7 +61,6 @@ export default async function decorate(block) {
   const apiElement = block.querySelector('div[data-block-name="carousel-items"] div > div');
   if (apiElement.textContent.trim().toLowerCase() === 'api') {
     const apiName = apiElement.nextElementSibling.textContent.trim();
-    // const data = await callSpecificAPI(apiName);
     const data = await callAPI(apiName);
 
     if (block.classList.contains('image-link')) {
@@ -69,8 +68,7 @@ export default async function decorate(block) {
       renderImageLinkVariant(data, carouselItems);
     }
   } else {
-    // create Carousel Items with static content i.e. image and title
+    // ToDo: create Carousel Items with static content i.e. image and title
   }
-
   return loadCarousel(carouselItems, block);
 }
