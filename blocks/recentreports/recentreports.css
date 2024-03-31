@@ -34,15 +34,21 @@
 }
 
 .block.recentreports .title-wrap h2 {
-  font-size: 32px;
+  font-size: 2rem;
   color: #053d6e;
   line-height: 45px;
   font-weight: 700;
 }
 
+@media (max-width: 575px) {
+  .block.recentreports .title-wrap h2 {
+      font-size: 20px; 
+      line-height: 20px;
+  }
+}
 
 
-@media (width >= 576px) {
+/*@media (width >= 576px) {
   .block.recentreports .container {
       max-width: 540px;
   }
@@ -72,7 +78,8 @@
   padding-left: 15px;
   margin-right: auto;
   margin-left: auto;
-}
+}*/
+
 .block.recentreports label {
   display: inline-block;
   margin-bottom: 0.5rem;
@@ -347,3 +354,59 @@
   font-size: 100%;
   vertical-align: baseline;
 } 
+
+.block.recentreports .carousel-slider {
+  margin-bottom: 1.9rem;  
+}
+
+.block.recentreports .carousel-slider .carousel-track,
+.block.recentreports .carousel-slider .carousel-list {
+    transform: translate3d(0, 0, 0);
+}
+
+.block.recentreports .carousel-slider .carousel-list {
+    overflow: hidden;
+    /*margin-left: 2rem;*/
+}
+
+.block.recentreports .carousel-slider .carousel-track {
+    position: relative;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    transition: transform 0.5s ease;
+    min-height: 17.5rem;
+}
+
+.block.recentreports .carousel-slider .carousel-track > * {
+    opacity: 1;
+}
+
+.block.recentreports .carousel-slider .carousel-track > :first-child {
+    opacity: 1;
+}
+
+.block.recentreports .carousel-slider .carousel-card {
+    transition: opacity 0.5s ease;
+    padding: 0.5rem;
+}
+.block.recentreports .dots-container {
+  text-align: center;
+  margin-top: 1.3rem;
+}
+
+.block.recentreports .dots-container .dot {
+  height: 0.9rem;
+  width: 0.9rem;
+  margin: 0 0.3rem;
+  padding: 0;
+  cursor: pointer;
+  background: var(--background-color-dark-grey);
+  border-radius: 3rem;
+  border: 0;
+}
+
+.block.recentreports .dots-container .dot.active {
+  background-color: #E87817 ;
+}

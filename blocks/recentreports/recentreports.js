@@ -1,6 +1,43 @@
 import { fetchReports } from '../../scripts/mockapi.js';
 import { createElement } from '../../scripts/blocks-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
+const Viewport = (function initializeViewport() {
+  let deviceType;
+
+  const breakpoints = {
+    mobile: window.matchMedia('(max-width: 47.99rem)'),
+    tablet: window.matchMedia('(min-width: 48rem) and (max-width: 63.99rem)'),
+    desktop: window.matchMedia('(min-width: 64rem)'),
+  };
+
+  function getDeviceType() {
+    if (breakpoints.mobile.matches) {
+      deviceType = 'Mobile';
+    } else if (breakpoints.tablet.matches) {
+      deviceType = 'Tablet';
+    } else {
+      deviceType = 'Desktop';
+    }
+    return deviceType;
+  }
+
+  function isDesktop() {
+    return deviceType === 'Desktop';
+  }
+
+  function isMobile() {
+    return deviceType === 'Mobile';
+  }
+  function isTablet() {
+    return deviceType === 'Tablet';
+  }
+  return {
+    getDeviceType,
+    isDesktop,
+    isMobile,
+    isTablet,
+  };
+}());
 
 function decorateBoxHeader(title, reportLink) {
   const heading = createElement('h3', '');
@@ -104,18 +141,12 @@ function decorateBox(targetPrice, rating, date) {
 // }
 function createReportBox(title, targetPrice, rating, date, reportLink, i, buttontitle) {
   const slideDiv = document.createElement('div');
-  slideDiv.setAttribute('class', 'slide slick-slide slick-active');
-  slideDiv.setAttribute('data-slick-index', i);
-  slideDiv.setAttribute('aria-hidden', 'false');
+  slideDiv.setAttribute('class', 'carousel-card border-box');
   slideDiv.setAttribute('style', 'width: 318px; height: 267px;');
-  slideDiv.setAttribute('tabindex', '0');
-  slideDiv.setAttribute('role', 'tabpanel');
-  slideDiv.setAttribute('id', `slick-slide${70 + i}`);
-  //  slideDiv.setAttribute('aria-describedby', `slick-slide-control${70 + i}`);
   const box = createElement('div', 'box');
   slideDiv.appendChild(box);
-  const header = decorateBoxHeader(title);
-  box.appendChild(header, reportLink);
+  const header = decorateBoxHeader(title, reportLink);
+  box.appendChild(header);
   const rowDiv = decorateBox(targetPrice, rating, date, reportLink);
   box.appendChild(rowDiv);
   const footer = decorateBoxFooter(reportLink, buttontitle);
@@ -160,6 +191,145 @@ function decorateBoxes(blockCfg) {
   return slider;
 }
 
+function updateCarouselView(activeDot) {
+  const dotIndex = parseInt(activeDot.dataset.index, 10);
+  const carouselSlider = activeDot.closest('.carousel-slider');
+  const dots = carouselSlider.querySelectorAll('.dot');
+  const currentActiveDot = carouselSlider.querySelector('.dot.active');
+  if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
+    return;
+  }
+  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  const widthAvailable = carouselTrack.offsetWidth;
+  const allowedCards = allowedCardsCount();
+  const cardWidth = widthAvailable / allowedCards;
+  const cards = Array.from(carouselTrack.children);
+  cards.forEach((card, index) => {
+    if (index >= dotIndex && index < dotIndex + allowedCards) {
+      card.style.opacity = 1;
+    } else {
+      card.style.opacity = 0;
+    }
+    card.style.width = `${cardWidth}px`;
+  });
+  const moveDistance = dotIndex * cards[0].offsetWidth;
+  carouselTrack.style.transform = `translateX(-${moveDistance}px)`;
+  dots.forEach((dot) => dot.classList.remove('active'));
+  dots[dotIndex].classList.add('active');
+}
+
+function startUpdateCarousel(carouselSlider) {
+  const dotsContainer = carouselSlider.querySelector('.dots-container');
+  if (!dotsContainer) return; // Exit if dotsContainer doesn't exist
+
+  const dots = dotsContainer.querySelectorAll('.dot');
+  let activeDotIndex = Array.from(dots).findIndex((dot) => dot.classList.contains('active'));
+
+  if (activeDotIndex === -1) {
+    return;
+  }
+
+  const isDesktop = Viewport.isDesktop();
+  let movingForward = true;
+
+  const intervalId = setInterval(() => {
+    if (isDesktop) {
+      if (activeDotIndex === dots.length - 1) {
+        clearInterval(intervalId); // Stop if it's desktop and reaches the last dot
+        return;
+      }
+      activeDotIndex = (activeDotIndex + 1) % dots.length; // Move to the next dot
+    } else {
+      if (activeDotIndex === 0) {
+        movingForward = true; // Switch to moving forward
+      } else if (activeDotIndex === dots.length - 1) {
+        movingForward = false; // Switch to moving in reverse
+      }
+      activeDotIndex = movingForward ? (activeDotIndex + 1) % dots.length : activeDotIndex - 1;
+      if (activeDotIndex < 0) {
+        activeDotIndex = dots.length - 1;
+      }
+    }
+    const activeDot = dots[activeDotIndex];
+    updateCarouselView(activeDot);
+  }, 2000);
+}
+
+function setCarouselView(carouselSlider) {
+  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  const cards = Array.from(carouselTrack.children);
+  const visibleCards = allowedCardsCount();
+  const numberOfDots = cards.length - visibleCards + 1;
+  //const numberOfDots = 2;
+  if (numberOfDots > 0) {
+    const dotsContainer = document.createElement('div');
+    dotsContainer.className = 'dots-container border-box';
+    // eslint-disable-next-line no-plusplus
+    for (let i = 0; i < numberOfDots; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'dot border-box';
+      dot.dataset.index = i;
+      dotsContainer.appendChild(dot);
+      dot.addEventListener('click', (event) => {
+        updateCarouselView(event.currentTarget);
+      });
+    }
+
+    carouselSlider.appendChild(dotsContainer);
+    updateCarouselView(dotsContainer.firstChild);
+    startUpdateCarousel(carouselSlider);
+  }
+}
+
+async function generateCardsView(block,blockCfg) {
+  const carouselSlider = block.querySelector('.carousel-slider');
+  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  const { buttontitle } = blockCfg;
+  fetchReports().then((companies) => {
+    if (companies) {
+      let counter = 0;
+      companies.forEach((company) => {
+        const reportBox = createReportBox(
+          company.title,
+          company.targetPrice,
+          company.rating,
+          company.date,
+          company.reportLink,
+          counter,
+          buttontitle,
+        );
+        counter += 1;
+        carouselTrack.appendChild(reportBox);
+      });
+      setCarouselView(carouselSlider);
+    }
+  });
+}
+function allowedCardsCount() {
+  const deviceType = Viewport.getDeviceType();
+  switch (deviceType) {
+    case 'Desktop':
+      return 4;
+    case 'Tablet':
+      return 2;
+    default:
+      return 1;
+  }
+}
+function addCarouselCards(container) {
+  const carouselSlider = document.createElement('div');
+  carouselSlider.className = 'carousel-slider border-box';
+
+  const carouselList = document.createElement('div');
+  carouselList.classList.add('carousel-list');
+  carouselSlider.appendChild(carouselList);
+  const carouselTrack = document.createElement('div');
+  carouselTrack.classList.add('carousel-track');
+  //carouselTrack.setAttribute('style', 'opacity: 1; width: 636px; transform: translate3d(0px, 0px, 0px);');
+  carouselList.appendChild(carouselTrack);
+  container.appendChild(carouselSlider);
+}
+
 function decorateDiscoverMore(discoverMoreAnchor) {
   const discoverMoreDiv = createElement('div', 'mt-3');
   const link = createElement('a', 'link-color');
@@ -188,11 +358,8 @@ export default async function decorate(block) {
   const discoverMoreLink = decorateDiscoverMore(discoverMoreAnchor);
   const container = createElement('div', 'container');
   container.appendChild(title);
-  const slider = decorateBoxes(blockCfg);
-  const slickdots = createElement('ul', 'slick-dots');
-  slickdots.setAttribute('role', 'tablist');
-  slider.appendChild(slickdots);
-  container.appendChild(slider);
+  addCarouselCards(container);
+  generateCardsView(container,blockCfg);
   container.appendChild(discoverMoreLink);
   block.textContent = '';
   block.append(container);
