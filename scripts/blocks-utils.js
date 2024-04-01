@@ -79,12 +79,36 @@ function createPictureElement(
   if (src.indexOf('http://') === -1 && src.indexOf('https://') === -1) {
     return createOptimizedPicture(src, alt, eager, breakpoints);
   }
+
+  const url = new URL(src, window.location.href);
   const picture = document.createElement('picture');
-  const image = document.createElement('img');
-  image.setAttribute('src', src);
-  image.setAttribute('alt', alt);
-  image.setAttribute('loading', eager ? 'eager' : 'lazy');
-  picture.appendChild(image);
+  const pathname = url.href;
+  const ext = pathname.substring(pathname.lastIndexOf('.') + 1);
+
+  // webp
+  breakpoints.forEach((br) => {
+    const source = document.createElement('source');
+    if (br.media) source.setAttribute('media', br.media);
+    source.setAttribute('type', 'image/webp');
+    source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
+    picture.appendChild(source);
+  });
+
+  // fallback
+  breakpoints.forEach((br, i) => {
+    if (i < breakpoints.length - 1) {
+      const source = document.createElement('source');
+      if (br.media) source.setAttribute('media', br.media);
+      source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+      picture.appendChild(source);
+    } else {
+      const img = document.createElement('img');
+      img.setAttribute('loading', eager ? 'eager' : 'lazy');
+      img.setAttribute('alt', alt);
+      picture.appendChild(img);
+      img.setAttribute('src', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
+    }
+  });
   return picture;
 }
 

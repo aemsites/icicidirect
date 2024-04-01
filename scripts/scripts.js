@@ -12,9 +12,12 @@ import {
   loadBlocks,
   loadCSS,
   loadScript,
+  fetchPlaceholders,
 } from './aem.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
+
+let isSocialShareDialogInitializing = false;
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -136,3 +139,103 @@ async function loadPage() {
 // TODO: Remove once chatbot is compatible with Helix domain
 loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
+
+export async function handleSocialShareClick(link) {
+  const dialogs = document.querySelectorAll('dialog.social-share');
+  const placeholders = await fetchPlaceholders();
+
+  if (isSocialShareDialogInitializing) {
+    return;
+  }
+
+  let dialogAlreadyExists = false;
+
+  dialogs.forEach((d) => {
+    if (d.dataset?.link === link) {
+      d.showModal();
+      dialogAlreadyExists = true;
+    }
+  });
+
+  if (dialogAlreadyExists) {
+    return;
+  }
+
+  isSocialShareDialogInitializing = true;
+
+  const dialog = document.createElement('dialog');
+  dialog.dataset.link = link;
+  dialog.classList.add('social-share');
+
+  const divContainer = document.createElement('div');
+
+  const closeButton = document.createElement('button');
+  closeButton.classList.add('close-button');
+  closeButton.innerHTML = '&times;';
+
+  function handleDialogClose() {
+    isSocialShareDialogInitializing = false;
+    dialog.close();
+  }
+
+  closeButton.addEventListener('click', () => handleDialogClose());
+  dialog.addEventListener('close', () => handleDialogClose());
+
+  divContainer.appendChild(closeButton);
+
+  const dialogTitle = document.createElement('h4');
+  dialogTitle.textContent = (
+    placeholders.modaltitle ?? 'Share Article Link Via:'
+  ).trim();
+  divContainer.appendChild(dialogTitle);
+
+  const dialogContent = document.createElement('div');
+  dialogContent.classList.add('modal-body');
+
+  const encodeLink = encodeURIComponent(link);
+  const encodeTitle = encodeURIComponent(document.title);
+
+  const socialPlatforms = [
+    {
+      name: 'Twitter',
+      icon: '/icons/twitter-icon.png',
+      shareUrl: `https://twitter.com/intent/tweet?url=${encodeLink}`,
+    },
+    {
+      name: 'Facebook',
+      icon: '/icons/facebook-icon.png',
+      shareUrl: `http://www.facebook.com/sharer.php?u=${encodeLink}&t=${encodeTitle},'sharer',toolbar=0,status=0,width=626,height=436`,
+    },
+    {
+      name: 'WhatsApp',
+      icon: '/icons/whatsapp-icon.png',
+      shareUrl: `https://api.whatsapp.com/send?text=Hey! Check out this: ${encodeLink}`,
+    },
+    {
+      name: 'LinkedIn',
+      icon: '/icons/linkedin-icon.png',
+      shareUrl: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeLink}`,
+    },
+    { name: 'CopyLink', icon: '/icons/copy-link-icon.png' },
+  ];
+
+  socialPlatforms.forEach((platform) => {
+    const icon = document.createElement('img');
+    icon.src = platform.icon;
+    icon.alt = platform.name;
+    icon.classList.add('social-icon');
+    if (platform.shareUrl) {
+      icon.onclick = () => window.open(platform.shareUrl, '_blank');
+    } else if (platform.name === 'CopyLink') {
+      icon.onclick = () => {
+        navigator.clipboard.writeText(link);
+      };
+    }
+    dialogContent.appendChild(icon);
+  });
+  divContainer.appendChild(dialogContent);
+  dialog.appendChild(divContainer);
+  document.body.appendChild(dialog);
+
+  dialog.showModal();
+}
