@@ -69,7 +69,7 @@ function clearIntervalAndReset(intervalId) {
   dotsContainer.firstElementChild.classList.add('active');
 }
 
-let intervalId = startCaraousal();
+let intervalId = 1;
 
 function targetedDotView(event) {
   const targetDotIndex = event.currentTarget.dataset.index;
@@ -230,6 +230,7 @@ async function createTabPanel(block) {
   }
   // Wait for all promises to resolve
   await Promise.all(promises);
+  intervalId = startCaraousal();
 }
 
 export default async function decorate(block) {
