@@ -84,17 +84,30 @@ function createMarketCommentaryCard() {
 }
 
 function updateCarouselView(activeDot) {
+  const windowWidth = window.innerWidth;
+  console.log(`window width ${windowWidth}`);
   const dotIndex = parseInt(activeDot.dataset.index, 10);
 
   const commentaryContainer = activeDot.closest('.market-commentary-container');
+  console.log(`commentary container width ${commentaryContainer.offsetWidth}`);
   const dots = commentaryContainer.querySelectorAll('.dot');
   const currentActiveDot = commentaryContainer.querySelector('.dot.active');
   if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
     return;
   }
   const commentaryTrack = commentaryContainer.querySelector('.market-commentary-track');
+  console.log(`commentary track width ${commentaryTrack.offsetWidth}`);
   const cards = Array.from(commentaryTrack.children);
-  const moveDistance = dotIndex * cards[0].offsetWidth;
+  let moveDistance = dotIndex * cards[0].offsetWidth;
+  console.log(`move distance ${moveDistance}`);
+  if (Viewport.getDeviceType() === 'Desktop' && dotIndex === dots.length - 1) {
+    moveDistance += 2 * (window.innerWidth - commentaryContainer.offsetWidth);
+    // moveDistance = commentaryTrack.offsetWidth - commentaryContainer.offsetWidth;
+  } else if (dotIndex === dots.length - 1) {
+    console.log('I am here1');
+    moveDistance -= 2 * (window.innerWidth - commentaryContainer.offsetWidth);
+  }
+  console.log(`move distance ${moveDistance}`);
   commentaryTrack.style.transform = `translateX(-${moveDistance}px)`;
   dots.forEach((dot) => dot.classList.remove('active'));
   dots[dotIndex].classList.add('active');
@@ -104,7 +117,10 @@ function updateDots(block) {
   const track = block.querySelector('.market-commentary-track');
   const dotsContainer = block.querySelector('.dots-container');
   const cards = track.querySelectorAll('.card');
-  const dotsCont = cards.length - allowedCardsCount() + 1;
+  let dotsCont = cards.length - allowedCardsCount();
+  if (Viewport.getDeviceType() !== 'Desktop') {
+    dotsCont += 1;
+  }
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < dotsCont; i++) {
     const dot = document.createElement('button');

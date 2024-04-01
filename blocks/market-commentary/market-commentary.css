@@ -13,7 +13,7 @@
 .block.market-commentary .market-commentary-track {
     display: flex;
     flex-direction: row;
-    transition: transform 1s ease;
+    transition: transform 2s ease;
     transform: translate3d(0, 0, 0);
 }
 .block.market-commentary .card {
