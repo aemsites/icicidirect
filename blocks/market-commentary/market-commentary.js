@@ -15,44 +15,47 @@ function allowedCardsCount() {
   }
 }
 function createMarketCommentaryCard() {
+  const articleUrl = 'https://www.icicidirect.com/equity/market-news-list/e/nifty-holds-22k-despite-modest-losses,-banks-and-it-dip/1499137';
+  const titleText = 'Nifty holds 22K despite modest losses, banks & IT dip';
+  const descriptionText = 'Market Commentary - End-Session';
+  const poweredByText = 'Powered by ';
+  const sourceText = 'ICICI Securities';
+  const publishedOnText = 'Published on ';
+  const publicationTimeText = '17 May 2022 12:31';
+  const footerTimeText = '05:26 PM';
+
   const mainDiv = document.createElement('div');
   mainDiv.className = 'card';
 
   const anchorElement = document.createElement('a');
-  anchorElement.href = 'https://www.icicidirect.com/equity/market-news-list/e/nifty-holds-22k-despite-modest-losses,-banks-and-it-dip/1499137';
+  anchorElement.href = articleUrl;
   anchorElement.target = '_blank';
 
-  // Create div with class "inner"
   const innerDiv = document.createElement('div');
   innerDiv.className = 'content';
 
-  // Create heading element
   const headingElement = document.createElement('h4');
-  headingElement.textContent = 'Nifty holds 22K despite modest losses, banks & IT dip';
+  headingElement.textContent = titleText;
 
-  // Create paragraph element with class "commentText"
   const paragraphElement = document.createElement('p');
   paragraphElement.className = 'description';
-  paragraphElement.textContent = 'Market Commentary - End-Session';
+  paragraphElement.textContent = descriptionText;
 
-  // Create div with class "poweredBy"
   const poweredByDiv = document.createElement('div');
   poweredByDiv.className = 'info';
 
-  // Create paragraph elements with spans inside "poweredBy" div
   const poweredByParagraph1 = document.createElement('p');
-  poweredByParagraph1.textContent = 'Powered by ';
+  poweredByParagraph1.textContent = poweredByText;
   const poweredBySpan1 = document.createElement('span');
-  poweredBySpan1.textContent = 'ICICI Securities';
+  poweredBySpan1.textContent = sourceText;
   poweredByParagraph1.appendChild(poweredBySpan1);
 
   const poweredByParagraph2 = document.createElement('p');
-  poweredByParagraph2.textContent = 'Published on ';
+  poweredByParagraph2.textContent = publishedOnText;
   const poweredBySpan2 = document.createElement('span');
-  poweredBySpan2.textContent = '17 May 2022 12:31';
+  poweredBySpan2.textContent = publicationTimeText;
   poweredByParagraph2.appendChild(poweredBySpan2);
 
-  // Append all elements together
   poweredByDiv.appendChild(poweredByParagraph1);
   poweredByDiv.appendChild(poweredByParagraph2);
 
@@ -62,20 +65,17 @@ function createMarketCommentaryCard() {
 
   anchorElement.appendChild(innerDiv);
 
-  // Create div with class "circleRow"
   const circleRowDiv = document.createElement('div');
   circleRowDiv.className = 'footer-row';
 
-  // Create span with class "popCircle" inside "circleRow" div
   const popCircleSpan = document.createElement('span');
   popCircleSpan.className = 'footer-circle';
 
   circleRowDiv.appendChild(popCircleSpan);
 
-  // Create div with class "commentaryTime"
   const commentaryTimeDiv = document.createElement('div');
   commentaryTimeDiv.className = 'footer-time';
-  commentaryTimeDiv.textContent = '05:26 PM';
+  commentaryTimeDiv.textContent = footerTimeText;
 
   mainDiv.appendChild(anchorElement);
   mainDiv.appendChild(circleRowDiv);
@@ -84,30 +84,20 @@ function createMarketCommentaryCard() {
 }
 
 function updateCarouselView(activeDot) {
-  const windowWidth = window.innerWidth;
-  console.log(`window width ${windowWidth}`);
   const dotIndex = parseInt(activeDot.dataset.index, 10);
-
   const commentaryContainer = activeDot.closest('.market-commentary-container');
-  console.log(`commentary container width ${commentaryContainer.offsetWidth}`);
   const dots = commentaryContainer.querySelectorAll('.dot');
   const currentActiveDot = commentaryContainer.querySelector('.dot.active');
   if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
     return;
   }
   const commentaryTrack = commentaryContainer.querySelector('.market-commentary-track');
-  console.log(`commentary track width ${commentaryTrack.offsetWidth}`);
   const cards = Array.from(commentaryTrack.children);
   let moveDistance = dotIndex * cards[0].offsetWidth;
-  console.log(`move distance ${moveDistance}`);
-  if (Viewport.getDeviceType() === 'Desktop' && dotIndex === dots.length - 1) {
-    moveDistance += 2 * (window.innerWidth - commentaryContainer.offsetWidth);
-    // moveDistance = commentaryTrack.offsetWidth - commentaryContainer.offsetWidth;
-  } else if (dotIndex === dots.length - 1) {
-    console.log('I am here1');
-    moveDistance -= 2 * (window.innerWidth - commentaryContainer.offsetWidth);
+  if (Viewport.isDesktop() && dotIndex === dots.length - 1) {
+    moveDistance -= (commentaryTrack.offsetWidth - dotIndex * cards[0].offsetWidth);
   }
-  console.log(`move distance ${moveDistance}`);
+
   commentaryTrack.style.transform = `translateX(-${moveDistance}px)`;
   dots.forEach((dot) => dot.classList.remove('active'));
   dots[dotIndex].classList.add('active');
@@ -117,10 +107,7 @@ function updateDots(block) {
   const track = block.querySelector('.market-commentary-track');
   const dotsContainer = block.querySelector('.dots-container');
   const cards = track.querySelectorAll('.card');
-  let dotsCont = cards.length - allowedCardsCount();
-  if (Viewport.getDeviceType() !== 'Desktop') {
-    dotsCont += 1;
-  }
+  const dotsCont = cards.length - allowedCardsCount() + 1;
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < dotsCont; i++) {
     const dot = document.createElement('button');
