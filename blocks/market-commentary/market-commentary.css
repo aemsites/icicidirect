@@ -38,7 +38,14 @@
     width: 90%;
     /*margin: 0 5%;*/
     transition: 0s;
+    text-decoration: none;
 }
+
+.block.market-commentary .card a:hover {
+    background: #007bff;
+}
+
+
 @media (width >= 48rem) {
     .block.market-commentary .card a {
 
@@ -63,10 +70,14 @@
 .block.market-commentary .card .content {
     padding: 20px;
     background: #fff;
-    border: 1px solid #ABABAB;
+    border: 1px solid #E1E1E1;
     border-radius: 0;
-    /*height: 295px;*/
 }
+
+.block.market-commentary .card .content:hover {
+    background: #E1E1E1;
+}
+
 .block.market-commentary .card h4 {
     font-size: 15px;
     margin-bottom: 10px;

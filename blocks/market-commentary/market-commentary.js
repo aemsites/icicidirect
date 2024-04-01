@@ -1,6 +1,9 @@
-import { getTrendingNews } from '../../scripts/mockapi.js';
-import { Viewport, createPictureElement, isInViewport } from '../../scripts/blocks-utils.js';
-import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
+import {observe, Viewport} from '../../scripts/blocks-utils.js';
+import { fetchPlaceholders } from '../../scripts/aem.js';
+import { callMockCommenrtaryAPI } from '../../scripts/mockapi.js';
+import {
+  div, a, h4, p, span,
+} from '../../scripts/dom-builder.js';
 
 const placeholders = await fetchPlaceholders();
 function allowedCardsCount() {
@@ -14,72 +17,35 @@ function allowedCardsCount() {
       return 1;
   }
 }
-function createMarketCommentaryCard() {
-  const articleUrl = 'https://www.icicidirect.com/equity/market-news-list/e/nifty-holds-22k-despite-modest-losses,-banks-and-it-dip/1499137';
-  const titleText = 'Nifty holds 22K despite modest losses, banks & IT dip';
-  const descriptionText = 'Market Commentary - End-Session';
-  const poweredByText = 'Powered by ';
-  const sourceText = 'ICICI Securities';
-  const publishedOnText = 'Published on ';
-  const publicationTimeText = '17 May 2022 12:31';
-  const footerTimeText = '05:26 PM';
-
-  const mainDiv = document.createElement('div');
-  mainDiv.className = 'card';
-
-  const anchorElement = document.createElement('a');
-  anchorElement.href = articleUrl;
-  anchorElement.target = '_blank';
-
-  const innerDiv = document.createElement('div');
-  innerDiv.className = 'content';
-
-  const headingElement = document.createElement('h4');
-  headingElement.textContent = titleText;
-
-  const paragraphElement = document.createElement('p');
-  paragraphElement.className = 'description';
-  paragraphElement.textContent = descriptionText;
-
-  const poweredByDiv = document.createElement('div');
-  poweredByDiv.className = 'info';
-
-  const poweredByParagraph1 = document.createElement('p');
-  poweredByParagraph1.textContent = poweredByText;
-  const poweredBySpan1 = document.createElement('span');
-  poweredBySpan1.textContent = sourceText;
-  poweredByParagraph1.appendChild(poweredBySpan1);
-
-  const poweredByParagraph2 = document.createElement('p');
-  poweredByParagraph2.textContent = publishedOnText;
-  const poweredBySpan2 = document.createElement('span');
-  poweredBySpan2.textContent = publicationTimeText;
-  poweredByParagraph2.appendChild(poweredBySpan2);
-
-  poweredByDiv.appendChild(poweredByParagraph1);
-  poweredByDiv.appendChild(poweredByParagraph2);
-
-  innerDiv.appendChild(headingElement);
-  innerDiv.appendChild(paragraphElement);
-  innerDiv.appendChild(poweredByDiv);
-
-  anchorElement.appendChild(innerDiv);
-
-  const circleRowDiv = document.createElement('div');
-  circleRowDiv.className = 'footer-row';
-
-  const popCircleSpan = document.createElement('span');
-  popCircleSpan.className = 'footer-circle';
-
-  circleRowDiv.appendChild(popCircleSpan);
-
-  const commentaryTimeDiv = document.createElement('div');
-  commentaryTimeDiv.className = 'footer-time';
-  commentaryTimeDiv.textContent = footerTimeText;
-
-  mainDiv.appendChild(anchorElement);
-  mainDiv.appendChild(circleRowDiv);
-  mainDiv.appendChild(commentaryTimeDiv);
+function createMarketCommentaryCard(cardData) {
+  const {
+    articleUrl, titleText, descriptionText, publicationTimeText, footerTimeText,
+  } = cardData;
+  const mainDiv = div(
+    { class: 'card' },
+    a(
+      { href: articleUrl, target: '_blank' },
+      div(
+        { class: 'content' },
+        h4(titleText),
+        p({ class: 'description' }, descriptionText),
+        div(
+          { class: 'info' },
+          p(
+            span(`${placeholders.powerby}`),
+          ),
+          p(
+            span(`${placeholders.publishedon} ${publicationTimeText}`),
+          ),
+        ),
+      ),
+    ),
+    div(
+      { class: 'footer-row' },
+      span({ class: 'footer-circle' }),
+    ),
+    div({ class: 'footer-time' }, footerTimeText),
+  );
   return mainDiv;
 }
 
@@ -95,9 +61,8 @@ function updateCarouselView(activeDot) {
   const cards = Array.from(commentaryTrack.children);
   let moveDistance = dotIndex * cards[0].offsetWidth;
   if (Viewport.isDesktop() && dotIndex === dots.length - 1) {
-    moveDistance -= (commentaryTrack.offsetWidth - dotIndex * cards[0].offsetWidth);
+    moveDistance -= ((cards[0].offsetWidth) * 0.9);
   }
-
   commentaryTrack.style.transform = `translateX(-${moveDistance}px)`;
   dots.forEach((dot) => dot.classList.remove('active'));
   dots[dotIndex].classList.add('active');
@@ -124,6 +89,16 @@ function updateDots(block) {
   }
 }
 
+async function generateCardsView(block) {
+  const blogsContainer = block.querySelector('.market-commentary-track');
+  const blogsDataArray = await callMockCommenrtaryAPI();
+  blogsDataArray.forEach((blogData) => {
+    // Create a market commentary card using createMarketCommentaryCard function
+    const card = createMarketCommentaryCard(blogData);
+    blogsContainer.appendChild(card);
+  });
+  updateDots(block);
+}
 export default function decorate(block) {
   block.textContent = '';
 
@@ -143,23 +118,12 @@ export default function decorate(block) {
   const containerTrack = document.createElement('div');
   containerTrack.className = 'market-commentary-track';
 
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
-  containerTrack.appendChild(createMarketCommentaryCard());
   containerlist.appendChild(containerTrack);
 
   const dotsContainer = document.createElement('div');
   dotsContainer.className = 'dots-container';
-  // const dot = document.createElement('button');
-  // dot.className = 'dot border-box';
-  // dotsContainer.appendChild(dot);
   containerlist.appendChild(dotsContainer);
   container.appendChild(containerlist);
   block.appendChild(container);
-  updateDots(block);
+  observe(block, generateCardsView);
 }
