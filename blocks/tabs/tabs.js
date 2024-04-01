@@ -1,4 +1,4 @@
-import { createOptimizedPicture, toClassName } from '../../scripts/aem.js';
+import { toClassName } from '../../scripts/aem.js';
 import { Viewport, createPictureElement, observe } from '../../scripts/blocks-utils.js';
 import { getTabDataAPI } from '../../scripts/mockapi.js';
 import { handleSocialShareClick } from '../../scripts/scripts.js';
