@@ -201,7 +201,10 @@ async function createTabPanel(block) {
     const title = document.createElement('div');
     title.className = 'title';
     const h2 = document.createElement('h2');
-    const picture = createOptimizedPicture('/icons/video-icon.png');
+    const img = document.createElement('img');
+    img.src = '/icons/video-icon.png';
+    const picture = document.createElement('picture');
+    picture.appendChild(img);
     const textNode = document.createTextNode(tabId);
     h2.appendChild(picture);
     h2.appendChild(textNode);
