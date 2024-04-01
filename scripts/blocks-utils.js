@@ -79,7 +79,6 @@ function createPictureElement(
   if (src.indexOf('http://') === -1 && src.indexOf('https://') === -1) {
     return createOptimizedPicture(src, alt, eager, breakpoints);
   }
-
   const picture = document.createElement('picture');
   const image = document.createElement('img');
   image.setAttribute('src', src);
