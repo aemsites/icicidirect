@@ -77,6 +77,73 @@ async function callMockBlogAPI() {
     return null; // Return null or appropriate error handling
   }
 }
+function formatDateString(dateString) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const [datePart, timePart] = dateString.split(' ');
+  const [day, month, year] = datePart.split('-');
+  const [hour, minute, second] = timePart.split(':');
+
+  // Construct the date object
+  const date = new Date(year, month - 1, day, hour, minute, second);
+
+  // Format the date string
+  const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()}`;
+
+  return formattedDate;
+}
+
+// eslint-disable-next-line consistent-return
+async function fetchBlogsData() {
+  try {
+    const response = await fetch('https://icicidirect-secure-worker.franklin-prod.workers.dev', {
+      method: 'POST',
+      body: JSON.stringify({
+        apiName: 'GetBlogs',
+        inputJson: JSON.stringify({ pageNo: '1', pageSize: '10' }),
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    const data = await response.json();
+
+    const extractedDataArray = [];
+    data.Data.forEach((entry) => {
+      // Initialize object to store extracted data for this entry
+      const extractedData = {};
+
+      // Extract required keys
+      entry.forEach((item) => {
+        if (item.Key === 'PermLink') {
+          // Prepend URL to PermLink value
+          extractedData.link = `https://www.icicidirect.com/research/equity/blog/${item.Value}`;
+        } else if (item.Key === 'PublishedOnDate') {
+          extractedData.postDate = formatDateString(item.Value);
+        } else if (item.Key === 'MetaTitle') {
+          extractedData.title = item.Value;
+        } else if (item.Key === 'SmallImage') {
+          // Prepend URL to SmallImage value
+          extractedData.imageUrl = `https://www.icicidirect.com/images/${item.Value}`;
+        } else if (item.Key === 'MetaDescription') {
+          // Decode MetaDescription using decodeURIComponent
+          extractedData.description = decodeURIComponent(item.Value);
+        }
+      });
+
+      // Push extracted data to array if any required key was found
+      if (Object.keys(extractedData).length > 0) {
+        extractedDataArray.push(extractedData);
+      }
+    });
+    console.log('Extracted data:', extractedDataArray);
+    return extractedDataArray;
+  } catch (error) {
+    console.error('Error fetching JSON data:', error);
+    return null;
+  }
+}
 
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
@@ -139,5 +206,6 @@ export {
   mockPredicationConstant,
   fetchDynamicStockIndexData,
   callMockBlogAPI,
+  fetchBlogsData,
   getTrendingNews,
 };

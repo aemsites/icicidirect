@@ -1,4 +1,5 @@
-import { callMockBlogAPI } from '../../scripts/mockapi.js';
+// eslint-disable-next-line import/named
+import { fetchBlogsData } from '../../scripts/mockapi.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import { createPictureElement, observe } from '../../scripts/blocks-utils.js';
 
@@ -57,7 +58,7 @@ async function createBlogCard(blogData) {
 
 async function generateCardsView(block) {
   const blogsContainer = block.querySelector('.blogs-cards-container');
-  const blogsDataArray = await callMockBlogAPI();
+  const blogsDataArray = await fetchBlogsData();
   const entriesToProcess = blogsDataArray.length;
   /**
    * Loop through the blogsDataArray and create a blog card for each blog entry.
