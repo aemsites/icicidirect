@@ -11,6 +11,7 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
+  loadScript,
 } from './aem.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -132,4 +133,8 @@ async function loadPage() {
   loadDelayed();
 }
 
+// TODO: Remove once chatbot is compatible with Helix domain
+loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
+
+window.validateuserToken = '';

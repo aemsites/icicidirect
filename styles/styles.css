@@ -16,11 +16,13 @@
   --color-orange: #DB620A;
   --color-dark: #262B36;
   --color-black: black;
+  --color-light-black: #212121;
   --color-light-gray: #8F8F8F;
   --color-lighter-gray: #E1E1E1;
   --color-gray: #6c757d;
   --color-gray-dark: #4A4A4A;
   --color-light-gray-dark: #979797;
+  --color-strong-gray-light: #6B6B6B;
   --color-blue: #007bff;
   --color-deep-blue: #004A80;
   --color-light-blue: #4b9dff;
@@ -49,6 +51,7 @@
   --text-color-normal: #212529;
   --text-color-light: #4a4a4a;
   --text-color-blue: #043C6D;
+  --text-color-gray: #9B9B9B;
   --link-color-blue: #4b9dff;
   --link-color-dark-blue: #415270;
   --link-color-dark-gray : #3d3d3d;
@@ -58,11 +61,15 @@
   --background-color-unset: unset;
   --background-color-disable: unset;
   --background-color-dark-grey: #D8D8D8;
+  --background-color-grey: #97979733;
   --background-color-light-orange: #FAE4D1;
   --background-color-light-blue: #EFF6FF;
   --background-color-blue-dark: #183B6A;
+  --background-color-blue: #314467;
   --border-color-light-gray: #E1E8EE;
   --border-color-gray: #D1D1D1;
+  --border-color-dark-gray: #d7d7d7;
+  --border-color-dark-grey: #0E1F3533;
   --color-diable-element: #D1D1D1;
   --color-disable-dot: #D1D1D1;
   --color-footer-top-note-blue: #0e1f35;
@@ -70,6 +77,11 @@
   --color-footer-gray: #a3a3a3;
   --box-shadow-footer-top-gray: #0e1f354d;
   --veritcal-line-footer-top-gray: #9797974d;
+  --box-shadow: #97979733;
+  --boarder-trendign-news-card: #EAEAEA;
+  --card-post-color: #6B6B6B;
+  --card-post-boarder: #d7d7d7;
+  --modal-background-color: #000000BF;
   
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -79,6 +91,7 @@
   /* body sizes */
   --body-font-size-xxxl: 26px;
   --body-font-size-xxl: 22px;
+  --body-font-size-xlm: 21px;
   --body-font-size-xl: 20px;
   --body-font-size-l: 18px;
   --body-font-size-m: 16px;
@@ -96,11 +109,15 @@
   --heading-font-size-m: 20px;
   --heading-font-size-s: 18px;
   --heading-font-size-ms: 16px;
+  --heading-font-size-ss: 15px;
   --heading-font-size-xs: 14px;
   --heading-font-size-sxs: 13px;
   --heading-font-size-mxs: 12px;
   --heading-font-size-xxs: 11px;
   --heading-font-size-xxxs: 10px;
+  --heading-font-size-lmicro: 10px;
+  --heading-font-size-mmicro: 9px;
+  --heading-font-size-micro: 8px;
 
   /* Heading Variables */
   --h1-font-size-desktop: var(--heading-font-size-xxxl);
@@ -126,6 +143,14 @@
   --line-width-hairline: 1px;
   --line-width-thin: 2px;
   --line-width-extra-light: 3px;
+
+  /* Line Height */
+  --line-height-narrow: 10px;
+  --line-height-small: 18px;
+  --line-height-normal: 20px;
+  --line-height-medium: 22px;
+  --line-height-large: 24px;
+  --line-height-wide: 45px;
 
   /* margin and fine spaces */
   --space-1px: 0.06rem;
@@ -298,7 +323,10 @@ h4, h5, h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--font-weight-semibold);
   line-height: 1.2;
-  margin-top: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
 }
 
 h1 {
@@ -397,6 +425,23 @@ a:not([href]):hover {
   text-decoration: none;
 }
 
+a.discover-more-button:any-link {
+  display: inline-block;
+  font-size: var(--heading-font-size-ms);
+  line-height: 2.375rem;
+  min-height: 3.125rem;
+  font-weight: var(--font-weight-semibold);
+  min-width: 12.25rem;
+  background: var(--button-color-orange);
+  color: var(--color-white);
+  text-transform: uppercase;
+  border-radius: 1.875rem;
+  padding: 0.3125rem 1.25rem;
+  border: 0.0625rem solid transparent;
+  text-decoration: none;
+  cursor: pointer;   
+}
+
 main img {
   max-width: 100%;
   width: auto;
@@ -404,25 +449,52 @@ main img {
 }
 
 /* sections */
-main .section {
-  margin: 2rem 0;
-}
 
 main .section.padded > .section-container {
   max-width: 81.25rem;
   width: 100%;
-  padding: 0 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   margin-right: auto;
   margin-left: auto;
 }
 
-@media (width >= 48rem) {
-  header {
-    min-height: 8.4rem;
+main .section.shadow  {
+  background: var(--background-color-light-orange);
+  box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
+}
+
+main .section.top-bottom-padded {
+  padding: 1.5625rem 0;
+}
+
+main .section.bottom-padded {
+  padding-bottom: 1.5625rem;
+}
+
+main .section.background-gray {
+  box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
+}
+
+@media (width >= 36rem) {
+  main .section.top-bottom-padded {
+    padding: 2.5rem 0;
   }
 
-  main .section {
-    margin: 2.8rem 0;
+  main .section.bottom-padded {
+    padding-bottom: 2.5rem;
+  }
+}
+
+@media (width >= 48rem) {
+main .section.shadow  {
+  background: var(--background-color-light-orange);
+  box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
+}
+
+@media (width >= 768px) {
+  header {
+    min-height: 8.4rem;
   }
 
   h1 {
@@ -438,4 +510,5 @@ main .section.padded > .section-container {
   h3 { font-size: var(--h3-font-size-desktop); }
   h4 { font-size: var(--h4-font-size-desktop); }
   h5 { font-size: var(--h5-font-size-desktop); }
+  }
 }
