@@ -56,6 +56,19 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
 };
 
 /**
+ * Prevent the quick links from appending internal links at the end of URL
+ * @param {*} quickLinkItem each quicklink item
+ * @param {*} sectionId internal section ID that the quick link points to
+ */
+const preventInternalLinksDefault = (quickLinkItem, sectionId) => {
+  quickLinkItem.addEventListener('click', (event) => {
+    event.preventDefault();
+    const targetSection = document.getElementById(sectionId);
+    targetSection.scrollIntoView({ behavior: 'smooth' });
+  });
+};
+
+/**
  * Decorate the quick links block
  * @param {Element} block The quicklinks block element
  */
@@ -82,6 +95,8 @@ export default function decorate(block) {
     linkNode.href = `#${linkId}`;
     linkNode.innerText = linkTitle;
     quickLinkContainerDiv.appendChild(linkNode);
+    // prevent quicklinks default behaviour
+    preventInternalLinksDefault(linkNode, linkId);
     // observe other sections of the page when scrolled
     observer.observe(singleItem);
   });
