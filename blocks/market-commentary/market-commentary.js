@@ -1,4 +1,4 @@
-import {observe, Viewport} from '../../scripts/blocks-utils.js';
+import { observe, Viewport } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
 import { callMockCommenrtaryAPI } from '../../scripts/mockapi.js';
 import {
@@ -93,7 +93,6 @@ async function generateCardsView(block) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   const blogsDataArray = await callMockCommenrtaryAPI();
   blogsDataArray.forEach((blogData) => {
-    // Create a market commentary card using createMarketCommentaryCard function
     const card = createMarketCommentaryCard(blogData);
     blogsContainer.appendChild(card);
   });
@@ -102,15 +101,12 @@ async function generateCardsView(block) {
 export default function decorate(block) {
   block.textContent = '';
 
-  const container = document.createElement('div');
-  container.className = 'row';
-
   const titleWrap = document.createElement('div');
   titleWrap.className = 'title text-center';
   const h2 = document.createElement('h2');
   h2.textContent = placeholders.marketcommentary;
   titleWrap.appendChild(h2);
-  container.appendChild(titleWrap);
+  block.appendChild(titleWrap);
 
   const containerlist = document.createElement('div');
   containerlist.className = 'market-commentary-container';
@@ -123,7 +119,6 @@ export default function decorate(block) {
   const dotsContainer = document.createElement('div');
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
-  container.appendChild(containerlist);
-  block.appendChild(container);
+  block.appendChild(containerlist);
   observe(block, generateCardsView);
 }

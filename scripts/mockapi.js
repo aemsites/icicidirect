@@ -90,9 +90,6 @@ async function callMockCommenrtaryAPI() {
     return null; // Return null or appropriate error handling
   }
 }
-
-
-
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }

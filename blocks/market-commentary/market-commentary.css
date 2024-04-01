@@ -16,71 +16,56 @@
     transition: transform 2s ease;
     transform: translate3d(0, 0, 0);
 }
+
 .block.market-commentary .card {
     display: block;
-    min-width: 235px;
-    /*margin-left: 1%;*/
-
-}
-
-@media (width >= 48rem) {
-    .block.market-commentary .card {
-        min-width: 354px;
-    }
+    min-width: 15rem;
 }
 
 .block.market-commentary .card a {
     display: block;
     position: relative;
-    box-shadow: 0 10px 10px rgba(232, 120, 23, 0.8);
+    box-shadow: 0 var(--space-10px) var(--space-10px) var(--link-color-orange);
     background: none;
     border-radius: 0;
     width: 90%;
-    /*margin: 0 5%;*/
     transition: 0s;
     text-decoration: none;
 }
 
-.block.market-commentary .card a:hover {
-    background: #007bff;
+.block.market-commentary .card a::after {
+    content: "";
+    width:2rem;
+    height: 2rem;
+    transform: rotate(-45deg);
+    background: var(--color-white);
+    position: absolute;
+    box-shadow: calc(0rem - var(--space-9px)) var(--space-9px) var(--space-9px) var(--link-color-orange);
+    z-index: 99;
+    bottom: calc(0rem - var(--space-15px));
+    left: calc(50%);
+    border-left:  solid var(--color-lighter-gray);
+    border-bottom: var(--line-width-hairline) solid var(--color-lighter-gray);
 }
 
-
-@media (width >= 48rem) {
-    .block.market-commentary .card a {
-
-    }
+.block.market-commentary .card a:hover::after {
+    background: var(--color-lighter-gray);
 }
-
-    .block.market-commentary .card a::after {
-        content: "";
-        width: 30px;
-        height: 30px;
-        transform: rotate(-45deg);
-        background: #fff;
-        position: absolute;
-        box-shadow: -9px 9px 9px rgba(232, 120, 23, 0.8);
-        z-index: 99;
-        bottom: -15px;
-        left: calc(50%);
-        border-left: 1px solid #ABABAB;
-        border-bottom: 1px solid #ABABAB;
-    }
 
 .block.market-commentary .card .content {
-    padding: 20px;
-    background: #fff;
-    border: 1px solid #E1E1E1;
+    padding: 1.25rem;
+    background: var(--color-white);
+    border: var(--line-width-hairline) solid var(--color-lighter-gray);
     border-radius: 0;
 }
 
 .block.market-commentary .card .content:hover {
-    background: #E1E1E1;
+    background: var(--color-lighter-gray);
 }
 
 .block.market-commentary .card h4 {
-    font-size: 15px;
-    margin-bottom: 10px;
+    font-size: var(--heading-font-size-ss);
+    margin-bottom: var(--space-10px);
     word-break: break-word;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -90,30 +75,29 @@
 }
 
 .block.market-commentary .card .description {
-    font-size: 14px;
-    margin-bottom: 10px;
-    line-height: 1.4;
-    max-height: 118px;
-    min-height: 118px;
+    font-size: var(--heading-font-size-xs);
+    margin-bottom: var(--space-10px);
+    line-height: var(--line-height-normal);
+    max-height: 7.4rem;
+    min-height: 7.4rem;
     overflow: hidden;
 }
 
 .block.market-commentary .card .info {
-    border-top: 1px solid #ABABAB;
-    padding-top: 10px;
+    border-top: var(--line-width-hairline) solid var(--color-lighter-gray);
+    padding-top: var(--space-10px);
     position: relative;
     z-index: 2;
-    bottom: 14px;
+    bottom: var(--space-14px);
     left: 50%;
     transform: translateX(-50%);
-    /*width: 85%;*/
 }
 
 .block.market-commentary .card .info p {
     margin-bottom: 0;
-    font-size: 11px;
+    font-size: var(--heading-font-size-xxs);
     line-height: normal;
-    color: #9B9B9B;
+    color: var(--text-color-gray);
 }
 
 .block.market-commentary .card .footer-row {
@@ -125,32 +109,32 @@
     content: '';
     position: absolute;
     width: 100%;
-    height: 8px;
-    background: #e87817;
-    bottom: 15px;
+    height: var(--space-8px);
+    background: var(--link-color-orange);
+    bottom: var(--space-15px);
     z-index: -1;
 }
 
 .block.market-commentary .card .footer-circle {
-    width: 35px;
-    height: 35px;
+    width: 2.25rem;
+    height: 2.25rem;
     display: block;
-    border: 5px solid rgba(232, 120, 23, 0.8);
+    border: var(--space-5px) solid var(--link-color-orange);;
     border-radius: 50%;
-    background: #fff;
+    background: var(--color-white);
     text-align: center;
-    margin: 50px auto 30px;
+    margin: 4rem auto 2.75rem;
     position: relative;
     z-index: 99;
-    box-shadow: 0px 4px 12px #000;
+    box-shadow: 0 var(--space-4px) var(--space-12px) var(--color-black);
 }
 
 .block.market-commentary .card .footer-time {
     text-align: center;
-    color: #053D6E;
-    font-size: 24px;
+    color: var(--primary);
+    font-size: var(--heading-font-size-ml);
     font-weight: bold;
-    margin-bottom: 50px;
+    margin-bottom: 4rem;
 }
 
 .block.market-commentary .dots-container {
@@ -170,4 +154,10 @@
 
 .block.market-commentary .dots-container .dot.active {
     background-color: var(--color-orange);
+}
+
+@media (width >= 48rem) {
+    .block.market-commentary .card {
+        min-width: 22rem;
+    }
 }
