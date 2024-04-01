@@ -25,7 +25,7 @@
 .block.quicklinks .quicklinks-container a {
   text-decoration: none;
   color: var(--color-white);
-  font-size: var(--heading-font-size-xxxs);
+  font-size: var(--heading-font-size-lmicro);
   font-weight: var(--font-weight-medium);
   padding-right: var(--space-5px);
   margin: var(--space-10px) 0 var(--space-10px) var(--space-10px);
@@ -34,10 +34,44 @@
 
 .block.quicklinks .quicklinks-container a.active {
   color: var(--link-color-orange);
+  transition: color 0.3s ease;
 }
 
 .block.quicklinks .quicklinks-container a:not(:last-child) {
   border-right: var(--line-width-hairline) solid var(--link-color-orange);
+}
+
+.block.quicklinks.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  min-height: 2.813rem;
+  justify-content: center;
+}
+
+.block.quicklinks.sticky .quicklinks-title {
+  display: none;
+}
+
+.block.quicklinks.sticky .quicklinks-container {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.block.quicklinks.sticky .quicklinks-container::-webkit-scrollbar {
+  display: none;
+}
+
+.block.quicklinks.sticky .quicklinks-container a {
+  font-size: var(--body-font-size-xs);
+  white-space: nowrap;
+  min-width: auto;
+  padding-left: var(--space-8px);
+  padding-right: 1.125rem;
+  transition: font-size 0.3s ease;
 }
 
 /* CSS styles to apply when the screen width is more than 768px */
