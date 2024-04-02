@@ -1,4 +1,4 @@
-import { observe, Viewport } from '../../scripts/blocks-utils.js';
+import { Viewport } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
 import { callMockCommenrtaryAPI } from '../../scripts/mockapi.js';
 import {
@@ -89,6 +89,7 @@ function updateDots(block) {
   }
 }
 
+// eslint-disable-next-line no-unused-vars
 async function generateCardsView(block) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   const blogsDataArray = await callMockCommenrtaryAPI();
@@ -98,7 +99,7 @@ async function generateCardsView(block) {
   });
   updateDots(block);
 }
-export default function decorate(block) {
+export default async function decorate(block) {
   block.textContent = '';
 
   const titleWrap = document.createElement('div');
@@ -120,5 +121,5 @@ export default function decorate(block) {
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
   block.appendChild(containerlist);
-  observe(block, generateCardsView);
+  // observe(block, generateCardsView);
 }
