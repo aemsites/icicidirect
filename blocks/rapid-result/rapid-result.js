@@ -1,34 +1,6 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
 import { createElement, observe } from '../../scripts/blocks-utils.js';
-
-// TODO: This is dummy function that fetch sample data from EDS json.
-// It will be replaced when API call is available.
-async function fetchRapidResultMockData() {
-  let hostUrl = window.location.origin;
-  if (!hostUrl || hostUrl === 'null') {
-    // eslint-disable-next-line prefer-destructuring
-    hostUrl = window.location.ancestorOrigins[0];
-  }
-  const apiUrl = `${hostUrl}/draft/jiang/rapidresult.json`;
-  try {
-    const response = await fetch(apiUrl);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    const results = data.data.map((result) => ({
-      title: result.title,
-      description: result.description,
-      link: result.link,
-      publishedon: result.publishedon,
-    }));
-    return results;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.log('Failed to get API data: ', error);
-    return [];
-  }
-}
+import { fetchRapidResultMockData } from '../../scripts/mockapi.js';
 
 function decorateTitle(titleContent) {
   const title = createElement('div', 'title');
@@ -38,11 +10,38 @@ function decorateTitle(titleContent) {
   return title;
 }
 
-async function decorateCards(block, placeholders, previousNode) {
-  const results = await fetchRapidResultMockData();
+function formatDate(date) {
+  let result = '';
+  const isInvalidDate = (validDate) => Number.isNaN(validDate.getDate());
+  const dateObj = new Date(date);
+  if (!isInvalidDate(dateObj)) {
+    const hours = dateObj.getHours();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const dateArr = dateObj.toString().split(' ');
+    const time = dateArr[4].split(':', 2).join(':');
+    result = `${dateArr[2]} ${dateArr[1]} ${dateArr[3]} ${time} ${ampm}`;
+  }
+  return result;
+}
+
+async function decorateCards(block, placeholders, cardCount, previousNode) {
+  const queryObj = await fetchRapidResultMockData();
+  const results = queryObj.map((el) => {
+    const elArr = el.PublishedOnDate.split(' ');
+    const publishDate = elArr[0];
+    const publishTime = elArr[1];
+    const formatPublishDate = publishDate.split('-').reverse();
+    el.PublishedOnDate = `${formatPublishDate} ${publishTime}`;
+    return el;
+  }).sort((a, b) => {
+    const dateA = new Date(a.PublishedOnDate);
+    const dateB = new Date(b.PublishedOnDate);
+    return dateB - dateA;
+  });
+
   const ul = createElement('ul', '');
-  // show 4 cards by default
-  for (let index = 0; index < (results.length > 4 ? 4 : results.length); index += 1) {
+  const loopNum = results.length > cardCount ? cardCount : results.length;
+  for (let index = 0; index < loopNum; index += 1) {
     const result = results[index];
     const li = createElement('li', '');
     const liWrapper = createElement('div', 'company-result');
@@ -56,27 +55,28 @@ async function decorateCards(block, placeholders, previousNode) {
     titleIcon.append(titleIconSpan);
     decorateIcons(titleIcon);
     const h3 = createElement('h3', '');
-    if (result.link) {
+    const titleContent = result.Title ?? '';
+    if (result.PermLink) {
       const aLink = createElement('a', '');
-      aLink.href = result.link;
+      aLink.href = result.PermLink;
       aLink.target = '_blank';
-      aLink.append(result.title);
+      aLink.append(titleContent);
       h3.append(aLink);
     } else {
-      h3.textContent = result.title;
+      h3.textContent = titleContent;
     }
     const pTag = createElement('p', '');
-    pTag.textContent = result.publishedon;
+    pTag.textContent = formatDate(result.PublishedOnDate);
     h3.append(pTag);
     title.append(titleIcon);
     title.append(h3);
     // Cards description
-    description.innerHTML = decodeURIComponent(result.description);
+    description.innerHTML = decodeURIComponent(result.ShortDescription ?? '');
     // Cards powerby
     const viewMoreDiv = createElement('div', '');
     const viewMoreLink = createElement('a', 'view-more-link');
-    if (result.link) {
-      viewMoreLink.href = result.link;
+    if (result.PermLink) {
+      viewMoreLink.href = result.PermLink;
       viewMoreLink.target = '_blank';
     }
     viewMoreLink.append((placeholders.viewmore ?? '').trim());
@@ -124,6 +124,7 @@ export default async function decorate(block) {
   const blockCfg = readBlockConfig(block);
   const { title } = blockCfg;
   const { subtitle } = blockCfg;
+  const cardCount = blockCfg.count ?? 4;
   const topTitle = decorateTitle(title);
   const mainContent = createElement('div', 'main-content');
   const mainWrapper = createElement('div', 'main-wrapper');
@@ -135,5 +136,5 @@ export default async function decorate(block) {
   block.textContent = '';
   block.append(topTitle);
   block.append(mainContent);
-  observe(block, decorateCards, placeholders, discoverMoreButton);
+  observe(block, decorateCards, placeholders, cardCount, discoverMoreButton);
 }

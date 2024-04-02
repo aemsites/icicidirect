@@ -88,6 +88,7 @@
     max-width: 2.5rem;
 }
 
+.block.rapid-result .company-result .cards-title h3,
 .block.rapid-result .company-result .cards-title h3 a {
     max-width: 70%;
     font-size: var(--heading-font-size-s);
@@ -175,13 +176,12 @@
 
 @media (width >=62rem) {
     .block.rapid-result .main-wrapper > ul {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 1.5rem;
     }
 
     .block.rapid-result .main-wrapper > ul > li {
-        flex: 0 0 25%;
-        max-width: 23%;
+        max-width: unset;
     }
 }
