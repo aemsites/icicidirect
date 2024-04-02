@@ -1,4 +1,4 @@
-import { getBlockKeyValue } from '../../scripts/aem.js';
+import { readBlockConfig } from '../../scripts/aem.js';
 
 const options = {
   root: null,
@@ -88,9 +88,10 @@ const preventInternalLinksDefault = (quickLinkItem, sectionId) => {
  * Decorate the quick links block
  * @param {Element} block The quicklinks block element
  */
-export default function decorate(block) {
+export default async function decorate(block) {
   // extract title from the block data
-  const blockTitle = getBlockKeyValue(block, 'Title');
+  const blockConfig = readBlockConfig(block);
+  const blockTitle = blockConfig.title || '';
   block.innerText = '';
   const titleDiv = document.createElement('h2');
   titleDiv.className = 'quicklinks-title';

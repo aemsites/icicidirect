@@ -613,21 +613,6 @@ async function loadBlocks(main) {
 }
 
 /**
- * Returns the value specified in front of key or undefined if missing in the block
- * <div>
- *  <div>key</div>
- *  <div>value</div>
- * <div>
- * @param {*} block from which value needs to be extracted
- * @returns the value or undefined if not present
- */
-const getBlockKeyValue = (block, key) => {
-  const divNode = [...block.children].find((item) => (
-    item.children[0] && item.children[0].innerText === key));
-  return divNode && divNode.children[1].innerText;
-};
-
-/**
  * Decorates a block.
  * @param {Element} block The block element
  */
@@ -642,12 +627,23 @@ function decorateBlock(block) {
     const section = block.closest('.section');
     if (section) section.classList.add(`${shortBlockName}-container`);
   }
-  // extract the quicklinks details if present
-  const quickLinkTitle = getBlockKeyValue(block, 'Quicklinks title');
-  if (quickLinkTitle) {
-    block.dataset.quicklinksTitle = quickLinkTitle;
-    block.id = toCamelCase(quickLinkTitle);
-  }
+}
+
+/**
+ * Decorates all blocks in a container element to enable quicklinks metadata.
+ * @param {Element} main The container element under which quicklinks has to be enabled.
+ */
+function decorateQuickLinks(main) {
+  const addQuickLinksMetadata = (block) => {
+    // extract the quicklinks details if present
+    const blockConfig = readBlockConfig(block);
+    const quickLinkTitle = blockConfig['quicklinks-title'];
+    if (quickLinkTitle) {
+      block.dataset.quicklinksTitle = quickLinkTitle;
+      block.id = toCamelCase(quickLinkTitle);
+    }
+  };
+  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
 }
 
 /**
@@ -731,5 +727,5 @@ export {
   toClassName,
   updateSectionsStatus,
   waitForLCP,
-  getBlockKeyValue,
+  decorateQuickLinks,
 };
