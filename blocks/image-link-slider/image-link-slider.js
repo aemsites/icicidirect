@@ -2,7 +2,6 @@
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
 import { handleSocialShareClick } from '../../scripts/scripts.js';
 import { callAPI } from '../../scripts/mockapi.js';
-import { observe } from "../../scripts/blocks-utils.js";
 
 function renderImageLinkVariant({ data }, carouselItems) {
   data.forEach((item) => {
@@ -56,44 +55,47 @@ async function loadCarousel(block, carouselItems) {
   return loadBlock(carouselBlock);
 }
 
+function handleTitleConfig(titleElement, container) {
+  const titleText = titleElement.textContent.trim();
+  const title = document.createElement('h2');
+  title.textContent = titleText;
+
+  const titleWrapper = document.createElement('div');
+  titleWrapper.classList.add('title-wrapper');
+  titleWrapper.appendChild(title);
+
+  container.insertBefore(titleWrapper, container.firstChild);
+}
+
 export default async function decorate(block) {
   block.style.display = 'none';
   const container = block.closest('.section .section-container');
   container.style.display = 'none';
-  for (let i = 0; i < block.children.length; i++) {
-    const configElements = block.children[i];
-    const configNameElement = configElements.querySelector("div");
-    if (configNameElement.textContent.trim().toLowerCase() === 'api') {
+  const configElementsArray = Array.from(block.children);
+
+  const promises = configElementsArray.map(async (configElement) => {
+    const configNameElement = configElement.querySelector('div');
+    const configName = configNameElement.textContent.trim().toLowerCase();
+    if (configName === 'api') {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      callAPI(apiName)
-          .then((data) => {
-            if (block.classList.contains('image-link-slider')) {
-              // create Carousel Items with Image & Heading
-              renderImageLinkVariant(data, carouselItems);
-            }
-            return loadCarousel(block, carouselItems);
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          })
-          .finally(() => {
-            container.style.display = 'block';
-          });
-    } else if (configNameElement.textContent.trim().toLowerCase() === 'title') {
-      const titleElement = document.createElement('h2');
-      const title = configNameElement.nextElementSibling.textContent.trim();
-      titleElement.textContent = title;
-      const titleParentElement = document.createElement('div');
-      titleParentElement.classList.add('title-wrapper');
-      titleParentElement.append(titleElement);
-      container.insertBefore(titleParentElement, container.firstChild);
-    } else if (configNameElement.textContent.trim().toLowerCase() === 'link') {
+      const data = await callAPI(apiName);
+      if (block.classList.contains('image-link-slider')) {
+        renderImageLinkVariant(data, carouselItems);
+      }
+      await loadCarousel(block, carouselItems);
+    } else if (configName === 'title') {
+      const titleElement = configNameElement.nextElementSibling;
+      handleTitleConfig(titleElement, container);
+    } else if (configName === 'link') {
       const buttonWrapper = document.createElement('div');
       buttonWrapper.classList.add('button-wrapper');
       buttonWrapper.append(configNameElement.nextElementSibling);
       container.append(buttonWrapper);
     }
-  }
+  });
+
+  await Promise.all(promises);
+  container.style.display = 'block';
 }
