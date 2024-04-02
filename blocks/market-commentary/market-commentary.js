@@ -98,7 +98,7 @@ async function generateCardsView(block) {
   });
   updateDots(block);
 }
-export default function decorate(block) {
+export default async function decorate(block) {
   block.textContent = '';
 
   const titleWrap = document.createElement('div');
