@@ -56,6 +56,22 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
 };
 
 /**
+ * For scrolling the selected section on the top with sticky quicklinks visible.
+ * The header offset will add some space on top to allow the section heading to be visible
+ * @param {*} section that needs to be scrolled on top
+ */
+const scrollToAdjustedStickyHeader = (section) => {
+  const headerOffset = 70;
+  const elementPosition = section.getBoundingClientRect().top;
+  const offsetPosition = elementPosition + window.scrollY - headerOffset;
+
+  window.scrollTo({
+    top: offsetPosition,
+    behavior: 'smooth',
+  });
+};
+
+/**
  * Prevent the quick links from appending internal links at the end of URL
  * @param {*} quickLinkItem each quicklink item
  * @param {*} sectionId internal section ID that the quick link points to
@@ -64,7 +80,7 @@ const preventInternalLinksDefault = (quickLinkItem, sectionId) => {
   quickLinkItem.addEventListener('click', (event) => {
     event.preventDefault();
     const targetSection = document.getElementById(sectionId);
-    targetSection.scrollIntoView({ behavior: 'smooth' });
+    scrollToAdjustedStickyHeader(targetSection);
   });
 };
 
