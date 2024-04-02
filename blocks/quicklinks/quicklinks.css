@@ -48,7 +48,7 @@
   z-index: 9;
   min-height: 2.813rem;
   justify-content: center;
-  box-shadow: 0 5px 10px 0 var(--box-shadow);
+  box-shadow: 0 var(--space-5px) var(--space-10px) 0 var(--box-shadow);
 }
 
 .block.quicklinks.sticky .quicklinks-title {
