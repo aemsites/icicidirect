@@ -45,7 +45,7 @@
   position: fixed;
   top: 0;
   width: 100%;
-  z-index: 100;
+  z-index: 9;
   min-height: 2.813rem;
   justify-content: center;
   box-shadow: 0 5px 10px 0 var(--box-shadow);
@@ -60,10 +60,7 @@
   overflow-x: auto;
   width: 100%;
   margin-bottom: 0;
-}
-
-.block.quicklinks.sticky .quicklinks-container::-webkit-scrollbar {
-  display: none;
+  flex: auto;
 }
 
 .block.quicklinks.sticky .quicklinks-container a {
@@ -95,5 +92,13 @@
     padding-right: var(--space-15px);
     line-height: 1;
     margin: var(--space-5px) 0 var(--space-5px) var(--space-10px);
+  }
+
+  .block.quicklinks.sticky .quicklinks-container { 
+    justify-content: unset;
+  }
+
+  .block.quicklinks.sticky .quicklinks-container::-webkit-scrollbar {
+    display: none;
   }
 }
