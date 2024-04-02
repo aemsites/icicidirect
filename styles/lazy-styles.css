@@ -12,7 +12,6 @@ dialog.social-share > div {
     border: 2px solid var(--link-color-orange);
     border-radius: 10px;
     background-color: var(--color-white);
-    min-width: 500px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -28,6 +27,7 @@ dialog.social-share .modal-body {
 dialog.social-share .modal-body .social-icon {
     width: 2.5rem;
     height: 2.5rem;
+    cursor: pointer;
 }
 
 dialog.social-share .modal-body h3 {
@@ -45,4 +45,14 @@ dialog.social-share .close-button {
     background-color: transparent;
     border: none;
     cursor: pointer;
+}
+
+dialog.social-share::backdrop {
+    background-color: var(--modal-background-color);
+}
+
+@media (width >= 768px) {
+    dialog.social-share > div {
+        min-width: 500px;
+    }
 }
