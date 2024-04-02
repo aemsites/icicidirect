@@ -118,17 +118,20 @@ async function fetchBlogsData() {
       entry.forEach((item) => {
         if (item.Key === 'PermLink') {
           // Prepend URL to PermLink value
-          extractedData.link = `https://www.icicidirect.com/research/equity/blog/${item.Value}`;
+          extractedData.link = `http://icicidirect.finoux.com/research/equity/blog/${item.Value}`;
         } else if (item.Key === 'PublishedOnDate') {
           extractedData.postDate = formatDateString(item.Value);
-        } else if (item.Key === 'MetaTitle') {
+        } else if (item.Key === 'ArticleTitle') {
           extractedData.title = item.Value;
         } else if (item.Key === 'SmallImage') {
           // Prepend URL to SmallImage value
-          extractedData.imageUrl = `https://www.icicidirect.com/images/${item.Value}`;
-        } else if (item.Key === 'MetaDescription') {
-          // Decode MetaDescription using decodeURIComponent
-          extractedData.description = decodeURIComponent(item.Value);
+          extractedData.imageUrl = `https://www.icicidirect.finoux.com/images/${item.Value}`;
+        } else if (item.Key === 'ShortDescription') {
+          const decodedString = decodeURIComponent(item.Value);
+          const tempElement = document.createElement('div');
+          tempElement.innerHTML = decodedString;
+          const textContent = tempElement.textContent || tempElement.innerText;
+          extractedData.description = textContent;
         }
       });
 
