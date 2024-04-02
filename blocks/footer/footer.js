@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { div } from '../../scripts/dom-builder.js';
 
 function onClick() {
   const disclaimerDiv = document.querySelector('.panel-body');
@@ -105,6 +106,10 @@ function decorateDisclaimer(block) {
   defaultWrapper.appendChild(panelBody);
 }
 
+function stickyFooter() {
+  return div({ class: ['sticky-footer', 'turnstile-container'] });
+}
+
 /**
  * loads and decorates the footer
  * @param {Element} block The footer block element
@@ -122,5 +127,6 @@ export default async function decorate(block) {
   while (fragment.firstElementChild) {
     footer.append(fragment.firstElementChild);
   }
+  footer.append(stickyFooter());
   block.append(footer);
 }

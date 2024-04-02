@@ -4,7 +4,11 @@ import { createElement, observe } from '../../scripts/blocks-utils.js';
 // TODO: This is dummy function that fetch sample data from EDS json.
 // It will be replaced when API call is available.
 async function fetchMarketInsightMockData() {
-  const hostUrl = window.location.origin;
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
   const apiUrl = `${hostUrl}/draft/jiang/marketinsight.json`;
   try {
     const response = await fetch(apiUrl);

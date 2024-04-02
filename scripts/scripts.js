@@ -139,6 +139,7 @@ async function loadPage() {
 // TODO: Remove once chatbot is compatible with Helix domain
 loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
+window.validateuserToken = '';
 
 export async function handleSocialShareClick(link) {
   const dialogs = document.querySelectorAll('dialog.social-share');
