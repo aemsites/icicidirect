@@ -1,4 +1,4 @@
-import { Viewport } from '../../scripts/blocks-utils.js';
+import { observe, Viewport } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
 import { callMockCommenrtaryAPI } from '../../scripts/mockapi.js';
 import {
@@ -121,5 +121,5 @@ export default async function decorate(block) {
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
   block.appendChild(containerlist);
-  // observe(block, generateCardsView);
+  observe(block, generateCardsView);
 }
