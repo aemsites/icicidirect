@@ -58,6 +58,7 @@
   --button-color-orange: #E87817;
   --background-color-light-grey: #FCFCFC;
   --background-color-gray-scale: #F9F9F9;
+  --background-color-deep-light-grey: #F7F7F7;
   --background-color-transparent: transparent;
   --background-color-unset: unset;
   --background-color-disable: unset;
@@ -145,6 +146,7 @@
 
   /* Line Height */
   --line-height-narrow: 10px;
+  --line-height-little-small: 14px;
   --line-height-small: 18px;
   --line-height-normal: 20px;
   --line-height-medium: 22px;
@@ -489,8 +491,12 @@ main .section.bottom-padded {
   padding-bottom: 1.5625rem;
 }
 
-main .section.background-gray {
+main .section.shadow-gray {
   box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
+}
+
+main .section.background-gray {
+  background: var(--background-color-deep-light-grey);
 }
 
 @media (width >= 36rem) {
