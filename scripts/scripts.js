@@ -12,8 +12,9 @@ import {
   loadBlocks,
   loadCSS,
   loadScript,
-  decorateQuickLinks,
 } from './aem.js';
+
+import { decorateQuickLinks } from './blocks-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 

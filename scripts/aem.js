@@ -630,23 +630,6 @@ function decorateBlock(block) {
 }
 
 /**
- * Decorates all blocks in a container element to enable quicklinks metadata.
- * @param {Element} main The container element under which quicklinks has to be enabled.
- */
-function decorateQuickLinks(main) {
-  const addQuickLinksMetadata = (block) => {
-    // extract the quicklinks details if present
-    const blockConfig = readBlockConfig(block);
-    const quickLinkTitle = blockConfig['quicklinks-title'];
-    if (quickLinkTitle) {
-      block.dataset.quicklinksTitle = quickLinkTitle;
-      block.id = toCamelCase(quickLinkTitle);
-    }
-  };
-  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
-}
-
-/**
  * Decorates all blocks in a container element.
  * @param {Element} main The container element
  */
@@ -727,5 +710,4 @@ export {
   toClassName,
   updateSectionsStatus,
   waitForLCP,
-  decorateQuickLinks,
 };

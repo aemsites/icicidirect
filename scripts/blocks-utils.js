@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from './aem.js';
+import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -117,6 +117,23 @@ function getEnvType(hostname = window.location.hostname) {
   return fqdnToEnvType[hostname] || 'dev';
 }
 
+/**
+ * Decorates all blocks in a container element to enable quicklinks metadata.
+ * @param {Element} main The container element under which quicklinks has to be enabled.
+ */
+function decorateQuickLinks(main) {
+  const addQuickLinksMetadata = (block) => {
+    // extract the quicklinks details if present
+    const blockConfig = readBlockConfig(block);
+    const quickLinkTitle = blockConfig['quicklinks-title'];
+    if (quickLinkTitle) {
+      block.dataset.quicklinksTitle = quickLinkTitle;
+      block.id = toCamelCase(quickLinkTitle);
+    }
+  };
+  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
+}
+
 export {
   isInViewport,
   Viewport,
@@ -125,4 +142,5 @@ export {
   createPictureElement,
   observe,
   getEnvType,
+  decorateQuickLinks,
 };
