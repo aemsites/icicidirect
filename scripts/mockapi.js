@@ -104,7 +104,6 @@ async function callMockBlogAPI() {
     return null; // Return null or appropriate error handling
   }
 }
-
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -167,7 +166,7 @@ export {
   fetchDynamicStockIndexData,
   callMockBlogAPI,
   getTrendingNews,
-  getHostUrl,
   fetchRapidResultMockData,
   fetchMarketInsightMockData,
+  getHostUrl,
 };
