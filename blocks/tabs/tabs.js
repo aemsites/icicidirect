@@ -112,9 +112,13 @@ function createSocialLinkElement(item) {
   socialLink.classList.add('social-link');
   const socialItem = document.createElement('li');
   const socialAnchor = document.createElement('a');
-  socialAnchor.addEventListener('click', () => { handleSocialShareClick(item.shareLink); });
   const socialIcon = document.createElement('i');
   socialIcon.classList.add('fa', 'fa-share', 'icon');
+  socialAnchor.href = item.shareLink;
+  socialIcon.addEventListener('click', (event) => {
+    event.preventDefault();
+    handleSocialShareClick(socialAnchor);
+  });
   socialAnchor.appendChild(socialIcon);
   socialItem.appendChild(socialAnchor);
   socialLink.appendChild(socialItem);
@@ -122,10 +126,14 @@ function createSocialLinkElement(item) {
 }
 
 function createCards(container, data, tabId) {
+  const cardWidth = container.offsetWidth / allowedCardsCount();
   data.forEach((item) => {
     // Create slide element
     const card = document.createElement('div');
     card.className = 'slide-card';
+    if (cardWidth > 0) {
+      card.style.width = `${cardWidth}px`;
+    }
 
     // Create cardInfo element
     const cardInfo = document.createElement('div');

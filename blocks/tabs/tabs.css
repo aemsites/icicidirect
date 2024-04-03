@@ -38,7 +38,7 @@
 }
 
 .block.tabs .tabs-list button[aria-selected="false"] {
-    border-bottom: 1px solid var(--background-color);
+    border-bottom: var(--space-1px) solid var(--background-color);
     background-color: var(--background-color);
     cursor: pointer;
 }
@@ -178,7 +178,7 @@
 
 .block.tabs .card-info .text-content .social-link li a {
     border-radius: var(--space-4px);
-    border: 1px solid var(--link-color-gray);;
+    border: var(--space-1px) solid var(--link-color-gray);;
     padding: var(--space-5px);
     width: 2.125rem;
     height: 2.125rem;
@@ -223,7 +223,7 @@
     content: "";
     position: absolute;
     left: 50%;
-    bottom: var(--space-negative-15px);
+    bottom: calc(-1 * var(--space-15px));
     width: 92%;
     height: 9.375rem;
     margin: 0 auto;
@@ -244,11 +244,11 @@
 }
 
 .block.tabs .card-info.videos-card .picture-wrapper::after {
-    background-image: url("../../icons/icon-play-button.png");
+    background-image: url("../../icons/play-button.svg");
 }
 
 .block.tabs .card-info.podcasts-card .picture-wrapper::after {
-    background-image: url("../../icons/icon-play-audio-button.png");
+    background-image: url("../../icons/microphone.svg");
 }
 
 .block.tabs .card-info .picture-wrapper picture {

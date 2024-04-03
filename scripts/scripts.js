@@ -141,10 +141,10 @@ loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
 window.validateuserToken = '';
 
-export async function handleSocialShareClick(link) {
+export async function handleSocialShareClick(anchor) {
   const dialogs = document.querySelectorAll('dialog.social-share');
   const placeholders = await fetchPlaceholders();
-
+  const link = anchor.closest('li')?.querySelector('a').href ?? anchor.dataset?.href;
   if (isSocialShareDialogInitializing) {
     return;
   }
