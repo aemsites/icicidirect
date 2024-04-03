@@ -182,4 +182,5 @@ export {
   getTrendingNews,
   fetchRapidResultMockData,
   fetchMarketInsightMockData,
+  getHostUrl,
 };

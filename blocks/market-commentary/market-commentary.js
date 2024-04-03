@@ -98,9 +98,9 @@ function updateDots(block) {
 
 async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
-  fetchData(`${getHostUrl()}/scripts/mock-commentarydata.json`, async (error, blogsDataArray = []) => {
-    if (blogsDataArray) {
-      blogsDataArray.forEach((blogData) => {
+  fetchData(`${getHostUrl()}/scripts/mock-commentarydata.json`, async (error, marketCommentaryDataArray = []) => {
+    if (marketCommentaryDataArray) {
+      marketCommentaryDataArray.forEach((blogData) => {
         const card = createMarketCommentaryCard(blogData, placeholders);
         blogsContainer.appendChild(card);
       });
