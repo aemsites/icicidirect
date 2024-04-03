@@ -1,0 +1,91 @@
+.block.sticky-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 9999;
+}
+
+.block.sticky-footer .sticky-footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color-blue-dark);
+  padding: var(--space-8px) var(--space-15px);
+}
+
+.block.sticky-footer .action-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.block.sticky-footer .action-container .discover-more-button {
+  text-transform: none;
+  min-height: 2.5rem;
+  width: 14rem;
+  font-size: var(--heading-font-size-lmicro);
+  font-weight: var(--font-weight-regular);
+  text-align: center;
+  padding: 0 var(--space-5px);
+  margin: 0 var(--space-8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.block.sticky-footer .action-container .discover-more-button a {
+  text-align: center;
+}
+
+.block.sticky-footer .action-container input {
+  min-height: 2.5rem;
+  font-size: var(--heading-font-size-sxs);
+  border-radius: var(--space-8px);
+  border: var(--line-width-hairline) solid var(--button-color-orange);
+  width: 16.563rem;
+  padding: var(--space-6px) var(--space-12px);
+  cursor: text;
+  color: var(--color-gray-dark);
+}
+
+.block.sticky-footer .message-container p {
+  color: var(--color-white);
+  font-size: var(--body-font-size-s);
+  margin: 0;
+}
+
+.block.sticky-footer .message-container .validation-message {
+  display: none;
+}
+
+.block.sticky-footer .message-container .validation-message.invalid {
+  display: block;
+}
+
+/* CSS styles to apply when the screen width is more than 576 px and less than 768px */
+@media screen and (width >= 36rem) and  (width < 48rem) {
+  .block.sticky-footer .action-container .discover-more-button {
+    font-size: var(--body-font-size-l);
+    transition: all 0.3s ease ;
+  }
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .block.sticky-footer .action-container input {
+    font-size: var(--body-font-size-m);
+    min-height: 2.813rem;
+    line-height: 1.5rem;
+  }
+
+  .block.sticky-footer .action-container input::placeholder {
+    font-size: var(--body-font-size-m);
+    font-stretch: expanded;
+  }
+
+  .block.sticky-footer .action-container .discover-more-button {
+    font-size: var(--body-font-size-l);
+    transition: all 0.3s ease ;
+    min-height: 2.813rem;
+  }
+}
