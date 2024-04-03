@@ -96,7 +96,6 @@ function updateDots(block) {
   }
 }
 
-// eslint-disable-next-line no-unused-vars
 async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   fetchData(`${getHostUrl()}/scripts/mock-commentarydata.json`, async (error, blogsDataArray = []) => {
@@ -108,13 +107,6 @@ async function generateCardsView(block, placeholders) {
       updateDots(block);
     }
   });
-
-  // const blogsDataArray = await callMockCommenrtaryAPI();
-  // blogsDataArray.forEach((blogData) => {
-  //   const card = createMarketCommentaryCard(blogData, placeholders);
-  //   blogsContainer.appendChild(card);
-  // });
-  // updateDots(block);
 }
 export default async function decorate(block) {
   block.textContent = '';
