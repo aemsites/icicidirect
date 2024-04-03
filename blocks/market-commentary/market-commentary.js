@@ -5,17 +5,6 @@ import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
 
-function allowedCardsCount() {
-  const deviceType = Viewport.getDeviceType();
-  switch (deviceType) {
-    case 'Desktop':
-      return 4;
-    case 'Tablet':
-      return 2;
-    default:
-      return 1;
-  }
-}
 function createMarketCommentaryCard(cardData, placeholders) {
   const {
     articleUrl, titleText, descriptionText, publicationTimeText, footerTimeText,
@@ -67,11 +56,30 @@ function updateCarouselView(activeDot) {
   dots[dotIndex].classList.add('active');
 }
 
+function countVisibleCards(track, cards) {
+  const totalAvailableWidth = track.offsetWidth;
+  let totalCardsWidth = 0;
+  let count = 0;
+  // eslint-disable-next-line consistent-return
+  cards.forEach((card) => {
+    totalCardsWidth += card.offsetWidth;
+    if (totalCardsWidth <= (totalAvailableWidth + 1)) {
+      count += 1;
+    } else {
+      return count;
+    }
+  });
+  return count;
+}
+
 function updateDots(block) {
   const track = block.querySelector('.market-commentary-track');
   const dotsContainer = block.querySelector('.dots-container');
   const cards = track.querySelectorAll('.card');
-  const dotsCont = cards.length - allowedCardsCount() + 1;
+  const dotsCont = cards.length - countVisibleCards(track, cards) + 1;
+  if (dotsCont <= 1) {
+    return;
+  }
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < dotsCont; i++) {
     const dot = document.createElement('button');
