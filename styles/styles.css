@@ -458,24 +458,9 @@ main .section > .section-container {
   margin-left: auto;
 }
 
-/* section - block-padded */
-main .section.block-padded > .section-container {
-  padding: 2rem 1rem;
-}
-
 /* section - padded i.e. inline padding */
 main .section.padded > .section-container, main .section.inline-padded > .section-container {
   padding: 0 1rem;
-}
-
-/** section - Gray Scale */
-main .section.gray-scale > .section-container {
-  background: var(--background-color-gray-scale);
-}
-
-/* section - Align Button Center */
-main .section.align-button-center > .section-container .button-container {
-  text-align: center;
 }
 
 main .section.shadow  {

@@ -48,7 +48,7 @@ async function loadCarousel(block, carouselItems) {
   const carouselBlockParent = document.createElement('div');
   carouselBlockParent.classList.add('carousel-wrapper');
   carouselBlockParent.appendChild(carouselBlock);
-  block.parentElement.insertAdjacentElement('afterend', carouselBlockParent);
+  block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
   decorateBlock(carouselBlock);
 
   carouselBlock.querySelectorAll('.social-share').forEach((anchor) => anchor.addEventListener('click', () => handleSocialShareClick(anchor)));
@@ -69,11 +69,15 @@ function handleTitleConfig(titleElement, container) {
 
 export default async function decorate(block) {
   block.style.display = 'none';
-  const container = block.closest('.section .section-container');
-  container.style.display = 'none';
+  // style the block
+  block.classList.add('padded');
+  block.classList.add('gray-scale-bg');
+  block.classList.add('align-button-center');
+
   const configElementsArray = Array.from(block.children);
 
   configElementsArray.map(async (configElement) => {
+    configElement.style.display = 'none';
     const configNameElement = configElement.querySelector('div');
     const configName = configNameElement.textContent.trim().toLowerCase();
     if (configName === 'api') {
@@ -91,16 +95,16 @@ export default async function decorate(block) {
           console.error('Error fetching data:', error);
         })
         .finally(() => {
-          container.style.display = 'block';
+          block.style.display = 'block';
         });
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
-      handleTitleConfig(titleElement, container);
+      handleTitleConfig(titleElement, block);
     } else if (configName === 'link') {
       const buttonWrapper = document.createElement('div');
       buttonWrapper.classList.add('button-wrapper');
       buttonWrapper.append(configNameElement.nextElementSibling);
-      container.append(buttonWrapper);
+      block.append(buttonWrapper);
     }
   });
 }
