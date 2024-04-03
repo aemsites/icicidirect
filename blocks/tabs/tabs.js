@@ -1,6 +1,8 @@
 import { toClassName } from '../../scripts/aem.js';
-import { Viewport, createPictureElement, observe } from '../../scripts/blocks-utils.js';
-import { getTabDataAPI } from '../../scripts/mockapi.js';
+import {
+  Viewport, createPictureElement, observe, fetchData,
+} from '../../scripts/blocks-utils.js';
+import { getHostUrl } from '../../scripts/mockapi.js';
 import { handleSocialShareClick } from '../../scripts/scripts.js';
 
 function allowedCardsCount() {
@@ -16,7 +18,8 @@ function allowedCardsCount() {
 }
 
 function numberOfDots(totalCards, maxAllowedCards) {
-  return totalCards - maxAllowedCards + 1;
+  if (totalCards > maxAllowedCards) return totalCards - maxAllowedCards + 1;
+  return 0;
 }
 
 function openUrl(event) {
@@ -66,7 +69,9 @@ function clearIntervalAndReset(intervalId) {
   Array.from(dotsContainer.querySelectorAll('.active')).forEach((dot) => {
     dot.classList.remove('active');
   });
-  dotsContainer.firstElementChild.classList.add('active');
+  if (dotsContainer.firstElementChild) {
+    dotsContainer.firstElementChild.classList.add('active');
+  }
 }
 
 let intervalId = 1;
@@ -189,12 +194,13 @@ function createDots(totalCards, maxAllowedCards, dots) {
     });
     index += 1;
   }
-  dots.firstElementChild.classList.add('active');
+  if (numberOfDotsToBeCreated > 0) {
+    dots.firstElementChild.classList.add('active');
+  }
 }
 
 async function createTabPanel(block) {
   const tabsPanel = block.querySelectorAll('.tabs-panel');
-  const promises = [];
 
   for (let index = 0; index < tabsPanel.length; index += 1) {
     const tab = tabsPanel[index];
@@ -229,13 +235,13 @@ async function createTabPanel(block) {
     tab.appendChild(discoverMoreButton);
 
     // Collect promises from asynchronous operations
-    promises.push(getTabDataAPI(tabId).then((data) => {
-      createCards(track, data, tabId);
-      createDots(data.length, allowedCardsCount(), dots);
-    }));
+    fetchData(`${getHostUrl()}/scripts/mock-${tabId}.json`, async (error, data = []) => {
+      if (data) {
+        createCards(track, data, tabId);
+        createDots(data.length, allowedCardsCount(), dots);
+      }
+    });
   }
-  // Wait for all promises to resolve
-  await Promise.all(promises);
   intervalId = startCaraousal();
 }
 

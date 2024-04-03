@@ -78,30 +78,6 @@ async function callMockBlogAPI() {
   }
 }
 
-async function getTabDataAPI(id) {
-  try {
-    if (id.toLowerCase() === 'videos') {
-      const response = await fetch(`${getHostUrl()}/scripts/mock-videosdata.json`);
-      if (!response.ok) { // Check if response is OK (status in the range 200-299)
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json(); // Parse the JSON from the response
-      return data;
-    }
-    if (id.toLowerCase() === 'podcasts') {
-      const response = await fetch(`${getHostUrl()}/scripts/mock-podcastsdata.json`);
-      if (!response.ok) { // Check if response is OK (status in the range 200-299)
-        throw new Error('Network response was not ok');
-      }
-      const data = await response.json(); // Parse the JSON from the response
-      return data;
-    }
-  } catch (error) {
-    return 'null'; // Return null or appropriate error handling
-  }
-  return JSON.stringify([]);
-}
-
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -164,5 +140,5 @@ export {
   fetchDynamicStockIndexData,
   callMockBlogAPI,
   getTrendingNews,
-  getTabDataAPI,
+  getHostUrl,
 };
