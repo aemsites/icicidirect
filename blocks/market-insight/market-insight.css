@@ -235,9 +235,14 @@
 }
 
 @media (width >=62rem) {
-  .block.market-insight>ul>li {
-    flex: 0 0 33.33%;
-    max-width: 31.5%;
+  .block.market-insight > ul {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1.5rem;
+}
+
+  .block.market-insight > ul > li {
+    max-width: unset;
   }
 }
 
