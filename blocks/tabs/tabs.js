@@ -108,20 +108,15 @@ function createPostTitle(item) {
 }
 
 function createSocialLinkElement(item) {
-  const socialLink = document.createElement('ul');
+  const socialLink = document.createElement('div');
   socialLink.classList.add('social-link');
-  const socialItem = document.createElement('li');
   const socialAnchor = document.createElement('a');
   const socialIcon = document.createElement('i');
   socialIcon.classList.add('fa', 'fa-share', 'icon');
-  socialAnchor.href = item.shareLink;
-  socialIcon.addEventListener('click', (event) => {
-    event.preventDefault();
-    handleSocialShareClick(socialAnchor);
-  });
+  socialAnchor.dataset.href = item.shareLink;
+  socialIcon.addEventListener('click', () => { handleSocialShareClick(socialAnchor); });
   socialAnchor.appendChild(socialIcon);
-  socialItem.appendChild(socialAnchor);
-  socialLink.appendChild(socialItem);
+  socialLink.appendChild(socialAnchor);
   return socialLink;
 }
 
@@ -210,7 +205,7 @@ async function createTabPanel(block) {
     title.className = 'title';
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
-    img.src = '/icons/video-icon.png';
+    img.src = '/icons/video-icon.svg';
     const picture = document.createElement('picture');
     picture.appendChild(img);
     const textNode = document.createTextNode(tabId);

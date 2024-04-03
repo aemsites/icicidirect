@@ -176,7 +176,7 @@
     padding-left: 0;
 }
 
-.block.tabs .card-info .text-content .social-link li a {
+.block.tabs .card-info .text-content .social-link a {
     border-radius: var(--space-4px);
     border: var(--space-1px) solid var(--link-color-gray);;
     padding: var(--space-5px);
@@ -190,7 +190,7 @@
     cursor: pointer;
 }
 
-.block.tabs .text-content .social-link li a .icon {
+.block.tabs .text-content .social-link a .icon {
     color: var(--link-color-gray);
     font-size: 1.25rem;
 }
