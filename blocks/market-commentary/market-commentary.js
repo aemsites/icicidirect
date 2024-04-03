@@ -1,6 +1,6 @@
-import { observe, Viewport } from '../../scripts/blocks-utils.js';
+import { fetchData, observe, Viewport } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
-import { callMockCommenrtaryAPI } from '../../scripts/mockapi.js';
+import { getHostUrl } from '../../scripts/mockapi.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
@@ -48,7 +48,7 @@ function updateCarouselView(activeDot) {
   const commentaryTrack = commentaryContainer.querySelector('.market-commentary-track');
   const cards = Array.from(commentaryTrack.children);
   let moveDistance = dotIndex * cards[0].offsetWidth;
-  if (Viewport.isDesktop() && dotIndex === dots.length - 1) {
+  if (Viewport.getDeviceType() === 'Desktop' && dotIndex === dots.length - 1) {
     moveDistance -= ((cards[0].offsetWidth) * 0.9);
   }
   commentaryTrack.style.transform = `translateX(-${moveDistance}px)`;
@@ -99,12 +99,22 @@ function updateDots(block) {
 // eslint-disable-next-line no-unused-vars
 async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
-  const blogsDataArray = await callMockCommenrtaryAPI();
-  blogsDataArray.forEach((blogData) => {
-    const card = createMarketCommentaryCard(blogData, placeholders);
-    blogsContainer.appendChild(card);
+  fetchData(`${getHostUrl()}/scripts/mock-commentarydata.json`, async (error, blogsDataArray = []) => {
+    if (blogsDataArray) {
+      blogsDataArray.forEach((blogData) => {
+        const card = createMarketCommentaryCard(blogData, placeholders);
+        blogsContainer.appendChild(card);
+      });
+      updateDots(block);
+    }
   });
-  updateDots(block);
+
+  // const blogsDataArray = await callMockCommenrtaryAPI();
+  // blogsDataArray.forEach((blogData) => {
+  //   const card = createMarketCommentaryCard(blogData, placeholders);
+  //   blogsContainer.appendChild(card);
+  // });
+  // updateDots(block);
 }
 export default async function decorate(block) {
   block.textContent = '';

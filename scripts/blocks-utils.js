@@ -117,6 +117,22 @@ function getEnvType(hostname = window.location.hostname) {
   return fqdnToEnvType[hostname] || 'dev';
 }
 
+function fetchData(url, callback) {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((error) => {
+      callback(error, null);
+    });
+}
+
 export {
   isInViewport,
   Viewport,
@@ -125,4 +141,5 @@ export {
   createPictureElement,
   observe,
   getEnvType,
+  fetchData,
 };

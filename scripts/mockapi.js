@@ -153,4 +153,5 @@ export {
   callMockBlogAPI,
   callMockCommenrtaryAPI,
   getTrendingNews,
+  getHostUrl,
 };
