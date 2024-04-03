@@ -104,19 +104,6 @@ async function callMockBlogAPI() {
     return null; // Return null or appropriate error handling
   }
 }
-
-async function callMockCommenrtaryAPI() {
-  try {
-    const response = await fetch(`${getHostUrl()}/scripts/mock-commentarydata.json`);
-    if (!response.ok) { // Check if response is OK (status in the range 200-299)
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json(); // Parse the JSON from the response
-    return data; // Return the data so it can be used by whoever calls this function
-  } catch (error) {
-    return null; // Return null or appropriate error handling
-  }
-}
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -178,7 +165,6 @@ export {
   mockPredicationConstant,
   fetchDynamicStockIndexData,
   callMockBlogAPI,
-  callMockCommenrtaryAPI,
   getTrendingNews,
   fetchRapidResultMockData,
   fetchMarketInsightMockData,
