@@ -5,7 +5,6 @@ import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
 
-const placeholders = await fetchPlaceholders();
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
   switch (deviceType) {
@@ -17,7 +16,7 @@ function allowedCardsCount() {
       return 1;
   }
 }
-function createMarketCommentaryCard(cardData) {
+function createMarketCommentaryCard(cardData, placeholders) {
   const {
     articleUrl, titleText, descriptionText, publicationTimeText, footerTimeText,
   } = cardData;
@@ -90,18 +89,19 @@ function updateDots(block) {
 }
 
 // eslint-disable-next-line no-unused-vars
-async function generateCardsView(block) {
+async function generateCardsView(block, placeholders) {
+  console.log(placeholders);
   const blogsContainer = block.querySelector('.market-commentary-track');
   const blogsDataArray = await callMockCommenrtaryAPI();
   blogsDataArray.forEach((blogData) => {
-    const card = createMarketCommentaryCard(blogData);
+    const card = createMarketCommentaryCard(blogData, placeholders);
     blogsContainer.appendChild(card);
   });
   updateDots(block);
 }
 export default async function decorate(block) {
   block.textContent = '';
-
+  const placeholders = await fetchPlaceholders();
   const titleWrap = document.createElement('div');
   titleWrap.className = 'title text-center';
   const h2 = document.createElement('h2');
@@ -121,5 +121,5 @@ export default async function decorate(block) {
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
   block.appendChild(containerlist);
-  observe(block, generateCardsView);
+  observe(block, generateCardsView, placeholders);
 }
