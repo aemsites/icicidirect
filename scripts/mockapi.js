@@ -155,5 +155,4 @@ export {
   callMockBlogAPI,
   getTrendingNews,
   fetchRapidResultMockData,
-  getHostUrl,
 };
