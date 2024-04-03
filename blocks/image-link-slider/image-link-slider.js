@@ -73,7 +73,7 @@ export default async function decorate(block) {
   container.style.display = 'none';
   const configElementsArray = Array.from(block.children);
 
-  const promises = configElementsArray.map(async (configElement) => {
+  configElementsArray.map(async (configElement) => {
     const configNameElement = configElement.querySelector('div');
     const configName = configNameElement.textContent.trim().toLowerCase();
     if (configName === 'api') {
@@ -81,18 +81,18 @@ export default async function decorate(block) {
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
       callAPI(apiName)
-          .then((data) => {
-            if (block.classList.contains('image-link-slider')) {
-              renderImageLinkVariant(data, carouselItems);
-            }
-            return loadCarousel(block, carouselItems);
-          })
-          .catch((error) => {
-            console.error('Error fetching data:', error);
-          })
-          .finally(() => {
-            container.style.display = 'block';
-          });
+        .then((data) => {
+          if (block.classList.contains('image-link-slider')) {
+            renderImageLinkVariant(data, carouselItems);
+          }
+          return loadCarousel(block, carouselItems);
+        })
+        .catch((error) => {
+          console.error('Error fetching data:', error);
+        })
+        .finally(() => {
+          container.style.display = 'block';
+        });
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, container);
