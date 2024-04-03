@@ -3,6 +3,11 @@
   bottom: 0;
   width: 100%;
   z-index: 9999;
+  display: none;
+}
+
+.block.sticky-footer.sticky {
+  display: block;
 }
 
 .block.sticky-footer .sticky-footer-container {

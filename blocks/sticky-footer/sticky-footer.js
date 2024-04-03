@@ -4,6 +4,29 @@ import {
 } from '../../scripts/dom-builder.js';
 
 /**
+ * Makes the sticky footer visible when the parent container is scrolled out of view port on top
+ * @param {*} block that should be made sticky
+ */
+const showStickyFooterWhenScrolled = (block) => {
+  const stickyFooterOptions = {
+    root: null,
+    threshold: 0,
+  };
+  const intersectionHandler = (entires) => {
+    entires.forEach((entry) => {
+      if (!entry.isIntersecting && entry.boundingClientRect.y < 0) {
+        block.classList.add('sticky');
+      } else {
+        block.classList.remove('sticky');
+      }
+    });
+  };
+  const observer = new IntersectionObserver(intersectionHandler, stickyFooterOptions);
+  const parentDiv = document.querySelector('.section.sticky-footer-container');
+  observer.observe(parentDiv);
+};
+
+/**
  * Actions to be performed for account creation when mobile number is valid
  * @param {*} url account opening url
  * @param {*} mobileNumber the mobile number entered by user
@@ -82,4 +105,5 @@ export default async function decorate(block) {
   stickyFooterWrapper.appendChild(validationContainer);
 
   block.append(stickyFooterWrapper);
+  showStickyFooterWhenScrolled(block);
 }
