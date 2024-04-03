@@ -80,11 +80,19 @@ export default async function decorate(block) {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      const data = await callAPI(apiName);
-      if (block.classList.contains('image-link-slider')) {
-        renderImageLinkVariant(data, carouselItems);
-      }
-      await loadCarousel(block, carouselItems);
+      callAPI(apiName)
+          .then((data) => {
+            if (block.classList.contains('image-link-slider')) {
+              renderImageLinkVariant(data, carouselItems);
+            }
+            return loadCarousel(block, carouselItems);
+          })
+          .catch((error) => {
+            console.error('Error fetching data:', error);
+          })
+          .finally(() => {
+            container.style.display = 'block';
+          });
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, container);
@@ -95,7 +103,4 @@ export default async function decorate(block) {
       container.append(buttonWrapper);
     }
   });
-
-  await Promise.all(promises);
-  container.style.display = 'block';
 }
