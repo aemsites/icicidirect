@@ -59,6 +59,7 @@ function addSocialButtonEvent(button, block) {
 async function decorateCards(block, placeholders, cardCount, previousNode) {
   const queryObj = await fetchMarketInsightMockData();
   const results = queryObj.map((el) => {
+    if (!el.PublishedOnDate) return el;
     const elArr = el.PublishedOnDate.split(' ');
     const publishDate = elArr[0];
     const publishTime = elArr[1];
