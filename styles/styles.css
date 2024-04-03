@@ -46,6 +46,7 @@
   --color-danger: #dc3545;
   --color-light: #f8f9fa;
   --link-color: var(--color-blue);
+  --link-color-gray: #C8C8C8;
   --link-color-orange:#E87817;
   --link-hover-color: #0056b3;
   --text-color-normal: #212529;
@@ -83,6 +84,8 @@
   --card-post-color: #6B6B6B;
   --card-post-boarder: #d7d7d7;
   --modal-background-color: #000000BF;
+  --title-color: #122E45;
+  --title-color-card: #303030;
   
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -168,8 +171,7 @@
   --space-12px: 0.75rem;
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
-  --space-15px: 0.938rem;
-  
+  --space-15px: 0.938rem;  
 }
 
 *, *::before, *::after { 
