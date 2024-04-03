@@ -92,6 +92,7 @@ export default async function decorate(block) {
           return loadCarousel(block, carouselItems);
         })
         .catch((error) => {
+          // eslint-disable-next-line no-console
           console.error('Error fetching data:', error);
         })
         .finally(() => {
