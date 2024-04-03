@@ -104,6 +104,35 @@ function observe(elementToObserve, callback, ...args) {
   observer.observe(elementToObserve);
 }
 
+/**
+ * Fetches data from the given URL and calls the callback function with the response.
+ * @param {string} url The URL to fetch data from.
+ * @param {Function} callback The callback function to call with the response.
+ * returns {void}
+ * @example
+ * fetchData('https://jsonplaceholder.typicode.com/todos/1', (error, data) => {
+ *  if (error) {
+ *   console.error(error);
+ * } else {
+ *  console.log(data);
+ * }
+ */
+function fetchData(url, callback) {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((error) => {
+      callback(error, null);
+    });
+}
+
 /*
   * Returns the environment type based on the hostname.
 */
@@ -143,4 +172,5 @@ export {
   observe,
   getEnvType,
   decorateQuickLinks,
+  fetchData,
 };

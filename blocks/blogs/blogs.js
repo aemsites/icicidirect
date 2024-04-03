@@ -1,6 +1,6 @@
-import { callMockBlogAPI } from '../../scripts/mockapi.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
-import { createPictureElement, observe } from '../../scripts/blocks-utils.js';
+import { createPictureElement, fetchData, observe } from '../../scripts/blocks-utils.js';
+import { getHostUrl } from '../../scripts/mockapi.js';
 
 async function createBlogCard(blogData) {
   const { imageUrl } = blogData;
@@ -55,26 +55,29 @@ async function createBlogCard(blogData) {
   return arcticleDiv;
 }
 
-async function generateCardsView(block) {
+function generateCardsView(block) {
   const blogsContainer = block.querySelector('.blogs-cards-container');
-  const blogsDataArray = await callMockBlogAPI();
-  const entriesToProcess = blogsDataArray.length;
-  /**
-   * Loop through the blogsDataArray and create a blog card for each blog entry.
-   * Append the blog card to the blogsContainers column. Each column will have 2 blog cards.
-   */
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i + 1 < entriesToProcess; i += 2) {
-    const blogsColumn = document.createElement('div');
-    blogsColumn.className = 'blogs-container-column';
-    // eslint-disable-next-line no-await-in-loop
-    const blogCard1 = await createBlogCard(blogsDataArray[i]);
-    // eslint-disable-next-line no-await-in-loop
-    const blogCard2 = await createBlogCard(blogsDataArray[i + 1]);
-    blogsColumn.appendChild(blogCard1);
-    blogsColumn.appendChild(blogCard2);
-    blogsContainer.appendChild(blogsColumn);
-  }
+  fetchData(`${getHostUrl()}/scripts/mock-blogdata.json`, async (error, blogsDataArray = []) => {
+    if (blogsDataArray) {
+      const entriesToProcess = blogsDataArray.length;
+      /**
+       * Loop through the blogsDataArray and create a blog card for each blog entry.
+       * Append the blog card to the blogsContainers column. Each column will have 2 blog cards.
+       */
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i + 1 < entriesToProcess; i += 2) {
+        const blogsColumn = document.createElement('div');
+        blogsColumn.className = 'blogs-container-column';
+        // eslint-disable-next-line no-await-in-loop
+        const blogCard1 = await createBlogCard(blogsDataArray[i]);
+        // eslint-disable-next-line no-await-in-loop
+        const blogCard2 = await createBlogCard(blogsDataArray[i + 1]);
+        blogsColumn.appendChild(blogCard1);
+        blogsColumn.appendChild(blogCard2);
+        blogsContainer.appendChild(blogsColumn);
+      }
+    }
+  });
 }
 
 function addDiscoverLink(blogsContainer, discoverMoreAnchor) {
