@@ -213,23 +213,6 @@
     border-radius: var(--space-8px);
 }
 
-.block.tabs .card-info .picture-wrapper::before {
-    background-image: url("../../icons/video-shadow.svg");
-    background-repeat: no-repeat;
-    background-size: cover;
-    mix-blend-mode: normal;
-    opacity: 0.8;
-    filter: blur(1.25rem);
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: calc(-1 * var(--space-15px));
-    width: 92%;
-    height: 9.375rem;
-    margin: 0 auto;
-    transform: translateX(-50%);
-}
-
 .block.tabs .card-info .picture-wrapper::after {
     content: "";
     display: block;
@@ -252,8 +235,10 @@
 }
 
 .block.tabs .card-info .picture-wrapper picture {
+    display: flex;
     min-height: 11.25rem;
     border-radius: var(--space-8px);
+    box-shadow: 0 1rem 1rem 0  var(--box-shadow-footer-top-gray);
 }
 
 .block.tabs .card-info .picture-wrapper picture img {
