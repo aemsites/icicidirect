@@ -125,14 +125,14 @@ function createSocialLinkElement(item) {
   return socialLink;
 }
 
-async function createPicture(imageUrl,mediaWrapper){
+async function createPicture(imageUrl, mediaWrapper) {
   // Create picture element
-  mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));  
+  mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
 }
 
 function createCards(container, data, tabId) {
   const cardWidth = container.offsetWidth / allowedCardsCount();
-  
+
   data.forEach((item) => {
     // Create slide element
     const card = document.createElement('div');
@@ -153,7 +153,7 @@ function createCards(container, data, tabId) {
       openUrl(event);
     });
 
-    createPicture(item.imageUrl,mediaWrapper);
+    createPicture(item.imageUrl, mediaWrapper);
     // Create text-content element
     const textContent = document.createElement('div');
     textContent.classList.add('text-content');
