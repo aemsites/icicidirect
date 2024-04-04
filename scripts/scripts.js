@@ -14,6 +14,8 @@ import {
   loadScript,
 } from './aem.js';
 
+import { decorateQuickLinks } from './blocks-utils.js';
+
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
 /**
@@ -68,6 +70,7 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  decorateQuickLinks(main);
 }
 
 /**

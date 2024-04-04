@@ -79,6 +79,19 @@ async function fetchRapidResultMockData() {
   }
 }
 
+async function fetchMarketInsightMockData() {
+  try {
+    const response = await fetch(`${getHostUrl()}/scripts/mock-market-insight.json`);
+    if (!response.ok) { // Check if response is OK (status in the range 200-299)
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json(); // Parse the JSON from the response
+    return data; // Return the data so it can be used by whoever calls this function
+  } catch (error) {
+    return null; // Return null or appropriate error handling
+  }
+}
+
 async function callMockBlogAPI() {
   try {
     const response = await fetch(`${getHostUrl()}/scripts/mock-blogdata.json`);
@@ -91,7 +104,6 @@ async function callMockBlogAPI() {
     return null; // Return null or appropriate error handling
   }
 }
-
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -155,4 +167,6 @@ export {
   callMockBlogAPI,
   getTrendingNews,
   fetchRapidResultMockData,
+  fetchMarketInsightMockData,
+  getHostUrl,
 };

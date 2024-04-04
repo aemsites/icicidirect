@@ -1,4 +1,4 @@
-import { createOptimizedPicture } from './aem.js';
+import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -104,6 +104,35 @@ function observe(elementToObserve, callback, ...args) {
   observer.observe(elementToObserve);
 }
 
+/**
+ * Fetches data from the given URL and calls the callback function with the response.
+ * @param {string} url The URL to fetch data from.
+ * @param {Function} callback The callback function to call with the response.
+ * returns {void}
+ * @example
+ * fetchData('https://jsonplaceholder.typicode.com/todos/1', (error, data) => {
+ *  if (error) {
+ *   console.error(error);
+ * } else {
+ *  console.log(data);
+ * }
+ */
+function fetchData(url, callback) {
+  fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((error) => {
+      callback(error, null);
+    });
+}
+
 /*
   * Returns the environment type based on the hostname.
 */
@@ -117,6 +146,23 @@ function getEnvType(hostname = window.location.hostname) {
   return fqdnToEnvType[hostname] || 'dev';
 }
 
+/**
+ * Decorates all blocks in a container element to enable quicklinks metadata.
+ * @param {Element} main The container element under which quicklinks has to be enabled.
+ */
+function decorateQuickLinks(main) {
+  const addQuickLinksMetadata = (block) => {
+    // extract the quicklinks details if present
+    const blockConfig = readBlockConfig(block);
+    const quickLinkTitle = blockConfig['quicklinks-title'];
+    if (quickLinkTitle) {
+      block.dataset.quicklinksTitle = quickLinkTitle;
+      block.id = toCamelCase(quickLinkTitle);
+    }
+  };
+  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
+}
+
 export {
   isInViewport,
   Viewport,
@@ -125,4 +171,6 @@ export {
   createPictureElement,
   observe,
   getEnvType,
+  decorateQuickLinks,
+  fetchData,
 };
