@@ -1,0 +1,163 @@
+.block.market-commentary .title {
+   text-transform: uppercase;
+}
+
+
+.block.market-commentary .market-commentary-container {
+    display: flex;
+    flex-direction: column;
+    margin-left: 1%;
+    overflow: hidden;
+}
+
+.block.market-commentary .market-commentary-track {
+    display: flex;
+    flex-direction: row;
+    transition: transform 2s ease;
+    transform: translate3d(0, 0, 0);
+}
+
+.block.market-commentary .card {
+    display: block;
+    min-width: 15rem;
+}
+
+.block.market-commentary .card a {
+    display: block;
+    position: relative;
+    box-shadow: 0 var(--space-10px) var(--space-10px) var(--link-color-orange);
+    background: none;
+    border-radius: 0;
+    width: 90%;
+    transition: 0s;
+    text-decoration: none;
+}
+
+.block.market-commentary .card a::after {
+    content: "";
+    width:2rem;
+    height: 2rem;
+    transform: rotate(-45deg);
+    background: var(--color-white);
+    position: absolute;
+    box-shadow: calc(0rem - var(--space-9px)) var(--space-9px) var(--space-9px) var(--link-color-orange);
+    z-index: 99;
+    bottom: calc(0rem - var(--space-15px));
+    left: calc(50%);
+    border-left:  solid var(--color-lighter-gray);
+    border-bottom: var(--line-width-hairline) solid var(--color-lighter-gray);
+}
+
+.block.market-commentary .card a:hover::after {
+    background: var(--color-lighter-gray);
+}
+
+.block.market-commentary .card .content {
+    padding: 1.25rem;
+    background: var(--color-white);
+    border: var(--line-width-hairline) solid var(--color-lighter-gray);
+    border-radius: 0;
+}
+
+.block.market-commentary .card .content:hover {
+    background: var(--color-lighter-gray);
+}
+
+.block.market-commentary .card h4 {
+    font-size: var(--heading-font-size-ss);
+    margin-bottom: var(--space-10px);
+    word-break: break-word;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+}
+
+.block.market-commentary .card .description {
+    font-size: var(--heading-font-size-xs);
+    margin-bottom: var(--space-10px);
+    line-height: var(--line-height-normal);
+    max-height: 7.4rem;
+    min-height: 7.4rem;
+    overflow: hidden;
+}
+
+.block.market-commentary .card .info {
+    border-top: var(--line-width-hairline) solid var(--color-lighter-gray);
+    padding-top: var(--space-10px);
+    position: relative;
+    z-index: 2;
+    bottom: var(--space-14px);
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.block.market-commentary .card .info p {
+    margin-bottom: 0;
+    font-size: var(--heading-font-size-xxs);
+    line-height: normal;
+    color: var(--text-color-gray);
+}
+
+.block.market-commentary .card .footer-row {
+    position: relative;
+    z-index: 99;
+}
+
+.block.market-commentary .card .footer-row::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: var(--space-8px);
+    background: var(--link-color-orange);
+    bottom: var(--space-15px);
+    z-index: -1;
+}
+
+.block.market-commentary .card .footer-circle {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: block;
+    border: var(--space-5px) solid var(--link-color-orange);;
+    border-radius: 50%;
+    background: var(--color-white);
+    text-align: center;
+    margin: 4rem auto 2.75rem;
+    position: relative;
+    z-index: 99;
+    box-shadow: 0 var(--space-4px) var(--space-12px) var(--color-black);
+}
+
+.block.market-commentary .card .footer-time {
+    text-align: center;
+    color: var(--primary);
+    font-size: var(--heading-font-size-ml);
+    font-weight: bold;
+    margin-bottom: 4rem;
+}
+
+.block.market-commentary .dots-container {
+    text-align: center;
+}
+
+.block.market-commentary .dots-container .dot {
+    height: 0.9rem;
+    width: 0.9rem;
+    margin: 0 0.3rem;
+    padding: 0;
+    cursor: pointer;
+    background: var(--background-color-dark-grey);
+    border-radius: 3rem;
+    border: 0;
+}
+
+.block.market-commentary .dots-container .dot.active {
+    background-color: var(--color-orange);
+}
+
+@media (width >= 48rem) {
+    .block.market-commentary .card {
+        min-width: 22rem;
+    }
+}
