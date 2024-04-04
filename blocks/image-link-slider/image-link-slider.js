@@ -97,6 +97,11 @@ export default async function decorate(block) {
             observe(slide, (element) => {
               const img = element.querySelector('img');
               img.src = img.dataset.src;
+              img.onload = function handleImageLoad() {
+                // Set the width and height directly on the img element
+                img.width = this.width;
+                img.height = this.height;
+              };
             });
           });
         }).then(() => {
