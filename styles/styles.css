@@ -82,6 +82,7 @@
   --card-post-color: #6B6B6B;
   --card-post-boarder: #d7d7d7;
   --modal-background-color: #000000BF;
+  --qr-code-box-shadow: #878787;
   
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -478,6 +479,11 @@ main .section.shadow-gray {
 
 main .section.background-gray {
   background: var(--background-color-deep-light-grey);
+}
+
+main .section.app-download {
+  background: var(--color-lighter-gray);
+  margin-bottom: 2rem;
 }
 
 @media (width >= 36rem) {
