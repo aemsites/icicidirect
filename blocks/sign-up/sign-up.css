@@ -63,7 +63,7 @@
  .block.sign-up .signupContainer .title_wrap h2 strong {
      font-weight: 700;
  }
- .block.sign-up .title_wrap h2 span {
+ .block.sign-up .title_wrap h2 em {
      font-weight: 300;
      font-family:"Poppins", sans-serif;
      font-style: normal;

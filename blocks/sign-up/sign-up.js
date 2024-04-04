@@ -1,4 +1,4 @@
-import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
+import { readBlockConfig } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
 
 /**
@@ -33,6 +33,11 @@ const handleOpenAccountSubmit = (event) => {
   }
 };
 
+function blockNonNumbers(event) {
+  const inputElement = event.target;
+  inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
+}
+
 function createMobileNumberInput(placeholderText) {
   const inputElement = createElement('input', 'phoneNumberTextBox');
   inputElement.type = 'text';
@@ -40,9 +45,7 @@ function createMobileNumberInput(placeholderText) {
   inputElement.maxLength = '10';
   inputElement.pattern = '[0-9]*';
   inputElement.autocomplete = 'off';
-  inputElement.oninput = function () {
-    this.value = this.value.replace(/[^0-9]/g, '');
-  };
+  inputElement.addEventListener('input', blockNonNumbers);
   return inputElement;
 }
 
@@ -57,13 +60,12 @@ function createErrorSpan(errormessage) {
   spanElement.textContent = errormessage;
   return spanElement;
 }
-function createTitle(title) {
+function createTitle(titleHTML) {
   const col1Div = createElement('div', 'signupsections');
   const titleWrapDiv = createElement('div', 'title_wrap');
-  const h2Element = createElement('h2', 'text-left');
-
-  h2Element.innerHTML = '<span>Open</span> <strong>Free Trading Account</strong> Online with ICICIDIRECT';
-  // h2Element.textContent = title;
+  const h2Element = createElement('h2', '');
+  h2Element.innerHTML = titleHTML.innerHTML;
+  h2Element.classList.add('text-left');
   titleWrapDiv.appendChild(h2Element);
   col1Div.appendChild(titleWrapDiv);
   return col1Div;
@@ -81,8 +83,8 @@ function createSignUpElement(
   formGroupDiv.classList.add('text-center');
 
   const labelElement = createElement('label', '');
-  labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
-  // labelElement.textContent = signupString;
+  // labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
+  labelElement.innerHTML = signupString.innerHTML;
 
   const promotionalSpan = createElement('span', 'promotionalText');
   promotionalSpan.textContent = promotionalText;
@@ -106,14 +108,28 @@ function createSignUpElement(
 
   return signupFormDiv;
 }
+function findHTMLElementFromBock(block, key) {
+  const parentDivs = block.querySelectorAll('.sign-up > div');
+  for (let i = 0; i < parentDivs.length; i++) {
+    const parentDiv = parentDivs[i];
+    // Select the first and second child divs
+    const firstChildDiv = parentDiv.querySelector(':nth-child(1)');
+    const secondChildDiv = parentDiv.querySelector(':nth-child(2)');
+    if (firstChildDiv.textContent.includes(key)) {
+      return secondChildDiv;
+    }
+  }
+  return '';
+}
 
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
-  const placeholders = await fetchPlaceholders();
   const {
-    title, signupstring, promotionaltext, placeholdertext, buttontitle, errormessage,
+    promotionaltext, placeholdertext, buttontitle, errormessage,
   } = blockConfig;
 
+  const titleHTML = findHTMLElementFromBock(block, 'title');
+  const signupstringHTML = findHTMLElementFromBock(block, 'signupString');
   const sectionDiv = createElement('div', 'section');
   sectionDiv.classList.add('margin', 'signupContainer');
 
@@ -121,9 +137,9 @@ export default async function decorate(block) {
   const rowDiv = createElement('div', 'row');
   rowDiv.classList.add('justify-content-center', 'align-items-center');
 
-  const titleField = createTitle(title);
+  const titleField = createTitle(titleHTML);
   const signupElementDiv = createSignUpElement(
-    signupstring,
+    signupstringHTML,
     promotionaltext,
     placeholdertext,
     buttontitle,
