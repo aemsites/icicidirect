@@ -9,3 +9,7 @@ main .section .block.image-link-slider.gray-scale-bg {
 main .section .block.image-link-slider.align-button-center .button-container {
     text-align: center;
 }
+
+main .section .block.image-link-slider .block.carousel .carousel-slides img:not([src]) {
+    visibility: hidden;
+}

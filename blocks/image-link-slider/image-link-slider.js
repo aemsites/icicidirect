@@ -2,6 +2,7 @@
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
 import { handleSocialShareClick } from '../../scripts/scripts.js';
 import { callAPI } from '../../scripts/mockapi.js';
+import { observe } from "../../scripts/blocks-utils.js";
 
 function renderImageLinkVariant({ data }, carouselItems) {
   data.forEach((item) => {
@@ -9,7 +10,7 @@ function renderImageLinkVariant({ data }, carouselItems) {
     slide.classList.add('carousel-slide');
     slide.innerHTML = `
                     <div class="carousel-slide-image">
-                        <img src="${item.finImage}" alt="${item.finTitle}">
+                        <img data-src="${item.finImage}" alt="${item.finTitle}">
                     </div>
                     <div class="carousel-slide-content">
                         <h3><a href="${item.finLink}">${item.finTitle}</a></h3>
@@ -90,6 +91,15 @@ export default async function decorate(block) {
             renderImageLinkVariant(data, carouselItems);
           }
           return loadCarousel(block, carouselItems);
+        })
+        .then(() => {
+          block.querySelectorAll('.carousel-slide').forEach((slide) => {
+            observe(slide, (element) => {
+              const img = element.querySelector('img');
+              img.src = img.dataset.src;
+            });
+          });
+
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
