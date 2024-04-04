@@ -2,7 +2,7 @@
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
 import { handleSocialShareClick } from '../../scripts/scripts.js';
 import { callAPI } from '../../scripts/mockapi.js';
-import { observe } from "../../scripts/blocks-utils.js";
+import { observe } from '../../scripts/blocks-utils.js';
 
 function renderImageLinkVariant({ data }, carouselItems) {
   data.forEach((item) => {
@@ -99,7 +99,6 @@ export default async function decorate(block) {
               img.src = img.dataset.src;
             });
           });
-
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
