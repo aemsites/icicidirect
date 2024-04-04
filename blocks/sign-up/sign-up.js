@@ -72,8 +72,8 @@ function createErrorSpan(errormessage) {
   return spanElement;
 }
 function createTitle(title) {
-  const col1Div = createElement('div', 'col-lg-5');
-  col1Div.classList.add('col-md-6', 'col-12');
+  const col1Div = createElement('div', 'signupsections');
+  //col1Div.classList.add('col-md-6', 'col-12');
   const titleWrapDiv = createElement('div', 'title_wrap');
   const h2Element = createElement('h2', 'text-left');
   
@@ -90,8 +90,8 @@ function createSignUpElement(
   buttontitle,
   errormessage,
 ) {
-  const col2Div = createElement('div', 'col-lg-5');
-  col2Div.classList.add('col-md-6', 'col-12');
+  const col2Div = createElement('div', 'signupsections');
+  //col2Div.classList.add('col-md-6', 'col-12');
 
   const formGroupDiv = createElement('div', 'signup-form-group');
   formGroupDiv.classList.add('mb-0', 'text-center');
