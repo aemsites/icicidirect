@@ -15,7 +15,7 @@ const initiateAccountCreation = (url, mobileNumber) => {
  * Handler for submit button click
  * @param {*} event
  */
-const   handleOpenAccountSubmit = (event) => {
+const handleOpenAccountSubmit = (event) => {
   event.preventDefault();
   const mobileNumberInput = document.querySelector('.block.sign-up .phoneNumberTextBox');
   const mobileNumber = mobileNumberInput.value;
@@ -29,10 +29,9 @@ const   handleOpenAccountSubmit = (event) => {
     const navigationLink = event.target.href;
     initiateAccountCreation(navigationLink, mobileNumber);
 
-    //TBD : need ajax call for otp generation etc
+    // TBD : need ajax call for otp generation etc
   }
 };
-
 
 function createMobileNumberInput(placeholderText) {
   const inputElement = createElement('input', 'phoneNumberTextBox');
@@ -62,9 +61,9 @@ function createTitle(title) {
   const col1Div = createElement('div', 'signupsections');
   const titleWrapDiv = createElement('div', 'title_wrap');
   const h2Element = createElement('h2', 'text-left');
-  
-   h2Element.innerHTML = '<span>Open</span> <strong>Free Trading Account</strong> Online with ICICIDIRECT';
-  //h2Element.textContent = title;
+
+  h2Element.innerHTML = '<span>Open</span> <strong>Free Trading Account</strong> Online with ICICIDIRECT';
+  // h2Element.textContent = title;
   titleWrapDiv.appendChild(h2Element);
   col1Div.appendChild(titleWrapDiv);
   return col1Div;
@@ -83,7 +82,7 @@ function createSignUpElement(
 
   const labelElement = createElement('label', '');
   labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
-  //labelElement.textContent = signupString;
+  // labelElement.textContent = signupString;
 
   const promotionalSpan = createElement('span', 'promotionalText');
   promotionalSpan.textContent = promotionalText;
@@ -97,14 +96,14 @@ function createSignUpElement(
   formFieldsDiv.appendChild(mobileInput);
   formFieldsDiv.appendChild(tunrstileContainer);
   formFieldsDiv.appendChild(submitButton);
-  
+
   formGroupDiv.appendChild(labelElement);
   formGroupDiv.appendChild(promotionalSpan);
   formGroupDiv.appendChild(formFieldsDiv);
   formGroupDiv.appendChild(errorSpan);
-  
+
   signupFormDiv.appendChild(formGroupDiv);
-  
+
   return signupFormDiv;
 }
 
