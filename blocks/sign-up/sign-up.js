@@ -1,41 +1,42 @@
 import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
 
-function createIframeElement() {
-  const iframeElement = document.createElement('iframe');
-  iframeElement.src = 'https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/g/turnstile/if/ov2/av0/rcv0/0/j7cqz/0x4AAAAAAAK3iakV3QAmUWAf/auto/normal';
-  iframeElement.allow = 'cross-origin-isolated; fullscreen';
-  iframeElement.sandbox = 'allow-same-origin allow-scripts allow-popups';
-  iframeElement.id = 'cf-chl-widget-j7cqz';
-  iframeElement.tabIndex = '0';
-  iframeElement.title = 'Widget containing a Cloudflare security challenge';
-  iframeElement.style.cssText = 'border: none; overflow: hidden; width: 300px; height: 65px;';
-  return iframeElement;
-}
-function createCaptcha() {
-  const captchaContainerDiv = createElement('div', 'mb-2');
-  captchaContainerDiv.classList.add('mt-2', 'captcha-container', 'elseOAO');
-  captchaContainerDiv.style.display = 'none';
+/**
+ * Actions to be performed for account creation when mobile number is valid
+ * @param {*} url account opening url
+ * @param {*} mobileNumber the mobile number entered by user
+ */
+const initiateAccountCreation = (url, mobileNumber) => {
+  // TODO: Handle what needs to be for login
+  window.open(`${url}?mobile=${mobileNumber}`, '_blank');
+};
 
-  const iframeElement = createIframeElement();
+/**
+ * Handler for submit button click
+ * @param {*} event
+ */
+const   handleOpenAccountSubmit = (event) => {
+  event.preventDefault();
+  const mobileNumberInput = document.querySelector('.block.sign-up .phoneNumberTextBox');
+  const mobileNumber = mobileNumberInput.value;
+  // Check for valid mobile number format
+  const mobileRegex = /^([0]|\+91)?[6789]\d{9}$/;
+  const validationMessage = document.querySelector('.block.sign-up .signupContainer .error-message');
+  if (!mobileNumber || mobileNumber.length < 10 || !mobileRegex.test(mobileNumber)) {
+    validationMessage.classList.add('invalid');
+  } else {
+    validationMessage.classList.remove('invalid');
+    const navigationLink = event.target.href;
+    initiateAccountCreation(navigationLink, mobileNumber);
 
-  const hiddenInputResponse = document.createElement('input');
-  hiddenInputResponse.type = 'hidden';
-  hiddenInputResponse.name = 'cf-turnstile-response';
-  hiddenInputResponse.id = 'cf-chl-widget-j7cqz_response';
-  hiddenInputResponse.value = '';
-  captchaContainerDiv.appendChild(iframeElement);
-  captchaContainerDiv.appendChild(hiddenInputResponse);
+    //TBD : need ajax call for otp generation etc
+  }
+};
 
-  return captchaContainerDiv;
-}
 
 function createMobileNumberInput(placeholderText) {
-  const wrapperDiv = createElement('div', '');
   const inputElement = createElement('input', 'phoneNumberTextBox');
   inputElement.type = 'text';
-  //inputElement.classList.add('ml-auto', 'mr-auto');
-  //inputElement.id = 'itxtmobile';
   inputElement.placeholder = placeholderText;
   inputElement.maxLength = '10';
   inputElement.pattern = '[0-9]*';
@@ -43,37 +44,22 @@ function createMobileNumberInput(placeholderText) {
   inputElement.oninput = function () {
     this.value = this.value.replace(/[^0-9]/g, '');
   };
-
-  const hiddenInputElement = createElement('input', '');
-  hiddenInputElement.type = 'hidden';
-  hiddenInputElement.id = 'itxtpagename';
-  hiddenInputElement.value = 'research/equity';
-
-  wrapperDiv.appendChild(inputElement);
-  wrapperDiv.appendChild(hiddenInputElement);
-  return wrapperDiv;
+  return inputElement;
 }
-function createSubmitButton(buttontitle, errormessage) {
+
+function createSubmitButton(buttontitle) {
   const buttonElement = createElement('button', 'signupbtn');
-  //buttonElement.type = 'button';
-  //buttonElement.classList.add('btn', 'btn-field-theme');
-  //buttonElement.id = 'ibtnotp';
   buttonElement.textContent = buttontitle;
-  buttonElement.onclick = function () {
-    checkresponseSectionEntry();
-  };
+  buttonElement.addEventListener('click', handleOpenAccountSubmit);
   return buttonElement;
 }
 function createErrorSpan(errormessage) {
-  const spanElement = document.createElement('span', 'has-error');
-  spanElement.classList.add('oaomobilenumbererror');
-  spanElement.style.display = 'none';
+  const spanElement = createElement('span', 'error-message');
   spanElement.textContent = errormessage;
   return spanElement;
 }
 function createTitle(title) {
   const col1Div = createElement('div', 'signupsections');
-  //col1Div.classList.add('col-md-6', 'col-12');
   const titleWrapDiv = createElement('div', 'title_wrap');
   const h2Element = createElement('h2', 'text-left');
   
@@ -91,38 +77,34 @@ function createSignUpElement(
   errormessage,
 ) {
   const signupFormDiv = createElement('div', 'signupsections');
-  //col2Div.classList.add('col-md-6', 'col-12');
 
   const formGroupDiv = createElement('div', 'signup-form-group');
-  formGroupDiv.classList.add('mb-0', 'text-center');
+  formGroupDiv.classList.add('text-center');
 
   const labelElement = createElement('label', '');
-  // labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
-  labelElement.textContent = signupString;
+  labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
+  //labelElement.textContent = signupString;
 
-  const spanElement = createElement('span', '');
-  spanElement.classList.add('promotionalText');
-  spanElement.textContent = promotionalText;
+  const promotionalSpan = createElement('span', 'promotionalText');
+  promotionalSpan.textContent = promotionalText;
 
   const formFieldsDiv = createElement('div', '');
-  // formFieldsDiv.classList.add('d-block');
-  // formFieldsDiv.id = 'step1';
-  // formFieldsDiv.dataset.gstarget = '1';
-
   const mobileInput = createMobileNumberInput(placeholderText);
-  const captchaContainerDiv = createCaptcha();
+  const tunrstileContainer = createElement('div', 'turnstile-container');
   const submitButton = createSubmitButton(buttontitle, errormessage);
   const errorSpan = createErrorSpan(errormessage);
 
   formFieldsDiv.appendChild(mobileInput);
-  formFieldsDiv.appendChild(captchaContainerDiv);
+  formFieldsDiv.appendChild(tunrstileContainer);
   formFieldsDiv.appendChild(submitButton);
-  formFieldsDiv.appendChild(errorSpan);
+  
   formGroupDiv.appendChild(labelElement);
-  formGroupDiv.appendChild(spanElement);
+  formGroupDiv.appendChild(promotionalSpan);
   formGroupDiv.appendChild(formFieldsDiv);
-
+  formGroupDiv.appendChild(errorSpan);
+  
   signupFormDiv.appendChild(formGroupDiv);
+  
   return signupFormDiv;
 }
 
@@ -157,12 +139,6 @@ export default async function decorate(block) {
 }
 /*
 1. how to give strong etc
-2. how to find code for submit method onclick
-2. when is iframe getting into the picture
-4. how to handle hidden elements
-5.  how to show error on submit
-3. some elements have ids
-7. captcha
-8. what abt moz properties
-9. otp modal
+
+10. poppins-light for open
 */
