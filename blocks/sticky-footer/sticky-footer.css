@@ -26,7 +26,7 @@
 }
 
 .block.sticky-footer .action-container .turnstile-container {
-  margin: 8px 20px 0;
+  margin: var(--space-8px) 1.25rem 0;
 }
 
 .block.sticky-footer .action-container .discover-more-button {
@@ -100,6 +100,6 @@
   }
 
   .block.sticky-footer .action-container .turnstile-container {
-    margin: 0 20px;
+    margin: 0 1.25rem;
   }
 }
