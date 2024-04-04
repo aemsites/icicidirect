@@ -90,7 +90,7 @@ function createSignUpElement(
   buttontitle,
   errormessage,
 ) {
-  const col2Div = createElement('div', 'signupsections');
+  const signupFormDiv = createElement('div', 'signupsections');
   //col2Div.classList.add('col-md-6', 'col-12');
 
   const formGroupDiv = createElement('div', 'signup-form-group');
@@ -100,14 +100,14 @@ function createSignUpElement(
   // labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
   labelElement.textContent = signupString;
 
-  const spanElement = createElement('span', 'd-block');
-  spanElement.classList.add('mt-1');
+  const spanElement = createElement('span', '');
+  spanElement.classList.add('promotionalText');
   spanElement.textContent = promotionalText;
 
-  const formFieldsDiv = createElement('div', 'form-fields');
-  formFieldsDiv.classList.add('d-block');
-  formFieldsDiv.id = 'step1';
-  formFieldsDiv.dataset.gstarget = '1';
+  const formFieldsDiv = createElement('div', '');
+  // formFieldsDiv.classList.add('d-block');
+  // formFieldsDiv.id = 'step1';
+  // formFieldsDiv.dataset.gstarget = '1';
 
   const mobileInput = createMobileNumberInput(placeholderText);
   const captchaContainerDiv = createCaptcha();
@@ -118,12 +118,12 @@ function createSignUpElement(
   formFieldsDiv.appendChild(captchaContainerDiv);
   formFieldsDiv.appendChild(submitButton);
   formFieldsDiv.appendChild(errorSpan);
-
   formGroupDiv.appendChild(labelElement);
   formGroupDiv.appendChild(spanElement);
   formGroupDiv.appendChild(formFieldsDiv);
-  col2Div.appendChild(formGroupDiv);
-  return col2Div;
+
+  signupFormDiv.appendChild(formGroupDiv);
+  return signupFormDiv;
 }
 
 export default async function decorate(block) {
@@ -134,9 +134,9 @@ export default async function decorate(block) {
   } = blockConfig;
 
   const sectionDiv = createElement('div', 'section');
-  sectionDiv.classList.add('margin', 'openDematAC');
+  sectionDiv.classList.add('margin', 'signupContainer');
 
-  const articleElement = createElement('article', 'field_bg');
+  const articleElement = createElement('article', '');
   const rowDiv = createElement('div', 'row');
   rowDiv.classList.add('justify-content-center', 'align-items-center');
 
@@ -164,4 +164,5 @@ export default async function decorate(block) {
 3. some elements have ids
 7. captcha
 8. what abt moz properties
+9. otp modal
 */
