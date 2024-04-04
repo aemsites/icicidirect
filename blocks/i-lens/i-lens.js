@@ -1,68 +1,40 @@
-import { callMockIlensAPI } from '../../scripts/mockapi.js';
 
-function createHTMLElements(block, jsonResponse) {
-  // Accessing necessary data from the JSON response
-  const data = jsonResponse.body.tableData;
+async function makeAPICall() {
+  const url = 'https://www.icicidirect.com/trendlyne/ScreenerDetails';
+  const headers = new Headers();
+  headers.append('Accept', '*/*');
+  headers.append('Accept-Language', 'en-GB,en-US;q=0.9,en;q=0.8');
+  headers.append('Cache-Control', 'no-cache');
+  headers.append('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+  headers.append('Origin', 'https://www.icicidirect.com');
+  headers.append('Pragma', 'no-cache');
+  headers.append('Sec-Fetch-Dest', 'empty');
+  headers.append('Sec-Fetch-Mode', 'cors');
+  headers.append('Sec-Fetch-Site', 'same-origin');
+  headers.append('User-Agent', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36');
+  headers.append('X-Requested-With', 'XMLHttpRequest');
+  headers.append('sec-ch-ua', '"Google Chrome";v="123", "Not:A-Brand";v="8", "Chromium";v="123"');
+  headers.append('sec-ch-ua-mobile', '?0');
+  headers.append('sec-ch-ua-platform', '"macOS"');
 
-  // Creating a container div
-  const containerDiv = document.createElement('div');
-  containerDiv.classList.add('container');
+  const body = 'screenpk=83415';
 
-  // Iterating through the data array to create article elements
-  data.forEach((item) => {
-    // Creating article element
-    const article = document.createElement('article');
-    // article.classList.add('');
+  const requestOptions = {
+    method: 'POST',
+    headers,
+    body,
+    redirect: 'follow',
+  };
 
-    // Creating div for title wrap
-    const titleWrapDiv = document.createElement('div');
-    titleWrapDiv.classList.add('title_wrap', 'text-center');
-
-    // Creating h2 element with image and text
-    const h2 = document.createElement('h2');
-    // h2.classList.add('');
-    const img = document.createElement('img');
-    // eslint-disable-next-line max-len
-    img.src = jsonResponse.body.screen.iconURL;
-    img.alt = 'assets-orange-114';
-    h2.appendChild(img);
-    const titleText = document.createTextNode(` ${item[0]}`); // Assuming the first item in the data array is the title
-    h2.appendChild(titleText);
-    titleWrapDiv.appendChild(h2);
-
-    // Appending titleWrapDiv to article
-    article.appendChild(titleWrapDiv);
-
-    // Creating paragraph element
-    const paragraph = document.createElement('p');
-    const paragraphText = document.createTextNode('Your paragraph text goes here'); // You can replace this with actual content from the JSON response
-    paragraph.appendChild(paragraphText);
-    article.appendChild(paragraph);
-
-    // Creating div for explore section
-    const exploreSectionDiv = document.createElement('div');
-    exploreSectionDiv.classList.add('explore-section');
-
-    // Creating div for explore container
-    const exploreContainerDiv = document.createElement('div');
-    exploreContainerDiv.classList.add('explore-container');
-
-    // Appending exploreContainerDiv to exploreSectionDiv
-    exploreSectionDiv.appendChild(exploreContainerDiv);
-
-    // Appending exploreSectionDiv to article
-    article.appendChild(exploreSectionDiv);
-
-    // Appending article to containerDiv
-    containerDiv.appendChild(article);
-  });
-
-  // Appending containerDiv to the document body
-  block.appendChild(containerDiv);
+  try {
+    const response = await fetch(url, requestOptions);
+    const data = await response.text();
+    console.log(data); // Logging the response data
+  } catch (error) {
+    console.error('Error occurred:', error);
+  }
 }
 export default async function decorate(block) {
-  console.log('Decorating i-lens block...');
   block.textContent = '';
-  const jsonResponse = await callMockIlensAPI();
-  createHTMLElements(block, JSON.parse(jsonResponse));
+  await makeAPICall();
 }
