@@ -33,6 +33,7 @@ function renderImageLinkVariant({ data }, carouselItems) {
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
+  carouselBlock.style.display = 'none';
   carouselBlock.innerHTML = '';
   block.classList.forEach((className) => {
     carouselBlock.classList.add(className);
@@ -69,7 +70,6 @@ function handleTitleConfig(titleElement, container) {
 }
 
 export default async function decorate(block) {
-  block.style.display = 'none';
   // style the block
   block.classList.add('padded');
   block.classList.add('gray-scale-bg');
@@ -99,6 +99,8 @@ export default async function decorate(block) {
               img.src = img.dataset.src;
             });
           });
+        }).then(() => {
+          block.querySelector('.block.carousel').style.display = 'block';
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
