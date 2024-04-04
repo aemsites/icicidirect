@@ -40,7 +40,7 @@ const initiateAccountCreation = (url, mobileNumber) => {
  * Handler for submit button click
  * @param {*} event
  */
-const handleSubmit = (event) => {
+const handleOpenAccountSubmit = (event) => {
   event.preventDefault();
   const mobileNumberInput = document.querySelector('.block.sticky-footer .action-container input');
   const mobileNumber = mobileNumberInput.value;
@@ -54,6 +54,16 @@ const handleSubmit = (event) => {
     const navigationLink = event.target.href;
     initiateAccountCreation(navigationLink, mobileNumber);
   }
+};
+
+/**
+ * Handler for when open trading account button is clicked
+ * @param {*} event
+ */
+const handleOpenTradingAcSubmit = (event) => {
+  event.preventDefault();
+  // TODO: Handle what needs to be for account creation
+  window.open(event.target.href, '_blank');
 };
 
 /**
@@ -74,11 +84,12 @@ export default async function decorate(block) {
   // extract open account button linl from the block data
   const blockConfig = readBlockConfig(block);
   const openAccountUrl = blockConfig['open-account-link'] || '';
+  const openTradingAccrountUrl = blockConfig['open-trading-account-link'] || '';
   block.innerText = '';
 
   const placeholders = await fetchPlaceholders();
 
-  const stickyFooterWrapper = div({ class: 'sticky-footer-container' });
+  const stickyFooterWrapper = div({ class: 'sticky-footer-bottom' });
   const stickyFooterContainer = div({ class: 'action-container' });
 
   const mobileNumberField = input({ class: 'mobilenumber' });
@@ -93,7 +104,7 @@ export default async function decorate(block) {
   const aLink = a({ class: 'discover-more-button' });
   aLink.href = openAccountUrl;
   aLink.textContent = placeholders[toCamelCase('OpenAccountButton')];
-  aLink.addEventListener('click', handleSubmit);
+  aLink.addEventListener('click', handleOpenAccountSubmit);
   openAccountButton.appendChild(aLink);
   stickyFooterContainer.appendChild(openAccountButton);
   stickyFooterWrapper.appendChild(stickyFooterContainer);
@@ -104,6 +115,16 @@ export default async function decorate(block) {
   validationContainer.appendChild(message);
   stickyFooterWrapper.appendChild(validationContainer);
 
+  const rightStickyButton = div({ class: 'sticky-footer-right' });
+  const openTradingAccountButton = div({ class: 'open-trading-account' });
+  const tradingALink = a({ class: 'open-trading-button' });
+  tradingALink.href = openTradingAccrountUrl;
+  tradingALink.textContent = placeholders[toCamelCase('OpenTradingAccountButton')];
+  tradingALink.addEventListener('click', handleOpenTradingAcSubmit);
+  openTradingAccountButton.appendChild(tradingALink);
+  rightStickyButton.appendChild(openTradingAccountButton);
+
   block.append(stickyFooterWrapper);
+  block.append(rightStickyButton);
   showStickyFooterWhenScrolled(block);
 }
