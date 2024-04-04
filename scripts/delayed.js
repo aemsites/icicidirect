@@ -46,6 +46,7 @@ async function loadGTM() {
         j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
     j.async = true;
     j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl + '&referrer=' + encodeURIComponent(r);
+    console.log(j.src);
     f.parentNode.insertBefore(j, f);
 }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ', document.referrer));;
     `;
