@@ -265,7 +265,13 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-hidden', !!i);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
-    tabpanel.setAttribute('api-key', id);
+    const valueArray = Array.from(tabpanel.lastElementChild.childNodes);
+    const textNode = valueArray.filter((node) => node.nodeType === Node.TEXT_NODE)[0];
+    if (textNode) {
+      const apiKey = textNode.textContent.replace(',', '').trim();
+      tabpanel.setAttribute('api-key', apiKey);
+      textNode.textContent = textNode.textContent.replace(textNode.textContent, '').trim();
+    }
 
     // build tab button
     const button = document.createElement('button');
