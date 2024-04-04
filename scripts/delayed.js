@@ -49,6 +49,7 @@ async function loadGTM() {
     f.parentNode.insertBefore(j, f);
 }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ', document.referrer));;
     `;
+  console.log(scriptTag);
   document.head.prepend(scriptTag);
 }
 
