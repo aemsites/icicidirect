@@ -12,8 +12,6 @@ function createIframeElement() {
   iframeElement.style.cssText = 'border: none; overflow: hidden; width: 300px; height: 65px;';
   return iframeElement;
 }
-
-// Create the div with class "mb-2 mt-2 captcha-container elseOAO" and style "display: none;"
 function createCaptcha() {
   const captchaContainerDiv = createElement('div', 'mb-2');
   captchaContainerDiv.classList.add('mt-2', 'captcha-container', 'elseOAO');
@@ -36,8 +34,8 @@ function createMobileNumberInput(placeholderText) {
   const wrapperDiv = createElement('div', '');
   const inputElement = createElement('input', 'phoneNumberTextBox');
   inputElement.type = 'text';
-  inputElement.classList.add('ml-auto', 'mr-auto');
-  inputElement.id = 'itxtmobile';
+  //inputElement.classList.add('ml-auto', 'mr-auto');
+  //inputElement.id = 'itxtmobile';
   inputElement.placeholder = placeholderText;
   inputElement.maxLength = '10';
   inputElement.pattern = '[0-9]*';
@@ -56,10 +54,10 @@ function createMobileNumberInput(placeholderText) {
   return wrapperDiv;
 }
 function createSubmitButton(buttontitle, errormessage) {
-  const buttonElement = createElement('button', '');
-  buttonElement.type = 'button';
-  buttonElement.classList.add('btn', 'btn-field-theme');
-  buttonElement.id = 'ibtnotp';
+  const buttonElement = createElement('button', 'signupbtn');
+  //buttonElement.type = 'button';
+  //buttonElement.classList.add('btn', 'btn-field-theme');
+  //buttonElement.id = 'ibtnotp';
   buttonElement.textContent = buttontitle;
   buttonElement.onclick = function () {
     checkresponseSectionEntry();

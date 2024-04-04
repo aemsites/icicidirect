@@ -138,10 +138,10 @@
      }
  }
  
- .block.sign-up .openDematAC .signup-form-group #itxtmobile {
+ /*.block.sign-up .openDematAC .signup-form-group #itxtmobile {
      max-width: 260px;
      margin: 0 auto 10px auto;
- }
+ }*/
  
  .block.sign-up .openDematAC .signup-form-group .btn {
      margin-top: 12px !important;
@@ -233,73 +233,72 @@
      justify-content: center !important;
  }
  
- .block.sign-up .btn:not(.dropdown-toggle) {
-     /*font-size: 16px;
-     line-height: 38px;
-     font-family: "Poppins";
-     -webkit-border-radius: 30px;
-     -moz-border-radius: 30px;
-     -ms-border-radius: 30px;
-     border: 1px solid transparent;
-     box-shadow: 0px 7px 17px 5px #050e3517;
-     -webkit-transition: 0.3s;
-     -moz-transition: 0.3s;
-     -o-transition: 0.3s;
-     -ms-transition: 0.3s;*/
-
-     min-height: 50px;
-     font-weight: 600;
-     min-width: 196px;
-     background: #E87817;
-     color: #ffffff;
-     
-     text-transform: uppercase;
+ .block.sign-up .signupbtn {
+    /*font-size: 16px;
+    line-height: 38px;
+    font-family: "Poppins";
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
     
-     border-radius: 30px;
-     padding: 5px 20px;
-     
+    box-shadow: 0px 7px 17px 5px #050e3517;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    -ms-transition: 0.3s;*/
+
+    min-height: 50px;
+    font-weight: 600;
+    min-width: 196px;
+    background: #E87817;
+    color: #ffffff;
+    text-transform: uppercase;
+    border: 1px solid transparent;
+    border-radius: 30px;
+    padding: 5px 20px;
     
    
-     transition: 0.3s;
- }
+  
+    transition: 0.3s;
+}
 
- .block.sign-up .btn {
-     font-size: 16px;
-     line-height: 30px;
-     min-height: 35px;
-     text-transform: uppercase;
-     -webkit-border-radius: 30px;
-     -moz-border-radius: 30px;
-     -ms-border-radius: 30px;
-     border-radius: 30px;
-     padding: 2px 20px 1px;
-     border: 1px solid transparent;
-     box-shadow: none !important;
-     -webkit-transition: 0.3s;
-     -moz-transition: 0.3s;
-     -o-transition: 0.3s;
-     -ms-transition: 0.3s;
-     transition: 0.3s;
- }
- 
- @media (max-width: 1199px) {
-     .block.sign-up .btn {
-         padding-left: 15px;
-         padding-right: 15px;
-     }
- }
- 
- @media (max-width: 767px) {
-     .block.sign-up .btn {
-         font-size: 15px;
-     }
- }
- 
- @media (max-width: 575px) {
-     .block.sign-up .btn + .block.sign-up .btn {
-         margin-top: 10px;
-     }
- }
+/*.block.sign-up .btn {
+    font-size: 16px;
+    line-height: 30px;
+    min-height: 35px;
+    text-transform: uppercase;
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    -ms-border-radius: 30px;
+    border-radius: 30px;
+    padding: 2px 20px 1px;
+    border: 1px solid transparent;
+    box-shadow: none !important;
+    -webkit-transition: 0.3s;
+    -moz-transition: 0.3s;
+    -o-transition: 0.3s;
+    -ms-transition: 0.3s;
+    transition: 0.3s;
+}*/
+
+@media (max-width: 1199px) {
+    .block.sign-up .signupbtn {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+
+@media (max-width: 767px) {
+    .block.sign-up .signupbtn {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 575px) {
+    .block.sign-up .signupbtn + .block.sign-up .signupbtn {
+        margin-top: 10px;
+    }
+}
  
  input, button, select, optgroup, textarea {
      margin: 0;
@@ -309,31 +308,36 @@
  }
  
  .block.sign-up input, .block.sign-up .phoneNumberTextBox {
-     height: 40px;
-     padding: 5px 15px;
-     color: rgba(14, 31, 53, 0.5);
-     font-weight: 300;
-     font-style: italic;
-     border-color: #AEB7C1;
- }
- 
- .block.sign-up textarea.phoneNumberTextBox {
-     height: auto;
- }
- .block.sign-up .phoneNumberTextBox {
-    display: block;
-    width: 100%;
-    height: calc(1.5em + 0.75rem + 2px);
-    padding: 0.375rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 400;
-    line-height: 1.5;
-    color: #495057;
+    height: 40px;
+    padding: 5px 15px;
+    color: rgba(14, 31, 53, 0.5);
+    font-weight: 300;
+    font-style: italic;
+    border-color: #AEB7C1;
+    font-family: inherit;
+    max-width: 260px;
+    margin: 0 auto 10px auto;
+}
+
+/* .block.sign-up textarea.phoneNumberTextBox {
+    height: auto;
+} */
+.block.sign-up .phoneNumberTextBox {
+  /* padding: 0.375rem 0.75rem;
+   color: #495057;
+     margin-left: auto !important;
+    margin-right: auto !important;
     background-color: #fff;
-    background-clip: padding-box;
-    border: 1px solid #ced4da;
-    border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+   background-clip: padding-box;*/
+
+   display: block;
+   width: 100%;   
+   font-size: 1rem;
+   line-height: 1.5;  
+   border: 1px solid #ced4da;
+   border-radius: 0.25rem;
+   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+ 
 }
 
  .block.sign-up .ml-auto, .block.sign-up .mx-auto {
