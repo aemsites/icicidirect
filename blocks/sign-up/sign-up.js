@@ -1,4 +1,4 @@
-import { readBlockConfig } from '../../scripts/aem.js';
+import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
 
 function createIframeElement() {
@@ -34,9 +34,9 @@ function createCaptcha() {
 
 function createMobileNumberInput(placeholderText) {
   const wrapperDiv = createElement('div', '');
-  const inputElement = createElement('input', '');
+  const inputElement = createElement('input', 'phoneNumberTextBox');
   inputElement.type = 'text';
-  inputElement.classList.add('form-control', 'ml-auto', 'mr-auto');
+  inputElement.classList.add('ml-auto', 'mr-auto');
   inputElement.id = 'itxtmobile';
   inputElement.placeholder = placeholderText;
   inputElement.maxLength = '10';
@@ -77,11 +77,10 @@ function createTitle(title) {
   const col1Div = createElement('div', 'col-lg-5');
   col1Div.classList.add('col-md-6', 'col-12');
   const titleWrapDiv = createElement('div', 'title_wrap');
-  const h2Element = createElement('h2', 'sec_title');
-  h2Element.classList.add('text-left', 'hindiclassheading');
-  // h2Element.innerHTML = '<span>Open</span> <strong>Free Trading Account</strong>
-  // Online with ICICIDIRECT';
-  h2Element.textContent = title;
+  const h2Element = createElement('h2', 'text-left');
+  
+   h2Element.innerHTML = '<span>Open</span> <strong>Free Trading Account</strong> Online with ICICIDIRECT';
+  //h2Element.textContent = title;
   titleWrapDiv.appendChild(h2Element);
   col1Div.appendChild(titleWrapDiv);
   return col1Div;
@@ -96,10 +95,10 @@ function createSignUpElement(
   const col2Div = createElement('div', 'col-lg-5');
   col2Div.classList.add('col-md-6', 'col-12');
 
-  const formGroupDiv = createElement('div', 'form-group');
+  const formGroupDiv = createElement('div', 'signup-form-group');
   formGroupDiv.classList.add('mb-0', 'text-center');
 
-  const labelElement = createElement('label', 'hindiclasslabel');
+  const labelElement = createElement('label', '');
   // labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
   labelElement.textContent = signupString;
 
@@ -131,6 +130,7 @@ function createSignUpElement(
 
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
+  const placeholders = await fetchPlaceholders();
   const {
     title, signupstring, promotionaltext, placeholdertext, buttontitle, errormessage,
   } = blockConfig;
@@ -141,6 +141,7 @@ export default async function decorate(block) {
   const articleElement = createElement('article', 'field_bg');
   const rowDiv = createElement('div', 'row');
   rowDiv.classList.add('justify-content-center', 'align-items-center');
+
   const titleField = createTitle(title);
   const signupElementDiv = createSignUpElement(
     signupstring,
@@ -163,4 +164,6 @@ export default async function decorate(block) {
 4. how to handle hidden elements
 5.  how to show error on submit
 3. some elements have ids
+7. captcha
+8. what abt moz properties
 */
