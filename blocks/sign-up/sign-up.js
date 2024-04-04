@@ -17,11 +17,11 @@ const initiateAccountCreation = (url, mobileNumber) => {
  */
 const handleOpenAccountSubmit = (event) => {
   event.preventDefault();
-  const mobileNumberInput = document.querySelector('.block.sign-up .phoneNumberTextBox');
+  const mobileNumberInput = document.querySelector('.block.sign-up .phonenumber-textbox');
   const mobileNumber = mobileNumberInput.value;
   // Check for valid mobile number format
   const mobileRegex = /^([0]|\+91)?[6789]\d{9}$/;
-  const validationMessage = document.querySelector('.block.sign-up .signupContainer .error-message');
+  const validationMessage = document.querySelector('.block.sign-up .signup-container .error-message');
   if (!mobileNumber || mobileNumber.length < 10 || !mobileRegex.test(mobileNumber)) {
     validationMessage.classList.add('invalid');
   } else {
@@ -39,7 +39,7 @@ function blockNonNumbers(event) {
 }
 
 function createMobileNumberInput(placeholderText) {
-  const inputElement = createElement('input', 'phoneNumberTextBox');
+  const inputElement = createElement('input', 'phonenumber-textbox');
   inputElement.type = 'text';
   inputElement.placeholder = placeholderText;
   inputElement.maxLength = '10';
@@ -62,7 +62,7 @@ function createErrorSpan(errormessage) {
 }
 function createTitle(titleHTML) {
   const col1Div = createElement('div', 'signupsections');
-  const titleWrapDiv = createElement('div', 'title_wrap');
+  const titleWrapDiv = createElement('div', 'title-wrap');
   const h2Element = createElement('h2', '');
   h2Element.innerHTML = titleHTML.innerHTML;
   h2Element.classList.add('text-left');
@@ -72,7 +72,7 @@ function createTitle(titleHTML) {
 }
 function createSignUpElement(
   signupString,
-  promotionalText,
+  promotionaltext,
   placeholderText,
   buttontitle,
   errormessage,
@@ -86,8 +86,8 @@ function createSignUpElement(
   // labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
   labelElement.innerHTML = signupString.innerHTML;
 
-  const promotionalSpan = createElement('span', 'promotionalText');
-  promotionalSpan.textContent = promotionalText;
+  const promotionalSpan = createElement('span', 'promotional-text');
+  promotionalSpan.textContent = promotionaltext;
 
   const formFieldsDiv = createElement('div', '');
   const mobileInput = createMobileNumberInput(placeholderText);
@@ -110,7 +110,7 @@ function createSignUpElement(
 }
 function findHTMLElementFromBock(block, key) {
   const parentDivs = block.querySelectorAll('.sign-up > div');
-  for (let i = 0; i < parentDivs.length; i++) {
+  for (let i = 0; i < parentDivs.length; i += 1) {
     const parentDiv = parentDivs[i];
     // Select the first and second child divs
     const firstChildDiv = parentDiv.querySelector(':nth-child(1)');
@@ -119,7 +119,7 @@ function findHTMLElementFromBock(block, key) {
       return secondChildDiv;
     }
   }
-  return '';
+  return ''; // Return an empty string if no match is found
 }
 
 export default async function decorate(block) {
@@ -131,7 +131,7 @@ export default async function decorate(block) {
   const titleHTML = findHTMLElementFromBock(block, 'title');
   const signupstringHTML = findHTMLElementFromBock(block, 'signupString');
   const sectionDiv = createElement('div', 'section');
-  sectionDiv.classList.add('margin', 'signupContainer');
+  sectionDiv.classList.add('margin', 'signup-container');
 
   const articleElement = createElement('article', '');
   const rowDiv = createElement('div', 'row');

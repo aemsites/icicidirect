@@ -1,37 +1,39 @@
-.block.sign-up .signupContainer {
-     box-shadow: 0 1px 3px 0 rgba(14, 31, 53, 0.2);
+.block.sign-up .signup-container {
+     box-shadow: 0 1px 3px 0 rgb(14 31 53 / 20%);
      padding: 20px 0;
  }
  
- @media (max-width: 991px) {
-     .block.sign-up .signupContainer {
+ @media (width <= 991px) {
+     .block.sign-up .signup-container {
          text-align: center;
      }
  }
  
- @media (max-width: 575px) {
-     .block.sign-up .signupContainer {
+ @media (width <= 575px) {
+     .block.sign-up .signup-container {
          margin-top: 0;
      }
  }
  
- .block.sign-up .signupContainer article {
+ .block.sign-up .signup-container article {
      padding: 0 15px;
      max-width: 1300px;
      margin: 0 auto;
-     box-shadow: 0px 0px 7px -1px rgba(0, 0, 0, 0.4);
+     box-shadow: 0 0 7px -1px rgb(0 0 0 / 40%);
  }
 
 
-@media (max-width: 1199px) {
-    .block.sign-up .signupContainer article {
+@media (width <= 1199px) {
+    .block.sign-up .signup-container article {
         padding: 20px 15px;
     }
 }
- .block.sign-up .signupContainer .title_wrap {
+
+ .block.sign-up .signup-container .title-wrap {
      margin-bottom: 0;
  }
- .block.sign-up .signupContainer .title_wrap h2 {
+
+ .block.sign-up .signup-container .title-wrap h2 {
      color: #053D6E;
      text-transform: inherit;
      font-weight: 500;
@@ -40,50 +42,52 @@
      margin: 10px 0;
  }
 
- @media (max-width: 575px) {
-    .block.sign-up .signupContainer h2 {
+ @media (width <= 575px) {
+    .block.sign-up .signup-container h2 {
        font-size: 20px;
     }
 }
  
- @media (max-width: 991px) {
-     .block.sign-up .signupContainer .title_wrap h2 {
+ @media (width <= 991px) {
+     .block.sign-up .signup-container .title-wrap h2 {
          line-height: 42px;
          font-size: 25px;
      }
  }
  
- @media (max-width: 575px) {
-     .block.sign-up .signupContainer .title_wrap h2 {
+ @media (width <= 575px) {
+     .block.sign-up .signup-container .title-wrap h2 {
          line-height: 28px;
          font-size: 20px;
      }
  }
  
- .block.sign-up .signupContainer .title_wrap h2 strong {
+ .block.sign-up .signup-container .title-wrap h2 strong {
      font-weight: 700;
  }
- .block.sign-up .title_wrap h2 em {
+
+ .block.sign-up .title-wrap h2 em {
      font-weight: 300;
-     font-family:"Poppins", sans-serif;
+     font-family:Poppins, sans-serif;
      font-style: normal;
  }
- .block.sign-up .signupContainer .error-message {
+
+ .block.sign-up .signup-container .error-message {
      color: #da0000;
      font-size: 13px;
      display: none;
  }
 
- .block.sign-up .signupContainer .error-message.invalid {
+ .block.sign-up .signup-container .error-message.invalid {
     display: inline-block;
 }
  
- .block.sign-up .signupContainer .signup-form-group {
+ .block.sign-up .signup-container .signup-form-group {
      text-align: center;
-     border: 1px solid rgba(151, 151, 151, 0.2);
+     border: 1px solid rgb(151 151 151 / 20%);
      border-radius: 24px;
-     background-color: #FFFFFF;
-     box-shadow: 0 20px 60px 20px rgba(201, 201, 201, 0.1), 0 2px 4px 0 #EBEBEB;
+     background-color: #FFF;
+     box-shadow: 0 20px 60px 20px rgb(201 201 201 / 10%), 0 2px 4px 0 #EBEBEB;
      padding: 15px 35px;
      width: 420px;
      position: absolute;
@@ -92,16 +96,16 @@
      transform: translateY(-50%);
  }
  
- @media (max-width: 991px) {
-     .block.sign-up .signupContainer .signup-form-group {
-         padding: 15px 15px;
+ @media (width <= 991px) {
+     .block.sign-up .signup-container .signup-form-group {
+         padding: 15px;
          max-width: 380px;
          width: 100%;
      }
  }
  
- @media (max-width: 767px) {
-     .block.sign-up .signupContainer .signup-form-group {
+ @media (width <= 767px) {
+     .block.sign-up .signup-container .signup-form-group {
          position: static;
          transform: inherit;
          margin: 22px auto;
@@ -114,7 +118,7 @@
 }
 
 
- .block.sign-up .signupContainer .signup-form-group label {
+ .block.sign-up .signup-container .signup-form-group label {
      font-size: 24px;
      color: #4A4A4A;
      position: relative;
@@ -122,7 +126,7 @@
      margin-bottom: 10px;
  }
  
- .block.sign-up .signupContainer .signup-form-group label::before {
+ .block.sign-up .signup-container .signup-form-group label::before {
      content: "";
      position: absolute;
      bottom: 5px;
@@ -133,16 +137,17 @@
      background: #e77817;
  }
  
- @media (max-width: 575px) {
-     .block.sign-up .signupContainer .signup-form-group label::before {
+ @media (width <= 575px) {
+     .block.sign-up .signup-container .signup-form-group label::before {
          font-size: 18px;
      }
  } 
+
  .block.sign-up .section.margin {
      margin: 45px 0;
  }
  
- @media (max-width: 575px) {
+ @media (width <= 575px) {
      .block.sign-up .section.margin {
          margin: 32px 0;
      }
@@ -154,38 +159,40 @@
      margin-right: -15px;
      margin-left: -15px;
  }
+
  .block.sign-up .text-left {
      text-align: left !important;
  }
   
- .block.sign-up .promotionalText {
+ .block.sign-up .promotional-text {
      margin-top: 0.25rem !important;
      color:#333;
      display: block !important;
  }
  
  .block.sign-up .signupsections {
-    flex: 0 0 41.66667%;
-    max-width: 41.66667%;
+    flex: 0 0 41.6667%;
+    max-width: 41.6667%;
     position: relative;
     padding-right: 15px;
     padding-left: 15px;
 }
 
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
     .block.sign-up .signupsections {
         flex: 0 0 50%;
         max-width: 50%
     }
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
    .block.sign-up .signupsections {
        flex: 0 0 100%;
        max-width: 100%
    }
 }
+
  .block.sign-up .justify-content-center {
      justify-content: center !important;
  }
@@ -195,7 +202,7 @@
     font-weight: 600;
     min-width: 196px;
     background: #E87817;
-    color: #ffffff;
+    color: #fff;
     text-transform: uppercase;
     border: 1px solid transparent;
     border-radius: 30px;
@@ -205,28 +212,29 @@
      margin-bottom: 12px !important;
 }
 
-@media (max-width: 1199px) {
+@media (width <= 1199px) {
     .block.sign-up .signupbtn {
         padding-left: 15px;
         padding-right: 15px;
     }
 }
 
-@media (max-width: 767px) {
+@media (width <= 767px) {
     .block.sign-up .signupbtn {
         font-size: 15px;
     }
 }
- .block.sign-up input, .block.sign-up .phoneNumberTextBox {
+
+ .block.sign-up input, .block.sign-up .phonenumber-textbox {
     height: 40px;
     padding: 5px 15px;
-    color: rgba(14, 31, 53, 0.5);
+    color: rgb(14 31 53 / 50%);
     font-weight: 300;
     font-style: italic;
     border-color: #AEB7C1;
     font-family: inherit;
     max-width: 260px;
-    margin: 0 auto 10px auto;
+    margin: 0 auto 10px;
     display: block;
    width: 100%;   
    font-size: 1 rem;
