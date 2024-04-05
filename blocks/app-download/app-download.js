@@ -1,3 +1,6 @@
+import { createOptimizedPicture } from "../../scripts/aem.js";
+import { getHostUrl } from "../../scripts/mockapi.js";
+
 export default function decorate(block) {
   const qrImage = block.querySelector('picture');
   qrImage.parentNode.className = 'qrcode';
@@ -11,11 +14,9 @@ export default function decorate(block) {
   buttonContainers.forEach((buttonContainer) => {
     // Get the anchor tag inside the button container
     const anchorTag = buttonContainer.querySelector('a');
-    const picture = document.createElement('picture');
-    const img = document.createElement('img');
-    img.src = `/icons/${anchorTag.text}.png`;
+    const badgeName = anchorTag.text.toLowerCase();
+    const picture = createOptimizedPicture(`${getHostUrl()}/icons/${badgeName}.png`);
     anchorTag.text = '';
-    picture.append(img);
     anchorTag.append(picture);
     // Move the anchor tag directly under the div
     storeDiv.appendChild(anchorTag);
