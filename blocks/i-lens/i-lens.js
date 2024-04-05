@@ -1,9 +1,6 @@
 import { createElement, fetchData } from '../../scripts/blocks-utils.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
 import { readBlockConfig } from '../../scripts/aem.js';
-import {
-  div, h3, label, li, span, ul,
-} from '../../scripts/dom-builder.js';
 
 function decorateTitle(blockCfg) {
   const { title } = blockCfg;

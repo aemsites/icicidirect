@@ -30,8 +30,6 @@
 
 .block.carousel-section .dropdowns {
     text-align: left;
-    /*flex: 0 0 66.6666%;*/
-    /*max-width: 66.6666%;*/
     position: relative;
     width: 100%;
     padding-right: 0.9rem;
@@ -118,7 +116,6 @@
 }
 
 .block.carousel-section .dropdowns .dropdown-menu li a {
-    /*padding: 0.3rem 0.6rem;*/
     color: var(--link-color-dark-blue);
     cursor: pointer;
     text-decoration: none;
@@ -145,11 +142,8 @@
     content: "\e900";
 }
 
-.block.carousel-section .carousel-body {
-    /*padding: 0.9rem 1.9rem;*/
-}
 .block.carousel-section .carousel-body .box {
-    background: #ffffff;
+    background: #fff;
     padding: 20px 25px;
     display: flex;
     flex-direction: column;
@@ -157,7 +151,7 @@
 }
 
 .block.carousel-section .carousel-body .box + .box {
-    border-top: 1px solid rgba(151, 151, 151, 0.2);
+    border-top: 1px solid var(--color-lighter-gray);
 }
 
 .block.carousel-section .carousel-body .box:nth-child(even) {
@@ -176,6 +170,7 @@
     flex-wrap: wrap;
     margin-left: -10px;
 }
+
 .block.carousel-section .carousel-body .box ul li {
     flex: 0 0 11.11%;
     max-width: 11.11%;
@@ -204,6 +199,7 @@
     color: #000;
     display: block;
 }
+
 @media (width >= 48rem) {
     .block.carousel-section .carousel-title {
         flex: 0 0 50%;
