@@ -2,16 +2,6 @@ import { readBlockConfig } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
 
 /**
- * Actions to be performed for account creation when mobile number is valid
- * @param {*} url account opening url
- * @param {*} mobileNumber the mobile number entered by user
- */
-const initiateAccountCreation = (url, mobileNumber) => {
-  // TODO: Handle what needs to be for login
-  window.open(`${url}?mobile=${mobileNumber}`, '_blank');
-};
-
-/**
  * Handler for submit button click
  * @param {*} event
  */
@@ -26,13 +16,14 @@ const handleOpenAccountSubmit = (event) => {
     validationMessage.classList.add('invalid');
   } else {
     validationMessage.classList.remove('invalid');
-    const navigationLink = event.target.href;
-    initiateAccountCreation(navigationLink, mobileNumber);
-
     // TBD : need ajax call for otp generation etc
   }
 };
 
+/**
+ * Removes non-numeric characters from the input value.
+ * @param {Event} event - The event object triggered by the input element.
+ */
 function blockNonNumbers(event) {
   const inputElement = event.target;
   inputElement.value = inputElement.value.replace(/[^0-9]/g, '');
@@ -50,10 +41,10 @@ function createMobileNumberInput(placeholderText) {
 }
 
 function createSubmitButton(buttontitle) {
-  const buttonElement = createElement('button', 'signupbtn');
-  buttonElement.textContent = buttontitle;
-  buttonElement.addEventListener('click', handleOpenAccountSubmit);
-  return buttonElement;
+  const submitButton = createElement('button', 'signupbtn');
+  submitButton.textContent = buttontitle;
+  submitButton.addEventListener('click', handleOpenAccountSubmit);
+  return submitButton;
 }
 function createErrorSpan(errormessage) {
   const spanElement = createElement('span', 'error-message');
@@ -82,9 +73,8 @@ function createSignUpElement(
   const formGroupDiv = createElement('div', 'signup-form-group');
   formGroupDiv.classList.add('text-center');
 
-  const labelElement = createElement('label', '');
-  // labelElement.innerHTML = 'Sign up for a <strong>New Account</strong>';
-  labelElement.innerHTML = signupString.innerHTML;
+  const signupStringElement = createElement('label', '');
+  signupStringElement.innerHTML = signupString.innerHTML;
 
   const promotionalSpan = createElement('span', 'promotional-text');
   promotionalSpan.textContent = promotionaltext;
@@ -99,27 +89,31 @@ function createSignUpElement(
   formFieldsDiv.appendChild(tunrstileContainer);
   formFieldsDiv.appendChild(submitButton);
 
-  formGroupDiv.appendChild(labelElement);
+  formGroupDiv.appendChild(signupStringElement);
   formGroupDiv.appendChild(promotionalSpan);
   formGroupDiv.appendChild(formFieldsDiv);
   formGroupDiv.appendChild(errorSpan);
 
   signupFormDiv.appendChild(formGroupDiv);
-
   return signupFormDiv;
 }
+/**
+ * Finds an HTML element from a block based on a given key.
+ * @param {HTMLElement} block - The block to search within.
+ * @param {string} key - The key to search for within the block.
+ * @returns {HTMLElement|string} - The found HTML element or an empty string if no match is found.
+ */
 function findHTMLElementFromBock(block, key) {
   const parentDivs = block.querySelectorAll('.sign-up > div');
   for (let i = 0; i < parentDivs.length; i += 1) {
     const parentDiv = parentDivs[i];
-    // Select the first and second child divs
     const firstChildDiv = parentDiv.querySelector(':nth-child(1)');
     const secondChildDiv = parentDiv.querySelector(':nth-child(2)');
     if (firstChildDiv.textContent.includes(key)) {
       return secondChildDiv;
     }
   }
-  return ''; // Return an empty string if no match is found
+  return '';
 }
 
 export default async function decorate(block) {
@@ -152,8 +146,3 @@ export default async function decorate(block) {
   block.textContent = '';
   block.appendChild(sectionDiv);
 }
-/*
-1. how to give strong etc
-
-10. poppins-light for open
-*/
