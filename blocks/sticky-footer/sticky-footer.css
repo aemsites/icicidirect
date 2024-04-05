@@ -48,6 +48,10 @@
   transition: color 0.3s ease;
 }
 
+.block.sticky-footer .action-container .turnstile-container {
+  height: 4.063rem;
+}
+
 .block.sticky-footer .action-container .turnstile-container:not(:empty) {
   margin: var(--space-8px) 1.25rem 0;
 }
@@ -64,6 +68,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: unset;
 }
 
 .block.sticky-footer .action-container .discover-more-button a {
@@ -122,6 +127,7 @@
     height: 2.813rem;
   }
 
+ 
   .block.sticky-footer .action-container .turnstile-container:not(:empty) {
     margin: 0 1.25rem;
   }
