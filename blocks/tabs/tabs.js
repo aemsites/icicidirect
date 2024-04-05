@@ -125,7 +125,6 @@ function createSocialLinkElement(item) {
 }
 
 async function createPicture(imageUrl, mediaWrapper) {
-  // Create picture element
   mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
 }
 
