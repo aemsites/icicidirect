@@ -46,11 +46,13 @@ function createSubmitButton(buttontitle) {
   submitButton.addEventListener('click', handleOpenAccountSubmit);
   return submitButton;
 }
+
 function createErrorSpan(errormessage) {
   const spanElement = createElement('span', 'error-message');
   spanElement.textContent = errormessage;
   return spanElement;
 }
+
 function createTitle(titleHTML) {
   const col1Div = createElement('div', 'signupsections');
   const titleWrapDiv = createElement('div', 'title-wrap');
@@ -61,6 +63,7 @@ function createTitle(titleHTML) {
   col1Div.appendChild(titleWrapDiv);
   return col1Div;
 }
+
 function createSignUpElement(
   signupString,
   promotionaltext,
@@ -81,12 +84,12 @@ function createSignUpElement(
 
   const formFieldsDiv = createElement('div', '');
   const mobileInput = createMobileNumberInput(placeholderText);
-  const tunrstileContainer = createElement('div', 'turnstile-container');
+  // const tunrstileContainer = createElement('div', 'turnstile-container');
   const submitButton = createSubmitButton(buttontitle, errormessage);
   const errorSpan = createErrorSpan(errormessage);
 
   formFieldsDiv.appendChild(mobileInput);
-  formFieldsDiv.appendChild(tunrstileContainer);
+  // formFieldsDiv.appendChild(tunrstileContainer);
   formFieldsDiv.appendChild(submitButton);
 
   formGroupDiv.appendChild(signupStringElement);
@@ -97,6 +100,7 @@ function createSignUpElement(
   signupFormDiv.appendChild(formGroupDiv);
   return signupFormDiv;
 }
+
 /**
  * Finds an HTML element from a block based on a given key.
  * @param {HTMLElement} block - The block to search within.

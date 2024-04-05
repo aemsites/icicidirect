@@ -1,13 +1,18 @@
 .block.sign-up .signup-container {
-    box-shadow: 0 1px 3px 0 var(--border-color-dark-grey);
-    padding: var(--space-20px) 0;
+    box-shadow: 0 var(--space-1px) var(--space-3px) 0 var(--border-color-dark-grey);
+    padding: 1.25rem 0;
+    margin: 0 0 2rem;
 }
 
 .block.sign-up .signup-container article {
     padding: 0 var(--space-15px);
     max-width: 81.25rem;
     margin: 0 auto;
-    box-shadow: 0 0 7px -1px var(--color-darkest-gray);
+    box-shadow: 0 0 var(--space-7px) calc(-1 * var(--space-1px)) var(--color-darkest-gray);
+}
+
+.block.sign-up .section.margin {
+    margin: 2rem 0;
 }
 
 .block.sign-up .signup-container .title-wrap {
@@ -17,10 +22,9 @@
 .block.sign-up .signup-container .title-wrap h2 {
     color: var(--primary);
     text-transform: inherit;
-    font-weight: var(--font-weight-medium);
-    line-height: var(--line-height-xxxl);
-    font-size: var(--heading-font-size-xxl);
     margin: var(--space-10px) 0;
+    line-height: var(--line-height-xl);
+    font-size: var(--heading-font-size-m);
 }
 
 .block.sign-up .signup-container .title-wrap h2 strong {
@@ -39,90 +43,77 @@
 }
 
 .block.sign-up .signup-container .error-message.invalid {
-   display: inline-block;
+    display: inline-block;
 }
 
- .block.sign-up .signup-container .signup-form-group {
-     text-align: center;
-     border: 1px solid var(--background-color-grey);
-     border-radius: var(--space-24px);
-     background-color: var(--color-white);
-     box-shadow: 0 20px 60px 20px var( --color-darker), 0 2px 4px 0 var(--color-yellowish-white);
-     padding: var(--space-15px) var(--space-35px);
-     width: 26.25rem;
-     position: absolute;
-     top: 50%;
-     right: 0;
-     transform: translateY(-50%);
- }
- 
+.block.sign-up .signup-container .signup-form-group {
+    text-align: center;
+    border: var(--space-1px) solid var(--background-color-grey);
+    border-radius: 1.5rem;
+    background-color: var(--color-white);
+    box-shadow: 0 1.25rem 3.75rem 1.25rem var(--color-darker), 0 var(--space-2px) var(--space-4px) 0 var(--color-yellowish-white);
+    padding: var(--space-15px);
+    position: static;
+    transform: inherit;
+    margin: 1.375rem auto;
+    max-width: 23.75rem;
+}
 
- 
- .block.sign-up label {
+.block.sign-up label {
     display: inline-block;
     margin-bottom: 0.5rem;
 }
 
-
- .block.sign-up .signup-container .signup-form-group label {
-     font-size: var(--heading-font-size-ml);
-     color: var(--color-gray-dark);
-     position: relative;
-     padding-bottom: var(--space-15px);
-     margin-bottom: var(--space-10px);
- }
- 
- .block.sign-up .signup-container .signup-form-group label::before {
-     content: "";
-     position: absolute;
-     bottom: 5px;
-     left: 50%;
-     transform: translateX(-50%);
-     width: 100px;
-     height: 3px;
-     background: var(--link-color-orange);
- }
- 
-
-
- .block.sign-up .section.margin {
-     margin: var( --space-45px) 0;
- }
- 
-
-
- .block.sign-up .row {
-     display: flex;
-     flex-wrap: wrap;
-     margin-right: calc(-1 * var(--space-15px));
-     margin-left: calc(-1 * var(--space-15px));
- }
-
- .block.sign-up .text-left {
-     text-align: left !important;
- }
-  
- .block.sign-up .promotional-text {
-     margin-top: 0.25rem !important;
-     color:var(--color-darker-gray);
-     display: block !important;
- }
- 
- .block.sign-up .signupsections {
-    flex: 0 0 41.6667%;
-    max-width: 41.6667%;
+.block.sign-up .signup-container .signup-form-group label {
+    font-size: var(--heading-font-size-ml);
+    color: var(--color-gray-dark);
     position: relative;
-    padding-right:  var(--space-15px);
-    padding-left:  var(--space-15px);
+    padding-bottom: var(--space-15px);
+    margin-bottom: var(--space-10px);
 }
 
+.block.sign-up .signup-container .signup-form-group label::before {
+    content: "";
+    position: absolute;
+    bottom: var(--space-5px);
+    left: 50%;
+    transform: translateX(-50%);
+    height: var(--space-3px);
+    background: var(--link-color-orange);
+    font-size: var(--body-font-size-l);
+}
 
+.block.sign-up .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin-right: calc(-1 * var(--space-15px));
+    margin-left: calc(-1 * var(--space-15px));
+}
 
- .block.sign-up .justify-content-center {
-     justify-content: center !important;
- }
- 
- .block.sign-up .signupbtn {
+.block.sign-up .text-left {
+    text-align: left;
+}
+
+.block.sign-up .promotional-text {
+    margin-top: 0.25rem;
+    color: var(--color-darker-gray);
+    display: block;
+}
+
+.block.sign-up .signupsections {
+    flex: 0 0 100%;
+    max-width: 100%;
+    margin: 0;
+    position: relative;
+    padding-right: var(--space-15px);
+    padding-left: var(--space-15px);
+}
+
+.block.sign-up .justify-content-center {
+    justify-content: center;
+}
+
+.block.sign-up .signupbtn {
     min-height: 3.125rem;
     font-weight: var(--font-weight-semibold);
     min-width: 12.25rem;
@@ -131,47 +122,35 @@
     text-transform: uppercase;
     border: var(--space-1px) solid transparent;
     border-radius: 1.875rem;
-    padding: var(--space-5px)  var(--space-20px);
+    padding: var(--space-5px) 1.25rem;
     transition: 0.3s;
-    margin-top:  var(--space-12px) !important;
-     margin-bottom:  var(--space-12px) !important;
-     font-size:1rem;    
+    margin-top: var(--space-12px);
+    margin-bottom: var(--space-12px);
+    font-size: 1rem;
 }
 
-
-
- .block.sign-up input, .block.sign-up .phonenumber-textbox {
+.block.sign-up .phonenumber-textbox {
     height: 2.5rem;
     padding: var(--space-5px) var(--space-15px);
-    color: var(--color-footer-top-note-blue);
-    font-weight: var( --font-weight-small);
+    color: var(--text-color-light-gray);
+    font-weight: var(--font-weight-small);
     font-style: italic;
     border-color: var(--color-lighter-gray-border);
     font-family: inherit;
     max-width: 16.25rem;
-    margin: 0 auto var(--space-10px);
+    margin: 0 auto 10px;
     display: block;
-    width: 100%;   
+    width: 100%;
     font-size: 1rem;
-    border: 1px solid var( --border-color-lighter-gray);
+    border: var(--space-1px) solid var(--border-color-lighter-gray);
     border-radius: 0.25rem;
 }
 
-.block.sign-up input, .block.sign-up .phonenumber-textbox::placeholder {
+.block.sign-up .phonenumber-textbox::placeholder {
     font-size: 1rem;
 }
 
-
-@media (width <= 64rem) {
-    .block.sign-up .signup-container {
-        text-align: center;
-    }
-
-    .block.sign-up .signup-container .signup-form-group {
-        padding: var(--space-15px);
-        max-width: 23.75rem;
-        width: 100%;
-    }
+@media (width >=48rem) {
     .block.sign-up .signup-container .title-wrap h2 {
         line-height: var(--line-height-xxl);
         font-size: var(--heading-font-size-mls);
@@ -179,38 +158,44 @@
 
     .block.sign-up .signupsections {
         flex: 0 0 50%;
-        max-width: 50%
-    }
-} 
-
-@media (width < 48rem) {
-    .block.sign-up .signup-container {
-        margin-top: 0;
+        max-width: 50%;
     }
 
+    .block.sign-up .signup-container .signup-form-group {
+        padding: var(--space-15px);
+        max-width: 23.75rem;
+        position: absolute;
+        top: 50%;
+        right: 0;
+        transform: translateY(-50%);
+    }
+}
+
+@media (width > 64rem) {
     .block.sign-up .signup-container .title-wrap h2 {
-        line-height: var(--line-height-xl);
-        font-size: var(--heading-font-size-m);
-    }
-
-    .block.sign-up .signup-container .signup-form-group label::before {
-        font-size: var(--body-font-size-l);
-    }
-
-    .block.sign-up .section.margin {
-        margin: var( --space-32px) 0;
+        font-weight: var(--font-weight-medium);
+        line-height: var(--line-height-xxxl);
+        font-size: var(--heading-font-size-xxl);
     }
 
     .block.sign-up .signupsections {
-        flex: 0 0 100%;
-        max-width: 100%;
-        margin:0;
+        flex: 0 0 41.6667%;
+        max-width: 41.6667%;
+        margin-bottom: 0;
     }
- 
-    .block.sign-up .signup-container .signup-form-group {
-     position: static;
-     transform: inherit;
-     margin: var(--space-22px) auto;
- }
-} 
 
+    .block.sign-up .signup-container .signup-form-group {
+        transform: translateY(-50%);
+        padding:  var(--space-15px) 2.1875rem;
+        width: 26.25rem;
+        margin: 0;
+    }
+
+    .block.sign-up .signup-container {
+        padding: 1.25rem 0;
+    }
+
+    .block.sign-up .section.margin {
+        margin: 2.8125rem 0;
+    }
+}
