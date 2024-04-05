@@ -3,18 +3,6 @@
     padding: var(--space-20px) 0;
 }
 
-@media (width <= 991px) {
-    .block.sign-up .signup-container {
-        text-align: center;
-    }
-}
-
-@media (width <= 575px) {
-    .block.sign-up .signup-container {
-        margin-top: 0;
-    }
-}
-
 .block.sign-up .signup-container article {
     padding: 0 var(--space-15px);
     max-width: 81.25rem;
@@ -33,20 +21,6 @@
     line-height: var(--line-height-xxxl);
     font-size: var(--heading-font-size-xxl);
     margin: var(--space-10px) 0;
-}
-
-@media (width <= 991px) {
-    .block.sign-up .signup-container .title-wrap h2 {
-        line-height: var(--line-height-xxl);
-        font-size: var(--heading-font-size-mls);
-    }
-}
-
-@media (width <= 575px) {
-    .block.sign-up .signup-container .title-wrap h2 {
-        line-height: var(--line-height-xl);
-        font-size: var(--heading-font-size-m);
-    }
 }
 
 .block.sign-up .signup-container .title-wrap h2 strong {
@@ -82,21 +56,7 @@
      transform: translateY(-50%);
  }
  
- @media (width <= 991px) {
-     .block.sign-up .signup-container .signup-form-group {
-         padding: var(--space-15px);
-         max-width: 23.75rem;
-         width: 100%;
-     }
- }
- 
- @media (width <= 767px) {
-     .block.sign-up .signup-container .signup-form-group {
-         position: static;
-         transform: inherit;
-         margin: var(--space-22px) auto;
-     }
- }
+
  
  .block.sign-up label {
     display: inline-block;
@@ -123,21 +83,13 @@
      background: var(--link-color-orange);
  }
  
- @media (width <= 575px) {
-     .block.sign-up .signup-container .signup-form-group label::before {
-         font-size: var(--body-font-size-l);
-     }
- } 
+
 
  .block.sign-up .section.margin {
      margin: var( --space-45px) 0;
  }
  
- @media (width <= 575px) {
-     .block.sign-up .section.margin {
-         margin: var( --space-32px) 0;
-     }
- }
+
 
  .block.sign-up .row {
      display: flex;
@@ -165,20 +117,6 @@
 }
 
 
-@media (width <= 768px) {
-    .block.sign-up .signupsections {
-        flex: 0 0 50%;
-        max-width: 50%
-    }
-}
-
-@media (width <= 767px) {
-   .block.sign-up .signupsections {
-       flex: 0 0 100%;
-       max-width: 100%;
-       margin:0;
-   }
-}
 
  .block.sign-up .justify-content-center {
      justify-content: center !important;
@@ -200,18 +138,7 @@
      font-size:1rem;    
 }
 
-@media (width <= 1199px) {
-    .block.sign-up .signupbtn {
-        padding-left:  var(--space-15px);
-        padding-right:  var(--space-15px);
-    }
-}
 
-@media (width <= 767px) {
-    .block.sign-up .signupbtn {
-        font-size: var(--space-15px);
-    }
-}
 
  .block.sign-up input, .block.sign-up .phonenumber-textbox {
     height: 2.5rem;
@@ -228,6 +155,62 @@
     font-size: 1rem;
     border: 1px solid var( --border-color-lighter-gray);
     border-radius: 0.25rem;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.block.sign-up input, .block.sign-up .phonenumber-textbox::placeholder {
+    font-size: 1rem;
+}
+
+
+@media (width <= 64rem) {
+    .block.sign-up .signup-container {
+        text-align: center;
+    }
+
+    .block.sign-up .signup-container .signup-form-group {
+        padding: var(--space-15px);
+        max-width: 23.75rem;
+        width: 100%;
+    }
+    .block.sign-up .signup-container .title-wrap h2 {
+        line-height: var(--line-height-xxl);
+        font-size: var(--heading-font-size-mls);
+    }
+
+    .block.sign-up .signupsections {
+        flex: 0 0 50%;
+        max-width: 50%
+    }
+} 
+
+@media (width < 48rem) {
+    .block.sign-up .signup-container {
+        margin-top: 0;
+    }
+
+    .block.sign-up .signup-container .title-wrap h2 {
+        line-height: var(--line-height-xl);
+        font-size: var(--heading-font-size-m);
+    }
+
+    .block.sign-up .signup-container .signup-form-group label::before {
+        font-size: var(--body-font-size-l);
+    }
+
+    .block.sign-up .section.margin {
+        margin: var( --space-32px) 0;
+    }
+
+    .block.sign-up .signupsections {
+        flex: 0 0 100%;
+        max-width: 100%;
+        margin:0;
+    }
  
+    .block.sign-up .signup-container .signup-form-group {
+     position: static;
+     transform: inherit;
+     margin: var(--space-22px) auto;
+ }
+} 
+
