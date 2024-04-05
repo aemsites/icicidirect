@@ -1,4 +1,4 @@
-import { readBlockConfig } from '../../scripts/aem.js';
+import { readBlockConfig, toClassName } from '../../scripts/aem.js';
 
 const options = {
   root: null,
@@ -26,7 +26,10 @@ const activateSectionInView = (elementId) => {
 const handlePageSectionIntersection = (entries) => {
   entries.forEach((entry) => {
     if (entry.isIntersecting) {
-      const elementId = entry.target.id;
+      let elementId = entry.target.id;
+      if (entry.target.classList.contains('section') && elementId) {
+        elementId = `tab-${elementId}`;
+      }
       activateSectionInView(elementId);
     }
   });
@@ -62,13 +65,16 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
  */
 const scrollToAdjustedStickyHeader = (section) => {
   const headerOffset = 70;
-  const elementPosition = section.getBoundingClientRect().top;
+  const elementPosition = section && section.getBoundingClientRect().top;
   const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
   window.scrollTo({
     top: offsetPosition,
     behavior: 'smooth',
   });
+  if (section) {
+    section.click();
+  }
 };
 
 /**
@@ -101,21 +107,40 @@ export default async function decorate(block) {
   // extract quicklinks from the complete page
   const quickLinkContainerDiv = document.createElement('div');
   quickLinkContainerDiv.className = 'quicklinks-container';
-  const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
+  const quickLinkEnabledBlocksOrSection = document.querySelectorAll('[data-quicklinks-title]');
 
   // Create a new intersection observer
   const observer = new IntersectionObserver(handlePageSectionIntersection, options);
-  quickLinkEnabledBlocks.forEach((singleItem) => {
-    const linkId = singleItem.id;
-    const linkTitle = singleItem.getAttribute('data-quicklinks-title');
-    const linkNode = document.createElement('a');
-    linkNode.href = `#${linkId}`;
-    linkNode.innerText = linkTitle;
-    quickLinkContainerDiv.appendChild(linkNode);
-    // prevent quicklinks default behaviour
-    preventInternalLinksDefault(linkNode, linkId);
-    // observe other sections of the page when scrolled
-    observer.observe(singleItem);
+  quickLinkEnabledBlocksOrSection.forEach((singleItem) => {
+    const isSection = singleItem.classList.contains('section');
+    // in case of section look for all ids within the section that matches the name
+    if (isSection) {
+      // TODO: fetch tabs directly from tab list and set title as true
+      const linkTitles = singleItem.getAttribute('data-quicklinks-title').split(',');
+      linkTitles.forEach((singleTitle) => {
+        const linkId = `tab-${toClassName(singleTitle.trim())}`;
+        const linkTitle = singleTitle.trim();
+        const linkNode = document.createElement('a');
+        linkNode.href = `#${linkId}`;
+        linkNode.innerText = linkTitle;
+        quickLinkContainerDiv.appendChild(linkNode);
+        // prevent quicklinks default behaviour
+        preventInternalLinksDefault(linkNode, linkId);
+        // observe other sections of the page when scrolled
+        observer.observe(singleItem);
+      });
+    } else {
+      const linkId = singleItem.id;
+      const linkTitle = singleItem.getAttribute('data-quicklinks-title');
+      const linkNode = document.createElement('a');
+      linkNode.href = `#${linkId}`;
+      linkNode.innerText = linkTitle;
+      quickLinkContainerDiv.appendChild(linkNode);
+      // prevent quicklinks default behaviour
+      preventInternalLinksDefault(linkNode, linkId);
+      // observe other sections of the page when scrolled
+      observer.observe(singleItem);
+    }
   });
   block.append(quickLinkContainerDiv);
 
