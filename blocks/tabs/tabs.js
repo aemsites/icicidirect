@@ -269,7 +269,7 @@ export default async function decorate(block) {
     const textNode = valueArray.filter((node) => node.nodeType === Node.TEXT_NODE)[0];
     if (textNode) {
       const apiKey = textNode.textContent.replace(',', '').trim();
-      tabpanel.setAttribute('api-key', apiKey);
+      tabpanel.setAttribute('api-key', apiKey.toLowerCase());
       textNode.textContent = textNode.textContent.replace(textNode.textContent, '').trim();
     }
 
