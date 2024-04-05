@@ -151,7 +151,18 @@ function getEnvType(hostname = window.location.hostname) {
  * @param {Element} main The container element under which quicklinks has to be enabled.
  */
 function decorateQuickLinks(main) {
-  const addQuickLinksMetadata = (block) => {
+  const handQuickLinksMetadataForTabs = (section) => {
+    const quickLinkTitles = section.getAttribute('data-quicklinks-title').split(',');
+    const nestedTabs = section.querySelectorAll('.block.tabs > div > div:first-child');
+    const nestedTabsIndexed = Array.from(nestedTabs);
+    // assign the ids as per the order of tabs
+    quickLinkTitles.forEach((singleTitle, index) => {
+      nestedTabsIndexed[index].id = toCamelCase(singleTitle.trim());
+      nestedTabsIndexed[index].setAttribute('data-quicklinks-title', singleTitle.trim());
+    });
+    section.removeAttribute('data-quicklinks-title');
+  };
+  const addQuickLinksMetadataForBlocks = (block) => {
     // extract the quicklinks details if present
     const blockConfig = readBlockConfig(block);
     const quickLinkTitle = blockConfig['quicklinks-title'];
@@ -160,7 +171,8 @@ function decorateQuickLinks(main) {
       block.id = toCamelCase(quickLinkTitle);
     }
   };
-  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
+  main.querySelectorAll('div.tabs-container[data-quicklinks-title]').forEach(handQuickLinksMetadataForTabs);
+  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
 }
 
 export {
