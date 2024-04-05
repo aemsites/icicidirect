@@ -255,6 +255,8 @@ export default async function decorate(block) {
 
   // decorate tabs and tabpanels
   const tabs = [...block.children].map((child) => child.firstElementChild);
+  const types = [...block.children].map((child) => child.children[1]);
+
   tabs.forEach((tab, i) => {
     const id = toClassName(tab.textContent);
 
@@ -265,14 +267,8 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-hidden', !!i);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
-    const valueArray = Array.from(tabpanel.lastElementChild.childNodes);
-    const textNode = valueArray.filter((node) => node.nodeType === Node.TEXT_NODE)[0];
-    if (textNode) {
-      const apiKey = textNode.textContent.replace(',', '').trim();
-      tabpanel.setAttribute('api-key', apiKey.toLowerCase());
-      textNode.textContent = textNode.textContent.replace(textNode.textContent, '').trim();
-    }
-
+    tabpanel.setAttribute('api-key', types[i].textContent.toLowerCase());
+    
     // build tab button
     const button = document.createElement('button');
     button.className = 'tabs-tab';
