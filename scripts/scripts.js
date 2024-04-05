@@ -35,6 +35,59 @@ function buildHeroBlock(main) {
   }
 }
 
+function buildAppDowloadBlock(main) {
+  const appDownloadSection = main.querySelector('.section.app-download');
+  if (appDownloadSection && appDownloadSection.dataset.sectionStatus !== 'loaded') {
+    const appDowloadDefaultWrapper = main.querySelector('.section.app-download .default-content-wrapper');
+
+    const newContentWrapper = document.createElement('div');
+    newContentWrapper.classList.add('app-download-wrapper');
+
+    const contenDiv = document.createElement('div');
+
+    const storeDiv = document.createElement('div');
+    storeDiv.className = 'stores';
+
+    const qrDiv = document.createElement('div');
+    qrDiv.className = 'qrcode';
+
+    const qrPictureTag = appDowloadDefaultWrapper.querySelector('picture');
+    if (qrPictureTag.parentNode) {
+      qrPictureTag.parentNode.remove();
+    }
+    qrDiv.appendChild(qrPictureTag);
+
+    // Get the buttons from the original content wrapper
+    const buttons = appDowloadDefaultWrapper.querySelectorAll('.button-container');
+    buttons.forEach((button) => {
+    // Get the anchor tag inside the button container
+      const anchorTag = button.querySelector('a');
+      const badgeName = anchorTag.text.toLowerCase();
+      const picture = createOptimizedPicture(`${getHostUrl()}/icons/${badgeName}.png`);
+      anchorTag.text = '';
+      anchorTag.append(picture);
+      // Move the anchor tag directly under the div
+      storeDiv.appendChild(anchorTag);
+      // Remove the button container paragraph
+      button.remove();
+    });
+
+    // Move all children of defaultContentWrapper to newParentDiv
+    while (appDowloadDefaultWrapper.firstChild) {
+      contenDiv.appendChild(appDowloadDefaultWrapper.firstChild);
+    }
+
+    newContentWrapper.appendChild(contenDiv);
+    newContentWrapper.appendChild(storeDiv);
+    newContentWrapper.appendChild(qrDiv);
+
+    appDowloadDefaultWrapper.parentNode.insertBefore(newContentWrapper, appDowloadDefaultWrapper);
+
+    // Remove the default content wrapper
+    appDowloadDefaultWrapper.remove();
+  }
+}
+
 /**
  * load fonts.css and set a session storage flag
  */
@@ -143,56 +196,4 @@ async function loadPage() {
 loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
 
-function buildAppDowloadBlock(main){
-  const appDownloadSection = main.querySelector('.section.app-download');
-  if (appDownloadSection && appDownloadSection.dataset.sectionStatus !== 'loaded') {
-    const appDowloadDefaultWrapper =  main.querySelector('.section.app-download .default-content-wrapper');
-    
-    const newContentWrapper = document.createElement('div');
-    newContentWrapper.classList.add('app-download-wrapper');
-
-    const contenDiv = document.createElement('div');
-
-    const storeDiv = document.createElement('div');
-    storeDiv.className = 'stores';
-
-    const qrDiv = document.createElement('div');
-    qrDiv.className = 'qrcode';
-    
-    const qrPictureTag = appDowloadDefaultWrapper.querySelector('picture');
-    if(qrPictureTag.parentNode){
-      qrPictureTag.parentNode.remove();
-    }
-    qrDiv.appendChild(qrPictureTag);
-
-    // Get the buttons from the original content wrapper
-    const buttons = appDowloadDefaultWrapper.querySelectorAll('.button-container');
-    buttons.forEach((button) => {
-    // Get the anchor tag inside the button container
-    const anchorTag = button.querySelector('a');
-    const badgeName = anchorTag.text.toLowerCase();
-    const picture = createOptimizedPicture(`${getHostUrl()}/icons/${badgeName}.png`);
-    anchorTag.text = '';
-    anchorTag.append(picture);
-    // Move the anchor tag directly under the div
-    storeDiv.appendChild(anchorTag);
-    // Remove the button container paragraph
-    button.remove();
-    }); 
-
-    // Move all children of defaultContentWrapper to newParentDiv
-    while (appDowloadDefaultWrapper.firstChild) {
-      contenDiv.appendChild(appDowloadDefaultWrapper.firstChild);
-    }
-
-    newContentWrapper.appendChild(contenDiv);
-    newContentWrapper.appendChild(storeDiv);
-    newContentWrapper.appendChild(qrDiv);
-
-    appDowloadDefaultWrapper.parentNode.insertBefore(newContentWrapper, appDowloadDefaultWrapper);
-
-    // Remove the default content wrapper
-    appDowloadDefaultWrapper.remove(); 
-  }
-}
 window.validateuserToken = '';
