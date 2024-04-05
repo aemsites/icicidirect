@@ -125,7 +125,6 @@ function createSocialLinkElement(item) {
 }
 
 async function createPicture(imageUrl, mediaWrapper) {
-  // Create picture element
   mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
 }
 
@@ -255,6 +254,8 @@ export default async function decorate(block) {
 
   // decorate tabs and tabpanels
   const tabs = [...block.children].map((child) => child.firstElementChild);
+  const types = [...block.children].map((child) => child.children[1]);
+
   tabs.forEach((tab, i) => {
     const id = toClassName(tab.textContent);
 
@@ -265,12 +266,11 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-hidden', !!i);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
-    tabpanel.setAttribute('api-key', id);
+    tabpanel.setAttribute('api-key', types[i].textContent.toLowerCase());
 
     // build tab button
     const button = document.createElement('button');
     button.className = 'tabs-tab';
-    button.id = `tab-${id}`;
     button.innerHTML = tab.innerHTML;
     button.setAttribute('aria-controls', `tabpanel-${id}`);
     button.setAttribute('aria-selected', !i);

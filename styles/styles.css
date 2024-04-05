@@ -11,7 +11,7 @@
  */
 
 :root {
-  /* colors */  
+  /* colors */
   --primary: #053D6E;
   --color-orange: #DB620A;
   --color-dark: #262B36;
@@ -58,6 +58,7 @@
   --link-color-dark-gray : #3d3d3d;
   --button-color-orange: #E87817;
   --background-color-light-grey: #FCFCFC;
+  --background-color-gray-scale: #F9F9F9;
   --background-color-deep-light-grey: #F7F7F7;
   --background-color-transparent: transparent;
   --background-color-unset: unset;
@@ -176,7 +177,7 @@
   --space-15px: 0.938rem;  
 }
 
-*, *::before, *::after { 
+*, *::before, *::after {
   box-sizing: border-box;
   outline: none;
 }
@@ -412,11 +413,10 @@ a:any-link {
   color: var(--color-blue);
   text-decoration: none;
   background-color: transparent;
-  font-size: 1rem;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
   color: var(--link-hover-color);
 }
 
@@ -430,7 +430,7 @@ a:not([href]):hover {
   text-decoration: none;
 }
 
-a.discover-more-button:any-link {
+a.discover-more, a.discover-more-button:any-link {
   display: inline-block;
   font-size: var(--heading-font-size-ms);
   line-height: 2.375rem;
@@ -444,7 +444,8 @@ a.discover-more-button:any-link {
   padding: 0.3125rem 1.25rem;
   border: 0.0625rem solid transparent;
   text-decoration: none;
-  cursor: pointer;   
+  cursor: pointer;
+  text-align: center;
 }
 
 main img {
@@ -455,13 +456,16 @@ main img {
 
 /* sections */
 
-main .section.padded > .section-container {
+main .section > .section-container {
   max-width: 81.25rem;
   width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
   margin-right: auto;
   margin-left: auto;
+}
+
+/* section - padded i.e. inline padding */
+main .section.padded > .section-container, main .section.inline-padded > .section-container {
+  padding: 0 1rem;
 }
 
 main .section.shadow  {
@@ -554,29 +558,29 @@ main .section.app-download .stores a {
 }
 
 @media (width >= 48rem) {
-main .section.shadow  {
-  background: var(--background-color-light-orange);
-  box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
-}
-
-@media (width >= 768px) {
-  header {
-    min-height: 8.4rem;
+  main .section.shadow  {
+    background: var(--background-color-light-orange);
+    box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
   }
 
-  h1 {
-    font-size: var(--h1-font-size-desktop);
-    margin-bottom: 3rem;
-  } 
+  @media (width >= 768px) {
+    header {
+      min-height: 8.4rem;
+    }
 
-  h2 {
-    font-size: var(--h2-font-size-desktop);
-    line-height: 2.813rem;
-    margin-bottom: 2rem;
-  }
-  h3 { font-size: var(--h3-font-size-desktop); }
-  h4 { font-size: var(--h4-font-size-desktop); }
-  h5 { font-size: var(--h5-font-size-desktop); }
+    h1 {
+      font-size: var(--h1-font-size-desktop);
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: var(--h2-font-size-desktop);
+      line-height: 2.813rem;
+      margin-bottom: 2rem;
+    }
+    h3 { font-size: var(--h3-font-size-desktop); }
+    h4 { font-size: var(--h4-font-size-desktop); }
+    h5 { font-size: var(--h5-font-size-desktop); }
   }
 
   main .section.app-download .app-download-wrapper {
