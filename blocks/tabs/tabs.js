@@ -268,7 +268,7 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
     tabpanel.setAttribute('api-key', types[i].textContent.toLowerCase());
-    
+
     // build tab button
     const button = document.createElement('button');
     button.className = 'tabs-tab';
