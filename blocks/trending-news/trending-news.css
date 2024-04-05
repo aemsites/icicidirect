@@ -48,7 +48,7 @@
     height: 20rem;
     flex: 0 0 auto;
     min-height: var(--space-1px);
-    transition: opacity 0.1s ease;
+    transition: opacity 0.5s ease;
 }
 
 .block.trending-news .news-section .article {
