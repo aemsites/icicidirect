@@ -1,3 +1,9 @@
+/*
+This block is derived from the 'carousel' block found in the
+Adobe Experience Manager (AEM) Block Collection. The original code can be accessed
+at: https://github.com/adobe/aem-block-collection/tree/main/blocks/carousel
+Modifications (preferably avoid) may have been made to fit the specific needs of this project.
+*/
 import { fetchPlaceholders } from '../../scripts/aem.js';
 
 function updateActiveSlide(slide) {

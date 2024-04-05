@@ -1,6 +1,6 @@
 // Map of API names and their respective endpoint URLs
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
-import { handleSocialShareClick } from '../../scripts/scripts.js';
+import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import { callAPI } from '../../scripts/mockapi.js';
 import { observe } from '../../scripts/blocks-utils.js';
 
@@ -81,7 +81,7 @@ export default async function decorate(block) {
     configElement.style.display = 'none';
     const configNameElement = configElement.querySelector('div');
     const configName = configNameElement.textContent.trim().toLowerCase();
-    if (configName === 'api') {
+    if (configName === 'type') {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
@@ -98,7 +98,6 @@ export default async function decorate(block) {
               const img = element.querySelector('img');
               img.src = img.dataset.src;
               img.onload = function handleImageLoad() {
-                // Set the width and height directly on the img element
                 img.width = this.width;
                 img.height = this.height;
               };
