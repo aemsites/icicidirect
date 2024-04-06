@@ -87,7 +87,7 @@
   --modal-background-color: #000000BF;
   --title-color: #122E45;
   --title-color-card: #303030;
-  
+
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
@@ -172,7 +172,7 @@
   --space-12px: 0.75rem;
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
-  --space-15px: 0.938rem;  
+  --space-15px: 0.938rem;
 }
 
 *, *::before, *::after {
@@ -453,12 +453,16 @@ main img {
 }
 
 /* sections */
-
 main .section > .section-container {
   max-width: 81.25rem;
   width: 100%;
   margin-right: auto;
   margin-left: auto;
+}
+
+/* section - full-width */
+main .section.full-width > .section-container{
+  max-width: 100%;
 }
 
 /* section - padded i.e. inline padding */
