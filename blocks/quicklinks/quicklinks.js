@@ -22,8 +22,8 @@ const activateSectionInView = (elementId) => {
  * Function to handle the intersecting section of the page with quicklink enabled
  */
 const handlePageSectionIntersection = (entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting && index === 0) {
       const elementId = entry.target.id;
       activateSectionInView(elementId);
     }
@@ -82,7 +82,7 @@ const preventInternalLinksDefault = (quickLinkItem, sectionId) => {
     event.preventDefault();
     const targetSection = document.getElementById(sectionId);
     scrollToAdjustedStickyHeader(targetSection);
-    activateSectionInView(sectionId);
+    setTimeout(() => activateSectionInView(sectionId), 200);
   });
 };
 
@@ -93,7 +93,7 @@ const enableSectionHighligting = () => {
   const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
   const options = {
     root: null,
-    threshold: 0.7,
+    threshold: 0.5,
   };
   const observer = new IntersectionObserver(handlePageSectionIntersection, options);
   quickLinkEnabledBlocks.forEach((singleBlock) => {
