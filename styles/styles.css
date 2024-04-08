@@ -306,6 +306,7 @@ header {
 }
 
 body {
+  display: none;
   margin: 0;
   font: var(--font-weight-regular) 0.9rem Poppins, "Poppins Fallback", sans-serif;
   color: var(--text-color-normal);
