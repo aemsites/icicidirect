@@ -137,6 +137,6 @@ export default async function decorate(block) {
   const parentContainer = document.querySelector('.section.quicklinks-container');
   enableStickyBehaviorForQuickLinks(parentContainer, block);
   // enable the section highlighting when quicklinks comes into viewport
-  // this gives the quicklinks sometime so that other sections are ready 
+  // this gives the quicklinks sometime so that other sections are ready
   observe(block, enableSectionHighligting);
 }
