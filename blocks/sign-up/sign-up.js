@@ -1,5 +1,6 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
+import GoogleReCaptcha  from '../../scripts/recaptcha.js';
 
 /**
  * Handler for submit button click
@@ -64,12 +65,22 @@ function createTitle(titleHTML) {
   return col1Div;
 }
 
+function createReCaptcha( submitButton) {
+  const captchadiv = createElement('div', 'g-recaptcha');
+  const sitekey = '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-';
+  const secretKey = '6LfrHrQpAAAAAMksjIBanoGo_w4hR1-PvwJHLpVm';
+  const captcha = new GoogleReCaptcha(sitekey, '');
+  captcha.loadCaptcha(submitButton);
+  return captchadiv;
+}
+
 function createSignUpElement(
   signupString,
   promotionaltext,
   placeholderText,
   buttontitle,
   errormessage,
+  block,
 ) {
   const signupFormDiv = createElement('div', 'signupsections');
 
@@ -86,8 +97,10 @@ function createSignUpElement(
   const mobileInput = createMobileNumberInput(placeholderText);
   const submitButton = createSubmitButton(buttontitle, errormessage);
   const errorSpan = createErrorSpan(errormessage);
+  const captcha = createReCaptcha(submitButton);
 
   formFieldsDiv.appendChild(mobileInput);
+  formFieldsDiv.appendChild(captcha);
   formFieldsDiv.appendChild(submitButton);
 
   formGroupDiv.appendChild(signupStringElement);
@@ -120,6 +133,7 @@ export default async function decorate(block) {
     placeholdertext,
     buttontitle,
     errormessage,
+    block,
   );
   rowDiv.appendChild(titleField);
   rowDiv.appendChild(signupElementDiv);
