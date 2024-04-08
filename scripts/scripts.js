@@ -15,9 +15,9 @@ import {
 } from './aem.js';
 
 import { decorateQuickLinks } from './blocks-utils.js';
+import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
-
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
@@ -59,6 +59,41 @@ function buildAutoBlocks(main) {
 }
 
 /**
+ * Adds the 'discover-more' class to the specified anchor elements
+ * if their text content contains "Discover More".
+ * @param {Array<Element>} anchorElements - The anchor elements to decorate.
+ * @returns {void}
+ */
+function decorateDiscoverMore(anchorElements) {
+  anchorElements.forEach((anchor) => {
+    anchor.classList.add('discover-more');
+  });
+}
+
+/**
+ * Decorates anchor elements for styling updates via CSS.
+ * @param {Element} [element=document] - The element to decorate.
+ * @returns {void}
+ */
+function decorateAnchors(element = document) {
+  const anchors = Array.from(element.getElementsByTagName('a'));
+  const discoverMoreAnchors = anchors.filter((anchor) => anchor.textContent.includes('DISCOVER MORE') && anchor.childElementCount === 0);
+
+  if (discoverMoreAnchors.length > 0) {
+    decorateDiscoverMore(discoverMoreAnchors);
+  }
+
+  const socialShareAnchors = anchors.filter((anchor) => {
+    const img = anchor.querySelector('img');
+    return img && img.src.includes('/icons/gray-share-icon.svg');
+  });
+
+  if (socialShareAnchors.length > 0) {
+    decorateSocialShare(socialShareAnchors);
+  }
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -66,6 +101,7 @@ function buildAutoBlocks(main) {
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
+  decorateAnchors(document);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);

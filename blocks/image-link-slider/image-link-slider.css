@@ -1,0 +1,15 @@
+main .section .block.image-link-slider.padded {
+    padding: 2rem 1rem;
+}
+
+main .section .block.image-link-slider.gray-scale-bg {
+    background: var(--background-color-gray-scale);
+}
+
+main .section .block.image-link-slider.align-button-center .button-container {
+    text-align: center;
+}
+
+main .section .block.image-link-slider .block.carousel .carousel-slides img:not([src]) {
+    visibility: hidden;
+}
