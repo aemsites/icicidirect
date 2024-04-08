@@ -97,6 +97,7 @@
   --image-box-shadow: #878787;
   --title-color: #122E45;
   --title-color-card: #303030;
+  --color-gray-light-text: #4B5057;
 
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -163,6 +164,7 @@
   --line-height-narrow: 10px;
   --line-height-little-small: 14px;
   --line-height-small: 18px;
+  --line-height-regular: 19px;
   --line-height-normal: 20px;
   --line-height-medium: 22px;
   --line-height-large: 24px;

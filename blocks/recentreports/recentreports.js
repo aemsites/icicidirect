@@ -1,4 +1,3 @@
-// Map of API names and their respective endpoint URLs
 import {
   buildBlock, decorateBlock, loadBlock, readBlockConfig,
 } from '../../scripts/aem.js';
@@ -13,12 +12,11 @@ function decorateBoxHeader(title, reportLink) {
   anchor.tabIndex = 0;
   anchor.textContent = title;
   heading.appendChild(anchor);
-
   return heading;
 }
+
 function decorateDataInBox(label, value, rowClass) {
   const div = createElement('div', rowClass);
-
   const content = createElement('div', 'value-content');
   const labelElem = createElement('label', '');
   labelElem.textContent = label;
@@ -33,6 +31,7 @@ function decorateDataInBox(label, value, rowClass) {
   div.appendChild(content);
   return div;
 }
+
 function decorateBoxFooter(reportLink, buttontitle) {
   const footer = createElement('div', 'box-footer');
   const reportBtn = createElement('a', 'btn');
@@ -43,6 +42,7 @@ function decorateBoxFooter(reportLink, buttontitle) {
   footer.appendChild(reportBtn);
   return footer;
 }
+
 function decorateBox(targetPrice, rating, date) {
   const row = createElement('div', 'row');
 
@@ -89,7 +89,7 @@ function renderRecentReportsCards({ data }, carouselItems, blockCfg) {
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
-  carouselBlock.style.display = 'none';
+  // carouselBlock.style.display = 'none';
   carouselBlock.innerHTML = '';
   block.classList.forEach((className) => {
     carouselBlock.classList.add(className);
@@ -108,9 +108,6 @@ async function loadCarousel(block, carouselItems) {
   carouselBlockParent.appendChild(carouselBlock);
   block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
   decorateBlock(carouselBlock);
-
-  // carouselBlock.querySelectorAll('.social-share').
-  // forEach((anchor) => anchor.addEventListener('click', () => handleSocialShareClick(anchor)));
   return loadBlock(carouselBlock);
 }
 
@@ -125,13 +122,26 @@ function handleTitleConfig(titleElement, container) {
 
   container.insertBefore(titleWrapper, container.firstChild);
 }
+function addDiscoverLink(discoverMoreDiv, block) {
+  const discoverMoreAnchor = discoverMoreDiv.querySelector('a');
+  if (discoverMoreAnchor) {
+    const div = document.createElement('div');
+    div.className = 'text-center discover-more';
+    const anchor = document.createElement('a');
+    anchor.href = discoverMoreAnchor.href; // Set the href to your discoverLink variable
+    anchor.className = 'link-color';
+    anchor.target = '_blank'; // Ensures the link opens in a new tab
+    anchor.textContent = discoverMoreAnchor.title; // Add the text content
+    const icon = document.createElement('i');
+    icon.className = 'icon-up-arrow icon ';
+    anchor.appendChild(icon);
+    div.appendChild(anchor);
+    block.appendChild(div);
+  }
+}
 
 export default async function decorate(block) {
-  /*  block.style.display = 'none';
-  const container = block.closest('.section .section-container');
-  container.style.display = 'none'; */
   const configElementsArray = Array.from(block.children);
-
   configElementsArray.map(async (configElement) => {
     configElement.style.display = 'none';
     const configNameElement = configElement.querySelector('div');
@@ -158,11 +168,9 @@ export default async function decorate(block) {
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);
-    } else if (configName === 'link') {
-      const buttonWrapper = document.createElement('div');
-      buttonWrapper.classList.add('button-wrapper');
-      buttonWrapper.append(configNameElement.nextElementSibling);
-      block.append(buttonWrapper);
+    } else if (configName === 'discoverlink') {
+      addDiscoverLink(configNameElement.nextElementSibling, block);
+      // discoverMoreLink.style.display = 'inline-block';
     }
   });
 }
