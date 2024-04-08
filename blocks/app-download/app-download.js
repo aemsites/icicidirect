@@ -11,7 +11,7 @@ export default function decorate(block) {
   buttonContainers.forEach((buttonContainer) => {
     const anchorTag = buttonContainer.querySelector('a');
     const badgeName = anchorTag.text.toLowerCase();
-    const picture = createOptimizedPicture(`${getHostUrl()}/icons/${badgeName}.png`);
+    const picture = createOptimizedPicture(`${getHostUrl()}/icons/${badgeName}-badge.png`);
     anchorTag.text = '';
     anchorTag.append(picture);
     storeDiv.appendChild(anchorTag);
