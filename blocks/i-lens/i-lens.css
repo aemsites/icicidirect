@@ -206,6 +206,10 @@
     display: block;
 }
 
+.block.carousel-section .title .icon {
+    vertical-align: middle;
+}
+
 @media (width >= 48rem) {
     .block.carousel-section .carousel-title {
         flex: 0 0 50%;

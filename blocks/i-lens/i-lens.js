@@ -1,23 +1,47 @@
 import { createElement, fetchData } from '../../scripts/blocks-utils.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
-import { readBlockConfig } from '../../scripts/aem.js';
+import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 
 function decorateTitle(blockCfg) {
   const { title } = blockCfg;
   const blockTitleDiv = createElement('div', 'title');
   const blockTitle = createElement('h2', '');
-  blockTitle.textContent = title;
+  const iconSpan = document.createElement('span');
+  iconSpan.className = 'icon icon-ilens';
+  blockTitle.appendChild(iconSpan);
+  const textNode = document.createTextNode(title);
+  blockTitle.appendChild(textNode);
   blockTitleDiv.append(blockTitle);
+  decorateIcons(blockTitleDiv);
   return blockTitleDiv;
+}
+
+function addSecondDropDown(dropdownsDiv, dropdownValue) {
+  console.log(dropdownValue);
+  fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
+    const { data } = ilensDDData;
+    data.forEach((item) => {
+      // console.log(item);
+      if (item.Level1 === dropdownValue) {
+        JSON.parse()
+        console.log(item.Level2.join(', '));
+      }
+    });
+    // const secondDropDown = createDropdown(secondDropDownValue);
+    // dropdownsDiv.appendChild(secondDropDown);
+  });
 }
 
 function updateRecommedations(selectedDropDownItem) {
   const dropdown = selectedDropDownItem.closest('.dropdown-select');
+  const dropdownContainer = selectedDropDownItem.closest('.dropdowns');
   dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
   dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
+  addSecondDropDown(dropdownContainer, selectedDropDownItem.textContent);
 }
 
 function createDropdown(dropdownValue) {
+  // console.log(dropdownValue);
   const menuItems = dropdownValue.split(', ');
   const dropdownText = menuItems[0];
 
@@ -73,6 +97,10 @@ function addCarouselHeader(carouselContainer, dropdowns) {
   if (dropdowns) {
     const dropdownsDiv = document.createElement('div');
     dropdownsDiv.className = 'dropdowns col border-box';
+    dropdowns.forEach((dropdownValue) => {
+      const dropDownEle = createDropdown(dropdownValue);
+      dropdownsDiv.appendChild(dropDownEle);
+    });
     dropdowns.forEach((dropdownValue) => {
       const dropDownEle = createDropdown(dropdownValue);
       dropdownsDiv.appendChild(dropDownEle);
