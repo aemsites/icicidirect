@@ -315,10 +315,11 @@ body {
   background-color: var(--color-white);
   text-align: left;
   line-height: 1.5;
+  display: none;
 }
 
 body.appear {
-  display: unset;
+  display: block;
 }
 
 h1, h2, h3,
