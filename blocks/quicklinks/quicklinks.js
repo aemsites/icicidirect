@@ -1,9 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-
-const options = {
-  root: null,
-  threshold: 0.7,
-};
+import { observe } from '../../scripts/blocks-utils.js';
 
 /**
  * Marks the link in the quicklinks section as active for the section visible in the view port
@@ -86,6 +82,22 @@ const preventInternalLinksDefault = (quickLinkItem, sectionId) => {
     event.preventDefault();
     const targetSection = document.getElementById(sectionId);
     scrollToAdjustedStickyHeader(targetSection);
+    activateSectionInView(sectionId);
+  });
+};
+
+/**
+ * Enable highlighting of all sections when come into viewport
+ */
+const enableSectionHighligting = () => {
+  const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
+  const options = {
+    root: null,
+    threshold: 0.7,
+  };
+  const observer = new IntersectionObserver(handlePageSectionIntersection, options);
+  quickLinkEnabledBlocks.forEach((singleBlock) => {
+    observer.observe(singleBlock);
   });
 };
 
@@ -109,7 +121,6 @@ export default async function decorate(block) {
   const quickLinkEnabledBlocksOrTabs = document.querySelectorAll('[data-quicklinks-title]');
 
   // Create a new intersection observer
-  const observer = new IntersectionObserver(handlePageSectionIntersection, options);
   quickLinkEnabledBlocksOrTabs.forEach((singleItem) => {
     const linkId = singleItem.id;
     const linkTitle = singleItem.getAttribute('data-quicklinks-title');
@@ -119,12 +130,13 @@ export default async function decorate(block) {
     quickLinkContainerDiv.appendChild(linkNode);
     // prevent quicklinks default behaviour
     preventInternalLinksDefault(linkNode, linkId);
-    // observe other sections of the page when scrolled
-    observer.observe(singleItem);
   });
   block.append(quickLinkContainerDiv);
 
   // enable sticky quicklinks when page is scrolled
   const parentContainer = document.querySelector('.section.quicklinks-container');
   enableStickyBehaviorForQuickLinks(parentContainer, block);
+  // enable the section highlighting when quicklinks comes into viewport
+  // this gives the quicklinks sometime so that other sections are ready 
+  observe(block, enableSectionHighligting);
 }
