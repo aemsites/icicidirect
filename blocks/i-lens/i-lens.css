@@ -123,10 +123,11 @@
 
 .block.carousel-section .discover-more {
     text-align: center;
+    margin-top: 1rem;
 }
 
 .block.carousel-section .discover-more .link-color {
-    font-size: 1rem;
+    font-size: var(--body-font-size-xlm);
     line-height: 1.5rem;
     font-weight: var(--font-weight-bold);
     color: var(--link-color-orange);

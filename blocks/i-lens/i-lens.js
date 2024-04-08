@@ -16,30 +16,14 @@ function decorateTitle(blockCfg) {
   return blockTitleDiv;
 }
 
-function addSecondDropDown(dropdownsDiv, dropdownValue) {
-  console.log(dropdownValue);
-  fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
-    const { data } = ilensDDData;
-    data.forEach((item) => {
-      // console.log(item);
-      if (item.Level1 === dropdownValue) {
-        JSON.parse()
-        console.log(item.Level2.join(', '));
-      }
-    });
-    // const secondDropDown = createDropdown(secondDropDownValue);
-    // dropdownsDiv.appendChild(secondDropDown);
-  });
-}
-
 function updateRecommedations(selectedDropDownItem) {
   const dropdown = selectedDropDownItem.closest('.dropdown-select');
   const dropdownContainer = selectedDropDownItem.closest('.dropdowns');
   dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
   dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
+  // eslint-disable-next-line no-use-before-define
   addSecondDropDown(dropdownContainer, selectedDropDownItem.textContent);
 }
-
 function createDropdown(dropdownValue) {
   // console.log(dropdownValue);
   const menuItems = dropdownValue.split(', ');
@@ -81,18 +65,29 @@ function createDropdown(dropdownValue) {
   return dropdownSelectDiv;
 }
 
+function addSecondDropDown(dropdownsDiv, dropdownValue) {
+  console.log(dropdownValue);
+  fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
+    const { data } = ilensDDData;
+    data.forEach((item) => {
+      // console.log(item);
+      if (item.Level1 === dropdownValue) {
+        const secondDropDownValue = JSON.parse(item.Level2).join(', ');
+        const secondDropDown = createDropdown(secondDropDownValue);
+        dropdownsDiv.appendChild(secondDropDown);
+        const carouselBody = dropdownsDiv.closest('.carousel-container').querySelector('.carousel-body');
+        // eslint-disable-next-line no-use-before-define
+        addStocksData(carouselBody, dropdownValue.toLowerCase());
+      }
+    });
+  });
+}
+
 function addCarouselHeader(carouselContainer, dropdowns) {
   const carouselHeader = document.createElement('div');
   carouselHeader.className = 'carousel-header';
   const rowDiv = document.createElement('div');
   rowDiv.className = 'row align-items-center';
-  // const colDiv = document.createElement('div');
-  // colDiv.className = 'col carousel-title';
-  // const heading = document.createElement('h3');
-  // heading.textContent = title;
-  // colDiv.appendChild(heading);
-  //
-  // rowDiv.appendChild(colDiv);
 
   if (dropdowns) {
     const dropdownsDiv = document.createElement('div');
@@ -101,10 +96,7 @@ function addCarouselHeader(carouselContainer, dropdowns) {
       const dropDownEle = createDropdown(dropdownValue);
       dropdownsDiv.appendChild(dropDownEle);
     });
-    dropdowns.forEach((dropdownValue) => {
-      const dropDownEle = createDropdown(dropdownValue);
-      dropdownsDiv.appendChild(dropDownEle);
-    });
+
     rowDiv.appendChild(dropdownsDiv);
     // document.addEventListener('click', (event) => {
     //   closeAllDropDowns(event.target);
@@ -116,9 +108,10 @@ function addCarouselHeader(carouselContainer, dropdowns) {
 }
 
 // eslint-disable-next-line no-unused-vars
-function addStocksData(carouselBody) {
+function addStocksData(carouselBody, dropdown = 'default') {
+  carouselBody.textContent = '';
   fetchData(`${getHostUrl()}/scripts/mock-ilensdata.json`, async (error, ilensData = []) => {
-    const { tableData } = ilensData.body;
+    const { tableData } = ilensData[dropdown].body;
     // Sort the tableData based on the Operating Revenue Qtr (SR_Q) in descending order
     tableData.sort((a, b) => b[6] - a[6]);
 
@@ -139,7 +132,8 @@ function addStocksData(carouselBody) {
 
         // eslint-disable-next-line no-shadow
         const label = document.createElement('label');
-        label.appendChild(document.createTextNode(ilensData.body.tableColumns[index + 6].name));
+        // eslint-disable-next-line max-len
+        label.appendChild(document.createTextNode(ilensData[dropdown].body.tableColumns[index + 6].name));
         listItem.appendChild(label);
 
         // eslint-disable-next-line no-shadow
@@ -179,6 +173,12 @@ export default async function decorate(block) {
   block.classList.add('carousel-section');
   const title = decorateTitle(blockConfig);
   block.appendChild(title);
+  const description = blockConfig.desciption;
+  if (description) {
+    const desc = createElement('p', 'description');
+    desc.textContent = description;
+    block.appendChild(desc);
+  }
   const dropdowns = Array.isArray(blockConfig.dropdowns)
     ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
   const carouselContainer = document.createElement('div');
