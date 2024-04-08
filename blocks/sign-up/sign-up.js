@@ -84,12 +84,10 @@ function createSignUpElement(
 
   const formFieldsDiv = createElement('div', '');
   const mobileInput = createMobileNumberInput(placeholderText);
-  // const tunrstileContainer = createElement('div', 'turnstile-container');
   const submitButton = createSubmitButton(buttontitle, errormessage);
   const errorSpan = createErrorSpan(errormessage);
 
   formFieldsDiv.appendChild(mobileInput);
-  // formFieldsDiv.appendChild(tunrstileContainer);
   formFieldsDiv.appendChild(submitButton);
 
   formGroupDiv.appendChild(signupStringElement);
@@ -101,33 +99,13 @@ function createSignUpElement(
   return signupFormDiv;
 }
 
-/**
- * Finds an HTML element from a block based on a given key.
- * @param {HTMLElement} block - The block to search within.
- * @param {string} key - The key to search for within the block.
- * @returns {HTMLElement|string} - The found HTML element or an empty string if no match is found.
- */
-function findHTMLElementFromBock(block, key) {
-  const parentDivs = block.querySelectorAll('.sign-up > div');
-  for (let i = 0; i < parentDivs.length; i += 1) {
-    const parentDiv = parentDivs[i];
-    const firstChildDiv = parentDiv.querySelector(':nth-child(1)');
-    const secondChildDiv = parentDiv.querySelector(':nth-child(2)');
-    if (firstChildDiv.textContent.includes(key)) {
-      return secondChildDiv;
-    }
-  }
-  return '';
-}
-
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const {
     promotionaltext, placeholdertext, buttontitle, errormessage,
   } = blockConfig;
-
-  const titleHTML = findHTMLElementFromBock(block, 'title');
-  const signupstringHTML = findHTMLElementFromBock(block, 'signupString');
+  const titleHTML = block.querySelectorAll(':scope > div')[0].children[1];
+  const signupstringHTML = block.querySelectorAll(':scope > div')[1].children[1];
   const sectionDiv = createElement('div', 'section');
   sectionDiv.classList.add('margin', 'signup-container');
 
