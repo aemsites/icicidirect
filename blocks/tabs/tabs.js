@@ -3,6 +3,7 @@ import {
   Viewport, createPictureElement, observe, fetchData,
 } from '../../scripts/blocks-utils.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
+import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -118,7 +119,7 @@ function createSocialLinkElement(item) {
   const socialIcon = document.createElement('i');
   socialIcon.classList.add('fa', 'fa-share', 'icon');
   socialAnchor.dataset.href = item.shareLink;
-  // TODO: add event listern on social anchor for calling method handleSocialShareClick
+  socialAnchor.addEventListener('click', () => handleSocialShareClick(socialAnchor));
   socialAnchor.appendChild(socialIcon);
   socialLink.appendChild(socialAnchor);
   return socialLink;
