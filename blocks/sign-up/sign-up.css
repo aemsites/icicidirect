@@ -24,6 +24,7 @@
     margin: var(--space-10px) 0;
     line-height: var(--line-height-xl);
     font-size: var(--heading-font-size-m);
+    font-weight: var(--font-weight-medium);
 }
 
 .block.sign-up .signup-container .title-wrap h2 strong {
@@ -195,7 +196,6 @@
     }
 
     .block.sign-up .signup-container .title-wrap h2 {
-        font-weight: var(--font-weight-medium);
         line-height: var(--line-height-xxxl);
         font-size: var(--heading-font-size-xxl);
     }
