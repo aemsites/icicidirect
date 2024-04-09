@@ -46,13 +46,13 @@ function decorateBoxFooter(reportLink, buttontitle) {
 function decorateBox(targetPrice, rating, date) {
   const row = createElement('div', 'row');
 
-  const targetPriceDiv = decorateDataInBox('Target Price', targetPrice, 'col-sm-8');
+  const targetPriceDiv = decorateDataInBox('Target Price', targetPrice, 'target-price-div');
   row.appendChild(targetPriceDiv);
 
-  const ratingDiv = decorateDataInBox('Rating', rating, 'col-sm-4');
+  const ratingDiv = decorateDataInBox('Rating', rating, 'rating-div');
   row.appendChild(ratingDiv);
 
-  const dateDiv = decorateDataInBox('Date', date, 'col-sm-12');
+  const dateDiv = decorateDataInBox('Date', date, 'date-div');
   row.appendChild(dateDiv);
 
   return row;
@@ -126,12 +126,12 @@ function addDiscoverLink(discoverMoreDiv, block) {
   const discoverMoreAnchor = discoverMoreDiv.querySelector('a');
   if (discoverMoreAnchor) {
     const div = document.createElement('div');
-    div.className = 'text-center discover-more';
+    div.className = 'discover-more';
     const anchor = document.createElement('a');
-    anchor.href = discoverMoreAnchor.href; // Set the href to your discoverLink variable
+    anchor.href = discoverMoreAnchor.href;
     anchor.className = 'link-color';
-    anchor.target = '_blank'; // Ensures the link opens in a new tab
-    anchor.textContent = discoverMoreAnchor.title; // Add the text content
+    anchor.target = '_blank'; 
+    anchor.textContent = discoverMoreAnchor.title;
     const icon = document.createElement('i');
     icon.className = 'icon-up-arrow icon ';
     anchor.appendChild(icon);
@@ -170,7 +170,6 @@ export default async function decorate(block) {
       handleTitleConfig(titleElement, block);
     } else if (configName === 'discoverlink') {
       addDiscoverLink(configNameElement.nextElementSibling, block);
-      // discoverMoreLink.style.display = 'inline-block';
     }
   });
 }

@@ -31,7 +31,6 @@
 }
 
 .block.recentreports .discover-more {
-  display:  inline-block;
   text-align: center;
   margin-top: 1rem;
 }
@@ -128,31 +127,31 @@
   color: var(--color-green);
 }
 
-.block.recentreports .col-sm-8,.col-sm-4,.col-sm-12 {
+.block.recentreports .target-price-div,.ratings-div,.date-div {
   position: relative;
   width: 100%;
   padding-right: var(--space-15px);
   padding-left: var(--space-15px)
 }
 
-.block.recentreports .col-sm-8 {
+.block.recentreports .target-price-div {
   flex: 0 0 50%;
   max-width: 50%;
 }
 
 @media (width >= 36rem) {
-  .block.recentreports .col-sm-8 {
+  .block.recentreports .target-price-div {
     flex: 0 0 66.6667%;
     max-width: 66.6667%;
   }
 }
 
-.block.recentreports .col-sm-4 {
+.block.recentreports .ratings-div {
   flex: 0 0 33.3333%;
   max-width: 33.3333%;
 }
 
-.block.recentreports .col-sm-12 {
+.block.recentreports .date-div {
   flex: 0 0 100%;
   max-width: 100%;
 }
