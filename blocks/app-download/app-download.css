@@ -64,6 +64,7 @@
 
   .block.app-download .store .button {
     padding: 1rem;
+    vertical-align: middle;
   }
 
   .block.app-download .store a {
@@ -90,7 +91,7 @@
     background-color: var(--color-white);
     text-align: center;
     padding: var(--space-11px);
-    box-shadow: 0 0 var(--space-7px) calc(-1*var(--space-1px)) var(--qr-code-box-shadow);
+    box-shadow: 0 0 var(--space-7px) calc(-1*var(--space-1px)) var(--image-box-shadow);
   }
 }
 
