@@ -68,3 +68,6 @@ setTimeout(() => {
   };
   loadScript(adobeLaunchSrc[getEnvType()], { async: true });
 }());
+
+loadScript('https://www.google.com/recaptcha/api.js', { async: true });
+loadScript('/scripts/captchscript.js');
