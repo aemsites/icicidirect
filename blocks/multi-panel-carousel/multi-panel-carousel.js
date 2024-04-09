@@ -90,6 +90,7 @@ function setCarouselView(type, carouselSlider) {
       const dot = document.createElement('button');
       dot.className = 'dot border-box';
       dot.dataset.index = i;
+      dot.setAttribute('aria-label', `dot ${i}`);
       dotsContainer.appendChild(dot);
       dot.addEventListener('click', (event) => {
         updateCarouselView(event.currentTarget);
@@ -156,12 +157,13 @@ function createDropdown(dropdownValue) {
   return dropdownSelectDiv;
 }
 
-function createIconLink(iconWrap, src) {
+function createIconLink(iconWrap, src, alt) {
   const a = document.createElement('a');
   a.href = '#';
   a.tabIndex = 0;
   const img = document.createElement('img');
   img.src = src;
+  img.alt = alt;
   a.appendChild(img);
   iconWrap.appendChild(a);
 }
@@ -178,8 +180,8 @@ function companyCardHeader(company) {
   const iconWrap = document.createElement('div');
   iconWrap.className = 'icon-wrap';
 
-  createIconLink(iconWrap, '../../icons/icon-bookmark.svg');
-  createIconLink(iconWrap, '../../icons/icon-share-2.svg');
+  createIconLink(iconWrap, '../../icons/icon-bookmark.svg', 'icon-bookmark');
+  createIconLink(iconWrap, '../../icons/icon-share-2.svg', 'icon-share-2');
 
   headingWrap.appendChild(iconWrap);
   return headingWrap;

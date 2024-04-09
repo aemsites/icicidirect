@@ -189,6 +189,7 @@ function createDots(totalCards, maxAllowedCards, dots) {
     const dot = document.createElement('button');
     dot.className = 'dot';
     dot.dataset.index = index;
+    dot.setAttribute('aria-label', `dot ${index}`);
     dots.appendChild(dot);
     dot.addEventListener('click', (event) => {
       targetedDotView(event);
@@ -213,6 +214,7 @@ async function createTabPanel(block) {
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     img.src = '/icons/video-icon.svg';
+    img.alt = 'video-icon';
     const picture = document.createElement('picture');
     picture.appendChild(img);
     const textNode = document.createTextNode(tabId);
