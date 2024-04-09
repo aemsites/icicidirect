@@ -177,3 +177,5 @@ loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
 
 window.validateuserToken = '';
+
+window.validateCaptchaToken = '';

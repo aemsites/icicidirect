@@ -21,16 +21,18 @@ function turnstileCb() {
   });
 }
 
-function onloadCallback() {
-  console.log('here');
+const onloadCallback = () => {
   grecaptcha.render('captchadiv', {
-    sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-',
+    sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-', // TODO: Replace with actual sitekey
+    callback(token) {
+      window.validateCaptchaToken = token;
+    },
   });
-}
+};
 
 window.turnstileCb = turnstileCb;
 
-window.grecaptcha = onloadCallback;
+window.onloadCallback = onloadCallback;
 
 if (getEnvType() !== 'dev') {
   await loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js?onload=turnstileCb');

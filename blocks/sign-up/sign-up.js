@@ -1,6 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
-import GoogleReCaptcha from '../../scripts/recaptcha.js';
 
 /**
  * Handler for submit button click
@@ -18,7 +17,8 @@ const handleOpenAccountSubmit = async (event) => {
   } else {
     validationMessage.classList.remove('invalid');
     // TBD : need ajax call for captcha validation and otp generation etc
-    
+    // window.validateCaptchaToken to be sent to icici api
+    // console.log(window.validateCaptchaToken);
   }
 };
 
@@ -66,17 +66,11 @@ function createTitle(titleHTML) {
   return col1Div;
 }
 
-function createReCaptcha(submitButton) {
+function createReCaptcha() {
   const captchadiv = createElement('div', 'g-recaptcha');
   captchadiv.id = 'captchadiv';
-  const sitekeyV3 = '6Lcl0bQpAAAAAK4_u1_BvFMmAPOOfGe_bO_f4Peb';
-  const siteKeyV2 = '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-';
-  const secretKey = '';
-  // const captcha = new GoogleReCaptcha(sitekeyV3, 'captchadiv');
-  // captcha.loadCaptcha(captchadiv);
   return captchadiv;
 }
-
 
 function createSignUpElement(
   signupString,
@@ -84,7 +78,6 @@ function createSignUpElement(
   placeholderText,
   buttontitle,
   errormessage,
-  block,
 ) {
   const signupFormDiv = createElement('div', 'signupsections');
 
@@ -101,7 +94,7 @@ function createSignUpElement(
   const mobileInput = createMobileNumberInput(placeholderText);
   const submitButton = createSubmitButton(buttontitle, errormessage);
   const errorSpan = createErrorSpan(errormessage);
-  const captcha = createReCaptcha(submitButton);
+  const captcha = createReCaptcha();
   formFieldsDiv.appendChild(mobileInput);
   formFieldsDiv.appendChild(captcha);
   formFieldsDiv.appendChild(submitButton);
@@ -136,7 +129,6 @@ export default async function decorate(block) {
     placeholdertext,
     buttontitle,
     errormessage,
-    block,
   );
   rowDiv.appendChild(titleField);
   rowDiv.appendChild(signupElementDiv);
