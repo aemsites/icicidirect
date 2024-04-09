@@ -22,7 +22,7 @@ function turnstileCb() {
 }
 
 const onloadCallback = () => {
-   // eslint-disable-next-line no-undef
+  // eslint-disable-next-line no-undef
   grecaptcha.render('captchadiv', {
     sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-', // TODO: Replace with actual sitekey
     callback(token) {
