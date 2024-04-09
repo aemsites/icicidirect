@@ -17,6 +17,7 @@ export default class GoogleReCaptcha {
         const script = document.createElement('script');
         script.src = url;
         script.async = true;
+        script.defer = true;
         script.onload = () => resolve(window.grecaptcha);
         script.onerror = () => reject(new Error(`Failed to load script ${url}`));
         head.append(script);

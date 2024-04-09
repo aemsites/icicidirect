@@ -21,13 +21,23 @@ function turnstileCb() {
   });
 }
 
+function onloadCallback() {
+  console.log('here');
+  grecaptcha.render('captchadiv', {
+    sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-',
+  });
+}
+
 window.turnstileCb = turnstileCb;
+
+window.grecaptcha = onloadCallback;
 
 if (getEnvType() !== 'dev') {
   await loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js?onload=turnstileCb');
 }
-
 loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
+
+await loadScript('https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit');
 
 /**
  * Google Tag Manager

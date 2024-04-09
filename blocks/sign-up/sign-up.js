@@ -1,12 +1,12 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/blocks-utils.js';
-import GoogleReCaptcha  from '../../scripts/recaptcha.js';
+import GoogleReCaptcha from '../../scripts/recaptcha.js';
 
 /**
  * Handler for submit button click
  * @param {*} event
  */
-const handleOpenAccountSubmit = (event) => {
+const handleOpenAccountSubmit = async (event) => {
   event.preventDefault();
   const mobileNumberInput = document.querySelector('.block.sign-up .phonenumber-textbox');
   const mobileNumber = mobileNumberInput.value;
@@ -17,7 +17,8 @@ const handleOpenAccountSubmit = (event) => {
     validationMessage.classList.add('invalid');
   } else {
     validationMessage.classList.remove('invalid');
-    // TBD : need ajax call for otp generation etc
+    // TBD : need ajax call for captcha validation and otp generation etc
+    
   }
 };
 
@@ -65,14 +66,17 @@ function createTitle(titleHTML) {
   return col1Div;
 }
 
-function createReCaptcha( submitButton) {
+function createReCaptcha(submitButton) {
   const captchadiv = createElement('div', 'g-recaptcha');
-  const sitekey = '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-';
-  const secretKey = '6LfrHrQpAAAAAMksjIBanoGo_w4hR1-PvwJHLpVm';
-  const captcha = new GoogleReCaptcha(sitekey, '');
-  captcha.loadCaptcha(submitButton);
+  captchadiv.id = 'captchadiv';
+  const sitekeyV3 = '6Lcl0bQpAAAAAK4_u1_BvFMmAPOOfGe_bO_f4Peb';
+  const siteKeyV2 = '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-';
+  const secretKey = '';
+  // const captcha = new GoogleReCaptcha(sitekeyV3, 'captchadiv');
+  // captcha.loadCaptcha(captchadiv);
   return captchadiv;
 }
+
 
 function createSignUpElement(
   signupString,
@@ -98,7 +102,6 @@ function createSignUpElement(
   const submitButton = createSubmitButton(buttontitle, errormessage);
   const errorSpan = createErrorSpan(errormessage);
   const captcha = createReCaptcha(submitButton);
-
   formFieldsDiv.appendChild(mobileInput);
   formFieldsDiv.appendChild(captcha);
   formFieldsDiv.appendChild(submitButton);
