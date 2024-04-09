@@ -188,7 +188,7 @@
     }
 }
 
-@media (width > 64rem) {
+@media (width >= 64rem) {
     .block.sign-up .signup-container article {
         max-width: 81.25rem;
     }
