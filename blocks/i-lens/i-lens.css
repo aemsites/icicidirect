@@ -63,6 +63,11 @@
 
 }
 
+.block.i-lens .i-lens-body ul li {
+    font: var(--font-weight-regular) var(--body-font-size-m) / var(--body-font-size-xl) Poppins, "Poppins Fallback",  sans-serif;
+    list-style-position: inside;
+}
+
 .block.i-lens .dropdowns .dropdown-toggle {
     height: 1.9rem;
     background-color: var(--background-color-transparent);
@@ -184,11 +189,6 @@
     padding: var(--space-10px);
 }
 
-.block.i-lens .i-lens-body ul li {
-    font: var(--font-weight-regular) var(--body-font-size-m) / var(--body-font-size-xl) "Poppins", "Poppins Fallback";
-    list-style-position: inside;
-}
-
 
 
 .block.i-lens .i-lens-body .box label {
@@ -218,7 +218,6 @@
 }
 
 @media (width >= 48rem) {
-
     .block.i-lens .i-lens-header {
         padding: var(--space-10px) 3rem;
     }
@@ -241,6 +240,7 @@
     .block.i-lens .i-lens-body .box .value {
         font-size: var(--body-font-size-xlm);
     }
+
     .block.i-lens .dropdowns .dropdown-toggle .dropdown-text {
         white-space: nowrap;
     }
@@ -248,6 +248,7 @@
     .block.i-lens .dropdowns .dropdown-select {
         width: auto;
     }
+
     .block.i-lens .dropdowns .dropdown-toggle {
         width: auto;
     }
@@ -259,5 +260,4 @@
         max-width: 11.11%;
         padding: 0 var(--space-10px);
     }
-
 }
