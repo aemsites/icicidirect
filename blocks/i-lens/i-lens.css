@@ -45,6 +45,7 @@
     display: inline-block;
     margin-bottom: 0.3rem;
     position: relative;
+    width: 100%;
 }
 
 .block.carousel-section .dropdowns .icon-down-arrow {
@@ -71,11 +72,15 @@
     border: 0.06rem solid #dee2e6;
     border-radius: 0;
     cursor: pointer;
+    width: 100%;
 }
 
 .block.carousel-section .dropdowns .dropdown-toggle .dropdown-text {
     display: inline-block;
     overflow: hidden;
+    white-space: nowrap;
+    width: 100%;
+    text-overflow: ellipsis;
 }
 
 .block.carousel-section .dropdowns .dropdown-menu-container {
@@ -179,10 +184,17 @@
 }
 
 .block.carousel-section .carousel-body .box ul li {
-    flex: 0 0 11.11%;
-    max-width: 11.11%;
-    padding: 0 10px;
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+    padding: 10px;
 }
+
+.block.carousel-section .carousel-body ul li {
+    font: 400 16px / 20px "Poppins", sans-serif;
+    list-style-position: inside;
+}
+
+
 
 .block.carousel-section .carousel-body .box label {
     font-size: 12px;
@@ -200,7 +212,7 @@
 }
 
 .block.carousel-section .carousel-body .box .value {
-    font-size: 21px;
+    font-size: 16px;
     line-height: 32px;
     font-weight: 600;
     color: #000;
@@ -229,4 +241,33 @@
     .block.carousel-section .discover-more {
         text-align: right;
     }
+
+    .block.carousel-section .carousel-body .box ul li {
+        flex: 0 0 20%;
+        max-width: 20%;
+        padding: 10px;
+    }
+
+    .block.carousel-section .carousel-body .box .value {
+        font-size: 21px;
+    }
+    .block.carousel-section .dropdowns .dropdown-toggle .dropdown-text {
+        white-space: nowrap;
+    }
+
+    .block.carousel-section .dropdowns .dropdown-select {
+        width: auto;
+    }
+    .block.carousel-section .dropdowns .dropdown-toggle {
+        width: auto;
+    }
+}
+
+@media (width >= 64rem) {
+    .block.carousel-section .carousel-body .box ul li {
+        flex: 0 0 11.11%;
+        max-width: 11.11%;
+        padding: 0 10px;
+    }
+
 }

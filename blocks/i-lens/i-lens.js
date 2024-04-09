@@ -21,8 +21,10 @@ function updateRecommedations(selectedDropDownItem) {
   const dropdownContainer = selectedDropDownItem.closest('.dropdowns');
   dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
   dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
-  // eslint-disable-next-line no-use-before-define
-  addSecondDropDown(dropdownContainer, selectedDropDownItem.textContent);
+  if (dropdownContainer.children[0] === dropdown) {
+    // eslint-disable-next-line no-use-before-define
+    addSecondDropDown(dropdownContainer, selectedDropDownItem.textContent);
+  }
 }
 function createDropdown(dropdownValue) {
   // console.log(dropdownValue);
@@ -67,6 +69,9 @@ function createDropdown(dropdownValue) {
 
 function addSecondDropDown(dropdownsDiv, dropdownValue) {
   console.log(dropdownValue);
+  while (dropdownsDiv.children.length > 1) {
+    dropdownsDiv.removeChild(dropdownsDiv.children[1]);
+  }
   fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
     const { data } = ilensDDData;
     data.forEach((item) => {
@@ -139,6 +144,9 @@ function addStocksData(carouselBody, dropdown = 'default') {
         // eslint-disable-next-line no-shadow
         const span = document.createElement('span');
         span.classList.add('value');
+        if (revenue.toLocaleString().endsWith('%') && parseFloat(revenue) > 0) {
+          span.classList.add('green');
+        }
         span.textContent = revenue.toLocaleString();
         listItem.appendChild(span);
 
