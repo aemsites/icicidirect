@@ -47,7 +47,6 @@
   transform: inherit;
   height: auto;
   width: auto;
-  padding: var(--space-2px);
   box-shadow: 0 0 var(--space-7px) calc(-1*var(--space-1px)) var(--image-box-shadow);
 }
 
@@ -99,7 +98,6 @@
     top: 50%;
     transform: translateY(-50%);
     max-width: 100%;
-    border: var(--space-1px) solid var(--background-color-grey);
     background-color: var(--color-white);
     text-align: center;
     padding: var(--space-11px);
