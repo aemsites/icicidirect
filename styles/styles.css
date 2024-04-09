@@ -488,8 +488,11 @@ main .section.shadow-gray {
   box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
 }
 
-main .section.app-download {
+main .section.background-lighter-gray {
   background: var(--color-lighter-gray);
+}
+
+main .margin-bottom {
   margin-bottom: 2rem;
 }
 
