@@ -1,5 +1,5 @@
 .block.app-download {
-  padding: 0 1rem;
+  padding: 1rem;
 }
 
 .block.app-download > div {
@@ -48,6 +48,11 @@
   height: auto;
   width: auto;
   padding: var(--space-2px);
+  box-shadow: 0 0 var(--space-7px) calc(-1*var(--space-1px)) var(--image-box-shadow);
+}
+
+.block.app-download .qrcode picture {
+  display: flex;
 }
 
 .block.app-download .store a {
@@ -55,6 +60,10 @@
 }
 
 @media (width >= 48rem) {
+  .block.app-download {
+    padding: 0 1rem;
+  }
+
   .block.app-download > div {
     justify-content: space-between;
     padding: 2.5rem 14.375rem 2.5rem 0;
@@ -94,7 +103,6 @@
     background-color: var(--color-white);
     text-align: center;
     padding: var(--space-11px);
-    box-shadow: 0 0 var(--space-7px) calc(-1*var(--space-1px)) var(--image-box-shadow);
   }
 }
 
