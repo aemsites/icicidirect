@@ -1,4 +1,4 @@
-import { createElement, fetchData } from '../../scripts/blocks-utils.js';
+import { createElement, fetchData, observe } from '../../scripts/blocks-utils.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
 import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 
@@ -32,17 +32,17 @@ function createDropdown(dropdownValue) {
   const dropdownText = menuItems[0];
 
   const dropdownSelectDiv = document.createElement('div');
-  dropdownSelectDiv.className = 'dropdown-select border-box';
+  dropdownSelectDiv.className = 'dropdown-select';
 
   const button = document.createElement('button');
-  button.className = 'dropdown-toggle border-box';
+  button.className = 'dropdown-toggle';
   button.innerHTML = `<span class="dropdown-text">${dropdownText}</span><span class="icon-down-arrow icon"></span>`;
 
   const dropdownMenuContainer = document.createElement('div');
-  dropdownMenuContainer.className = 'dropdown-menu-container border-box';
+  dropdownMenuContainer.className = 'dropdown-menu-container';
 
   const ul = document.createElement('ul');
-  ul.className = 'dropdown-menu border-box';
+  ul.className = 'dropdown-menu';
 
   menuItems.forEach((itemText) => {
     const li = document.createElement('li');
@@ -68,7 +68,7 @@ function createDropdown(dropdownValue) {
 }
 
 function addSecondDropDown(dropdownsDiv, dropdownValue) {
-  console.log(dropdownValue);
+  const ilensBody = dropdownsDiv.closest('.i-lens-container').querySelector('.i-lens-body');
   while (dropdownsDiv.children.length > 1) {
     dropdownsDiv.removeChild(dropdownsDiv.children[1]);
   }
@@ -76,16 +76,21 @@ function addSecondDropDown(dropdownsDiv, dropdownValue) {
     const { data } = ilensDDData;
     data.forEach((item) => {
       // console.log(item);
-      if (item.Level1 === dropdownValue) {
-        const secondDropDownValue = JSON.parse(item.Level2).join(', ');
+      if (item.primary === dropdownValue) {
+        const secondDropDownValue = JSON.parse(item.secondary).join(', ');
         const secondDropDown = createDropdown(secondDropDownValue);
         dropdownsDiv.appendChild(secondDropDown);
-        const carouselBody = dropdownsDiv.closest('.carousel-container').querySelector('.carousel-body');
+
         // eslint-disable-next-line no-use-before-define
-        addStocksData(carouselBody, dropdownValue.toLowerCase());
+        addStocksData(ilensBody, dropdownValue.toLowerCase());
       }
     });
   });
+
+  if (dropdownsDiv.children.length === 1) {
+    // eslint-disable-next-line no-use-before-define
+    addStocksData(ilensBody);
+  }
 }
 
 function closeAllDropDowns(clickedElement) {
@@ -96,16 +101,15 @@ function closeAllDropDowns(clickedElement) {
   });
 }
 
-
-function addCarouselHeader(carouselContainer, dropdowns) {
-  const carouselHeader = document.createElement('div');
-  carouselHeader.className = 'carousel-header';
+function addHeader(ilensContainer, dropdowns) {
+  const header = document.createElement('div');
+  header.className = 'i-lens-header';
   const rowDiv = document.createElement('div');
   rowDiv.className = 'row align-items-center';
 
   if (dropdowns) {
     const dropdownsDiv = document.createElement('div');
-    dropdownsDiv.className = 'dropdowns col border-box';
+    dropdownsDiv.className = 'dropdowns col';
     dropdowns.forEach((dropdownValue) => {
       const dropDownEle = createDropdown(dropdownValue);
       dropdownsDiv.appendChild(dropDownEle);
@@ -117,13 +121,13 @@ function addCarouselHeader(carouselContainer, dropdowns) {
     });
   }
 
-  carouselHeader.appendChild(rowDiv);
-  carouselContainer.appendChild(carouselHeader);
+  header.appendChild(rowDiv);
+  ilensContainer.appendChild(header);
 }
 
 // eslint-disable-next-line no-unused-vars
-function addStocksData(carouselBody, dropdown = 'default') {
-  carouselBody.textContent = '';
+function addStocksData(ilensBody, dropdown = 'default') {
+  ilensBody.textContent = '';
   fetchData(`${getHostUrl()}/scripts/mock-ilensdata.json`, async (error, ilensData = []) => {
     const { tableData } = ilensData[dropdown].body;
     // Sort the tableData based on the Operating Revenue Qtr (SR_Q) in descending order
@@ -164,14 +168,14 @@ function addStocksData(carouselBody, dropdown = 'default') {
       box.appendChild(list);
 
       // Append the box to the document body or any other container
-      carouselBody.appendChild(box);
+      ilensBody.appendChild(box);
     }
   });
 }
-function addDiscoverLink(carouselBody, discoverLink) {
+function addDiscoverLink(ilensBody, discoverLink) {
   if (discoverLink) {
     const div = document.createElement('div');
-    div.className = 'text-center discover-more border-box';
+    div.className = 'text-center discover-more';
     const anchor = document.createElement('a');
     anchor.href = discoverLink; // Set the href to your discoverLink variable
     anchor.className = 'link-color';
@@ -181,16 +185,15 @@ function addDiscoverLink(carouselBody, discoverLink) {
     icon.className = 'icon-up-arrow icon ';
     anchor.appendChild(icon);
     div.appendChild(anchor);
-    carouselBody.appendChild(div);
+    ilensBody.appendChild(div);
   }
 }
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   block.textContent = '';
-  block.classList.add('carousel-section');
   const title = decorateTitle(blockConfig);
   block.appendChild(title);
-  const description = blockConfig.desciption;
+  const { description } = blockConfig;
   if (description) {
     const desc = createElement('p', 'description');
     desc.textContent = description;
@@ -198,16 +201,16 @@ export default async function decorate(block) {
   }
   const dropdowns = Array.isArray(blockConfig.dropdowns)
     ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
-  const carouselContainer = document.createElement('div');
   const discoverLink = blockConfig.discoverlink;
-  carouselContainer.className = 'carousel-container';
-  block.appendChild(carouselContainer);
+  const ilensContainer = document.createElement('div');
+  ilensContainer.className = 'i-lens-container';
+  block.appendChild(ilensContainer);
 
-  addCarouselHeader(carouselContainer, dropdowns);
+  addHeader(ilensContainer, dropdowns);
 
-  const carouselBody = document.createElement('div');
-  carouselBody.className = 'carousel-body';
-  carouselContainer.appendChild(carouselBody);
-  addStocksData(carouselBody);
+  const ilensBody = document.createElement('div');
+  ilensBody.className = 'i-lens-body';
+  ilensContainer.appendChild(ilensBody);
   addDiscoverLink(block, discoverLink);
+  observe(ilensBody, addStocksData);
 }
