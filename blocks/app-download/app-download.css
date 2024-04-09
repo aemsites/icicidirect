@@ -1,9 +1,12 @@
+.block.app-download {
+  padding: 0 1rem;
+}
+
 .block.app-download > div {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-    padding: 1.5rem 0;
     position: relative;
     gap: 1rem;
 }
