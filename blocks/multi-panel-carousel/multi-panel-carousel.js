@@ -90,7 +90,7 @@ function setCarouselView(type, carouselSlider) {
       const dot = document.createElement('button');
       dot.className = 'dot border-box';
       dot.dataset.index = i;
-      dot.setAttribute('aria-label', `dot ${i}`);
+      dot.setAttribute('aria-label', `dot-${i}`);
       dotsContainer.appendChild(dot);
       dot.addEventListener('click', (event) => {
         updateCarouselView(event.currentTarget);

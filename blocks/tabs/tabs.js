@@ -189,7 +189,7 @@ function createDots(totalCards, maxAllowedCards, dots) {
     const dot = document.createElement('button');
     dot.className = 'dot';
     dot.dataset.index = index;
-    dot.setAttribute('aria-label', `dot ${index}`);
+    dot.setAttribute('aria-label', `dot-${index}`);
     dots.appendChild(dot);
     dot.addEventListener('click', (event) => {
       targetedDotView(event);
