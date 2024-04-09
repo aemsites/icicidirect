@@ -1,5 +1,7 @@
 import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
 
+const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
+
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
@@ -104,10 +106,22 @@ function observe(elementToObserve, callback, ...args) {
   observer.observe(elementToObserve);
 }
 
+function getOriginUrl() {
+  return WORKER_ORIGIN_URL;
+}
+
+function getResearchAPIUrl() {
+  return `${getOriginUrl()}/CDNResearchAPI/CallResearchAPI`;
+}
+
+function getMarketingAPIUrl() {
+  return `${getOriginUrl()}/CDNMarketAPI/CallMarketAPI`;
+}
 /**
  * Fetches data from the given URL and calls the callback function with the response.
  * @param {string} url The URL to fetch data from.
  * @param {Function} callback The callback function to call with the response.
+ * @param {string} apiName The name of the API to be called.
  * returns {void}
  * @example
  * fetchData('https://jsonplaceholder.typicode.com/todos/1', (error, data) => {
@@ -116,9 +130,30 @@ function observe(elementToObserve, callback, ...args) {
  * } else {
  *  console.log(data);
  * }
+ * }); // GET request
+ *
+ * fetchData('https://example.com/data', (error, data) => {
+ *   if (error) {
+ *     console.error('Error fetching data:', error);
+ *   } else {
+ *     console.log('Data fetched successfully:', data);
+ *   }
+ * }, 'getdata'); // POST request with API name
  */
-function fetchData(url, callback) {
-  fetch(url)
+function fetchData(url, callback, apiName = null) {
+  const options = {
+    method: 'GET', // Default method is GET
+  };
+
+  if (apiName) {
+    options.method = 'POST';
+    options.headers = {
+      'Content-Type': 'application/json',
+    };
+    options.body = JSON.stringify({ apiName });
+  }
+
+  fetch(url, options)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -173,4 +208,7 @@ export {
   getEnvType,
   decorateQuickLinks,
   fetchData,
+  getOriginUrl,
+  getResearchAPIUrl,
+  getMarketingAPIUrl,
 };

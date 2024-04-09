@@ -1,5 +1,8 @@
-import { fetchData, observe, Viewport } from '../../scripts/blocks-utils.js';
+import {
+  fetchData, getResearchAPIUrl, observe, Viewport,
+} from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
+// eslint-disable-next-line no-unused-vars
 import { getHostUrl } from '../../scripts/mockapi.js';
 import {
   div, a, h4, p, span,
@@ -98,7 +101,7 @@ function updateDots(block) {
 
 async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
-  fetchData(`${getHostUrl()}/scripts/mock-commentarydata.json`, async (error, marketCommentaryDataArray = []) => {
+  fetchData(getResearchAPIUrl(), async (error, marketCommentaryDataArray = []) => {
     if (marketCommentaryDataArray) {
       marketCommentaryDataArray.forEach((blogData) => {
         const card = createMarketCommentaryCard(blogData, placeholders);
@@ -106,7 +109,7 @@ async function generateCardsView(block, placeholders) {
       });
       updateDots(block);
     }
-  });
+  }, 'GetResearchEquityMarketCommentary');
 }
 export default async function decorate(block) {
   block.textContent = '';
