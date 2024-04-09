@@ -1,0 +1,103 @@
+[
+  {
+    "type": "eq",
+    "label": "Britannia Industries Ltd",
+    "long_name": "Britannia Industries Ltd",
+    "symbol": "BRITANNIA",
+    "ltp": "4815.90",
+    "change": "-10.90",
+    "changeper": "-0.23",
+    "code": "BRIND",
+    "url": "https://www.icicidirect.com/stocks/britannia-industries-ltd-share-price"
+  },
+  {
+    "type": "eq",
+    "label": "Carborundum Universal Ltd",
+    "long_name": "Carborundum Universal Ltd",
+    "symbol": "CARBORUNIV",
+    "ltp": "1269.50",
+    "change": "17.50",
+    "changeper": "1.40",
+    "code": "CARUNI",
+    "url": "https://www.icicidirect.com/stocks/carborundum-universal-ltd-share-price"
+  },
+  {
+    "type": "eq",
+    "label": "Deepak Nitrite Ltd",
+    "long_name": "Deepak Nitrite Ltd",
+    "symbol": "DEEPAKNTR",
+    "ltp": "2227.95",
+    "change": "21.15",
+    "changeper": "0.96",
+    "code": "DEENIT",
+    "url": "https://www.icicidirect.com/stocks/deepak-nitrite-ltd-share-price"
+  },
+  {
+    "type": "mf",
+    "label": "360 ONE ELSS Tax Saver Nifty 50 Index Fund-Reg (G)",
+    "value": "43534.0",
+    "long_name": "360 ONE ELSS Tax Saver Nifty 50 Index Fund-Reg (G)",
+    "symbol": "",
+    "ltp": "12.4454",
+    "change": "-0.0007",
+    "changeper": "-0.0056",
+    "url": "https://www.icicidirect.com/mutual-funds/nav-details/360-one-elss-tax-saver-nifty-50-index-fund-reg-(g)-43534"
+  },
+  {
+    "type": "mf",
+    "label": "AXIS Growth Opportunities Fund - Regular (G)",
+    "value": "38343.0",
+    "long_name": "AXIS Growth Opportunities Fund - Regular (G)",
+    "symbol": "",
+    "ltp": "28.21",
+    "change": "0.12",
+    "changeper": "0.4272",
+    "url": "https://www.icicidirect.com/mutual-funds/nav-details/axis-growth-opportunities-fund---regular-(g)-38343"
+  },
+  {
+    "type": "commodity",
+    "label": "ALUMINIUM-FUTCOM-30Apr24",
+    "value": "FUTCOM",
+    "long_name": "ALUMINIUM-FUTCOM-30Apr24",
+    "symbol": "ALUMINIUM",
+    "ltp": "224.60",
+    "change": "0.85",
+    "changeper": "0.38",
+    "url": "https://www.icicidirect.com/commodities-market/pricequote/mcx/futcom/aluminium/APR-30-2024"
+  },
+  {
+    "type": "commodity",
+    "label": "ALUMINIUM-FUTCOM-31May24",
+    "value": "FUTCOM",
+    "long_name": "ALUMINIUM-FUTCOM-31May24",
+    "symbol": "ALUMINIUM",
+    "ltp": "226.35",
+    "change": "0.30",
+    "changeper": "0.13",
+    "url": "https://www.icicidirect.com/commodities-market/pricequote/mcx/futcom/aluminium/MAY-31-2024"
+  },
+  {
+    "type": "bonds",
+    "label": "Adani Capital Pvt Ltd - 9.65 %",
+    "value": "73875.0",
+    "long_name": "Adani Capital Pvt Ltd",
+    "symbol": "",
+    "ISIN": "INE01EQ07087",
+    "ltp": "226.35",
+    "change": "0.30",
+    "changeper": "0.13",
+    "url": "https://www.icicidirect.com/fd-and-bonds/adani-capital-pvt-ltd-965/ine01eq07087"
+  },
+  {
+    "type": "bonds",
+    "label": "Indore Municipal Corporation - 8.25 %",
+    "value": "40189.0",
+    "long_name": "Indore Municipal Corporation",
+    "symbol": "",
+    "ISIN": "INE01EQ07087",
+    "ltp": "251.00",
+    "change": "0.30",
+    "changeper": "0.13",
+    "url": "https://www.icicidirect.com/fd-and-bonds/indore-municipal-corporation-825/ine00qs24019"
+  }
+]
