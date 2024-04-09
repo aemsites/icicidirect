@@ -88,6 +88,15 @@ function addSecondDropDown(dropdownsDiv, dropdownValue) {
   });
 }
 
+function closeAllDropDowns(clickedElement) {
+  document.querySelectorAll('.dropdown-select').forEach((container) => {
+    if (!container.contains(clickedElement)) {
+      container.querySelector('.dropdown-menu-container').classList.remove('visible');
+    }
+  });
+}
+
+
 function addCarouselHeader(carouselContainer, dropdowns) {
   const carouselHeader = document.createElement('div');
   carouselHeader.className = 'carousel-header';
@@ -103,9 +112,9 @@ function addCarouselHeader(carouselContainer, dropdowns) {
     });
 
     rowDiv.appendChild(dropdownsDiv);
-    // document.addEventListener('click', (event) => {
-    //   closeAllDropDowns(event.target);
-    // });
+    document.addEventListener('click', (event) => {
+      closeAllDropDowns(event.target);
+    });
   }
 
   carouselHeader.appendChild(rowDiv);
