@@ -80,6 +80,7 @@
     height: var(--space-3px);
     background: var(--link-color-orange);
     font-size: var(--body-font-size-l);
+    width: 6.25rem;
 }
 
 .block.sign-up .row {
@@ -179,7 +180,7 @@
     }
 
     .block.sign-up .section.margin {
-        margin: 5rem 0;
+        margin: 7rem 0;
     }
 
     .block.sign-up .signup-container .g-recaptcha {
