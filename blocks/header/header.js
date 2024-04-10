@@ -1,7 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
-import { formatDateTime } from '../../scripts/blocks-utils.js';
+import { formatDateTime, debounce } from '../../scripts/blocks-utils.js';
 
 /**
  * Decorator for global navigation on top the page
@@ -487,6 +487,16 @@ const decorateShareIndexPanel = (fragment, block) => {
 };
 
 /**
+ * Returns the result of the global search data
+ * @param {*} keyword the keyword to be searched
+ */
+const getGlobalSearchData = (keyword) => {
+  if (keyword) {
+    console.log('searched keyword:', keyword);
+  }
+};
+
+/**
  * Event handlers specific to header blocks
  */
 const addHeaderEventHandlers = () => {
@@ -526,6 +536,15 @@ const addHeaderEventHandlers = () => {
     }
   };
   document.addEventListener('click', hamburgerCloseHandler);
+
+  /**
+   * Handler for searching the keyword in the search bar
+   */
+  const searchBarInput = document.getElementById('global-search');
+  searchBarInput.addEventListener('input', debounce((event) => {
+    const searchValue = event.target.value;
+    getGlobalSearchData(searchValue);
+  }), 500);
 };
 
 /**
