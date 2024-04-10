@@ -17,7 +17,7 @@ const handleOpenAccountSubmit = async (event) => {
     validationMessage.classList.add('invalid');
   } else {
     validationMessage.classList.remove('invalid');
-    //const token = window.validateCaptchaToken;
+    // const token = window.validateCaptchaToken;
     window.location.href = `${accountCreationUrl}?mobile=${mobileNumber}`;
   }
 };

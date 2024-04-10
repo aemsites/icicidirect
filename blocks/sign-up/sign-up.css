@@ -153,13 +153,23 @@
 
 .block.sign-up .signup-container .g-recaptcha {
     margin-top: 0.5rem;
-    transform: scale(0.85) translateX(7%);
+    transform: scale(0.85) translateX(2%);
+}
+
+@media (width >=26.56rem) {
+    .block.sign-up .signup-container .g-recaptcha {
+        transform: scale(0.85) translateX(6%);
+    }
 }
 
 @media (width >=48rem) {
     .block.sign-up .signup-container .title-wrap h2 {
         line-height: var(--line-height-xxl);
         font-size: var(--heading-font-size-mls);
+    }
+
+    .block.sign-up .signup-container .g-recaptcha {
+        transform: scale(0.85) translateX(7%);
     }
 
     .block.sign-up .signupsections {
@@ -207,6 +217,4 @@
     .block.sign-up .section.margin {
         margin: 2.8125rem 0;
     }
-
-   
 }
