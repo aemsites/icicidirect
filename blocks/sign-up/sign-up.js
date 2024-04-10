@@ -9,6 +9,7 @@ const handleOpenAccountSubmit = async (event) => {
   event.preventDefault();
   const mobileNumberInput = document.querySelector('.block.sign-up .phonenumber-textbox');
   const mobileNumber = mobileNumberInput.value;
+  const accountCreationUrl = event.target.href;
   // Check for valid mobile number format
   const mobileRegex = /^([0]|\+91)?[6789]\d{9}$/;
   const validationMessage = document.querySelector('.block.sign-up .signup-container .error-message');
@@ -16,9 +17,8 @@ const handleOpenAccountSubmit = async (event) => {
     validationMessage.classList.add('invalid');
   } else {
     validationMessage.classList.remove('invalid');
-    // TBD : need ajax call for captcha validation and otp generation etc
-    // window.validateCaptchaToken to be sent to icici api
-    // console.log(window.validateCaptchaToken);
+    //const token = window.validateCaptchaToken;
+    window.location.href = `${accountCreationUrl}?mobile=${mobileNumber}`;
   }
 };
 
@@ -42,9 +42,10 @@ function createMobileNumberInput(placeholderText) {
   return inputElement;
 }
 
-function createSubmitButton(buttontitle) {
+function createSubmitButton(buttontitle, accountcreationurl) {
   const submitButton = createElement('button', 'signupbtn');
   submitButton.textContent = buttontitle;
+  submitButton.href = accountcreationurl;
   submitButton.addEventListener('click', handleOpenAccountSubmit);
   return submitButton;
 }
@@ -78,6 +79,7 @@ function createSignUpElement(
   placeholderText,
   buttontitle,
   errormessage,
+  accountcreationurl,
 ) {
   const signupFormDiv = createElement('div', 'signupsections');
 
@@ -92,7 +94,8 @@ function createSignUpElement(
 
   const formFieldsDiv = createElement('div', '');
   const mobileInput = createMobileNumberInput(placeholderText);
-  const submitButton = createSubmitButton(buttontitle, errormessage);
+
+  const submitButton = createSubmitButton(buttontitle, accountcreationurl);
   const errorSpan = createErrorSpan(errormessage);
   const captcha = createReCaptcha();
   formFieldsDiv.appendChild(mobileInput);
@@ -111,7 +114,7 @@ function createSignUpElement(
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const {
-    promotionaltext, placeholdertext, buttontitle, errormessage,
+    promotionaltext, placeholdertext, buttontitle, errormessage, accountcreationurl,
   } = blockConfig;
   const titleHTML = block.querySelectorAll(':scope > div')[0].children[1];
   const signupstringHTML = block.querySelectorAll(':scope > div')[1].children[1];
@@ -129,6 +132,7 @@ export default async function decorate(block) {
     placeholdertext,
     buttontitle,
     errormessage,
+    accountcreationurl,
   );
   rowDiv.appendChild(titleField);
   rowDiv.appendChild(signupElementDiv);
