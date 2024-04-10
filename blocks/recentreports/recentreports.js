@@ -2,7 +2,7 @@ import {
   buildBlock, decorateBlock, loadBlock, readBlockConfig,
 } from '../../scripts/aem.js';
 import { callAPI } from '../../scripts/mockapi.js';
-import { createElement, observe } from '../../scripts/blocks-utils.js';
+import { createElement, observe, getResearchAPIUrl, fetchData } from '../../scripts/blocks-utils.js';
 
 function decorateBoxHeader(title, reportLink) {
   const heading = createElement('h3', '');
@@ -72,15 +72,15 @@ function createReportBox(title, targetPrice, rating, date, reportLink, buttontit
   return slideDiv;
 }
 
-function renderRecentReportsCards({ data }, carouselItems, blockCfg) {
+function renderRecentReportsCards( recentReportsDataArray, carouselItems, blockCfg) {
   const { buttontitle } = blockCfg;
-  data.forEach((item) => {
+  recentReportsDataArray.Data.Table.forEach((item) => {
     const reportBox = createReportBox(
-      item.title,
-      item.targetPrice,
-      item.rating,
-      item.date,
-      item.reportLink,
+      item.COM_NAME,
+      item.TARGET_PRICE,
+      item.RATING,
+      item.REP_RELEASE_DTM,
+      item.REPORT_PDF_LINK,
       buttontitle,
     );
     carouselItems.append(reportBox);
@@ -130,7 +130,7 @@ function addDiscoverLink(discoverMoreDiv, block) {
     const anchor = document.createElement('a');
     anchor.href = discoverMoreAnchor.href;
     anchor.className = 'link-color';
-    anchor.target = '_blank'; 
+    anchor.target = '_blank';
     anchor.textContent = discoverMoreAnchor.title;
     const icon = document.createElement('i');
     icon.className = 'icon-up-arrow icon ';
@@ -151,20 +151,12 @@ export default async function decorate(block) {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      callAPI(apiName)
-        .then((data) => {
-          if (block.classList.contains('recentreports')) {
-            renderRecentReportsCards(data, carouselItems, blockCfg);
-          }
+      fetchData(getResearchAPIUrl(), async (error, recentReportsDataArray = []) => {
+        if (recentReportsDataArray) {
+          renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCfg);
           observe(block, loadCarousel, carouselItems);
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error('Error fetching data:', error);
-        })
-        .finally(() => {
-          block.style.display = 'block';
-        });
+        }
+      }, 'GetResearchRecentReports');
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);
