@@ -258,7 +258,7 @@ function createValueContent(row, labelText, valueText, colType = 'value') {
   h5.innerHTML = valueText; // Using innerHTML to include <span> if necessary
 
   // Adding 'negative' or 'positive' class based on valueText for 'profit' and 'return'
-  if (colType !== 'value' && valueText.includes('-')) {
+  if (colType !== 'value' && valueText.toString().includes('-')) {
     h5.classList.add('negative');
   } else if (colType !== 'value') {
     h5.classList.add('positive');
@@ -338,40 +338,54 @@ function getRecommendationsCard(companies, type) {
 async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
-
+  if (type === 'oneclickportfolio') {
+    fetchRecommendations(type).then((companies) => {
+      if (companies) {
+        const recommendationsCard = getRecommendationsCard(companies, type);
+        recommendationsCard.forEach((div) => {
+          carouselTrack.appendChild(div);
+        });
+        setCarouselView(type, carouselSlider);
+      }
+    });
+    return;
+  }
+  const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
   const jsonFormData = {
-    apiName: 'GetTradingIdeas',
+    apiName,
     inputJson: JSON.stringify({
       rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
     }),
   };
 
   postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-    const recommendationArray = tradingData.Data.Table;
-    const companiesArray = [];
-    recommendationArray.forEach((company) => {
-      const companyObj = {};
-      companyObj.name = company.COM_NAME;
-      companyObj.recoPrice = company.RECOM_PRICE;
-      companyObj.targetPrice = company.TARGET_PRICE;
-      companyObj.cmp = company.CMP;
-      companyObj.stopLoss = company.STOPLOSS_PRICE;
-      companyObj.action = company.RATING_TYPE_NM;
-      // company.profitPotential = company.ProfitPotential;
-      // company.buyingRange = company.BuyingRange;
-      // company.returns = company.Returns;
-      // company.minAmount = company.MinAmount;
-      // company.riskProfile = company.RiskProfile;
-      // company.reportLink = company.ReportLink;
-      companiesArray.push(companyObj);
-    });
-    if (companiesArray) {
-      console.log(companiesArray);
-      const recommendationsCard = getRecommendationsCard(companiesArray, type);
-      recommendationsCard.forEach((div) => {
-        carouselTrack.appendChild(div);
+    if (error === null) {
+      const recommendationArray = tradingData.Data.Table;
+      const companiesArray = [];
+      recommendationArray.forEach((company) => {
+        const companyObj = {};
+        companyObj.name = company.COM_NAME;
+        companyObj.targetPrice = company.TARGET_PRICE === null || company.TARGET_PRICE === 0 ? '10' : company.TARGET_PRICE;
+        companyObj.cmp = company.CMP === null || company.CMP === 0 ? '10' : company.CMP;
+        companyObj.stopLoss = company.STOPLOSS_PRICE === null || company.STOPLOSS_PRICE === 0 ? 'NA' : company.STOPLOSS_PRICE;
+        companyObj.action = company.RATING_TYPE_NM === null || company.RATING_TYPE_NM === 0 ? 'Buy' : company.RATING_TYPE_NM;
+
+        if (type === 'trading') {
+          companyObj.recoPrice = company.RECOM_PRICE === null || company.RECOM_PRICE === 0 ? '10' : company.RECOM_PRICE;
+        } else if (type === 'investing') {
+          companyObj.profitPotential = company.EXP_RETURN === null || company.EXP_RETURN === 0 ? '1%' : `${company.EXP_RETURN}%`;
+          companyObj.reportLink = company.REPORT_PDF_LINK === null ? 'https://www.icicidirect.com/mailimages/IDirect_Mastek_ConvictionIdea_Feb24.pdf' : company.REPORT_PDF_LINK;
+        }
+
+        companiesArray.push(companyObj);
       });
-      setCarouselView(type, carouselSlider);
+      if (companiesArray) {
+        const recommendationsCard = getRecommendationsCard(companiesArray, type);
+        recommendationsCard.forEach((div) => {
+          carouselTrack.appendChild(div);
+        });
+        setCarouselView(type, carouselSlider);
+      }
     }
   });
 }
