@@ -1,12 +1,349 @@
 {
   "_type": "export",
   "__export_format": 4,
-  "__export_date": "2024-04-09T10:20:24.174Z",
+  "__export_date": "2024-04-10T05:54:19.797Z",
   "__export_source": "insomnia.desktop.app:v2023.5.7-adobe",
   "resources": [
     {
-      "_id": "req_bdb0ad28242644f281eb7c0cdf8b2f8d",
-      "parentId": "fld_550e869e41a84b6a9c10f725f34a7cc1",
+      "_id": "req_caa5bd92b2134424b44afe0a833abc02",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712727972605,
+      "created": 1712727946431,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Investing Ideas",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetInvestingIdeas\",\n    \"inputJson\" : \"{\\\"rating\\\" : \\\"1\\\", \\\"timeFrame\\\" : \\\"\\\", \\\"pageNo\\\" : \\\"1\\\", \\\"pageSize\\\" : \\\"5\\\"}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727946431,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "parentId": "wrk_f7fa2cf22fe7477eb4eafa678a5f749f",
+      "modified": 1712657955352,
+      "created": 1712656954306,
+      "name": "ICICI APIs with Worker",
+      "description": "",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1712656954306,
+      "_type": "request_group"
+    },
+    {
+      "_id": "wrk_f7fa2cf22fe7477eb4eafa678a5f749f",
+      "parentId": null,
+      "modified": 1712728431549,
+      "created": 1712658945192,
+      "name": "ICICI Cloudflare",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "req_a12afdc480054420bfc9727051f670bd",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712728026247,
+      "created": 1712728020809,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Market Commentary",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetResearchEquityMarketCommentary\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727933454.25,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_edf5c20b0d72450bad806c9e82858d64",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712728062200,
+      "created": 1712728045879,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Recent Sector Reports",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetResearchRecentSectorReports\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727926965.875,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_99459829667f4f119e6f589435468f77",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712728084681,
+      "created": 1712728079135,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Recent Reports",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetResearchRecentReports\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727923721.6875,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_15df6e078adb41aa8a94233b2fea248f",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712728104921,
+      "created": 1712728100725,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Ratings",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetRatings\",\n    \"inputJson\" : \"{\\\"researchType\\\" : \\\"1\\\"}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727922099.5938,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_ac19e46ba236468e8e1b6138ad876bf7",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712728127558,
+      "created": 1712728122454,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Timeframes",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetTimeFrames\",\n    \"inputJson\" : \"{\\\"researchType\\\" : \\\"1\\\"}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727921288.5469,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_e51f071c672046f19ee07e49b87773a4",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712728000674,
+      "created": 1712727994754,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Upcoming IPO",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetLatestIPO\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727920477.5,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_3473660699ac4c23ac21ad160f34c6f9",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712727929237,
+      "created": 1712727894524,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
+      "name": "Trading Ideas",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetTradingIdeas\",\n    \"inputJson\" : \"{\\\"rating\\\" : \\\"1\\\", \\\"timeFrame\\\" : \\\"\\\", \\\"pageNo\\\" : \\\"1\\\", \\\"pageSize\\\" : \\\"5\\\"}\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712727894524,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_d9e3472b573f49e59d8a07797e1fd83c",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
+      "modified": 1712727799668,
+      "created": 1712659749097,
+      "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev/CDNMarketAPI/CallMarketAPI",
+      "name": "Market API",
+      "description": "",
+      "method": "POST",
+      "body": {
+        "mimeType": "",
+        "text": "{\n    \"apiName\" : \"GetEquityNiftySensex\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": ""
+        },
+        {
+          "name": "User-Agent",
+          "value": "Insomnia/2023.5.7-adobe"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1712659749097,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_229d1a9e818b4ee4835784949ba1dc89",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
       "modified": 1712657839458,
       "created": 1712656954309,
       "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
@@ -31,30 +368,8 @@
       "_type": "request"
     },
     {
-      "_id": "fld_550e869e41a84b6a9c10f725f34a7cc1",
-      "parentId": "wrk_8ea52b22f75f4bcf94cf1cb983b88ed4",
-      "modified": 1712657955352,
-      "created": 1712656954306,
-      "name": "ICICI APIs with Worker",
-      "description": "",
-      "environment": {},
-      "environmentPropertyOrder": null,
-      "metaSortKey": -1712656954306,
-      "_type": "request_group"
-    },
-    {
-      "_id": "wrk_8ea52b22f75f4bcf94cf1cb983b88ed4",
-      "parentId": null,
-      "modified": 1712656954304,
-      "created": 1712656954304,
-      "name": "Imported Workspace",
-      "description": "",
-      "scope": "collection",
-      "_type": "workspace"
-    },
-    {
-      "_id": "req_1dc727ab6a4f4451b4893048f7064865",
-      "parentId": "fld_550e869e41a84b6a9c10f725f34a7cc1",
+      "_id": "req_9ed91ff37e0f4053b594272857605661",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
       "modified": 1712657851925,
       "created": 1712656954308,
       "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
@@ -79,8 +394,8 @@
       "_type": "request"
     },
     {
-      "_id": "req_036f8d5cf8d845cf86e1773b4cbcd83d",
-      "parentId": "fld_550e869e41a84b6a9c10f725f34a7cc1",
+      "_id": "req_200a8390637347f999ec84d3c5f3a8c2",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
       "modified": 1712657862918,
       "created": 1712656954308,
       "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
@@ -105,8 +420,8 @@
       "_type": "request"
     },
     {
-      "_id": "req_8343ab16ae7d4868853ffb847a02fb06",
-      "parentId": "fld_550e869e41a84b6a9c10f725f34a7cc1",
+      "_id": "req_89c26f0b42034397a8f477fa4b37abe2",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
       "modified": 1712657869282,
       "created": 1712656954307,
       "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
@@ -131,8 +446,8 @@
       "_type": "request"
     },
     {
-      "_id": "req_223ac3e6ea29447a8362ad933a26a5c7",
-      "parentId": "fld_550e869e41a84b6a9c10f725f34a7cc1",
+      "_id": "req_64c2da25a7534cd9aa373626fd44cc68",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
       "modified": 1712657878667,
       "created": 1712656954307,
       "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
@@ -157,8 +472,8 @@
       "_type": "request"
     },
     {
-      "_id": "req_ab19e179e47f47499f271b677033f312",
-      "parentId": "fld_550e869e41a84b6a9c10f725f34a7cc1",
+      "_id": "req_4846bc4c0cd24651968e8ee49f6c6ef0",
+      "parentId": "fld_6ae4770d0a82408d8a6c3caa90ad6bad",
       "modified": 1712657890216,
       "created": 1712656954306,
       "url": "https://icicidirect-secure-worker.franklin-prod.workers.dev",
@@ -183,8 +498,8 @@
       "_type": "request"
     },
     {
-      "_id": "env_2c0480b9623cecc8dda9bfb0bd0587d9e41153e5",
-      "parentId": "wrk_8ea52b22f75f4bcf94cf1cb983b88ed4",
+      "_id": "env_8304233ef40c410a9f38996d5faed2f9",
+      "parentId": "wrk_f7fa2cf22fe7477eb4eafa678a5f749f",
       "modified": 1712656956417,
       "created": 1712656956417,
       "name": "Base Environment",
@@ -196,8 +511,8 @@
       "_type": "environment"
     },
     {
-      "_id": "jar_2c0480b9623cecc8dda9bfb0bd0587d9e41153e5",
-      "parentId": "wrk_8ea52b22f75f4bcf94cf1cb983b88ed4",
+      "_id": "jar_adcd28d5106c471abc02bbc7efe92973",
+      "parentId": "wrk_f7fa2cf22fe7477eb4eafa678a5f749f",
       "modified": 1712656956419,
       "created": 1712656956419,
       "name": "Default Jar",
