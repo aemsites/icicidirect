@@ -1,5 +1,5 @@
 import {
-  fetchData, getDataFromAPI, getResearchAPIUrl, observe, Viewport,
+  getDataFromAPI, getResearchAPIUrl, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
 // eslint-disable-next-line no-unused-vars
