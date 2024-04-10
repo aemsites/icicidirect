@@ -1,6 +1,8 @@
 import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
+const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
+const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -111,11 +113,11 @@ function getOriginUrl() {
 }
 
 function getResearchAPIUrl() {
-  return `${getOriginUrl()}/CDNResearchAPI/CallResearchAPI`;
+  return RESEARCH_API_URL;
 }
 
 function getMarketingAPIUrl() {
-  return `${getOriginUrl()}/CDNMarketAPI/CallMarketAPI`;
+  return MARKETING_API_URL;
 }
 /**
  * Fetches data from the given URL and calls the callback function with the response.
@@ -183,10 +185,18 @@ function formDataToJSON(formData) {
  *
  */
 function postFormData(url, formData, callback, options = {}) {
+  let formDataString;
+  if (formData instanceof FormData) {
+    formDataString = formDataToJSON(formData);
+  } else {
+    // assuming formData is already a JSON object
+    formDataString = JSON.stringify(formData);
+  }
+
   const requestOptions = {
     method: 'POST',
     headers: options.headers || {},
-    body: formDataToJSON(formData),
+    body: formDataString,
     ...options, // Override any additional options provided
   };
 
