@@ -1,5 +1,5 @@
 import {
-  fetchData, getResearchAPIUrl, observe, Viewport,
+  fetchData, getDataFromAPI, getResearchAPIUrl, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
 // eslint-disable-next-line no-unused-vars
@@ -101,7 +101,8 @@ function updateDots(block) {
 
 async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
-  fetchData(getResearchAPIUrl(), async (error, marketCommentaryDataArray = []) => {
+  getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', async (error, marketCommentaryDataArray = []) => {
+    console.log('Data fetched successfully:', marketCommentaryDataArray);
     if (marketCommentaryDataArray) {
       marketCommentaryDataArray.forEach((blogData) => {
         const card = createMarketCommentaryCard(blogData, placeholders);
@@ -109,7 +110,7 @@ async function generateCardsView(block, placeholders) {
       });
       updateDots(block);
     }
-  }, 'GetResearchEquityMarketCommentary');
+  });
 }
 export default async function decorate(block) {
   block.textContent = '';

@@ -131,29 +131,9 @@ function getMarketingAPIUrl() {
  *  console.log(data);
  * }
  * }); // GET request
- *
- * fetchData('https://example.com/data', (error, data) => {
- *   if (error) {
- *     console.error('Error fetching data:', error);
- *   } else {
- *     console.log('Data fetched successfully:', data);
- *   }
- * }, 'getdata'); // POST request with API name
  */
-function fetchData(url, callback, apiName = null) {
-  const options = {
-    method: 'GET', // Default method is GET
-  };
-
-  if (apiName) {
-    options.method = 'POST';
-    options.headers = {
-      'Content-Type': 'application/json',
-    };
-    options.body = JSON.stringify({ apiName });
-  }
-
-  fetch(url, options)
+function fetchData(url, callback) {
+  fetch(url)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');
@@ -166,6 +146,85 @@ function fetchData(url, callback, apiName = null) {
     .catch((error) => {
       callback(error, null);
     });
+}
+
+function formDataToJSON(formData) {
+  const jsonObject = {};
+  formData.forEach((value, key) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!jsonObject.hasOwnProperty(key)) {
+      jsonObject[key] = value;
+    } else {
+      if (!Array.isArray(jsonObject[key])) {
+        jsonObject[key] = [jsonObject[key]];
+      }
+      jsonObject[key].push(value);
+    }
+  });
+  return JSON.stringify(jsonObject);
+}
+
+/**
+ * Posts form data to the given URL and calls the callback function with the response.
+ * @param url
+ * @param formData
+ * @param callback
+ * @param options
+ * @example
+ * const formData = new FormData();
+ * formData.append('apiName', 'getdata');
+ * postFormData('https://example.com/data', formData, (error, data) => {
+ *  if (error) {
+ *  console.error('Error fetching data:', error);
+ *  }
+ *  else {
+ *  console.log('Data fetched successfully:', data);
+ *  }
+ *
+ */
+function postFormData(url, formData, callback, options = {}) {
+  const requestOptions = {
+    method: 'POST',
+    headers: options.headers || {},
+    body: formDataToJSON(formData),
+    ...options, // Override any additional options provided
+  };
+
+  fetch(url, requestOptions)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((error) => {
+      callback(error, null);
+    });
+}
+
+/**
+ * Fetches data from the given API URL and calls the callback function with the response.
+ * @param url
+ * @param apiName
+ * @param callback
+ * @example
+ * getDataFromAPI('https://example.com/data', 'getdata', (error, data) => {
+ * if (error) {
+ * console.error('Error fetching data:', error);
+ * }
+ * else {
+ * console.log('Data fetched successfully:', data);
+ * }
+ * });
+ *
+ */
+function getDataFromAPI(url, apiName, callback) {
+  const formData = new FormData();
+  formData.append('apiName', apiName);
+  postFormData(url, formData, callback);
 }
 
 /*
@@ -211,4 +270,6 @@ export {
   getOriginUrl,
   getResearchAPIUrl,
   getMarketingAPIUrl,
+  getDataFromAPI,
+  postFormData,
 };
