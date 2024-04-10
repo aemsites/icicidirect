@@ -1,6 +1,8 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { fetchRecommendations, getMarginActionUrl, mockPredicationConstant } from '../../scripts/mockapi.js';
-import { observe, Viewport } from '../../scripts/blocks-utils.js';
+import {
+  getResearchAPIUrl, observe, postFormData, Viewport,
+} from '../../scripts/blocks-utils.js';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -336,9 +338,36 @@ function getRecommendationsCard(companies, type) {
 async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
-  fetchRecommendations(type).then((companies) => {
-    if (companies) {
-      const recommendationsCard = getRecommendationsCard(companies, type);
+
+  const jsonFormData = {
+    apiName: 'GetTradingIdeas',
+    inputJson: JSON.stringify({
+      rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
+    }),
+  };
+
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+    const recommendationArray = tradingData.Data.Table;
+    const companiesArray = [];
+    recommendationArray.forEach((company) => {
+      const companyObj = {};
+      companyObj.name = company.COM_NAME;
+      companyObj.recoPrice = company.RECOM_PRICE;
+      companyObj.targetPrice = company.TARGET_PRICE;
+      companyObj.cmp = company.CMP;
+      companyObj.stopLoss = company.STOPLOSS_PRICE;
+      companyObj.action = company.RATING_TYPE_NM;
+      // company.profitPotential = company.ProfitPotential;
+      // company.buyingRange = company.BuyingRange;
+      // company.returns = company.Returns;
+      // company.minAmount = company.MinAmount;
+      // company.riskProfile = company.RiskProfile;
+      // company.reportLink = company.ReportLink;
+      companiesArray.push(companyObj);
+    });
+    if (companiesArray) {
+      console.log(companiesArray);
+      const recommendationsCard = getRecommendationsCard(companiesArray, type);
       recommendationsCard.forEach((div) => {
         carouselTrack.appendChild(div);
       });
@@ -427,7 +456,7 @@ function addDiscoverLink(carouselBody, discoverLink) {
 }
 
 function getHighlightDiv(block) {
-  const predicationDiv = block.querySelectorAll(':scope > div')[2].children[1];
+  const predicationDiv = block.querySelectorAll(':scope > div')[3].children[1];
   return predicationDiv;
 }
 
