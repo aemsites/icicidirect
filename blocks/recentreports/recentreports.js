@@ -15,6 +15,20 @@ function decorateBoxHeader(title, reportLink) {
   return heading;
 }
 
+/**
+ * Formats a date string into a human-readable format.
+ * @param {string} dateString - The date string to be formatted.
+ * @returns {string} The formatted date string.
+ */
+function formatDate(dateString) {
+  if(dateString){
+    const date = new Date(dateString);
+    const options = { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+  return "";
+}
+
 function decorateDataInBox(label, value, rowClass) {
   const div = createElement('div', rowClass);
   const content = createElement('div', 'value-content');
@@ -79,7 +93,7 @@ function renderRecentReportsCards( recentReportsDataArray, carouselItems, blockC
       item.COM_NAME,
       item.TARGET_PRICE,
       item.RATING,
-      item.REP_RELEASE_DTM,
+      formatDate(item.REP_RELEASE_DTM),
       item.REPORT_PDF_LINK,
       buttontitle,
     );
