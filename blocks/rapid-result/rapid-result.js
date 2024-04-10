@@ -1,6 +1,7 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
 import { createElement, observe } from '../../scripts/blocks-utils.js';
 import { fetchRapidResultMockData } from '../../scripts/mockapi.js';
+import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
 function decorateTitle(titleContent) {
   const title = createElement('div', 'title');
@@ -89,10 +90,7 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     iconSpan.classList.add('icon-gray-share-icon');
     button.append(iconSpan);
     decorateIcons(button);
-    // TODO: Wait for #57 commit, will address in a new PR.
-    // if (result.link) {
-    //   addSocialButtonEvent(button, block);
-    // }
+    button.addEventListener('click', () => handleSocialShareClick(button));
     socialShare.append(button);
     powerby.append(socialShare);
     liWrapper.append(title);
