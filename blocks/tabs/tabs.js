@@ -1,9 +1,29 @@
 import { toClassName } from '../../scripts/aem.js';
 import {
-  Viewport, createPictureElement, observe, fetchData,
+  Viewport, createPictureElement, observe, getDataFromAPI, getResearchAPIUrl, parseResponse,
 } from '../../scripts/blocks-utils.js';
-import { getHostUrl } from '../../scripts/mockapi.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
+
+const ICICI_DIRECT_VIDEOS_HOST = 'https://www.icicidirect.com/research/videos/';
+const ICICI_DIRECT_PODCASTS_HOST = 'https://www.icicidirect.com/research/podcasts/';
+const ICICI_DIRECT_VIDEOS_THUMBNAIL = 'https://img.youtube.com/vi/{id}/mqdefault.jpg';
+const ICICI_DIRECT_PODCASTS_THUMBNAIL_HOST = 'https://www.icicidirect.com/images/';
+
+function getVideosShareLink(permLink) {
+  return ICICI_DIRECT_VIDEOS_HOST + permLink;
+}
+
+function getPodcastsShareLink(permLink) {
+  return ICICI_DIRECT_PODCASTS_HOST + permLink;
+}
+
+function getVideosThumbnail(id) {
+  return ICICI_DIRECT_VIDEOS_THUMBNAIL.replace('{id}', id);
+}
+
+function getPodcastsThumbnail(image) {
+  return ICICI_DIRECT_PODCASTS_THUMBNAIL_HOST + image;
+}
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -107,7 +127,7 @@ function createPostTitle(item) {
   const postLink = document.createElement('a');
   postLink.setAttribute('href', item.shareLink);
   postLink.setAttribute('target', '_blank');
-  postLink.textContent = item.title;
+  postLink.textContent = item.Title;
   postTitle.appendChild(postLink);
   return postTitle;
 }
@@ -129,16 +149,12 @@ async function createPicture(imageUrl, mediaWrapper) {
   mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
 }
 
-function createCards(container, data, tabId) {
-  const cardWidth = container.offsetWidth / allowedCardsCount();
-
+function createCards(container, data, tabId, cardWidth) {
   data.forEach((item) => {
     // Create slide element
     const card = document.createElement('div');
     card.className = 'slide-card';
-    if (cardWidth > 0) {
-      card.style.width = `${cardWidth}px`;
-    }
+    card.style.width = `${cardWidth}px`;
 
     // Create cardInfo element
     const cardInfo = document.createElement('div');
@@ -147,27 +163,29 @@ function createCards(container, data, tabId) {
     // Create picture-wrapper element
     const mediaWrapper = document.createElement('div');
     mediaWrapper.classList.add('picture-wrapper');
-    mediaWrapper.setAttribute('share-link', item.shareLink);
     mediaWrapper.addEventListener('click', (event) => {
       openUrl(event);
     });
 
-    createPicture(item.imageUrl, mediaWrapper);
     // Create text-content element
     const textContent = document.createElement('div');
     textContent.classList.add('text-content');
 
-    // Append all elements to text-content
     switch (tabId.toLowerCase()) {
       case 'videos':
-        textContent.appendChild(createCardMetaElement(item.date, item.author));
+        textContent.appendChild(createCardMetaElement(item.PublishedOn, item.Author));
+        mediaWrapper.setAttribute('share-link', getVideosShareLink(item.PermLink));
+        createPicture(getVideosThumbnail(item.Link), mediaWrapper);
         break;
       case 'podcasts':
-        textContent.appendChild(createCardMetaElement(item.date, item.duration));
+        textContent.appendChild(createCardMetaElement(item.PublishedOn, '10:00 Minutes'));
+        mediaWrapper.setAttribute('share-link', getPodcastsShareLink(item.PermLink));
+        createPicture(getPodcastsThumbnail(item.Image), mediaWrapper);
         break;
       default:
         break;
     }
+
     textContent.appendChild(createPostTitle(item));
     textContent.appendChild(createSocialLinkElement(item));
 
@@ -204,6 +222,7 @@ function createDots(totalCards, maxAllowedCards, dots) {
 
 async function createTabPanel(block) {
   const tabsPanel = block.querySelectorAll('.tabs-panel');
+  let cardWidth;
 
   for (let index = 0; index < tabsPanel.length; index += 1) {
     const tab = tabsPanel[index];
@@ -238,13 +257,28 @@ async function createTabPanel(block) {
     }
     tab.appendChild(discoverMoreButton);
 
-    // Collect promises from asynchronous operations
-    fetchData(`${getHostUrl()}/scripts/mock-${tabId}.json`, async (error, data = []) => {
-      if (data) {
-        createCards(track, data, tabId);
-        createDots(data.length, allowedCardsCount(), dots);
+    if (track.offsetWidth) {
+      cardWidth = track.offsetWidth / allowedCardsCount();
+    }
+
+    /* eslint-disable no-loop-func */
+    const callback = async (error, apiResponse = []) => {
+      if (apiResponse) {
+        const jsonResult = parseResponse(apiResponse);
+        createCards(track, jsonResult, tabId, cardWidth);
+        createDots(jsonResult.length, allowedCardsCount(), dots);
       }
-    });
+    };
+    switch (tabId) {
+      case 'videos':
+        getDataFromAPI(getResearchAPIUrl(), 'GetVideos', callback);
+        break;
+      case 'podcasts':
+        getDataFromAPI(getResearchAPIUrl(), 'GetPodcasts', callback);
+        break;
+      default:
+        break;
+    }
   }
   intervalId = startCaraousal();
 }
