@@ -1,0 +1,46 @@
+{
+    "@context": "https://schema.org/",
+    "@type": "FAQPage",
+    "mainEntity": [
+    {
+        "@type": "Question",
+        "name": "Which share to buy today for long term?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ICICI Direct offers research reports on the ‘Top Stocks to Buy’ on the Research page. You can view recommendations in “Investing Ideas” and get the detailed report by downloading it from here. Also, if you wish to have curated Research baskets according to your needs, ICICI Direct offers – One Click Equity.In case, you want short term trading ideas refer “Trading ideas”."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "What is the best stock to buy first?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Stocks should be bought basis your holding period view. To know which is the best stock to buy, we have various recommendations for varied holding periods and research reports highlighting the dynamics of the particular company. These will assist you to take your call on the list of stocks to buy now for greater returns. To view the stock-specific research reports, please click here."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Which share gives highest return?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The price of the stock and the highest return shares is determined by quantitative techniques and formulas. The highest return shares can help customer maximize their profits. In order to be aware about the latest news with respect to the companies, we have research pages that help you gauge all angles of the organization."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Which shares are best for 5 years?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "You can decide the best stocks for next 5 years by evaluating the fundamentals of the specific stock. You may also go through the reports that enable you to know the in and out of the organization, its CMP (Current Market Price), our say on it and the projections. To view the detailed report in order to get more insights please click here."
+        }
+    },
+    {
+        "@type": "Question",
+        "name": "Which share is lowest price?",
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The extremely low price share is generally referred to as penny stocks. They are typically illiquid and have a very small market capitalization. You can sort on CMP (Current Market Price) to find latest low value stock from our Research Desk. Please click here to know more."
+        }
+    }
+]
+}

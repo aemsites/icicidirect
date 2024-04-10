@@ -72,6 +72,30 @@ function decorateButton(faqButton, block, buttonTitle, expendButtonTitle) {
   });
 }
 
+async function addSEOData() {
+  if (document.getElementById('faq-seo-schema')) {
+    return;
+  }
+  fetch('../../scripts/faqschema.json')
+    .then((response) => response.json()) // Parse the JSON response
+    .then((jsonData) => {
+      // Create a script element
+      const scriptElement = document.createElement('script');
+
+      // Set type attribute to "application/ld+json"
+      scriptElement.type = 'application/ld+json';
+
+      // Set text content of the script element to fetched JSON data
+      scriptElement.textContent = JSON.stringify(jsonData);
+
+      scriptElement.id = 'faq-seo-schema';
+
+      // Append the script element to the body
+      document.body.appendChild(scriptElement);
+    })
+    .catch((error) => console.error('Error fetching JSON:', error));
+}
+
 export default async function decorate(block) {
   const faqTitle = createElement('div', 'faq-title');
   const faqContent = createElement('div', 'faq-content');
@@ -100,4 +124,5 @@ export default async function decorate(block) {
   block.replaceChildren(faqTitle);
   block.appendChild(faqContent);
   block.appendChild(faqButton);
+  addSEOData();
 }
