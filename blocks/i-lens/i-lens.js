@@ -67,65 +67,6 @@ function createDropdown(dropdownValue) {
   return dropdownSelectDiv;
 }
 
-function addSecondDropDown(dropdownsDiv, dropdownValue) {
-  const ilensBody = dropdownsDiv.closest('.i-lens-container').querySelector('.i-lens-body');
-  while (dropdownsDiv.children.length > 1) {
-    dropdownsDiv.removeChild(dropdownsDiv.children[1]);
-  }
-  fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
-    const { data } = ilensDDData;
-    data.forEach((item) => {
-      // console.log(item);
-      if (item.primary === dropdownValue) {
-        const secondDropDownValue = JSON.parse(item.secondary).join(', ');
-        const secondDropDown = createDropdown(secondDropDownValue);
-        dropdownsDiv.appendChild(secondDropDown);
-
-        // eslint-disable-next-line no-use-before-define
-        addStocksData(ilensBody, dropdownValue.toLowerCase());
-      }
-    });
-  });
-
-  if (dropdownsDiv.children.length === 1) {
-    // eslint-disable-next-line no-use-before-define
-    addStocksData(ilensBody);
-  }
-}
-
-function closeAllDropDowns(clickedElement) {
-  document.querySelectorAll('.dropdown-select').forEach((container) => {
-    if (!container.contains(clickedElement)) {
-      container.querySelector('.dropdown-menu-container').classList.remove('visible');
-    }
-  });
-}
-
-function addHeader(ilensContainer, dropdowns) {
-  const header = document.createElement('div');
-  header.className = 'i-lens-header';
-  const rowDiv = document.createElement('div');
-  rowDiv.className = 'row align-items-center';
-
-  if (dropdowns) {
-    const dropdownsDiv = document.createElement('div');
-    dropdownsDiv.className = 'dropdowns col';
-    dropdowns.forEach((dropdownValue) => {
-      const dropDownEle = createDropdown(dropdownValue);
-      dropdownsDiv.appendChild(dropDownEle);
-    });
-
-    rowDiv.appendChild(dropdownsDiv);
-    document.addEventListener('click', (event) => {
-      closeAllDropDowns(event.target);
-    });
-  }
-
-  header.appendChild(rowDiv);
-  ilensContainer.appendChild(header);
-}
-
-// eslint-disable-next-line no-unused-vars
 function addStocksData(ilensBody, dropdown = 'default') {
   ilensBody.textContent = '';
   fetchData(`${getHostUrl()}/scripts/mock-ilensdata.json`, async (error, ilensData = []) => {
@@ -172,6 +113,62 @@ function addStocksData(ilensBody, dropdown = 'default') {
     }
   });
 }
+
+function addSecondDropDown(dropdownsDiv, dropdownValue) {
+  const ilensBody = dropdownsDiv.closest('.i-lens-container').querySelector('.i-lens-body');
+  while (dropdownsDiv.children.length > 1) {
+    dropdownsDiv.removeChild(dropdownsDiv.children[1]);
+  }
+  fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
+    const { data } = ilensDDData;
+    data.forEach((item) => {
+      // console.log(item);
+      if (item.primary === dropdownValue) {
+        const secondDropDownValue = JSON.parse(item.secondary).join(', ');
+        const secondDropDown = createDropdown(secondDropDownValue);
+        dropdownsDiv.appendChild(secondDropDown);
+        addStocksData(ilensBody, dropdownValue.toLowerCase());
+      }
+    });
+  });
+
+  if (dropdownsDiv.children.length === 1) {
+    addStocksData(ilensBody);
+  }
+}
+
+function closeAllDropDowns(clickedElement) {
+  document.querySelectorAll('.dropdown-select').forEach((container) => {
+    if (!container.contains(clickedElement)) {
+      container.querySelector('.dropdown-menu-container').classList.remove('visible');
+    }
+  });
+}
+
+function addHeader(ilensContainer, dropdowns) {
+  const header = document.createElement('div');
+  header.className = 'i-lens-header';
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'row align-items-center';
+
+  if (dropdowns) {
+    const dropdownsDiv = document.createElement('div');
+    dropdownsDiv.className = 'dropdowns col';
+    dropdowns.forEach((dropdownValue) => {
+      const dropDownEle = createDropdown(dropdownValue);
+      dropdownsDiv.appendChild(dropDownEle);
+    });
+
+    rowDiv.appendChild(dropdownsDiv);
+    document.addEventListener('click', (event) => {
+      closeAllDropDowns(event.target);
+    });
+  }
+
+  header.appendChild(rowDiv);
+  ilensContainer.appendChild(header);
+}
+
 function addDiscoverLink(ilensBody, discoverLink) {
   if (discoverLink) {
     const div = document.createElement('div');
