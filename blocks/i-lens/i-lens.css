@@ -64,7 +64,7 @@
 .block.i-lens .dropdowns .dropdown-toggle {
     height: 1.9rem;
     background-color: var(--background-color-transparent);
-    font-size: var(--heading-font-size-sxs);
+    font-size: var(--heading-font-size-mxs);
     text-transform: uppercase;
     padding: 0 1.9rem 0 var(--space-10px);
     border: 0.06rem solid var(--link-color-gray);
@@ -80,6 +80,8 @@
     width: 100%;
     text-overflow: ellipsis;
     text-align: left;
+    vertical-align: middle;
+    color: var(--color-deep-blue-dark);
 }
 
 .block.i-lens .dropdowns .dropdown-menu-container {
@@ -265,10 +267,10 @@
     }
 }
 
-@media (width >= 64rem) {
+@media (width >= 75rem) {
     .block.i-lens .i-lens-body .box ul li {
         flex: 0 0 11.11%;
         max-width: 11.11%;
-        padding: 0 var(--space-10px);
+        padding: 0 var(--space-15px);
     }
 }
