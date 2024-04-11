@@ -113,65 +113,6 @@ function formatDateString(dateString) {
   return formattedDate;
 }
 
-// eslint-disable-next-line consistent-return
-async function fetchBlogsData() {
-  try {
-    const response = await fetch('https://icicidirect-secure-worker.franklin-prod.workers.dev', {
-      method: 'POST',
-      body: JSON.stringify({
-        apiName: 'GetBlogs',
-        inputJson: JSON.stringify({ pageNo: '1', pageSize: '10' }),
-      }),
-    });
-
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-
-    const data = await response.json();
-
-    const extractedDataArray = [];
-    data.Data.forEach((entry) => {
-      // Initialize object to store extracted data for this entry
-      const extractedData = {};
-
-      // Extract required keys
-      entry.forEach((item) => {
-        if (item.Key === 'PermLink') {
-          // Prepend URL to PermLink value
-          extractedData.link = `http://icicidirect.finoux.com/research/equity/blog/${item.Value}`;
-        } else if (item.Key === 'PublishedOnDate') {
-          extractedData.postDate = formatDateString(item.Value);
-        } else if (item.Key === 'ArticleTitle') {
-          extractedData.title = item.Value;
-        } else if (item.Key === 'SmallImage') {
-          // Prepend URL to SmallImage value
-          extractedData.imageUrl = `https://www.icicidirect.finoux.com/images/${item.Value}`;
-        } else if (item.Key === 'ShortDescription') {
-          const decodedString = decodeURIComponent(item.Value);
-          const tempElement = document.createElement('div');
-          tempElement.innerHTML = decodedString;
-          const textContent = tempElement.textContent || tempElement.innerText;
-          extractedData.description = textContent;
-        }
-      });
-
-      // Push extracted data to array if any required key was found
-      if (Object.keys(extractedData).length > 0) {
-        extractedDataArray.push(extractedData);
-      }
-    });
-    console.log('Extracted data:', extractedDataArray);
-    return extractedDataArray;
-  } catch (error) {
-    console.error('Error fetching JSON data:', error);
-    return null;
-  }
-}
-
-async function callMockBlogAPI() {
-  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
-}
 
 async function callAPI(apiName) {
   const endpoint = apiEndPoints[apiName];
@@ -206,8 +147,6 @@ export {
   getMarginActionUrl,
   mockPredicationConstant,
   fetchDynamicStockIndexData,
-  callMockBlogAPI,
-  fetchBlogsData,
   callAPI,
   fetchRapidResultMockData,
   fetchMarketInsightMockData,
