@@ -1,6 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
+import { fetchDynamicStockIndexData, globalSearchAPI } from '../../scripts/mockapi.js';
 import { formatDateTime, debounce } from '../../scripts/blocks-utils.js';
 
 /**
@@ -142,6 +142,47 @@ const getSearchCategoryDropDown = (fragment) => {
 };
 
 /**
+ * Build the search results popup
+ */
+const buildSearchResultsPopup = (block) => {
+  const searchResultsPopup = document.createElement('div');
+  searchResultsPopup.className = 'search-results-popup';
+  searchResultsPopup.classList.add('visible');
+  searchResultsPopup.id = 'search-results-popup';
+  const searchResultsPopupContainer = document.createElement('div');
+  searchResultsPopupContainer.className = 'search-results-popup-container';
+  // TODO: Fetch the categories from the word document drop down list
+  searchResultsPopupContainer.innerHTML = `
+    <div class="category equity">
+      <span>Equity</span>
+      <ul class="equity-list"></ul>
+    </div>
+    <div class="category mf">
+      <span>Mutual Fund</span>
+      <ul class="mf-list"></ul>
+    </div>
+    <div class="category currency">
+      <span>Currency</span>
+      <ul class="currency-list"></ul>
+    </div>
+    <div class="category commodity">
+      <span>Commodity</span>
+      <ul class="commodity-list"></ul>
+    </div>
+    <div class="category knowledge_center">
+      <span>iLearn</span>
+      <ul class="knowledge_center-list"></ul>
+    </div>
+    <div class="category bonds">
+      <span>Bonds</span>
+      <ul class="bonds-list"></ul>
+    </div>
+  `;
+  searchResultsPopup.appendChild(searchResultsPopupContainer);
+  block.appendChild(searchResultsPopup);
+};
+
+/**
  * Builds the top search bar section
  * @returns the search bar wrapped in div
  */
@@ -167,6 +208,7 @@ const decorateTopSearchBar = (fragment) => {
       <img class="search-icon" src="../../icons/icon-search.svg" alt="Search">
     </div>
   `;
+  buildSearchResultsPopup(searchBoxDiv);
   searchBarContainer.appendChild(categoryPickerDiv);
   searchBarContainer.appendChild(searchBoxDiv);
   searchBarDiv.appendChild(searchBarContainer);
@@ -486,14 +528,100 @@ const decorateShareIndexPanel = (fragment, block) => {
   block.appendChild(shareIndexPanelDiv);
 };
 
+const buildEquityList = (equityList) => {
+  const equityListContainer = document.querySelector('.equity-list');
+  equityListContainer.innerHTML = '';
+  equityList.forEach((equity) => {
+    const equityItem = document.createElement('li');
+    equityItem.className = 'equity-list-item';
+    equityItem.innerHTML = `
+      <div class='equity-details-section'>
+        <a class='company-name' title='${equity.label}' href=${equity.url} target='_blank'>${equity.label}</a>
+        <a class='link' href=${equity.url} target='_blank'>
+          <span class='equity-value'>${equity.ltp}</span>
+        </a>
+        <span class='change-value ${equity.change >= 0 ? 'positive' : 'negative'}'>
+          ${equity.change} (${equity.changeper}%)
+        </span>
+      </div>
+      <div class='equity-action-section hidden'>
+        <button class='equity-button' onclick="window.open('${equity.url}', '_blank')">
+          BUY
+        </button>
+        <button class='equity-button' onclick="window.open('${equity.url}', '_blank')">
+          SELL
+        </button>
+      </div>
+    `;
+    equityListContainer.appendChild(equityItem);
+  });
+};
+
+const buildMutualFundsList = (mutualFundsList) => {
+  const mutualFundsListContainer = document.querySelector('.mf-list');
+  mutualFundsListContainer.innerHTML = '';
+  mutualFundsList.forEach((mutualFund) => {
+    const mutualFundItem = document.createElement('li');
+    mutualFundItem.innerHTML = `<a href=${mutualFund.url}>${mutualFund.label}</a>`;
+    mutualFundsListContainer.appendChild(mutualFundItem);
+  });
+};
+
+const buildCurrencyList = (currencyList) => {
+  const currencyListContainer = document.querySelector('.currency-list');
+  currencyListContainer.innerHTML = '';
+  currencyList.forEach((currency) => {
+    const currencyItem = document.createElement('li');
+    currencyItem.innerHTML = `<a href=${currency.url}>${currency.label}</a>`;
+    currencyListContainer.appendChild(currencyItem);
+  });
+};
+
+const buildCommodityList = (commodityList) => {
+  const commodityListContainer = document.querySelector('.commodity-list');
+  commodityListContainer.innerHTML = '';
+  commodityList.forEach((commodity) => {
+    const commodityItem = document.createElement('li');
+    commodityItem.innerHTML = `<a href=${commodity.url}>${commodity.label}</a>`;
+    commodityListContainer.appendChild(commodityItem);
+  });
+};
+
+const buildKnowledgeCenterList = (knowledgeCenterList) => {
+  const knowledgeCenterListContainer = document.querySelector('.knowledge_center-list');
+  knowledgeCenterListContainer.innerHTML = '';
+  knowledgeCenterList.forEach((knowledgeCenter) => {
+    const knowledgeCenterItem = document.createElement('li');
+    knowledgeCenterItem.innerHTML = `<a href=${knowledgeCenter.url}>${knowledgeCenter.label}</a>`;
+    knowledgeCenterListContainer.appendChild(knowledgeCenterItem);
+  });
+};
+
+const buildBondsList = (bondsList) => {
+  const bondsListContainer = document.querySelector('.bonds-list');
+  bondsListContainer.innerHTML = '';
+  bondsList.forEach((bond) => {
+    const bondItem = document.createElement('li');
+    bondItem.innerHTML = `<a href=${bond.url}>${bond.label}</a>`;
+    bondsListContainer.appendChild(bondItem);
+  });
+};
+
 /**
  * Returns the result of the global search data
  * @param {*} keyword the keyword to be searched
  */
-const getGlobalSearchData = (keyword) => {
-  if (keyword) {
-    console.log('searched keyword:', keyword);
+const handleSearchData = async (keyword) => {
+  if (!keyword) {
+    return;
   }
+  const results = await globalSearchAPI(keyword);
+  buildEquityList(results.filter((result) => result.type === 'eq'));
+  buildMutualFundsList(results.filter((result) => result.type === 'mf'));
+  buildCurrencyList(results.filter((result) => result.type === 'currency'));
+  buildCommodityList(results.filter((result) => result.type === 'commodity'));
+  buildKnowledgeCenterList(results.filter((result) => result.type === 'ilearn'));
+  buildBondsList(results.filter((result) => result.type === 'bonds'));
 };
 
 /**
@@ -543,7 +671,7 @@ const addHeaderEventHandlers = () => {
   const searchBarInput = document.getElementById('global-search');
   searchBarInput.addEventListener('input', debounce((event) => {
     const searchValue = event.target.value;
-    getGlobalSearchData(searchValue);
+    handleSearchData(searchValue);
   }), 500);
 };
 

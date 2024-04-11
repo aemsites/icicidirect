@@ -55,6 +55,28 @@
     "url": "https://www.icicidirect.com/mutual-funds/nav-details/axis-growth-opportunities-fund---regular-(g)-38343"
   },
   {
+    "type": "currency",
+    "label": "GBPINR-FUTCUR-26Apr24",
+    "value": "FUTCUR",
+    "long_name": "GBPINR-FUTCUR-26Apr24",
+    "symbol": "GBPINR",
+    "ltp": "105.65",
+    "change": "0.50",
+    "changeper": "0.47",
+    "url": "https://www.icicidirect.com/currency-forex-trading/pricequote/futcur/gbpinr/26-APR-2024/0/xx"
+  },
+  {
+    "type": "currency",
+    "label": "GBPINR-FUTCUR-29May24",
+    "value": "FUTCUR",
+    "long_name": "GBPINR-FUTCUR-29May24",
+    "symbol": "GBPINR",
+    "ltp": "105.65",
+    "change": "0.33",
+    "changeper": "0.31",
+    "url": "https://www.icicidirect.com/currency-forex-trading/pricequote/futcur/gbpinr/29-MAY-2024/0/xx"
+  },
+  {
     "type": "commodity",
     "label": "ALUMINIUM-FUTCOM-30Apr24",
     "value": "FUTCOM",
@@ -75,6 +97,22 @@
     "change": "0.30",
     "changeper": "0.13",
     "url": "https://www.icicidirect.com/commodities-market/pricequote/mcx/futcom/aluminium/MAY-31-2024"
+  },
+  {
+    "type": "ilearn",
+    "label": "Learn About Mutual Funds",
+    "value": "",
+    "long_name": "Learn About Mutual Funds",
+    "symbol": "",
+    "url": "https://www.icicidirect.com/idirectcontent/ProductService/ProductService.aspx?MutualFunds/what-are-mutual-funds"
+  },
+  {
+    "type": "ilearn",
+    "label": "Evaluate Mutual Funds",
+    "value": "",
+    "long_name": "Evaluate Mutual Funds",
+    "symbol": "",
+    "url": "https://www.icicidirect.com/idirectcontent/ProductService/ProductService.aspx?MutualFunds/evaluate-mutual-fund-perfomance"
   },
   {
     "type": "bonds",

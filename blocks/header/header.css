@@ -300,6 +300,7 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  position: relative;
 }
 
 .block.header .search-bar .search-box .search-field {
@@ -337,7 +338,7 @@
 .block.header .search-bar .category-picker .dropdown-menu-container.visible {
   display: block;
   position: absolute;
-  z-index: 1;
+  z-index: 2;
   top: 1.563rem;
   right: 0;
   user-select: none;
@@ -380,6 +381,131 @@
 .block.header .search-bar .search-box .search-icon {
   margin-top: calc(var(--line-width-extra-light) * -1);
   margin-right: 0.9rem;
+}
+
+/* search result popup related styles */
+.block.header .search-bar .search-box .search-results-popup{
+  display: none;
+}
+
+.block.header .search-bar .search-box .search-results-popup.visible {
+  display: block;
+  position: absolute;
+  top: 2rem;
+  min-width: 163%;
+  width: 100%;
+  left: 0;
+  background-color: #fff;
+  z-index: 2;
+  text-align: left;
+  border: 1px solid #dee2e6;
+  padding: 15px;
+  margin-top: 2px;
+  max-height: 350px;
+  overflow: auto;
+  border-radius: 10px;
+  border-top-left-radius: 0;
+}
+
+.block.header .search-bar .search-results-popup .category span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #000;
+}
+
+.block.header .search-bar .search-results-popup .category ul {
+  list-style: none;
+  padding: 0;
+}
+
+.block.header .search-bar .search-results-popup .equity-list-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+} 
+
+.block.header .search-bar .search-results-popup .equity-details-section .company-name {
+  font-size: 16px;
+  font-weight: 400;
+  color: #9f9f9f;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-right: 5px;
+  line-height: 38px;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section .link {
+  text-decoration: none;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section .equity-value {
+  font-size: 16px;
+  font-weight: 400;
+  color: #415270;
+  line-height: 38px;
+} 
+
+.block.header .search-bar .search-results-popup .equity-details-section .change-value {
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section .change-value.negative {
+  color: #da0000;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section .change-value.negative::before {
+  color: #da0000;
+  font-family: icomoon, sans-serif;
+  content: "\e900";
+  display: inline-block;
+  transform: rotate(180deg);
+  font-size: 12px;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section .change-value.positive {
+  color: #259702;
+}
+
+.block.header .search-bar .search-results-popup .equity-details-section .change-value.positive::before {
+  color: #259702;
+  font-family: icomoon, sans-serif;
+  content: "\e900";
+  display: inline-block;
+  font-size: 12px;
+}
+
+.block.header .search-bar .search-results-popup .equity-action-section {
+  display: flex;
+  align-items: flex-start;
+  margin: 0 10px;
+}
+
+.block.header .search-bar .search-results-popup .equity-action-section .equity-button{
+  font-size: 12px;
+  font-weight: 400;
+  color: #415270;
+  padding: 3px 8px;
+  border-radius: 1.875rem;
+  border: 1px solid #415270;
+  background-color: white;
+  margin-right: 5px;
+  cursor: pointer;
+}
+
+.block.header .search-bar .search-results-popup .equity-action-section .equity-button:hover{
+  background-color: #415270;
+  color: white;
+  transition: 0.3s;
 }
 
 /* Topmost grey navigator related css */
