@@ -112,111 +112,6 @@
   margin-top: 1.5rem;
 }
 
-.block.market-insight .modal {
-  display: none;
-}
-
-.block.market-insight .modal.visible {
-  background: var(--modal-background-color);
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  outline: 0;
-  z-index: 1050;
-  animation: fade-in .4s;
-}
-
-.block.market-insight .modal .modal-dialog {
-  display: flex;
-  align-items: center;
-  min-height: calc(100% - 1rem);
-  position: relative;
-  width: auto;
-  margin: 0.5rem;
-  pointer-events: none;
-}
-
-.block.market-insight .modal.visible .modal-dialog {
-  animation: move-in 0.3s;
-}
-
-.block.market-insight .modal .modal-dialog .modal-content {
-  padding: 1.5625rem;
-  border: var(--space-2px) solid var(--link-color-orange);
-  border-radius: 0.625rem;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  pointer-events: auto;
-  background-color: var(--color-white);
-  background-clip: padding-box;
-  outline: 0;
-}
-
-.block.market-insight .modal .modal-dialog .modal-body {
-  position: relative;
-  flex: 1 1 auto;
-  padding: 1rem;
-  vertical-align: baseline;
-}
-
-.block.market-insight .modal .modal-dialog .modal-body > div {
-  max-width: 81.25rem;
-  width: 100%;
-  padding-right: var(--space-15px);
-  padding-left: var(--space-15px);
-  margin-right: auto;
-  margin-left: auto;
-}
-
-.block.market-insight .modal .modal-dialog .modal-body ul {
-  list-style: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 0;
-}
-
-.block.market-insight .modal .modal-dialog .modal-body ul li {
-  margin-right: 0.625rem;
-}
-
-.block.market-insight .modal .modal-dialog .modal-body ul li img {
-  height: 2.375rem;
-  width: 2.375rem;
-  max-width: unset;
-  position: static;
-  border: 0;
-}
-
-.block.market-insight .modal .modal-dialog .modal-body h3 {
-  text-align: center;
-}
-
-.block.market-insight .modal .modal-dialog .close-button {
-  position: absolute;
-  right: 0.5rem;
-  top: 0.5rem;
-  width: 2.1875rem;
-  min-width: 2.1875rem;
-  font-weight: var(--font-weight-small);
-  font-size: var(--heading-font-size-xl);
-  color: var(--text-color-normal);
-  opacity: 1;
-  background-color: var(--background-color-transparent);
-  border: 0;
-  appearance: none;
-  cursor: pointer;
-}
-
-.modal-open {
-  overflow: hidden;
-}
-
 @media (width >= 36rem) {
   .block.market-insight > ul > li {
     flex: 0 0 50%;
@@ -225,12 +120,6 @@
 
   .block.market-insight .cards-powerby .socialshare {
     width: unset;
-  }
-
-  .block.market-insight .modal .modal-dialog {
-    min-height: calc(100% - 3.5rem);
-    max-width: 31.25rem;
-    margin: 1.75rem auto;
   }
 }
 
