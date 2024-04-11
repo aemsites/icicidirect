@@ -3,6 +3,7 @@ import {
   Viewport, createPictureElement, observe, fetchData,
 } from '../../scripts/blocks-utils.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
+import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -118,14 +119,13 @@ function createSocialLinkElement(item) {
   const socialIcon = document.createElement('i');
   socialIcon.classList.add('fa', 'fa-share', 'icon');
   socialAnchor.dataset.href = item.shareLink;
-  // TODO: add event listern on social anchor for calling method handleSocialShareClick
+  socialAnchor.addEventListener('click', () => handleSocialShareClick(socialAnchor));
   socialAnchor.appendChild(socialIcon);
   socialLink.appendChild(socialAnchor);
   return socialLink;
 }
 
 async function createPicture(imageUrl, mediaWrapper) {
-  // Create picture element
   mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
 }
 
@@ -190,6 +190,7 @@ function createDots(totalCards, maxAllowedCards, dots) {
     const dot = document.createElement('button');
     dot.className = 'dot';
     dot.dataset.index = index;
+    dot.setAttribute('aria-label', `dot-${index}`);
     dots.appendChild(dot);
     dot.addEventListener('click', (event) => {
       targetedDotView(event);
@@ -214,6 +215,7 @@ async function createTabPanel(block) {
     const h2 = document.createElement('h2');
     const img = document.createElement('img');
     img.src = '/icons/video-icon.svg';
+    img.alt = 'video-icon';
     const picture = document.createElement('picture');
     picture.appendChild(img);
     const textNode = document.createTextNode(tabId);
@@ -255,6 +257,8 @@ export default async function decorate(block) {
 
   // decorate tabs and tabpanels
   const tabs = [...block.children].map((child) => child.firstElementChild);
+  const types = [...block.children].map((child) => child.children[1]);
+
   tabs.forEach((tab, i) => {
     const id = toClassName(tab.textContent);
 
@@ -265,12 +269,15 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-hidden', !!i);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
-    tabpanel.setAttribute('api-key', id);
+    tabpanel.setAttribute('api-key', types[i].textContent.toLowerCase());
 
     // build tab button
     const button = document.createElement('button');
+    // copy all existing attributes of div into button
+    Array.from(tab.attributes).forEach((singleAttribute) => {
+      button.setAttribute(singleAttribute.name, singleAttribute.value);
+    });
     button.className = 'tabs-tab';
-    button.id = `tab-${id}`;
     button.innerHTML = tab.innerHTML;
     button.setAttribute('aria-controls', `tabpanel-${id}`);
     button.setAttribute('aria-selected', !i);

@@ -16,6 +16,8 @@ const decorateGlobalNavigationBar = (fragment, block) => {
   const navigationItems = fragment.querySelectorAll('.section.global-navigator li');
 
   navigationItems.forEach((singleNavigation) => {
+    const aLink = singleNavigation.querySelector('a');
+    aLink.setAttribute('aria-label', aLink.textContent);
     const singleItemDiv = document.createElement('div');
     singleItemDiv.className = 'global-section-item';
     singleItemDiv.appendChild(singleNavigation.firstChild);
@@ -215,6 +217,7 @@ const getPrimaryButtonsList = (fragment) => {
     } else {
       singleButton.classList.add('desktop-element');
     }
+    linkTag.setAttribute('aria-label', buttonName);
     linkTag.appendChild(singleButton);
     primaryButtonsList.push(linkTag);
   });
@@ -309,6 +312,7 @@ const buildSidePanelBottomSection = (fragment) => {
     const url = buttonLinkNode?.getAttribute('href');
     const linkTag = document.createElement('a');
     linkTag.href = url || '';
+    linkTag.setAttribute('aria-label', item.textContent);
     const singleButton = document.createElement('button');
     singleButton.innerText = buttonName;
     singleButton.className = 'round-button';
@@ -345,7 +349,7 @@ const buildSidePanelAccordion = (fragment) => {
     const categoryUrl = categoryLinkNode?.getAttribute('href') || '';
     const categoryName = categoryLinkNode?.innerText || item.firstChild.data;
     accordionItemLabel.innerHTML = `
-      <div><a href=${categoryUrl}>${categoryName}</a></div>
+      <div><a href=${categoryUrl} aria-label=${categoryName}>${categoryName}</a></div>
       <div class="accordion-item-expand">+</div>
     `;
 
@@ -423,6 +427,7 @@ const decorateShareIndexPanel = (fragment, block) => {
     const linkTag = document.createElement('a');
     linkTag.className = 'big-menu-item';
     linkTag.href = url || '';
+    linkTag.setAttribute('aria-label', menuItemName);
     if (index === 1) {
       linkTag.classList.add('selected');
     }

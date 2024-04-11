@@ -1,5 +1,7 @@
-import { getTrendingNews } from '../../scripts/mockapi.js';
-import { Viewport, createPictureElement } from '../../scripts/blocks-utils.js';
+import { getHostUrl } from '../../scripts/mockapi.js';
+import {
+  Viewport, createPictureElement, observe, fetchData,
+} from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
 const placeholders = await fetchPlaceholders();
@@ -68,9 +70,23 @@ function createNewsCards(news) {
   return article;
 }
 
+async function generateNewsCard(block) {
+  const newsTrack = block.querySelector('.news-track');
+  fetchData(`${getHostUrl()}/scripts/mock-trending-news.json`, async (error, data = []) => {
+    if (data) {
+      data.forEach((item) => {
+        const slide = document.createElement('div');
+        slide.className = 'news-card';
+        const article = createNewsCards(item);
+        slide.appendChild(article);
+        newsTrack.appendChild(slide);
+      });
+    }
+  });
+}
+
 export default function decorate(block) {
   const blockConfig = readBlockConfig(block);
-  const newsData = getTrendingNews();
   block.textContent = '';
 
   const container = document.createElement('div');
@@ -79,10 +95,9 @@ export default function decorate(block) {
   const titleWrap = document.createElement('div');
   titleWrap.className = 'title text-center';
   const h2 = document.createElement('h2');
-  h2.textContent = placeholders.trendingnews;
+  h2.textContent = blockConfig.title;
   titleWrap.appendChild(h2);
   container.appendChild(titleWrap);
-
   const newsSection = document.createElement('div');
   newsSection.className = 'news-section';
 
@@ -92,20 +107,12 @@ export default function decorate(block) {
   const newsTrack = document.createElement('div');
   newsTrack.className = 'news-track';
 
-  newsData.forEach((news) => {
-    const slide = document.createElement('div');
-    slide.className = 'news-card';
-    const article = createNewsCards(news);
-    slide.appendChild(article);
-    newsTrack.appendChild(slide);
-  });
-
   slider.appendChild(newsTrack);
   newsSection.appendChild(slider);
   newsSection.appendChild(createDiscoverMore(blockConfig.discovermorelink));
   container.appendChild(newsSection);
-
   block.appendChild(container);
+  observe(block, generateNewsCard, placeholders);
 }
 
 function allowedCardsCount() {
@@ -123,15 +130,17 @@ function allowedCardsCount() {
 let currentIndex = 0;
 let shift = 0;
 const intervalId = setInterval(() => {
-  const cards = document.getElementsByClassName('news-track')[0].children;
-  const cardSize = document.getElementsByClassName('news-card')[0].offsetWidth;
+  const newsTrack = document.querySelector('.news-track');
+  const cards = newsTrack.children;
+  const firstCard = document.querySelector('.news-track .news-card');
+  const cardSize = firstCard ? firstCard.offsetWidth : 0;
   const offset = allowedCardsCount();
-  const cardsarry = Array.from(document.getElementsByClassName('news-track')[0].children);
+  const cardsarry = Array.from(cards);
   if (offset >= 4) {
     cardsarry.forEach(((card) => {
       card.style.opacity = 1;
     }));
-    document.getElementsByClassName('news-track')[0].style.transform = 'translateX(0px)';
+    newsTrack.style.transform = 'translateX(0px)';
     clearInterval(intervalId);
   }
 
@@ -147,7 +156,7 @@ const intervalId = setInterval(() => {
   }
   currentIndex += shift;
   const moveDistance = currentIndex * (cardSize);
-  document.getElementsByClassName('news-track')[0].style.transform = `translateX(-${moveDistance}px)`;
+  newsTrack.style.transform = `translateX(-${moveDistance}px)`;
   let index = 0;
   if (allowedCardsCount() < 4) {
     if (allowedCardsCount() === 2) {
