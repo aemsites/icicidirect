@@ -1,0 +1,107 @@
+.block.quicklinks {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color-blue-dark);
+}
+
+.block.quicklinks h2 {
+  color: var(--color-white);
+  margin-top: var(--space-15px);
+  margin-bottom: 0;
+}
+
+.block.quicklinks .quicklinks-container {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  margin-bottom: var(--space-15px);
+  flex-wrap: wrap;
+  text-align: center;
+  padding-left: var(--space-15px);
+  padding-right: var(--space-15px);
+}
+
+.block.quicklinks .quicklinks-container a {
+  text-decoration: none;
+  color: var(--color-white);
+  font-size: var(--heading-font-size-lmicro);
+  font-weight: var(--font-weight-medium);
+  padding-right: var(--space-5px);
+  margin: var(--space-10px) 0 var(--space-10px) var(--space-10px);
+  min-width: 4.688rem;
+}
+
+.block.quicklinks .quicklinks-container a.active {
+  color: var(--link-color-orange);
+  transition: color 0.3s ease;
+}
+
+.block.quicklinks .quicklinks-container a:not(:last-child) {
+  border-right: var(--line-width-hairline) solid var(--link-color-orange);
+}
+
+.block.quicklinks.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 9;
+  min-height: 2.813rem;
+  justify-content: center;
+  box-shadow: 0 var(--space-5px) var(--space-10px) 0 var(--box-shadow);
+}
+
+.block.quicklinks.sticky .quicklinks-title {
+  display: none;
+}
+
+.block.quicklinks.sticky .quicklinks-container {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  width: 100%;
+  margin-bottom: 0;
+  flex: auto;
+}
+
+.block.quicklinks.sticky .quicklinks-container a {
+  font-size: var(--body-font-size-xs);
+  white-space: nowrap;
+  min-width: auto;
+  padding-left: var(--space-8px);
+  padding-right: 1.125rem;
+  transition: font-size 0.3s ease;
+}
+
+/* CSS styles to apply when the screen width is more than 576 px and less than 768px */
+@media screen and (width >= 36rem) and  (width < 48rem) {
+  .block.quicklinks.sticky .quicklinks-container { 
+    justify-content: unset;
+  }
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .block.quicklinks h2 {
+    margin-bottom: var(--space-8px);
+  }
+
+  .block.quicklinks .quicklinks-container {
+    justify-content: center;
+    max-width: 81.25rem;
+    width: 100%;
+    padding: 0 1rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .block.quicklinks .quicklinks-container a {
+    font-size: var(--space-15px);
+    padding-right: var(--space-15px);
+    line-height: 1;
+    margin: var(--space-5px) 0 var(--space-5px) var(--space-10px);
+  }
+
+  .block.quicklinks.sticky .quicklinks-container::-webkit-scrollbar {
+    display: none;
+  }
+}

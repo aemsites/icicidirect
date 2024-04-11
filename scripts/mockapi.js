@@ -23,6 +23,8 @@ const apiEndPoints = {
   investing: '/draft/anagarwa/investingideas.json',
   oneclickportfolio: '/draft/anagarwa/oneclickportfolio.json',
   muhratpicks: '/draft/anagarwa/muhratpicks.json',
+  finace: '/draft/shroti/finace.json',
+  rapidresult: '/draft/jiang/rapidresult.json',
 };
 
 function getHostUrl() {
@@ -34,40 +36,59 @@ function getHostUrl() {
   return hostUrl;
 }
 
-async function fetchRecommendations(type) {
-  const hostUrl = getHostUrl();
-  const apiUrl = `${hostUrl}${apiEndPoints[type]}`;
+async function fetchDataFromAPI(url) {
   try {
-    const response = await fetch(apiUrl);
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    // Transform the API response to the desired companies array format
-    const companies = data.data.map((company) => ({
-      action: company.action,
-      name: company.company,
-      recoPrice: company.recoPrice,
-      cmp: company.cmp,
-      targetPrice: company.targetPrice,
-      stopLoss: company.stopLoss,
-      exit: company.exit,
-      reportLink: company.reportLink,
-      profitPotential: company.profitPotential,
-      returns: company.returns,
-      minAmount: company.minAmount,
-      riskProfile: company.riskProfile,
-      buyingRange: company.buyingRange,
-    }));
-    return companies;
+    return await response.json();
   } catch (error) {
-    return [];
+    return null;
   }
 }
 
-async function callMockBlogAPI() {
+async function fetchRecommendations(type) {
+  const hostUrl = getHostUrl();
+  const apiUrl = `${hostUrl}${apiEndPoints[type]}`;
+  const data = await fetchDataFromAPI(apiUrl);
+  if (!data) {
+    return [];
+  }
+  // Transform the API response to the desired companies array format
+  return data.data.map((company) => ({
+    action: company.action,
+    name: company.company,
+    recoPrice: company.recoPrice,
+    cmp: company.cmp,
+    targetPrice: company.targetPrice,
+    stopLoss: company.stopLoss,
+    exit: company.exit,
+    reportLink: company.reportLink,
+    profitPotential: company.profitPotential,
+    returns: company.returns,
+    minAmount: company.minAmount,
+    riskProfile: company.riskProfile,
+    buyingRange: company.buyingRange,
+  }));
+}
+
+async function fetchRapidResultMockData() {
   try {
-    const response = await fetch(`${getHostUrl()}/scripts/mock-blogdata.json`);
+    const response = await fetch(`${getHostUrl()}/scripts/mock-rapid-result.json`);
+    if (!response.ok) { // Check if response is OK (status in the range 200-299)
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json(); // Parse the JSON from the response
+    return data; // Return the data so it can be used by whoever calls this function
+  } catch (error) {
+    return null; // Return null or appropriate error handling
+  }
+}
+
+async function fetchMarketInsightMockData() {
+  try {
+    const response = await fetch(`${getHostUrl()}/scripts/mock-market-insight.json`);
     if (!response.ok) { // Check if response is OK (status in the range 200-299)
       throw new Error('Network response was not ok');
     }
@@ -148,6 +169,17 @@ async function fetchBlogsData() {
   }
 }
 
+async function callMockBlogAPI() {
+  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
+}
+
+async function callAPI(apiName) {
+  const endpoint = apiEndPoints[apiName];
+  if (!endpoint) {
+    return null;
+  }
+  return fetchDataFromAPI(endpoint);
+}
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
@@ -169,40 +201,6 @@ const fetchDynamicStockIndexData = () => [
   },
 ];
 
-function getTrendingNews() {
-  const newsData = [
-    {
-      imgUrl: 'https://www.icicidirect.com/images/HG Infra-202403190956262997726.png',
-      title: 'HG infra. bags four solar projects worth ₹1026 crore',
-      link: 'https://www.icicidirect.com/research/equity/trending-news/hg-infra-bags-four-solar-projects-worth-1026-crore',
-      date: '19-Mar-2024 09:06',
-      source: 'ICICI Securities',
-    },
-    {
-      imgUrl: 'https://www.icicidirect.com/images/Trending_News_261x193-2-202403190926121034455.png',
-      title: 'CERC has finalised the tariff regulations for FY24-FY2',
-      link: 'https://www.icicidirect.com/research/equity/trending-news/cerc-has-finalised-the-tariff-regulations-for-fy24-fy2',
-      date: '19-Mar-2024 09:04',
-      source: 'ICICI Securities',
-    },
-    {
-      imgUrl: 'https://www.icicidirect.com/images/Trending_News_261x193-2-202403190926119516615.png',
-      title: 'Aditya Birla Capital has approved sale of  stake in Aditya Birla Sun Life AMC',
-      link: 'https://www.icicidirect.com/research/equity/trending-news/aditya-birla-capital-has-approved-sale-of-stake-in-aditya-birla-sun-life-amc',
-      date: '19-Mar-2024 09:02',
-      source: 'ICICI Securities',
-    },
-    {
-      imgUrl: 'https://www.icicidirect.com/images/Trending_News_261x193-2-202403181257495356697.png',
-      title: 'Government approves new E-Vehicle policy',
-      link: 'https://www.icicidirect.com/research/equity/trending-news/government-approves-new-e-vehicle-policy',
-      date: '18-Mar-2024 09:09',
-      source: 'ICICI Securities',
-    },
-  ];
-  return newsData;
-}
-
 export {
   fetchRecommendations,
   getMarginActionUrl,
@@ -210,5 +208,8 @@ export {
   fetchDynamicStockIndexData,
   callMockBlogAPI,
   fetchBlogsData,
-  getTrendingNews,
+  callAPI,
+  fetchRapidResultMockData,
+  fetchMarketInsightMockData,
+  getHostUrl,
 };

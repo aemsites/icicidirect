@@ -1,1 +1,58 @@
 /* add global styles that can be loaded post LCP here */
+
+/* Social Dialog Share */
+dialog.social-share {
+    border: none;
+    padding: 0;
+    border-radius: 10px;
+}
+
+dialog.social-share > div {
+    padding: 2rem;
+    border: 2px solid var(--link-color-orange);
+    border-radius: 10px;
+    background-color: var(--color-white);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+}
+
+dialog.social-share .modal-body {
+    display: flex;
+    gap: 1.25rem;
+}
+
+dialog.social-share .modal-body .social-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    cursor: pointer;
+}
+
+dialog.social-share .modal-body h3 {
+    margin-bottom: 1rem;
+}
+
+dialog.social-share .close-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2.1875rem;
+    min-width: 2.1875rem;
+    font-size: var(--heading-font-size-xl);
+    color: var(--text-color-normal);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+dialog.social-share::backdrop {
+    background-color: var(--modal-background-color);
+}
+
+@media (width >= 768px) {
+    dialog.social-share > div {
+        min-width: 500px;
+    }
+}

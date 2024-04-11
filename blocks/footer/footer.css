@@ -1,5 +1,10 @@
 .footer-wrapper {
   background: var(--background-color-light-grey);
+  min-width: 100%;
+}
+
+.footer.block {
+  min-width: 100%;
 }
 
 .footer.block .section.footer-top-note {

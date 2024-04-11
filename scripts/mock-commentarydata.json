@@ -1,0 +1,44 @@
+[
+  {
+    "articleUrl": "https://www.icicidirect.com/equity/market-news-list/e/nifty-holds-22k-despite-modest-losses,-banks-and-it-dip/1499137",
+    "titleText": "Nifty holds 22K despite modest losses, banks & IT dip",
+    "descriptionText": "Market Commentary - End-Session",
+    "publicationTimeText": "17 May 2022 12:31",
+    "footerTimeText": "05:26 PM"
+  },
+  {
+    "articleUrl": "https://www.example.com/article2",
+    "titleText": "Stocks surge as investors remain optimistic",
+    "descriptionText": "Market Commentary - Mid-Session",
+    "publicationTimeText": "17 May 2022 11:45",
+    "footerTimeText": "04:15 PM"
+  },
+  {
+    "articleUrl": "https://www.example.com/article3",
+    "titleText": "Tech sector sees gains amidst market uncertainty",
+    "descriptionText": "Market Commentary - Morning Update",
+    "publicationTimeText": "17 May 2022 09:20",
+    "footerTimeText": "01:45 PM"
+  },
+  {
+    "articleUrl": "https://www.example.com/article4",
+    "titleText": "Oil prices stabilize after recent fluctuations",
+    "descriptionText": "Market Commentary - Afternoon Update",
+    "publicationTimeText": "17 May 2022 13:55",
+    "footerTimeText": "06:30 PM"
+  },
+  {
+    "articleUrl": "https://www.example.com/article5",
+    "titleText": "Gold prices hit record high amid geopolitical tensions",
+    "descriptionText": "Market Commentary - Evening Report",
+    "publicationTimeText": "17 May 2022 16:40",
+    "footerTimeText": "08:15 PM"
+  },
+  {
+    "articleUrl": "https://www.example.com/article6",
+    "titleText": "Currency markets volatile ahead of central bank meeting",
+    "descriptionText": "Market Commentary - Special Update",
+    "publicationTimeText": "17 May 2022 14:20",
+    "footerTimeText": "07:00 PM"
+  }
+]
