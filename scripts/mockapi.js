@@ -98,21 +98,6 @@ async function fetchMarketInsightMockData() {
     return null; // Return null or appropriate error handling
   }
 }
-function formatDateString(dateString) {
-  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const [datePart, timePart] = dateString.split(' ');
-  const [day, month, year] = datePart.split('-');
-  const [hour, minute, second] = timePart.split(':');
-
-  // Construct the date object
-  const date = new Date(year, month - 1, day, hour, minute, second);
-
-  // Format the date string
-  const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()}`;
-
-  return formattedDate;
-}
-
 
 async function callAPI(apiName) {
   const endpoint = apiEndPoints[apiName];
