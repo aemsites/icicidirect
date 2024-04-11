@@ -418,20 +418,20 @@
   padding: 0;
 }
 
-.block.header .search-bar .search-results-popup .equity-list-item {
+.block.header .search-bar .search-results-popup .list-item {
   display: flex;
   justify-content: space-between;
   padding: 10px 0;
   border-bottom: 1px solid #dee2e6;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section {
+.block.header .search-bar .search-results-popup .details-section {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 } 
 
-.block.header .search-bar .search-results-popup .equity-details-section .company-name {
+.block.header .search-bar .search-results-popup .details-section .item-name {
   font-size: 16px;
   font-weight: 400;
   color: #9f9f9f;
@@ -443,27 +443,27 @@
   line-height: 38px;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section .link {
+.block.header .search-bar .search-results-popup .details-section .link {
   text-decoration: none;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section .equity-value {
+.block.header .search-bar .search-results-popup .details-section .item-value {
   font-size: 16px;
   font-weight: 400;
   color: #415270;
   line-height: 38px;
 } 
 
-.block.header .search-bar .search-results-popup .equity-details-section .change-value {
+.block.header .search-bar .search-results-popup .change-value {
   font-size: 16px;
   font-weight: 400;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section .change-value.negative {
+.block.header .search-bar .search-results-popup .change-value.negative {
   color: #da0000;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section .change-value.negative::before {
+.block.header .search-bar .search-results-popup .change-value.negative::before {
   color: #da0000;
   font-family: icomoon, sans-serif;
   content: "\e900";
@@ -472,11 +472,11 @@
   font-size: 12px;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section .change-value.positive {
+.block.header .search-bar .search-results-popup .change-value.positive {
   color: #259702;
 }
 
-.block.header .search-bar .search-results-popup .equity-details-section .change-value.positive::before {
+.block.header .search-bar .search-results-popup .change-value.positive::before {
   color: #259702;
   font-family: icomoon, sans-serif;
   content: "\e900";
@@ -484,13 +484,13 @@
   font-size: 12px;
 }
 
-.block.header .search-bar .search-results-popup .equity-action-section {
+.block.header .search-bar .search-results-popup .action-section {
   display: flex;
   align-items: flex-start;
   margin: 0 10px;
 }
 
-.block.header .search-bar .search-results-popup .equity-action-section .equity-button{
+.block.header .search-bar .search-results-popup .action-section .action-button{
   font-size: 12px;
   font-weight: 400;
   color: #415270;
@@ -502,7 +502,7 @@
   cursor: pointer;
 }
 
-.block.header .search-bar .search-results-popup .equity-action-section .equity-button:hover{
+.block.header .search-bar .search-results-popup .action-section .action-button:hover{
   background-color: #415270;
   color: white;
   transition: 0.3s;
