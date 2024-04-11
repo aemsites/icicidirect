@@ -535,23 +535,23 @@ const buildEquityList = (equityList) => {
     const equityItem = document.createElement('li');
     equityItem.className = 'list-item';
     equityItem.innerHTML = `
-      <div class='details-section'>
-        <a class='item-name' title='${equity.label}' href=${equity.url} target='_blank'>${equity.label}</a>
-        <a class='link' href=${equity.url} target='_blank'>
-          <span class='item-value'>${equity.ltp}</span>
-        </a>
-        <span class='change-value ${equity.change >= 0 ? 'positive' : 'negative'}'>
-          ${equity.change} (${equity.changeper}%)
-        </span>
-      </div>
-      <div class='action-section hidden'>
-        <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
-          BUY
-        </button>
-        <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
-          SELL
-        </button>
-      </div>
+    <div class='details-section'>
+      <a class='item-name' title='${equity.label}' href=${equity.url} target='_blank'>${equity.label}</a>
+      <a class='link' href=${equity.url} target='_blank'>
+        <span class='item-value'>${equity.ltp}</span>
+      </a>
+      <span class='change-value ${equity.change >= 0 ? 'positive' : 'negative'}'>
+        ${equity.change} (${equity.changeper}%)
+      </span>
+    </div>
+    <div class='action-section'>
+      <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
+        BUY
+      </button>
+      <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
+        SELL
+      </button>
+    </div>
     `;
     equityListContainer.appendChild(equityItem);
   });
@@ -565,20 +565,20 @@ const buildMutualFundsList = (mutualFundsList) => {
     mutualFundItem.className = 'list-item';
     mutualFundItem.innerHTML = `
     <div class='details-section'>
-    <a class='item-name' title='${mutualFund.label}' href=${mutualFund.url} target='_blank'>${mutualFund.label}</a>
-    <a class='link' href=${mutualFund.url} target='_blank'>
-      <span class='item-value'>${mutualFund.ltp}</span>
-    </a>
-    <span class='change-value ${mutualFund.change >= 0 ? 'positive' : 'negative'}'>
-      ${mutualFund.change} (${mutualFund.changeper}%)
-    </span>
-  </div>
-  <div class='action-section hidden'>
-    <button class='action-button' onclick="window.open('${mutualFund.url}', '_blank')">
-      INVEST
-    </button>
-  </div>
-  `;
+      <a class='item-name' title='${mutualFund.label}' href=${mutualFund.url} target='_blank'>${mutualFund.label}</a>
+      <a class='link' href=${mutualFund.url} target='_blank'>
+        <span class='item-value'>${mutualFund.ltp}</span>
+      </a>
+      <span class='change-value ${mutualFund.change >= 0 ? 'positive' : 'negative'}'>
+        ${mutualFund.change} (${mutualFund.changeper}%)
+      </span>
+    </div>
+    <div class='action-section'>
+      <button class='action-button' onclick="window.open('${mutualFund.url}', '_blank')">
+        INVEST
+      </button>
+    </div>
+    `;
     mutualFundsListContainer.appendChild(mutualFundItem);
   });
 };
@@ -589,16 +589,17 @@ const buildCurrencyList = (currencyList) => {
   currencyList.forEach((currency) => {
     const currencyItem = document.createElement('li');
     currencyItem.className = 'list-item';
-    currencyItem.innerHTML = `<div class='details-section'>
-    <a class='item-name' title='${currency.label}' href=${currency.url} target='_blank'>${currency.label}</a>
-    <a class='link' href=${currency.url} target='_blank'>
-      <span class='item-value'>${currency.ltp}</span>
-    </a>
-    <span class='change-value ${currency.change >= 0 ? 'positive' : 'negative'}'>
-      ${currency.change} (${currency.changeper}%)
-    </span>
-  </div>
-  `;
+    currencyItem.innerHTML = `
+    <div class='details-section'>
+      <a class='item-name' title='${currency.label}' href=${currency.url} target='_blank'>${currency.label}</a>
+      <a class='link' href=${currency.url} target='_blank'>
+        <span class='item-value'>${currency.ltp}</span>
+      </a>
+      <span class='change-value ${currency.change >= 0 ? 'positive' : 'negative'}'>
+        ${currency.change} (${currency.changeper}%)
+      </span>
+    </div>
+    `;
     currencyListContainer.appendChild(currencyItem);
   });
 };
@@ -608,7 +609,18 @@ const buildCommodityList = (commodityList) => {
   commodityListContainer.innerHTML = '';
   commodityList.forEach((commodity) => {
     const commodityItem = document.createElement('li');
-    commodityItem.innerHTML = `<a href=${commodity.url}>${commodity.label}</a>`;
+    commodityItem.className = 'list-item';
+    commodityItem.innerHTML = `
+    <div class='details-section'>
+      <a class='item-name' title='${commodity.label}' href=${commodity.url} target='_blank'>${commodity.label}</a>
+      <a class='link' href=${commodity.url} target='_blank'>
+        <span class='item-value'>${commodity.ltp}</span>
+      </a>
+      <span class='change-value ${commodity.change >= 0 ? 'positive' : 'negative'}'>
+        ${commodity.change} (${commodity.changeper}%)
+      </span>
+    </div>
+    `;
     commodityListContainer.appendChild(commodityItem);
   });
 };
@@ -618,7 +630,12 @@ const buildKnowledgeCenterList = (knowledgeCenterList) => {
   knowledgeCenterListContainer.innerHTML = '';
   knowledgeCenterList.forEach((knowledgeCenter) => {
     const knowledgeCenterItem = document.createElement('li');
-    knowledgeCenterItem.innerHTML = `<a href=${knowledgeCenter.url}>${knowledgeCenter.label}</a>`;
+    knowledgeCenterItem.className = 'list-item';
+    knowledgeCenterItem.innerHTML = `
+    <div class='details-section'>
+      <a class='full-item-name' title='${knowledgeCenter.label}' href=${knowledgeCenter.url} target='_blank'>${knowledgeCenter.label}</a>
+    </div>
+    `;
     knowledgeCenterListContainer.appendChild(knowledgeCenterItem);
   });
 };
@@ -628,7 +645,26 @@ const buildBondsList = (bondsList) => {
   bondsListContainer.innerHTML = '';
   bondsList.forEach((bond) => {
     const bondItem = document.createElement('li');
-    bondItem.innerHTML = `<a href=${bond.url}>${bond.label}</a>`;
+    bondItem.className = 'list-item';
+    bondItem.innerHTML = `
+    <div class='details-section'>
+      <a class='full-item-name' title='${bond.label}' href=${bond.url} target='_blank'>${bond.label}</a>
+      <a class='link' href=${bond.url} target='_blank'>
+        <span class='item-value'>${bond.ISIN}</span>
+      </a>
+      <span class='item-value'}'>
+        (${bond.maturity_date}%)
+      </span>
+    </div>
+    <div class='action-section hidden'>
+      <button class='action-button' onclick="window.open('${bond.url}', '_blank')">
+        BUY
+      </button>
+      <button class='action-button' onclick="window.open('${bond.url}', '_blank')">
+        SELL
+      </button>
+    </div>
+    `;
     bondsListContainer.appendChild(bondItem);
   });
 };

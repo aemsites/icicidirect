@@ -124,18 +124,20 @@
     "ltp": "226.35",
     "change": "0.30",
     "changeper": "0.13",
+    "maturity_date": "JUN 11,2026",
     "url": "https://www.icicidirect.com/fd-and-bonds/adani-capital-pvt-ltd-965/ine01eq07087"
   },
   {
     "type": "bonds",
-    "label": "Indore Municipal Corporation - 8.25 %",
+    "label": "Indore Municipal Corp - 8.25 %",
     "value": "40189.0",
-    "long_name": "Indore Municipal Corporation",
+    "long_name": "Indore Municipal Corp",
     "symbol": "",
     "ISIN": "INE01EQ07087",
     "ltp": "251.00",
     "change": "0.30",
     "changeper": "0.13",
+    "maturity_date": "DEC 31,2024",
     "url": "https://www.icicidirect.com/fd-and-bonds/indore-municipal-corporation-825/ine00qs24019"
   }
 ]
