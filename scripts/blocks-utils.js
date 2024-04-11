@@ -1,5 +1,9 @@
 import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
 
+const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
+const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
+const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
+
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
@@ -104,10 +108,22 @@ function observe(elementToObserve, callback, ...args) {
   observer.observe(elementToObserve);
 }
 
+function getOriginUrl() {
+  return WORKER_ORIGIN_URL;
+}
+
+function getResearchAPIUrl() {
+  return RESEARCH_API_URL;
+}
+
+function getMarketingAPIUrl() {
+  return MARKETING_API_URL;
+}
 /**
  * Fetches data from the given URL and calls the callback function with the response.
  * @param {string} url The URL to fetch data from.
  * @param {Function} callback The callback function to call with the response.
+ * @param {string} apiName The name of the API to be called.
  * returns {void}
  * @example
  * fetchData('https://jsonplaceholder.typicode.com/todos/1', (error, data) => {
@@ -116,6 +132,7 @@ function observe(elementToObserve, callback, ...args) {
  * } else {
  *  console.log(data);
  * }
+ * }); // GET request
  */
 function fetchData(url, callback) {
   fetch(url)
@@ -131,6 +148,93 @@ function fetchData(url, callback) {
     .catch((error) => {
       callback(error, null);
     });
+}
+
+function formDataToJSON(formData) {
+  const jsonObject = {};
+  formData.forEach((value, key) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!jsonObject.hasOwnProperty(key)) {
+      jsonObject[key] = value;
+    } else {
+      if (!Array.isArray(jsonObject[key])) {
+        jsonObject[key] = [jsonObject[key]];
+      }
+      jsonObject[key].push(value);
+    }
+  });
+  return JSON.stringify(jsonObject);
+}
+
+/**
+ * Posts form data to the given URL and calls the callback function with the response.
+ * @param url
+ * @param formData
+ * @param callback
+ * @param options
+ * @example
+ * const formData = new FormData();
+ * formData.append('apiName', 'getdata');
+ * postFormData('https://example.com/data', formData, (error, data) => {
+ *  if (error) {
+ *  console.error('Error fetching data:', error);
+ *  }
+ *  else {
+ *  console.log('Data fetched successfully:', data);
+ *  }
+ *
+ */
+function postFormData(url, formData, callback, options = {}) {
+  let formDataString;
+  if (formData instanceof FormData) {
+    formDataString = formDataToJSON(formData);
+  } else {
+    // assuming formData is already a JSON object
+    formDataString = JSON.stringify(formData);
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: options.headers || {},
+    body: formDataString,
+    ...options, // Override any additional options provided
+  };
+
+  fetch(url, requestOptions)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((error) => {
+      callback(error, null);
+    });
+}
+
+/**
+ * Fetches data from the given API URL and calls the callback function with the response.
+ * @param url
+ * @param apiName
+ * @param callback
+ * @example
+ * getDataFromAPI('https://example.com/data', 'getdata', (error, data) => {
+ * if (error) {
+ * console.error('Error fetching data:', error);
+ * }
+ * else {
+ * console.log('Data fetched successfully:', data);
+ * }
+ * });
+ *
+ */
+function getDataFromAPI(url, apiName, callback) {
+  const formData = new FormData();
+  formData.append('apiName', apiName);
+  postFormData(url, formData, callback);
 }
 
 /*
@@ -151,7 +255,18 @@ function getEnvType(hostname = window.location.hostname) {
  * @param {Element} main The container element under which quicklinks has to be enabled.
  */
 function decorateQuickLinks(main) {
-  const addQuickLinksMetadata = (block) => {
+  const handQuickLinksMetadataForTabs = (section) => {
+    const quickLinkTitles = section.getAttribute('data-quicklinks-title').split(',');
+    const nestedTabs = section.querySelectorAll('.block.tabs > div > div:first-child');
+    const nestedTabsIndexed = Array.from(nestedTabs);
+    // assign the ids as per the order of tabs
+    quickLinkTitles.forEach((singleTitle, index) => {
+      nestedTabsIndexed[index].id = toCamelCase(singleTitle.trim());
+      nestedTabsIndexed[index].setAttribute('data-quicklinks-title', singleTitle.trim());
+    });
+    section.removeAttribute('data-quicklinks-title');
+  };
+  const addQuickLinksMetadataForBlocks = (block) => {
     // extract the quicklinks details if present
     const blockConfig = readBlockConfig(block);
     const quickLinkTitle = blockConfig['quicklinks-title'];
@@ -160,7 +275,8 @@ function decorateQuickLinks(main) {
       block.id = toCamelCase(quickLinkTitle);
     }
   };
-  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
+  main.querySelectorAll('div.tabs-container[data-quicklinks-title]').forEach(handQuickLinksMetadataForTabs);
+  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
 }
 
 export {
@@ -173,4 +289,9 @@ export {
   getEnvType,
   decorateQuickLinks,
   fetchData,
+  getOriginUrl,
+  getResearchAPIUrl,
+  getMarketingAPIUrl,
+  getDataFromAPI,
+  postFormData,
 };

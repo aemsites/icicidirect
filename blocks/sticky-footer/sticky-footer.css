@@ -1,0 +1,134 @@
+.block.sticky-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: 9999;
+  display: none;
+}
+
+.block.sticky-footer.sticky {
+  display: block;
+}
+
+.block.sticky-footer .sticky-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--background-color-blue-dark);
+  padding: var(--space-8px) var(--space-15px);
+}
+
+.block.sticky-footer .action-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.block.sticky-footer .sticky-footer-right {
+  position: fixed;
+  top: 40%;
+  right: -3.75rem;
+  z-index: 11;
+  transform: rotate(90deg);
+  background-color: var(--link-color-orange);
+  padding: var(--space-10px);
+  font-size: var(--body-font-size-m);
+  border-bottom-left-radius: var(--space-6px);
+  border-bottom-right-radius: var(--space-6px);
+}
+
+.block.sticky-footer .sticky-footer-right a {
+  text-decoration: none;
+  color: var(--color-white);
+}
+
+.block.sticky-footer .sticky-footer-right a:hover {
+  color: var(--link-hover-color);
+  transition: color 0.3s ease;
+}
+
+.block.sticky-footer .action-container .turnstile-container {
+  height: 4.063rem;
+}
+
+.block.sticky-footer .action-container .turnstile-container:not(:empty) {
+  margin: var(--space-8px) 1.25rem 0;
+}
+
+.block.sticky-footer .action-container .discover-more-button {
+  text-transform: none;
+  height: 2.5rem;
+  width: 14rem;
+  font-size: var(--heading-font-size-lmicro);
+  font-weight: var(--font-weight-regular);
+  text-align: center;
+  padding: 0 var(--space-5px);
+  margin: 0 var(--space-8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: unset;
+}
+
+.block.sticky-footer .action-container .discover-more-button a {
+  text-align: center;
+}
+
+.block.sticky-footer .action-container input {
+  height: 2.5rem;
+  font-size: var(--heading-font-size-sxs);
+  border-radius: var(--space-8px);
+  border: var(--line-width-hairline) solid var(--button-color-orange);
+  width: 16.563rem;
+  padding: var(--space-6px) var(--space-12px);
+  cursor: text;
+  color: var(--color-gray-dark);
+}
+
+.block.sticky-footer .message-container p {
+  color: var(--color-white);
+  font-size: var(--body-font-size-s);
+  margin: 0;
+}
+
+.block.sticky-footer .message-container .validation-message {
+  display: none;
+}
+
+.block.sticky-footer .message-container .validation-message.invalid {
+  display: block;
+}
+
+/* CSS styles to apply when the screen width is more than 576 px and less than 768px */
+@media screen and (width >= 36rem) and  (width < 48rem) {
+  .block.sticky-footer .action-container .discover-more-button {
+    font-size: var(--body-font-size-l);
+    transition: all 0.3s ease ;
+  }
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .block.sticky-footer .action-container input {
+    font-size: var(--body-font-size-m);
+    height: 2.813rem;
+    line-height: 1.5rem;
+  }
+
+  .block.sticky-footer .action-container input::placeholder {
+    font-size: var(--body-font-size-m);
+    font-stretch: expanded;
+  }
+
+  .block.sticky-footer .action-container .discover-more-button {
+    font-size: var(--body-font-size-l);
+    transition: all 0.3s ease ;
+    height: 2.813rem;
+  }
+
+ 
+  .block.sticky-footer .action-container .turnstile-container:not(:empty) {
+    margin: 0 1.25rem;
+  }
+}

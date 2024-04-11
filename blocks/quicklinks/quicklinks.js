@@ -1,9 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-
-const options = {
-  root: null,
-  threshold: 0.7,
-};
+import { observe } from '../../scripts/blocks-utils.js';
 
 /**
  * Marks the link in the quicklinks section as active for the section visible in the view port
@@ -17,15 +13,17 @@ const activateSectionInView = (elementId) => {
   });
   // Set new section as active which is in viewport
   const quickLinkElement = document.querySelector(`[href="#${elementId}"]`);
-  quickLinkElement.classList.add('active');
+  if (quickLinkElement) {
+    quickLinkElement.classList.add('active');
+  }
 };
 
 /**
  * Function to handle the intersecting section of the page with quicklink enabled
  */
 const handlePageSectionIntersection = (entries) => {
-  entries.forEach((entry) => {
-    if (entry.isIntersecting) {
+  entries.forEach((entry, index) => {
+    if (entry.isIntersecting && index === 0) {
       const elementId = entry.target.id;
       activateSectionInView(elementId);
     }
@@ -62,13 +60,16 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
  */
 const scrollToAdjustedStickyHeader = (section) => {
   const headerOffset = 70;
-  const elementPosition = section.getBoundingClientRect().top;
+  const elementPosition = section && section.getBoundingClientRect().top;
   const offsetPosition = elementPosition + window.scrollY - headerOffset;
 
   window.scrollTo({
     top: offsetPosition,
     behavior: 'smooth',
   });
+  if (section) {
+    section.click();
+  }
 };
 
 /**
@@ -81,6 +82,22 @@ const preventInternalLinksDefault = (quickLinkItem, sectionId) => {
     event.preventDefault();
     const targetSection = document.getElementById(sectionId);
     scrollToAdjustedStickyHeader(targetSection);
+    setTimeout(() => activateSectionInView(sectionId), 200);
+  });
+};
+
+/**
+ * Enable highlighting of all sections when come into viewport
+ */
+const enableSectionHighligting = () => {
+  const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
+  const options = {
+    root: null,
+    threshold: 0.5,
+  };
+  const observer = new IntersectionObserver(handlePageSectionIntersection, options);
+  quickLinkEnabledBlocks.forEach((singleBlock) => {
+    observer.observe(singleBlock);
   });
 };
 
@@ -101,11 +118,10 @@ export default async function decorate(block) {
   // extract quicklinks from the complete page
   const quickLinkContainerDiv = document.createElement('div');
   quickLinkContainerDiv.className = 'quicklinks-container';
-  const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
+  const quickLinkEnabledBlocksOrTabs = document.querySelectorAll('[data-quicklinks-title]');
 
   // Create a new intersection observer
-  const observer = new IntersectionObserver(handlePageSectionIntersection, options);
-  quickLinkEnabledBlocks.forEach((singleItem) => {
+  quickLinkEnabledBlocksOrTabs.forEach((singleItem) => {
     const linkId = singleItem.id;
     const linkTitle = singleItem.getAttribute('data-quicklinks-title');
     const linkNode = document.createElement('a');
@@ -114,12 +130,13 @@ export default async function decorate(block) {
     quickLinkContainerDiv.appendChild(linkNode);
     // prevent quicklinks default behaviour
     preventInternalLinksDefault(linkNode, linkId);
-    // observe other sections of the page when scrolled
-    observer.observe(singleItem);
   });
   block.append(quickLinkContainerDiv);
 
   // enable sticky quicklinks when page is scrolled
   const parentContainer = document.querySelector('.section.quicklinks-container');
   enableStickyBehaviorForQuickLinks(parentContainer, block);
+  // enable the section highlighting when quicklinks comes into viewport
+  // this gives the quicklinks sometime so that other sections are ready
+  observe(block, enableSectionHighligting);
 }

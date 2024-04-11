@@ -89,6 +89,7 @@ function updateDots(block) {
       dot.className = 'dot';
     }
     dot.dataset.index = i;
+    dot.setAttribute('aria-label', `dot-${i}`);
     dotsContainer.appendChild(dot);
     dot.addEventListener('click', (event) => {
       updateCarouselView(event.currentTarget);

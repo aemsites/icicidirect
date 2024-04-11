@@ -11,16 +11,19 @@
  */
 
 :root {
-  /* colors */  
+  /* colors */
   --primary: #053D6E;
   --color-orange: #DB620A;
   --color-dark: #262B36;
+  --color-darker:#C9C9C910;
   --color-black: black;
   --color-light-black: #212121;
   --color-light-gray: #8F8F8F;
-  --color-lighter-gray: #E1E1E1;
+  --color-lightest-gray: #E1E1E1;
+  --color-darker-gray:#333;
   --color-gray: #6c757d;
   --color-gray-dark: #4A4A4A;
+  --color-lighter-gray:#AEB7C1;
   --color-light-gray-dark: #979797;
   --color-strong-gray-light: #6B6B6B;
   --color-blue: #007bff;
@@ -45,6 +48,8 @@
   --color-warning: #ffc107;
   --color-danger: #dc3545;
   --color-light: #f8f9fa;
+  --color-yellowish-white:#EBEBEB;
+  --color-darkest-gray:#0006;
   --link-color: var(--color-blue);
   --link-color-gray: #C8C8C8;
   --link-color-orange:#E87817;
@@ -53,11 +58,13 @@
   --text-color-light: #4a4a4a;
   --text-color-blue: #043C6D;
   --text-color-gray: #9B9B9B;
+  --text-color-light-gray: #0E1F3580;
   --link-color-blue: #4b9dff;
   --link-color-dark-blue: #415270;
   --link-color-dark-gray : #3d3d3d;
   --button-color-orange: #E87817;
   --background-color-light-grey: #FCFCFC;
+  --background-color-gray-scale: #F9F9F9;
   --background-color-deep-light-grey: #F7F7F7;
   --background-color-transparent: transparent;
   --background-color-unset: unset;
@@ -71,6 +78,7 @@
   --border-color-light-gray: #E1E8EE;
   --border-color-gray: #D1D1D1;
   --border-color-dark-gray: #d7d7d7;
+  --border-color-lighter-gray:#ced4da;
   --border-color-dark-grey: #0E1F3533;
   --color-diable-element: #D1D1D1;
   --color-disable-dot: #D1D1D1;
@@ -84,9 +92,10 @@
   --card-post-color: #6B6B6B;
   --card-post-boarder: #d7d7d7;
   --modal-background-color: #000000BF;
+  --image-box-shadow: #878787;
   --title-color: #122E45;
   --title-color-card: #303030;
-  
+
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
   --heading-font-family: var(--body-font-family);
@@ -109,6 +118,7 @@
   --heading-font-size-xmxl: 32px;
   --heading-font-size-mxl: 30px;
   --heading-font-size-l: 28px;
+  --heading-font-size-mls: 25px;
   --heading-font-size-ml: 24px;
   --heading-font-size-m: 20px;
   --heading-font-size-s: 18px;
@@ -154,8 +164,11 @@
   --line-height-normal: 20px;
   --line-height-medium: 22px;
   --line-height-large: 24px;
+  --line-height-xl: 28px;
   --line-height-extra-large: 32px;
+  --line-height-xxl: 42px;
   --line-height-wide: 45px;
+  --line-height-xxxl:54px;
 
   /* margin and fine spaces */
   --space-1px: 0.06rem;
@@ -173,9 +186,8 @@
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
   --space-15px: 0.938rem;  
-}
 
-*, *::before, *::after { 
+*, *::before, *::after {
   box-sizing: border-box;
   outline: none;
 }
@@ -315,10 +327,11 @@ body {
   background-color: var(--color-white);
   text-align: left;
   line-height: 1.5;
+  display: none;
 }
 
 body.appear {
-  display: unset;
+  display: block;
 }
 
 h1, h2, h3,
@@ -411,11 +424,10 @@ a:any-link {
   color: var(--color-blue);
   text-decoration: none;
   background-color: transparent;
-  font-size: 1rem;
 }
 
 a:hover {
-  text-decoration: underline;
+  text-decoration: none;
   color: var(--link-hover-color);
 }
 
@@ -429,7 +441,7 @@ a:not([href]):hover {
   text-decoration: none;
 }
 
-a.discover-more-button:any-link {
+a.discover-more, a.discover-more-button:any-link {
   display: inline-block;
   font-size: var(--heading-font-size-ms);
   line-height: 2.375rem;
@@ -443,7 +455,8 @@ a.discover-more-button:any-link {
   padding: 0.3125rem 1.25rem;
   border: 0.0625rem solid transparent;
   text-decoration: none;
-  cursor: pointer;   
+  cursor: pointer;
+  text-align: center;
 }
 
 main img {
@@ -453,14 +466,21 @@ main img {
 }
 
 /* sections */
-
-main .section.padded > .section-container {
+main .section > .section-container {
   max-width: 81.25rem;
   width: 100%;
-  padding-left: 1rem;
-  padding-right: 1rem;
   margin-right: auto;
   margin-left: auto;
+}
+
+/* section - full-width */
+main .section.full-width > .section-container{
+  max-width: 100%;
+}
+
+/* section - padded i.e. inline padding */
+main .section.padded > .section-container, main .section.inline-padded > .section-container {
+  padding: 0 1rem;
 }
 
 main .section.shadow  {
@@ -480,6 +500,14 @@ main .section.shadow-gray {
   box-shadow: inset 0 1.25rem 2.5rem var(--background-color-grey);
 }
 
+main .section.background-lighter-gray {
+  background: var(--color-lighter-gray);
+}
+
+main .margin-bottom {
+  margin-bottom: 2rem;
+}
+
 main .section.background-gray {
   background: var(--background-color-deep-light-grey);
 }
@@ -495,28 +523,29 @@ main .section.background-gray {
 }
 
 @media (width >= 48rem) {
-main .section.shadow  {
-  background: var(--background-color-light-orange);
-  box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
+  main .section.shadow  {
+    background: var(--background-color-light-orange);
+    box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
+  }
+
+  @media (width >= 768px) {
+    header {
+      min-height: 8.4rem;
+    }
+
+    h1 {
+      font-size: var(--h1-font-size-desktop);
+      margin-bottom: 3rem;
+    }
+
+    h2 {
+      font-size: var(--h2-font-size-desktop);
+      line-height: 2.813rem;
+      margin-bottom: 2rem;
+    }
+    h3 { font-size: var(--h3-font-size-desktop); }
+    h4 { font-size: var(--h4-font-size-desktop); }
+    h5 { font-size: var(--h5-font-size-desktop); }
+  }
 }
-
-@media (width >= 768px) {
-  header {
-    min-height: 8.4rem;
-  }
-
-  h1 {
-    font-size: var(--h1-font-size-desktop);
-    margin-bottom: 3rem;
-  } 
-
-  h2 {
-    font-size: var(--h2-font-size-desktop);
-    line-height: 2.813rem;
-    margin-bottom: 2rem;
-  }
-  h3 { font-size: var(--h3-font-size-desktop); }
-  h4 { font-size: var(--h4-font-size-desktop); }
-  h5 { font-size: var(--h5-font-size-desktop); }
-  }
 }

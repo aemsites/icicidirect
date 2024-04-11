@@ -21,13 +21,27 @@ function turnstileCb() {
   });
 }
 
+const onCaptchaloadCallback = () => {
+  document.querySelectorAll('.g-recaptcha').forEach((el) => {
+  // eslint-disable-next-line no-undef
+    grecaptcha.render(el, {
+      sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-', // TODO: Replace with actual sitekey
+      callback(token) {
+        window.validateCaptchaToken = token;
+      },
+    });
+  });
+};
+
 window.turnstileCb = turnstileCb;
+
+window.onCaptchaloadCallback = onCaptchaloadCallback;
 
 if (getEnvType() !== 'dev') {
   await loadScript('https://challenges.cloudflare.com/turnstile/v0/api.js?onload=turnstileCb');
 }
-
 loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
+loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback&render=explicit');
 
 /**
  * Google Tag Manager
