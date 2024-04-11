@@ -1,5 +1,7 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import { fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant } from '../../scripts/mockapi.js';
+import {
+  fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant,
+} from '../../scripts/mockapi.js';
 import {
   getResearchAPIUrl, observe, postFormData, Viewport,
 } from '../../scripts/blocks-utils.js';
