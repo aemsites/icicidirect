@@ -121,7 +121,7 @@ function createCardMetaElement(...cardMetaValues) {
   return postMeta;
 }
 
-function createPostTitle(title,shareLink) {
+function createPostTitle(title, shareLink) {
   const postTitle = document.createElement('h3');
   postTitle.classList.add('card-title');
   const postLink = document.createElement('a');
@@ -174,14 +174,14 @@ function createCards(container, data, tabId, cardWidth) {
     switch (tabId.toLowerCase()) {
       case 'videos':
         textContent.appendChild(createCardMetaElement(item.PublishedOn, item.Author));
-        textContent.appendChild(createPostTitle(item.Title,getVideosShareLink(item.PermLink)));
+        textContent.appendChild(createPostTitle(item.Title, getVideosShareLink(item.PermLink)));
         textContent.appendChild(createSocialLinkElement(getVideosShareLink(item.PermLink)));
         mediaWrapper.setAttribute('share-link', getVideosShareLink(item.PermLink));
         createPicture(getVideosThumbnail(item.Link), mediaWrapper);
         break;
       case 'podcasts':
         textContent.appendChild(createCardMetaElement(item.PublishedOn, '10:00 Minutes'));
-        textContent.appendChild(createPostTitle(item.Title,getPodcastsShareLink(item.PermLink)));
+        textContent.appendChild(createPostTitle(item.Title, getPodcastsShareLink(item.PermLink)));
         textContent.appendChild(createSocialLinkElement(getPodcastsShareLink(item.PermLink)));
         mediaWrapper.setAttribute('share-link', getPodcastsShareLink(item.PermLink));
         createPicture(getPodcastsThumbnail(item.Image), mediaWrapper);
