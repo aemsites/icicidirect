@@ -500,7 +500,7 @@ main .section.shadow-gray {
 }
 
 main .section.background-lighter-gray {
-  background: var(--color-lighter-gray);
+  background: var(--color-lightest-gray);
 }
 
 main .margin-bottom {
