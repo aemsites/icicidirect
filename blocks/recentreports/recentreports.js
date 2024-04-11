@@ -22,11 +22,28 @@ function decorateBoxHeader(title, reportLink) {
 function formatDate(dateString) {
   if(dateString){
     const date = new Date(dateString);
-    const options = { day: 'numeric', month: 'short', year: 'numeric', hour: 'numeric', minute: 'numeric' };
-    return date.toLocaleDateString('en-US', options);
+    const day = date.getDate().toString().padStart(2, '0');
+    const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
+    const year = date.getFullYear();
+    const hour = date.getHours().toString().padStart(2, '0');
+    const minute = date.getMinutes().toString().padStart(2, '0');
+    
+    return `${day} ${month} ${year} | ${hour}:${minute}`;
   }
   return "";
 }
+
+function formatPriceInRupees(price) {
+  // Check for empty or null input
+  if (price === null || price === "") {
+      return "";
+  }
+  const numericPrice = Number(price);
+  const formattedPrice = numericPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
+  // Remove the rupee sign
+  return formattedPrice.slice(1);
+}
+
 
 function decorateDataInBox(label, value, rowClass) {
   const div = createElement('div', rowClass);
@@ -90,7 +107,7 @@ function renderRecentReportsCards( recentReportsDataArray, carouselItems, blockC
   recentReportsDataArray.Data.Table.forEach((item) => {
     const reportBox = createReportBox(
       item.COM_NAME,
-      item.TARGET_PRICE,
+      formatPriceInRupees(item.TARGET_PRICE),
       item.RATING,
       formatDate(item.REP_RELEASE_DTM),
       item.REPORT_PDF_LINK,
