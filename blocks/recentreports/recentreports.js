@@ -1,8 +1,7 @@
 import {
   buildBlock, decorateBlock, loadBlock, readBlockConfig,
 } from '../../scripts/aem.js';
-import { callAPI } from '../../scripts/mockapi.js';
-import { createElement, observe, getResearchAPIUrl, fetchData } from '../../scripts/blocks-utils.js';
+import { createElement, observe, getResearchAPIUrl, getDataFromAPI } from '../../scripts/blocks-utils.js';
 
 function decorateBoxHeader(title, reportLink) {
   const heading = createElement('h3', '');
@@ -165,12 +164,12 @@ export default async function decorate(block) {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      fetchData(getResearchAPIUrl(), async (error, recentReportsDataArray = []) => {
+      getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
         if (recentReportsDataArray) {
           renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCfg);
           observe(block, loadCarousel, carouselItems);
         }
-      }, 'GetResearchRecentReports');
+      });
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);
