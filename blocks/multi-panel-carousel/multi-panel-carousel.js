@@ -1,5 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import {fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant} from '../../scripts/mockapi.js';
+import { fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant } from '../../scripts/mockapi.js';
 import {
   getResearchAPIUrl, observe, postFormData, Viewport,
 } from '../../scripts/blocks-utils.js';
@@ -338,6 +338,7 @@ function getRecommendationsCard(companies, type) {
 async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  // to be removed once oneclickportfolio api is ready
   if (type === 'oneclickportfolio') {
     fetchRecommendations(type).then((companies) => {
       if (companies) {
