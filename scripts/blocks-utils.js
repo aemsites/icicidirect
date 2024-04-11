@@ -1,4 +1,6 @@
-import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
+import {
+  createOptimizedPicture, readBlockConfig, toCamelCase, toClassName,
+} from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
 const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
@@ -279,6 +281,47 @@ function decorateQuickLinks(main) {
   main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
 }
 
+function readUpdateBlockConfig(block) {
+  const config = {};
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    if (row.children) {
+      const cols = [...row.children];
+      if (cols[1]) {
+        const col = cols[1];
+        const name = toClassName(cols[0].textContent);
+        if (block.classList.contains('block') && block.hasAttribute('data-block-name')) {
+          cols[0].classList.add(`block-${block.getAttribute('data-block-name')}-${name}`);
+        }
+        let value = '';
+        if (col.querySelector('a')) {
+          const as = [...col.querySelectorAll('a')];
+          if (as.length === 1) {
+            value = as[0].href;
+          } else {
+            value = as.map((a) => a.href);
+          }
+        } else if (col.querySelector('img')) {
+          const imgs = [...col.querySelectorAll('img')];
+          if (imgs.length === 1) {
+            value = imgs[0].src;
+          } else {
+            value = imgs.map((img) => img.src);
+          }
+        } else if (col.querySelector('p')) {
+          const ps = [...col.querySelectorAll('p')];
+          if (ps.length === 1) {
+            value = ps[0].textContent;
+          } else {
+            value = ps.map((p) => p.textContent);
+          }
+        } else value = row.children[1].textContent;
+        config[name] = value;
+      }
+    }
+  });
+  return config;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -294,4 +337,5 @@ export {
   getMarketingAPIUrl,
   getDataFromAPI,
   postFormData,
+  readUpdateBlockConfig,
 };
