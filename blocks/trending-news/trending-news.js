@@ -93,7 +93,7 @@ async function generateNewsCard(block) {
     if (apiResponse) {
       const jsonResult = parseResponse(apiResponse);
       jsonResult.forEach((item) => {
-        if(item.PermLink) {
+        if (item.PermLink) {
           const slide = document.createElement('div');
           slide.className = 'news-card';
           const article = createNewsCards(item);
