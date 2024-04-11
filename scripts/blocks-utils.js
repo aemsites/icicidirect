@@ -279,6 +279,23 @@ function decorateQuickLinks(main) {
   main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
 }
 
+/**
+ * Parses the response from the Secure Worker API.
+ * @param {Object} apiResponse - Response from the Secure Worker API.
+ * @returns {Object} - Parsed JSON object.
+ */
+function parseResponse(apiResponse) {
+  const result = [];
+  apiResponse.Data.forEach((item) => {
+    const jsonObject = {};
+    item.forEach((data) => {
+      jsonObject[data.Key] = data.Value;
+    });
+    result.push(jsonObject);
+  });
+  return result;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -294,4 +311,5 @@ export {
   getMarketingAPIUrl,
   getDataFromAPI,
   postFormData,
+  parseResponse,
 };
