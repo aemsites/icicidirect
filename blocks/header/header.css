@@ -384,8 +384,9 @@
 }
 
 /* search result popup related styles */
-.block.header .search-bar .search-box .search-results-popup{
+.block.header .search-bar .search-box .search-results-popup {
   display: none;
+  max-height: 0;
 }
 
 .block.header .search-bar .search-box .search-results-popup.visible {
@@ -405,6 +406,12 @@
   overflow: auto;
   border-radius: 10px;
   border-top-left-radius: 0;
+  transition: max-height 1s ease-out;
+}
+
+.block.header .search-bar .search-box .search-result-none {
+  font-size: 14px;
+  color: gray;
 }
 
 .block.header .search-bar .search-results-popup .category > span {

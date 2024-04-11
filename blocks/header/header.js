@@ -147,7 +147,6 @@ const getSearchCategoryDropDown = (fragment) => {
 const buildSearchResultsPopup = (block) => {
   const searchResultsPopup = document.createElement('div');
   searchResultsPopup.className = 'search-results-popup';
-  searchResultsPopup.classList.add('visible');
   searchResultsPopup.id = 'search-results-popup';
   const searchResultsPopupContainer = document.createElement('div');
   searchResultsPopupContainer.className = 'search-results-popup-container';
@@ -669,15 +668,28 @@ const buildBondsList = (bondsList) => {
   });
 };
 
+const buildNoResultsFound = () => {
+  const searchResultsContainer = document.querySelector('.block.header .search-results-popup-container');
+  searchResultsContainer.innerHTML = `
+    <span class='search-result-none'>
+      No records found
+    </span>
+  `;
+};
 /**
  * Returns the result of the global search data
+ * @param {*} category the category within which to search
  * @param {*} keyword the keyword to be searched
  */
-const handleSearchData = async (keyword) => {
+const handleSearchData = async (category, keyword) => {
   if (!keyword) {
     return;
   }
-  const results = await globalSearchAPI(keyword);
+  const results = await globalSearchAPI(category, keyword);
+  if (!results) {
+    buildNoResultsFound();
+    return;
+  }
   buildEquityList(results.filter((result) => result.type === 'eq'));
   buildMutualFundsList(results.filter((result) => result.type === 'mf'));
   buildCurrencyList(results.filter((result) => result.type === 'currency'));
@@ -733,8 +745,26 @@ const addHeaderEventHandlers = () => {
   const searchBarInput = document.getElementById('global-search');
   searchBarInput.addEventListener('input', debounce((event) => {
     const searchValue = event.target.value;
-    handleSearchData(searchValue);
+    if (searchValue === '') {
+      document.getElementById('search-results-popup').classList.remove('visible');
+      return;
+    }
+    const selectedCategoryId = document.querySelector('.block.header .category-picker .selected-category').id;
+    handleSearchData(selectedCategoryId, searchValue);
+    document.getElementById('search-results-popup').classList.add('visible');
   }), 500);
+
+  /**
+   * Handler to dismiss the search bar when clicked outside
+   * */
+  document.addEventListener('click', (event) => {
+    const searchResultsPopup = document.getElementById('search-results-popup');
+    const isClickedOnSearchBar = searchBarInput.contains(event.target);
+    const isClickedOnSearchResults = searchResultsPopup?.contains(event.target);
+    if (!isClickedOnSearchBar && !isClickedOnSearchResults) {
+      searchResultsPopup?.classList.remove('visible');
+    }
+  });
 };
 
 /**
