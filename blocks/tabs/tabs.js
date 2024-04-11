@@ -121,24 +121,24 @@ function createCardMetaElement(...cardMetaValues) {
   return postMeta;
 }
 
-function createPostTitle(item) {
+function createPostTitle(title,shareLink) {
   const postTitle = document.createElement('h3');
   postTitle.classList.add('card-title');
   const postLink = document.createElement('a');
-  postLink.setAttribute('href', item.shareLink);
+  postLink.setAttribute('href', shareLink);
   postLink.setAttribute('target', '_blank');
-  postLink.textContent = item.Title;
+  postLink.textContent = title;
   postTitle.appendChild(postLink);
   return postTitle;
 }
 
-function createSocialLinkElement(item) {
+function createSocialLinkElement(shareLink) {
   const socialLink = document.createElement('div');
   socialLink.classList.add('social-link');
   const socialAnchor = document.createElement('a');
   const socialIcon = document.createElement('i');
   socialIcon.classList.add('fa', 'fa-share', 'icon');
-  socialAnchor.dataset.href = item.shareLink;
+  socialAnchor.dataset.href = shareLink;
   socialAnchor.addEventListener('click', () => handleSocialShareClick(socialAnchor));
   socialAnchor.appendChild(socialIcon);
   socialLink.appendChild(socialAnchor);
@@ -174,20 +174,21 @@ function createCards(container, data, tabId, cardWidth) {
     switch (tabId.toLowerCase()) {
       case 'videos':
         textContent.appendChild(createCardMetaElement(item.PublishedOn, item.Author));
+        textContent.appendChild(createPostTitle(item.Title,getVideosShareLink(item.PermLink)));
+        textContent.appendChild(createSocialLinkElement(getVideosShareLink(item.PermLink)));
         mediaWrapper.setAttribute('share-link', getVideosShareLink(item.PermLink));
         createPicture(getVideosThumbnail(item.Link), mediaWrapper);
         break;
       case 'podcasts':
         textContent.appendChild(createCardMetaElement(item.PublishedOn, '10:00 Minutes'));
+        textContent.appendChild(createPostTitle(item.Title,getPodcastsShareLink(item.PermLink)));
+        textContent.appendChild(createSocialLinkElement(getPodcastsShareLink(item.PermLink)));
         mediaWrapper.setAttribute('share-link', getPodcastsShareLink(item.PermLink));
         createPicture(getPodcastsThumbnail(item.Image), mediaWrapper);
         break;
       default:
         break;
     }
-
-    textContent.appendChild(createPostTitle(item));
-    textContent.appendChild(createSocialLinkElement(item));
 
     // Append picture-wrapper and text-content to cardInfo
     cardInfo.appendChild(mediaWrapper);
