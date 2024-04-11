@@ -185,6 +185,7 @@
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
   --space-15px: 0.938rem;  
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -331,6 +332,10 @@ body {
 
 body.appear {
   display: block;
+}
+
+body.modal-open {
+  overflow: hidden;
 }
 
 h1, h2, h3,
@@ -546,5 +551,4 @@ main .section.background-gray {
     h4 { font-size: var(--h4-font-size-desktop); }
     h5 { font-size: var(--h5-font-size-desktop); }
   }
-}
 }
