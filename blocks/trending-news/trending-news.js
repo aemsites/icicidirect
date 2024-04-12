@@ -1,10 +1,22 @@
-import { getHostUrl } from '../../scripts/mockapi.js';
 import {
-  Viewport, createPictureElement, observe, fetchData,
+  getResearchAPIUrl, postFormData,
+  Viewport, createPictureElement, observe, parseResponse, getOriginUrl,
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
 const placeholders = await fetchPlaceholders();
+const ICICI_DIRECT_NEWS_HOST = 'https://www.icicidirect.com/research/equity/trending-news/';
+const ICICI_NEWS_THUMBNAIL_ICICI_HOST = 'https://www.icicidirect.com/images/';
+
+function getNewsShareLink(permLink) {
+  return ICICI_DIRECT_NEWS_HOST + permLink;
+}
+
+function getNewsThumbnail(image, author) {
+  if (author.toLowerCase() === 'icici securities') return ICICI_NEWS_THUMBNAIL_ICICI_HOST + image;
+  if (author.toLowerCase() === 'finoux') return `${getOriginUrl()}/images/${image}`;
+  return '';
+}
 
 function createDiscoverMore(discovermorelink) {
   const discoverMore = document.createElement('div');
@@ -22,14 +34,14 @@ function createDiscoverMore(discovermorelink) {
   return discoverMore;
 }
 
-function createNewsCards(news) {
+function createNewsCards(item) {
   const article = document.createElement('div');
   article.className = 'article';
 
   const mediaWrapper = document.createElement('div');
   mediaWrapper.className = 'picture-wrapper';
 
-  const picture = createPictureElement(news.imgUrl, 'article-thumbnail', false);
+  const picture = createPictureElement(getNewsThumbnail(item.Image, item.Author), 'article-thumbnail', false);
 
   mediaWrapper.appendChild(picture);
 
@@ -39,10 +51,10 @@ function createNewsCards(news) {
   const h3 = document.createElement('h3');
   h3.className = 'post-title';
   const a = document.createElement('a');
-  a.href = news.link;
+  a.href = getNewsShareLink(item.PermLink);
   a.target = '_blank';
   a.tabIndex = '0';
-  a.textContent = news.title;
+  a.textContent = item.Title;
   h3.appendChild(a);
   textContent.appendChild(h3);
 
@@ -51,9 +63,9 @@ function createNewsCards(news) {
   const iconSpan = document.createElement('span');
   iconSpan.className = 'icon icon-icon-time';
   const abbr = document.createElement('abbr');
-  abbr.textContent = `${news.date} `;
+  abbr.textContent = `${item.PublishedOn} `;
   const abbrSource = document.createElement('abbr');
-  abbrSource.textContent = news.source;
+  abbrSource.textContent = item.Author;
   postMeta.appendChild(iconSpan);
   postMeta.appendChild(abbr);
   postMeta.appendChild(abbrSource);
@@ -72,14 +84,21 @@ function createNewsCards(news) {
 
 async function generateNewsCard(block) {
   const newsTrack = block.querySelector('.news-track');
-  fetchData(`${getHostUrl()}/scripts/mock-trending-news.json`, async (error, data = []) => {
-    if (data) {
-      data.forEach((item) => {
-        const slide = document.createElement('div');
-        slide.className = 'news-card';
-        const article = createNewsCards(item);
-        slide.appendChild(article);
-        newsTrack.appendChild(slide);
+  const formData = new FormData();
+
+  formData.append('apiName', 'GetTrendingNews');
+  formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '4' }));
+  postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
+    if (apiResponse) {
+      const jsonResult = parseResponse(apiResponse);
+      jsonResult.forEach((item) => {
+        if (item.PermLink) {
+          const slide = document.createElement('div');
+          slide.className = 'news-card';
+          const article = createNewsCards(item);
+          slide.appendChild(article);
+          newsTrack.appendChild(slide);
+        }
       });
     }
   });
@@ -135,9 +154,9 @@ const intervalId = setInterval(() => {
   const firstCard = document.querySelector('.news-track .news-card');
   const cardSize = firstCard ? firstCard.offsetWidth : 0;
   const offset = allowedCardsCount();
-  const cardsarry = Array.from(cards);
+  const cardsArray = Array.from(cards);
   if (offset >= 4) {
-    cardsarry.forEach(((card) => {
+    cardsArray.forEach(((card) => {
       card.style.opacity = 1;
     }));
     newsTrack.style.transform = 'translateX(0px)';
