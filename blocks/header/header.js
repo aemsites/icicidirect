@@ -150,7 +150,6 @@ const buildSearchResultsPopup = (block) => {
   searchResultsPopup.id = 'search-results-popup';
   const searchResultsPopupContainer = document.createElement('div');
   searchResultsPopupContainer.className = 'search-results-popup-container';
-  // TODO: Fetch the categories from the word document drop down list
   searchResultsPopupContainer.innerHTML = `
     <div class="category equity">
       <span>Equity</span>
@@ -794,6 +793,18 @@ const addHeaderEventHandlers = () => {
     const isClickedOnSearchIcon = collapsedSearchIcon.contains(event.target);
     if (!isClickedOnFloatingSearchBar && !isClickedOnSearchIcon) {
       floatingSearchBar?.classList.remove('floating-visible');
+    }
+  });
+
+  /**
+   * Hide the floating search bar when window size is more than 768px
+   */
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) {
+      const floatingSearchBar = document.querySelector('.block.header .search-bar-container.floating-visible');
+      if (floatingSearchBar) {
+        floatingSearchBar.classList.remove('floating-visible');
+      }
     }
   });
 };
