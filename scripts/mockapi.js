@@ -86,10 +86,6 @@ async function fetchRapidResultMockData() {
   }
 }
 
-async function callMockBlogAPI() {
-  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
-}
-
 async function callAPI(apiName) {
   const endpoint = apiEndPoints[apiName];
   if (!endpoint) {
@@ -124,7 +120,6 @@ export {
   getMarginActionUrl,
   mockPredicationConstant,
   fetchDynamicStockIndexData,
-  callMockBlogAPI,
   callAPI,
   fetchRapidResultMockData,
   getHostUrl,
