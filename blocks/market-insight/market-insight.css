@@ -5,6 +5,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1.25rem;
+  min-height: 18.75rem;
 }
 
 .block.market-insight > ul > li {
@@ -70,8 +71,9 @@
   color: var(--color-gray-dark);
 }
 
-.block.market-insight .cards-description p {
+.block.market-insight .cards-description * {
   font: var(--font-weight-regular) var(--heading-font-size-ms) / var(--heading-font-size-m) Poppins, "Poppins Fallback", sans-serif;
+  color: var(--color-gray-dark);
 }
 
 .block.market-insight .cards-powerby {
@@ -118,6 +120,16 @@
     max-width: 48%;
   }
 
+  .block.market-insight > ul.central-cards {
+    display: flex;
+    justify-content: center;
+}
+
+  .block.market-insight > ul.central-cards > li {
+    flex: 0 0 30%;
+    min-width: 14.5rem;
+  }
+
   .block.market-insight .cards-powerby .socialshare {
     width: unset;
   }
@@ -132,21 +144,5 @@
 
   .block.market-insight > ul > li {
     max-width: unset;
-  }
-}
-
-@keyframes fade-in {
-  0% {
-    opacity: 0;
-  }
-
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes move-in {
-  from {
-    transform: translate(0, -3.125rem);
   }
 }
