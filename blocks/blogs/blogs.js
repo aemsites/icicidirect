@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/named
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import {
-  createPictureElement, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, postFormData,
+  createPictureElement, getOriginUrl, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, postFormData,
 } from '../../scripts/blocks-utils.js';
 
 function createBlogCard(blogData) {
@@ -103,7 +103,7 @@ async function generateCardsView(block) {
           extractedData.title = item.Value;
         } else if (item.Key === 'SmallImage') {
           // Prepend URL to SmallImage value
-          extractedData.imageUrl = `${ICICI_FINOUX_HOST}/images/${item.Value}`;
+          extractedData.imageUrl = `${getOriginUrl()}/images/${item.Value}`;
         } else if (item.Key === 'ShortDescription') {
           const decodedString = decodeURIComponent(item.Value);
           const tempElement = document.createElement('div');
