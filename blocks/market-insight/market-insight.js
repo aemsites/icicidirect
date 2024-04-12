@@ -1,7 +1,12 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
-import { createElement, observe } from '../../scripts/blocks-utils.js';
-import { fetchMarketInsightMockData } from '../../scripts/mockapi.js';
+import {
+  createElement, observe, postFormData, getResearchAPIUrl, parseResponse,
+} from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
+
+const apiName = 'GetMarketInsights';
+const apiFormData = '{ pageNo: 1, pageSize: 5 }';
+const defaultCardsCount = 3;
 
 function decorateTitle(blockCfg) {
   const { title } = blockCfg;
@@ -24,9 +29,8 @@ function decorateDiscoverMore(blockCfg, placeholders) {
   return discoverMoreDiv;
 }
 
-async function decorateCards(block, placeholders, cardCount, previousNode) {
-  const queryObj = await fetchMarketInsightMockData();
-  const results = queryObj.map((el) => {
+function sortResult(sortData) {
+  const results = sortData.map((el) => {
     if (!el.PublishedOnDate) return el;
     const elArr = el.PublishedOnDate.split(' ');
     const publishDate = elArr[0];
@@ -39,10 +43,15 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     const dateB = new Date(b.PublishedOnDate);
     return dateB - dateA;
   });
+  return results;
+}
 
+function buildCards(results, cards, cardCount, placeholders) {
   const powerBy = (placeholders.powerby ?? '').trim();
   const publishedOn = (placeholders.publishedon ?? '').trim();
-  const ul = createElement('ul', '');
+  if (cardCount < defaultCardsCount) {
+    cards.classList.add('central-cards');
+  }
   const loopNum = results.length > cardCount ? cardCount : results.length;
   for (let index = 0; index < loopNum; index += 1) {
     const result = results[index];
@@ -88,20 +97,32 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     li.append(title);
     li.append(description);
     li.append(powerby);
-    ul.append(li);
+    cards.append(li);
   }
-  const parentDiv = previousNode.parentNode;
-  parentDiv.insertBefore(ul, previousNode);
+}
+
+async function decorateCards(block, placeholders, cards, cardCount) {
+  const formData = new FormData();
+  formData.append('apiName', apiName);
+  formData.append('inputJson', apiFormData);
+  postFormData(getResearchAPIUrl(), formData, (error, GetMarketInsights = []) => {
+    if (!GetMarketInsights || !GetMarketInsights.Data) return;
+    const formattedData = parseResponse(GetMarketInsights);
+    const results = sortResult(formattedData);
+    buildCards(results, cards, cardCount, placeholders);
+  }, apiName);
 }
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
   const blockCfg = readBlockConfig(block);
   const title = decorateTitle(blockCfg);
-  const cardCount = blockCfg.count ?? 3;
+  const cards = createElement('ul', '');
+  const cardCount = blockCfg.count ?? defaultCardsCount;
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
   block.textContent = '';
   block.append(title);
+  block.append(cards);
   block.append(discoverMoreButton);
-  observe(block, decorateCards, placeholders, cardCount, discoverMoreButton);
+  observe(block, decorateCards, placeholders, cards, cardCount);
 }

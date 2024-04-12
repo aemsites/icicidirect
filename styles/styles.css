@@ -30,6 +30,7 @@
   --color-deep-blue: #004A80;
   --color-light-blue: #4b9dff;
   --color-blue-dark: #053C6D;
+  --color-deep-blue-dark: #314467;
   --color-deep-purple: #1A0D7C;
   --color-white: #FFF;
   --color-green: #259702;
@@ -165,6 +166,7 @@
   --line-height-medium: 22px;
   --line-height-large: 24px;
   --line-height-xl: 28px;
+  --line-height-extra-large: 32px;
   --line-height-xxl: 42px;
   --line-height-wide: 45px;
   --line-height-xxxl:54px;
