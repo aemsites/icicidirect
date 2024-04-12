@@ -297,6 +297,17 @@ function parseResponse(apiResponse) {
   return result;
 }
 
+/* Helper for delaying something like
+takes function as argument, default timout = 200
+*/
+function debounce(func, timeout = 200) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+
 export {
   isInViewport,
   Viewport,
@@ -313,5 +324,6 @@ export {
   getDataFromAPI,
   postFormData,
   parseResponse,
+  debounce,
   ICICI_FINOUX_HOST,
 };
