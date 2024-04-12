@@ -2,14 +2,10 @@ import { fetchPlaceholders } from './aem.js';
 
 let isSocialShareDialogInitializing = false;
 
-function handleBodyScrollOnModalOpen() {
-  if (!document.body.classList.contains('modal-open')) {
+function handleBodyScroll(isModalOpen) {
+  if (isModalOpen && !document.body.classList.contains('modal-open')) {
     document.body.classList.add('modal-open');
-  }
-}
-
-function handleBodyScrollOnModalClose() {
-  if (document.body.classList.contains('modal-open')) {
+  } else if (!isModalOpen && document.body.classList.contains('modal-open')) {
     document.body.classList.remove('modal-open');
   }
 }
@@ -35,7 +31,7 @@ export async function handleSocialShareClick(anchor) {
     if (d.dataset?.link === link) {
       d.showModal();
       dialogAlreadyExists = true;
-      handleBodyScrollOnModalOpen();
+      handleBodyScroll(true);
     }
   });
 
@@ -58,7 +54,7 @@ export async function handleSocialShareClick(anchor) {
   function handleDialogClose() {
     isSocialShareDialogInitializing = false;
     dialog.close();
-    handleBodyScrollOnModalClose();
+    handleBodyScroll(false);
   }
 
   function handleDialogClick(event) {
@@ -129,7 +125,7 @@ export async function handleSocialShareClick(anchor) {
   document.body.appendChild(dialog);
 
   dialog.showModal();
-  handleBodyScrollOnModalOpen();
+  handleBodyScroll(true);
 }
 
 /**
