@@ -282,7 +282,15 @@ function decorateQuickLinks(main) {
   main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
 }
 
-function readUpdateBlockConfig(block) {
+/**
+ * Reads the block markup and returns the configuration object.
+ * This function returns the second column of each row as the value for the first column.
+ * If there are more than two columns in a row, the function ignores the rest of the columns.
+ * but those can be retrived by nextSibling property of the value column.
+ * @param block - The block element.
+ * @returns {{}} - The configuration object.
+ */
+function readBlockMarkup(block) {
   const config = {};
   block.querySelectorAll(':scope > div').forEach((row) => {
     if (row.children) {
@@ -290,33 +298,7 @@ function readUpdateBlockConfig(block) {
       if (cols[1]) {
         const col = cols[1];
         const name = toClassName(cols[0].textContent);
-        if (block.classList.contains('block') && block.hasAttribute('data-block-name')) {
-          cols[0].classList.add(`block-${block.getAttribute('data-block-name')}-${name}`);
-        }
-        let value = '';
-        if (col.querySelector('a')) {
-          const as = [...col.querySelectorAll('a')];
-          if (as.length === 1) {
-            value = as[0].href;
-          } else {
-            value = as.map((a) => a.href);
-          }
-        } else if (col.querySelector('img')) {
-          const imgs = [...col.querySelectorAll('img')];
-          if (imgs.length === 1) {
-            value = imgs[0].src;
-          } else {
-            value = imgs.map((img) => img.src);
-          }
-        } else if (col.querySelector('p')) {
-          const ps = [...col.querySelectorAll('p')];
-          if (ps.length === 1) {
-            value = ps[0].textContent;
-          } else {
-            value = ps.map((p) => p.textContent);
-          }
-        } else value = row.children[1].textContent;
-        config[name] = value;
+        config[name] = col;
       }
     }
   });
@@ -355,7 +337,7 @@ export {
   getMarketingAPIUrl,
   getDataFromAPI,
   postFormData,
-  readUpdateBlockConfig,
+  readBlockMarkup,
   parseResponse,
   ICICI_FINOUX_HOST,
 };
