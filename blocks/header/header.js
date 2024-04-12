@@ -553,6 +553,8 @@ const buildEquityList = (equityList) => {
       </button>
     </div>
     `;
+    equityItem.addEventListener('mouseenter', (event) => { event.target.classList.add('hovered'); });
+    equityItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     equityListContainer.appendChild(equityItem);
   });
 };
@@ -579,6 +581,8 @@ const buildMutualFundsList = (mutualFundsList) => {
       </button>
     </div>
     `;
+    mutualFundItem.addEventListener('mouseenter', (event) => { event.target.classList.add('hovered'); });
+    mutualFundItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     mutualFundsListContainer.appendChild(mutualFundItem);
   });
 };
@@ -665,6 +669,8 @@ const buildBondsList = (bondsList) => {
       </button>
     </div>
     `;
+    bondItem.addEventListener('mouseenter', (event) => { event.target.classList.add('hovered'); });
+    bondItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     bondsListContainer.appendChild(bondItem);
   });
 };

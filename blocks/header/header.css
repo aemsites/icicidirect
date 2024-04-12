@@ -493,6 +493,11 @@
   white-space: nowrap;
   margin-right: var(--space-5px);
   line-height: 2.375rem;
+  transition: color 0.3s ease;
+}
+
+.block.header .search-bar .search-results-popup .details-section .item-name:hover {
+  color: var(--color-dark);
 }
 
 .block.header .search-bar .search-results-popup .details-section .full-item-name {
@@ -502,6 +507,7 @@
   overflow: hidden;
   margin-right: var(--space-5px);
   line-height: 2.375rem;
+  transition: color 0.3s ease;
 }
 
 .block.header .search-bar .search-results-popup .details-section .full-item-name:hover {
@@ -554,9 +560,10 @@
   display: flex;
   align-items: flex-start;
   margin: 0 var(--heading-font-size-lmicro);
+  min-width: 100px;
 }
 
-.block.header .search-bar .search-results-popup .action-section .action-button{
+.block.header .search-bar .search-results-popup .action-section .action-button {
   font-size: var(--body-font-size-xs);
   font-weight: var(--font-weight-regular);
   color: var(--link-color-dark-blue);
@@ -566,9 +573,15 @@
   background-color: white;
   margin-right: var(--space-5px);
   cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.block.header .search-bar .search-results-popup .action-section .action-button:hover{
+.block.header .search-bar .search-results-popup .hovered .action-button {
+  opacity: 1;
+}
+
+.block.header .search-bar .search-results-popup .action-section .action-button:hover {
   background-color: var(--link-color-dark-blue);
   color: var(--color-white);
   transition: 0.3s;
