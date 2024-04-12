@@ -1,13 +1,12 @@
 import {
   getResearchAPIUrl, postFormData,
-  Viewport, createPictureElement, observe, parseResponse,
+  Viewport, createPictureElement, observe, parseResponse, getOriginUrl
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
 const placeholders = await fetchPlaceholders();
 const ICICI_DIRECT_NEWS_HOST = 'https://www.icicidirect.com/research/equity/trending-news/';
 const ICICI_NEWS_THUMBNAIL_ICICI_HOST = 'https://www.icicidirect.com/images/';
-const ICICI_NEWS_THUMBNAIL_FINOUX_HOST = 'http://icicidirect.finoux.com/images/';
 
 function getNewsShareLink(permLink) {
   return ICICI_DIRECT_NEWS_HOST + permLink;
@@ -15,7 +14,7 @@ function getNewsShareLink(permLink) {
 
 function getNewsThumbnail(image, author) {
   if (author.toLowerCase() === 'icici securities') return ICICI_NEWS_THUMBNAIL_ICICI_HOST + image;
-  if (author.toLowerCase() === 'finoux') return ICICI_NEWS_THUMBNAIL_FINOUX_HOST + image;
+  if (author.toLowerCase() === 'finoux') return `${getOriginUrl()}/images/${image}`;
   return '';
 }
 
