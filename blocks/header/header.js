@@ -234,6 +234,7 @@ const buildSearchIcon = () => {
   searchImageIcon.classList.add('search-icon', 'mobile-element');
   searchImageIcon.src = '../../icons/icon-search.svg';
   searchImageIcon.alt = 'Search';
+  searchImageIcon.id = 'collapsed-search-icon';
   return searchImageIcon;
 };
 
@@ -763,6 +764,30 @@ const addHeaderEventHandlers = () => {
     const isClickedOnSearchResults = searchResultsPopup?.contains(event.target);
     if (!isClickedOnSearchBar && !isClickedOnSearchResults) {
       searchResultsPopup?.classList.remove('visible');
+    }
+  });
+
+  /**
+   * Handler for opening floating search bar when search icon is clicked
+   */
+  const collapsedSearchIcon = document.getElementById('collapsed-search-icon');
+  collapsedSearchIcon.addEventListener('click', () => {
+    const searchBarConatiner = document.querySelector('.block.header .search-bar .search-bar-container');
+    searchBarConatiner.classList.toggle('floating-visible');
+  });
+
+  /**
+   * Handler for dismissing the floating search bar when clicked outside
+   */
+  document.addEventListener('click', (event) => {
+    const floatingSearchBar = document.querySelector('.block.header .search-bar-container.floating-visible');
+    if (!floatingSearchBar) {
+      return;
+    }
+    const isClickedOnFloatingSearchBar = floatingSearchBar.contains(event.target);
+    const isClickedOnSearchIcon = collapsedSearchIcon.contains(event.target);
+    if (!isClickedOnFloatingSearchBar && !isClickedOnSearchIcon) {
+      floatingSearchBar?.classList.remove('floating-visible');
     }
   });
 };

@@ -267,7 +267,7 @@
 
 /* Search bar related css */
 
-.block.header .search-bar .search-bar-container{
+.block.header .search-bar .search-bar-container {
   display: none;
   flex-direction: row;
   justify-content: center;
@@ -275,6 +275,20 @@
   color: var(--color-gray-dark);
   max-height: 2.125rem;
   margin-left: 1rem;
+}
+
+.block.header .search-bar .search-bar-container.floating-visible {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  background-color: var(--color-white);
+  max-height: none;
+  width: 100%;
+  top: 2.875rem;
+  left: 0;
+  margin: 0;
+  padding: 0 var(--space-15px);
 }
 
 .block.header .search-bar .category-picker {
@@ -287,6 +301,14 @@
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  z-index: 4;
+  background-color: var(--color-white);
+}
+
+.block.header .search-bar .search-bar-container.floating-visible .category-picker {
+  border-radius: 1.875rem;
+  width: 100%;
+  margin-bottom: var(--space-5px);
 }
 
 .block.header .search-bar .search-box {
@@ -301,6 +323,13 @@
   flex-direction: row;
   justify-content: space-between;
   position: relative;
+  z-index: 3;
+  background-color: var(--color-white);
+}
+
+.block.header .search-bar .search-bar-container.floating-visible .search-box {
+  border-radius: 1.875rem;
+  width: 100%;
 }
 
 .block.header .search-bar .search-box .search-field {
@@ -313,6 +342,10 @@
   margin-left: 0.9rem;
   min-width: inherit;
   position: relative;
+}
+
+.block.header .search-bar-container.floating-visible .category-picker .dropdown-select {
+  width: 100%;
 }
 
 .block.header .search-bar .category-picker .dropdown-toggle {
@@ -338,10 +371,16 @@
 .block.header .search-bar .category-picker .dropdown-menu-container.visible {
   display: block;
   position: absolute;
-  z-index: 2;
+  z-index: 4;
   top: 1.563rem;
   right: 0;
   user-select: none;
+}
+
+.block.header .search-bar-container.floating-visible .category-picker .dropdown-menu-container.visible {
+  width: 100%;
+  top: 1.9rem;
+  right: 0.5rem;
 }
 
 .block.header .search-bar .category-picker .dropdown-menu {
@@ -397,7 +436,7 @@
   width: 100%;
   left: 0;
   background-color: var(--color-white);
-  z-index: 2;
+  z-index: 4;
   text-align: left;
   border: var(--line-width-hairline) solid var(--border-color-lighter-gray);
   padding: var(--space-15px);
@@ -407,6 +446,12 @@
   border-radius: var(--space-10px);
   border-top-left-radius: 0;
   transition: max-height 1s ease-out;
+}
+
+.block.header .search-bar-container.floating-visible .search-results-popup.visible {
+  min-width: 100%;
+  top: 2.75rem;
+  border-radius: var(--space-10px);
 }
 
 .block.header .search-bar .search-box .search-result-none {
@@ -640,6 +685,42 @@
   width: 1.875rem;
   height: 1.25rem;
   margin-right: 0.6rem;
+}
+
+/* CSS styles to apply when the screen width is more than 480 px and less than 768px */
+@media screen and (width >= 30rem) and  (width < 48rem) {
+  .block.header .search-bar .search-bar-container.floating-visible {
+    flex-direction: row;
+    max-width: fit-content;
+    right: 0;
+    left: unset;
+  }
+
+  .block.header .search-bar .search-bar-container.floating-visible .category-picker {
+    border-radius: 1.875rem 0 0 1.875rem;
+    margin-bottom: 0;
+    width: auto;
+  }
+
+  .block.header .search-bar .search-bar-container.floating-visible .search-box {
+    border-radius: 0 1.875rem 1.875rem 0;
+    width: auto;
+    padding: 0.45rem 0;
+  }
+  
+  .block.header .search-bar-container.floating-visible .category-picker .dropdown-select {
+    width: auto;
+  }
+  
+  .block.header .search-bar-container.floating-visible .category-picker .dropdown-menu-container.visible {
+    width: auto;
+    right: 0;
+  }
+  
+  .block.header .search-bar-container.floating-visible .search-results-popup.visible {
+    min-width: 100%;
+    top: 2.3rem;
+  }
 }
 
 /* CSS styles to apply when the screen width is more than 576 px and less than 768px */
