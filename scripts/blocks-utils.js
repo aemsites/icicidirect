@@ -3,6 +3,7 @@ import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
 const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
 const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
+const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -279,6 +280,23 @@ function decorateQuickLinks(main) {
   main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
 }
 
+/**
+ * Parses the response from the Secure Worker API.
+ * @param {Object} apiResponse - Response from the Secure Worker API.
+ * @returns {Object} - Parsed JSON object.
+ */
+function parseResponse(apiResponse) {
+  const result = [];
+  apiResponse.Data.forEach((item) => {
+    const jsonObject = {};
+    item.forEach((data) => {
+      jsonObject[data.Key] = data.Value;
+    });
+    result.push(jsonObject);
+  });
+  return result;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -294,4 +312,6 @@ export {
   getMarketingAPIUrl,
   getDataFromAPI,
   postFormData,
+  parseResponse,
+  ICICI_FINOUX_HOST,
 };
