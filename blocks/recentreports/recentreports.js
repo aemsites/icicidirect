@@ -119,7 +119,6 @@ function renderRecentReportsCards( recentReportsDataArray, carouselItems, blockC
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
-  // carouselBlock.style.display = 'none';
   carouselBlock.innerHTML = '';
   block.classList.forEach((className) => {
     carouselBlock.classList.add(className);
