@@ -6,6 +6,34 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
 */
 import { fetchPlaceholders } from '../../scripts/aem.js';
 
+/**
+ * Extends the block for MultiSlide functionality.
+ * @param block
+ */
+function decorateMultiSiteCarousel(carouselBlock) {
+  const visibleSlides = parseInt(carouselBlock.dataset.visibleSlides, 10);
+
+  if (Number.isInteger(visibleSlides) && visibleSlides > 1) {
+    carouselBlock.classList.add('multi-slide');
+    carouselBlock.querySelector('.carousel .carousel-slides').style.setProperty('--visible-slides', visibleSlides);
+  }
+}
+
+/** Adjusts the indicators based on the current slide index.
+ * @param block
+ * @param slideIndex
+ */
+function adjustIndicators(block, slideIndex) {
+  const indicators = block.querySelectorAll('.carousel-slide-indicator');
+  indicators.forEach((indicator, idx) => {
+    if (idx !== slideIndex) {
+      indicator.querySelector('button').removeAttribute('disabled');
+    } else {
+      indicator.querySelector('button').setAttribute('disabled', 'true');
+    }
+  });
+}
+
 function updateActiveSlide(slide) {
   const block = slide.closest('.carousel');
   const slideIndex = parseInt(slide.dataset.slideIndex, 10);
@@ -23,15 +51,7 @@ function updateActiveSlide(slide) {
       }
     });
   });
-
-  const indicators = block.querySelectorAll('.carousel-slide-indicator');
-  indicators.forEach((indicator, idx) => {
-    if (idx !== slideIndex) {
-      indicator.querySelector('button').removeAttribute('disabled');
-    } else {
-      indicator.querySelector('button').setAttribute('disabled', 'true');
-    }
-  });
+  adjustIndicators(block, slideIndex);
 }
 
 function showSlide(block, slideIndex = 0) {
@@ -39,6 +59,9 @@ function showSlide(block, slideIndex = 0) {
   let realSlideIndex = slideIndex < 0 ? slides.length - 1 : slideIndex;
   if (slideIndex >= slides.length) realSlideIndex = 0;
   const activeSlide = slides[realSlideIndex];
+  slides.forEach((slide) => {
+    slide.dataset.mainSlide = slide === activeSlide;
+  });
   activeSlide
     .querySelectorAll('a')
     .forEach((link) => link.removeAttribute('tabindex'));
@@ -47,9 +70,10 @@ function showSlide(block, slideIndex = 0) {
     left: activeSlide.offsetLeft,
     behavior: 'smooth',
   });
+  adjustIndicators(block, realSlideIndex);
 }
 
-function bindEvents(block) {
+function bindEvents(block, isMultiSlide) {
   const slideIndicators = block.querySelector('.carousel-slide-indicators');
   if (!slideIndicators) return;
 
@@ -70,7 +94,15 @@ function bindEvents(block) {
   const slideObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) updateActiveSlide(entry.target);
+        if (entry.isIntersecting) {
+          if (isMultiSlide) {
+            if (entry.target?.dataset?.mainSlide === 'true') {
+              updateActiveSlide(entry.target);
+            }
+          } else {
+            updateActiveSlide(entry.target);
+          }
+        }
       });
     },
     { threshold: 0.5 },
@@ -101,12 +133,57 @@ function createSlide(row, slideIndex, carouselId) {
   return slide;
 }
 
+function registerAutoScroll(
+  block,
+  totalSlides,
+  isMultiSlide,
+  visibleSlides,
+  autoScrollCount,
+  autoRotateDelay = 5000,
+) {
+  let autoRotateCounter = 1;
+  let numberOfRotations = 0;
+  const rotateInterval = setInterval(() => {
+    const activeSlide = parseInt(block?.dataset?.activeSlide ?? '0', 10);
+    const lenOfSlidesWindow = visibleSlides ? visibleSlides - 1 : 0;
+    const nextSlide = (activeSlide + 1) % (totalSlides - lenOfSlidesWindow);
+    block.dataset.activeSlide = nextSlide;
+    showSlide(block, nextSlide);
+    autoRotateCounter += 1;
+    if (autoRotateCounter >= totalSlides - lenOfSlidesWindow) {
+      autoRotateCounter = 0;
+      numberOfRotations += 1;
+    }
+    if (
+      autoScrollCount !== 'Infinity'
+      && numberOfRotations >= parseInt(autoScrollCount, 10)
+    ) {
+      clearInterval(rotateInterval);
+    }
+  }, autoRotateDelay);
+}
+
 let carouselId = 0;
 export default async function decorate(block) {
+  const visibleSlides = parseInt(block.dataset.visibleSlides, 10);
+  const isMultiSlide = Number.isInteger(visibleSlides) && visibleSlides > 1;
+  let autoScrollCount = parseInt(block.dataset.autoScroll, 10);
+  let isAutoScroll = false;
+  if (autoScrollCount < 0) {
+    autoScrollCount = Infinity;
+    isAutoScroll = true;
+  } else {
+    isAutoScroll = Number.isInteger(autoScrollCount) && autoScrollCount > 0;
+  }
+  const autoScrollDelay = parseInt(block.dataset.autoScrollDelay, 10);
+  const autoScrollDelayInMilliseconds = Number.isInteger(autoScrollDelay)
+    ? autoScrollDelay * 1000
+    : 5000;
   carouselId += 1;
   block.setAttribute('id', `carousel-${carouselId}`);
   const rows = block.querySelectorAll(':scope > div');
-  const isSingleSlide = rows.length < 2;
+  const totalSlides = rows.length;
+  const isSingleSlide = totalSlides < 2;
 
   const placeholders = await fetchPlaceholders();
 
@@ -124,7 +201,7 @@ export default async function decorate(block) {
   block.prepend(slidesWrapper);
 
   let slideIndicators;
-  if (!isSingleSlide) {
+  if (!isSingleSlide || (isMultiSlide && totalSlides > visibleSlides)) {
     const slideIndicatorsNav = document.createElement('nav');
     slideIndicatorsNav.setAttribute(
       'aria-label',
@@ -155,14 +232,17 @@ export default async function decorate(block) {
   rows.forEach((row, idx) => {
     const slide = createSlide(row, idx, carouselId);
     slidesWrapper.append(slide);
+    if (isMultiSlide) {
+      if (idx === 0) {
+        slide.dataset.mainSlide = 'true';
+      }
+    }
 
-    if (slideIndicators) {
+    if (slideIndicators && (!isMultiSlide || idx <= totalSlides - visibleSlides)) {
       const indicator = document.createElement('li');
       indicator.classList.add('carousel-slide-indicator');
       indicator.dataset.targetSlide = idx;
-      indicator.innerHTML = `<button type="button"><span>${
-        placeholders.showSlide || 'Show Slide'
-      } ${idx + 1} ${placeholders.of || 'of'} ${rows.length}</span></button>`;
+      indicator.innerHTML = `<button type="button"><span>${placeholders.showSlide || 'Show Slide'} ${idx + 1} ${placeholders.of || 'of'} ${totalSlides}</span></button>`;
       slideIndicators.append(indicator);
     }
     row.remove();
@@ -171,7 +251,19 @@ export default async function decorate(block) {
   container.append(slidesWrapper);
   block.prepend(container);
 
+  decorateMultiSiteCarousel(block);
   if (!isSingleSlide) {
-    bindEvents(block);
+    bindEvents(block, isMultiSlide);
+  }
+
+  if (isAutoScroll) {
+    registerAutoScroll(
+      block,
+      totalSlides,
+      isMultiSlide,
+      visibleSlides,
+      autoScrollCount,
+      autoScrollDelayInMilliseconds,
+    );
   }
 }
