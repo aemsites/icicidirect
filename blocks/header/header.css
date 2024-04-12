@@ -385,7 +385,7 @@
 /* Topmost grey navigator related css */
 
 .block.header .global-navigator {
-  background-color: var(--color-lighter-gray);
+  background-color: var(--color-lightest-gray);
 }
 
 .block.header .global-navigator .section-container {
