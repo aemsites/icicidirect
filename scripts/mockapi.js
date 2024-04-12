@@ -97,6 +97,7 @@ async function callAPI(apiName) {
   }
   return fetchDataFromAPI(endpoint);
 }
+
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
