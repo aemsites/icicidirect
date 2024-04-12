@@ -1,4 +1,6 @@
-import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
+import {
+  createOptimizedPicture, readBlockConfig, toCamelCase, toClassName,
+} from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
 const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
@@ -281,6 +283,29 @@ function decorateQuickLinks(main) {
 }
 
 /**
+ * Reads the block markup and returns the configuration object.
+ * This function returns the second column of each row as the value for the first column.
+ * If there are more than two columns in a row, the function ignores the rest of the columns.
+ * but those can be retrived by nextSibling property of the value column.
+ * @param block - The block element.
+ * @returns {{}} - The configuration object.
+ */
+function readBlockMarkup(block) {
+  const config = {};
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    if (row.children) {
+      const cols = [...row.children];
+      if (cols[1]) {
+        const col = cols[1];
+        const name = toClassName(cols[0].textContent);
+        config[name] = col;
+      }
+    }
+  });
+  return config;
+}
+
+/**
  * Parses the response from the Secure Worker API.
  * @param {Object} apiResponse - Response from the Secure Worker API.
  * @returns {Object} - Parsed JSON object.
@@ -323,6 +348,7 @@ export {
   getMarketingAPIUrl,
   getDataFromAPI,
   postFormData,
+  readBlockMarkup,
   parseResponse,
   debounce,
   ICICI_FINOUX_HOST,
