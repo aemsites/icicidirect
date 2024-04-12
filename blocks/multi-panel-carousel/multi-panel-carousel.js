@@ -1,6 +1,6 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { fetchRecommendations, getMarginActionUrl, mockPredicationConstant } from '../../scripts/mockapi.js';
-import { observe, Viewport } from '../../scripts/blocks-utils.js';
+import { observe, readBlockMarkup, Viewport } from '../../scripts/blocks-utils.js';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -426,21 +426,13 @@ function addDiscoverLink(carouselBody, discoverLink) {
   }
 }
 
-function getHighlightDiv(block) {
-  const predicationDiv = block.querySelectorAll(':scope > div')[2].children[1];
-  return predicationDiv;
-}
-
-function getHighlightIcon(block) {
-  const iconElement = block.querySelector('picture');
-  return iconElement;
-}
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
+  const blockMarkup = readBlockMarkup(block);
   const { type } = blockConfig;
   const { title } = blockConfig;
-  const highlightDiv = getHighlightDiv(block);
-  const highlightIcon = getHighlightIcon(block);
+  const highlightDiv = blockMarkup.predication;
+  const highlightIcon = blockMarkup.targeticon.querySelector('picture');
   const discoverLink = blockConfig.discoverlink;
   const dropdowns = Array.isArray(blockConfig.dropdowns)
     ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
