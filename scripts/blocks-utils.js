@@ -324,7 +324,6 @@ export {
   getDataFromAPI,
   postFormData,
   parseResponse,
-  globalsearch
   debounce,
   ICICI_FINOUX_HOST,
 };
