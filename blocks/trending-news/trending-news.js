@@ -1,6 +1,6 @@
 import {
   getResearchAPIUrl, postFormData,
-  Viewport, createPictureElement, observe, parseResponse, getOriginUrl
+  Viewport, createPictureElement, observe, parseResponse, getOriginUrl,
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
