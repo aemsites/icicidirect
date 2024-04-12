@@ -1,18 +1,13 @@
-import {
-  getDataFromAPI, getResearchAPIUrl, observe, Viewport,
-} from '../../scripts/blocks-utils.js';
+import { fetchData, observe, Viewport } from '../../scripts/blocks-utils.js';
 import { fetchPlaceholders } from '../../scripts/aem.js';
+import { getHostUrl } from '../../scripts/mockapi.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
 
 function createMarketCommentaryCard(cardData, placeholders) {
   const {
-    articleUrl = 'https://www.icicidirect.com/share-market-today/market-news-commentary',
-    HEADING,
-    SECTION_NAME,
-    NEWS_DATE,
-    NEWS_TIME,
+    articleUrl, titleText, descriptionText, publicationTimeText, footerTimeText,
   } = cardData;
   const mainDiv = div(
     { class: 'card' },
@@ -20,15 +15,15 @@ function createMarketCommentaryCard(cardData, placeholders) {
       { href: articleUrl, target: '_blank' },
       div(
         { class: 'content' },
-        h4(HEADING),
-        p({ class: 'description' }, SECTION_NAME),
+        h4(titleText),
+        p({ class: 'description' }, descriptionText),
         div(
           { class: 'info' },
           p(
             span(`${placeholders.powerby}`),
           ),
           p(
-            span(`${placeholders.publishedon} ${NEWS_DATE}`),
+            span(`${placeholders.publishedon} ${publicationTimeText}`),
           ),
         ),
       ),
@@ -37,7 +32,7 @@ function createMarketCommentaryCard(cardData, placeholders) {
       { class: 'footer-row' },
       span({ class: 'footer-circle' }),
     ),
-    div({ class: 'footer-time' }, NEWS_TIME),
+    div({ class: 'footer-time' }, footerTimeText),
   );
   return mainDiv;
 }
@@ -104,15 +99,14 @@ function updateDots(block) {
 
 async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
-  getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
-    if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
-      return;
+  fetchData(`${getHostUrl()}/scripts/mock-commentarydata.json`, async (error, marketCommentaryDataArray = []) => {
+    if (marketCommentaryDataArray) {
+      marketCommentaryDataArray.forEach((blogData) => {
+        const card = createMarketCommentaryCard(blogData, placeholders);
+        blogsContainer.appendChild(card);
+      });
+      updateDots(block);
     }
-    marketCommentaryData.Data.Table.forEach((cardData) => {
-      const card = createMarketCommentaryCard(cardData, placeholders);
-      blogsContainer.appendChild(card);
-    });
-    updateDots(block);
   });
 }
 export default async function decorate(block) {
