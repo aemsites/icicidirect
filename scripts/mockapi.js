@@ -98,6 +98,10 @@ function getMarginActionUrl(actionName) {
   return marginActions[actionName];
 }
 
+async function globalSearchAPI() {
+  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-global-search.json`);
+}
+
 const fetchDynamicStockIndexData = () => [
   {
     id: 'spnNifty_n',
@@ -123,4 +127,5 @@ export {
   callAPI,
   fetchRapidResultMockData,
   getHostUrl,
+  globalSearchAPI,
 };
