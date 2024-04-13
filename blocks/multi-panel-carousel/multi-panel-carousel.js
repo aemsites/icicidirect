@@ -1,6 +1,10 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import { fetchRecommendations, getMarginActionUrl, mockPredicationConstant } from '../../scripts/mockapi.js';
-import { observe, readBlockMarkup, Viewport } from '../../scripts/blocks-utils.js';
+import {
+  fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant,
+} from '../../scripts/mockapi.js';
+import {
+  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport,
+} from '../../scripts/blocks-utils.js';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -256,7 +260,7 @@ function createValueContent(row, labelText, valueText, colType = 'value') {
   h5.innerHTML = valueText; // Using innerHTML to include <span> if necessary
 
   // Adding 'negative' or 'positive' class based on valueText for 'profit' and 'return'
-  if (colType !== 'value' && valueText.includes('-')) {
+  if (colType !== 'value' && valueText.toString().includes('-')) {
     h5.classList.add('negative');
   } else if (colType !== 'value') {
     h5.classList.add('positive');
@@ -336,13 +340,55 @@ function getRecommendationsCard(companies, type) {
 async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
-  fetchRecommendations(type).then((companies) => {
-    if (companies) {
-      const recommendationsCard = getRecommendationsCard(companies, type);
-      recommendationsCard.forEach((div) => {
-        carouselTrack.appendChild(div);
+  // to be removed once oneclickportfolio api is ready
+  if (type === 'oneclickportfolio') {
+    fetchRecommendations(type).then((companies) => {
+      if (companies) {
+        const recommendationsCard = getRecommendationsCard(companies, type);
+        recommendationsCard.forEach((div) => {
+          carouselTrack.appendChild(div);
+        });
+        setCarouselView(type, carouselSlider);
+      }
+    });
+    return;
+  }
+  const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
+  const jsonFormData = {
+    apiName,
+    inputJson: JSON.stringify({
+      rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
+    }),
+  };
+
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+    if (error === null) {
+      const recommendationArray = tradingData.Data.Table;
+      const companiesArray = [];
+      recommendationArray.forEach((company) => {
+        const companyObj = {};
+        companyObj.name = company.COM_NAME;
+        companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
+        companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
+        companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
+        companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
+
+        if (type === 'trading') {
+          companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
+        } else if (type === 'investing') {
+          companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
+          companyObj.reportLink = !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
+        }
+
+        companiesArray.push(companyObj);
       });
-      setCarouselView(type, carouselSlider);
+      if (companiesArray) {
+        const recommendationsCard = getRecommendationsCard(companiesArray, type);
+        recommendationsCard.forEach((div) => {
+          carouselTrack.appendChild(div);
+        });
+        setCarouselView(type, carouselSlider);
+      }
     }
   });
 }
