@@ -14,10 +14,6 @@ main .section .block.image-link-slider .block.carousel .carousel-slides img:not(
     visibility: hidden;
 }
 
-main .section .block.image-link-slider .block.carousel.multi-slide .carousel-slides {
-    justify-content: center;
-}
-
 main .section .block.image-link-slider .block.carousel.multi-slide .carousel-slides .carousel-slide {
     padding: 2rem;
 }
