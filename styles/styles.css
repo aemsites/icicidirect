@@ -186,7 +186,16 @@
   --space-12px: 0.75rem;
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
-  --space-15px: 0.938rem;
+  --space-15px: 0.938rem;  
+}
+
+/*
+ * backdrop psudeo element doesn't inherit css variables on Safari
+ * https://bugs.webkit.org/show_bug.cgi?id=263834
+ */
+::backdrop {
+  --modal-background-color: #000000BF;
+}
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -333,6 +342,10 @@ body {
 
 body.appear {
   display: block;
+}
+
+body.modal-open {
+  overflow: hidden;
 }
 
 h1, h2, h3,
