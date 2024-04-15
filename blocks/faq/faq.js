@@ -1,4 +1,5 @@
 import { createElement } from '../../scripts/blocks-utils.js';
+import { readBlockConfig } from '../../scripts/aem.js';
 
 function addEvent(faqTitle, block) {
   faqTitle.addEventListener('click', () => {
@@ -76,24 +77,21 @@ export default async function decorate(block) {
   const faqTitle = createElement('div', 'faq-title');
   const faqContent = createElement('div', 'faq-content');
   const faqButton = createElement('div', 'more-button');
-  let title = '';
-  let buttonTitle = '';
-  let expendButtonTitle = '';
-  [...block.children].forEach((child, i) => {
-    if (i === 0) {
-      title = [...child.children][1].innerHTML;
-    } else if (i === 1) {
-      buttonTitle = [...child.children][1].innerHTML;
-    } else if (i === 2) {
-      expendButtonTitle = [...child.children][1].innerHTML;
-    } else {
-      if ([...child.children].length === 3) {
-        [...child.children][0].remove();
-      }
+  const blockConfig = readBlockConfig(block);
+  const topTitle = blockConfig.title;
+  const buttonTitle = blockConfig['button-title'];
+  const expendButtonTitle = blockConfig['expend-button-title'];
+  let faqContentIndex = false;
+  [...block.children].forEach((child) => {
+    if ([...child.children][0].textContent === 'Contents') {
+      faqContentIndex = true;
+      [...child.children][0].remove();
+    }
+    if (faqContentIndex) {
       faqContent.append(child);
     }
   });
-  decorateTitle(faqTitle, title);
+  decorateTitle(faqTitle, topTitle);
   decorateContent(faqContent, block);
   decorateButton(faqButton, block, buttonTitle, expendButtonTitle);
 
