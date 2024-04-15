@@ -48,14 +48,6 @@
   transition: color 0.3s ease;
 }
 
-.block.sticky-footer .action-container .turnstile-container {
-  height: 4.063rem;
-}
-
-.block.sticky-footer .action-container .turnstile-container:not(:empty) {
-  margin: var(--space-8px) 1.25rem 0;
-}
-
 .block.sticky-footer .action-container .discover-more-button {
   text-transform: none;
   height: 2.5rem;
@@ -125,10 +117,5 @@
     font-size: var(--body-font-size-l);
     transition: all 0.3s ease ;
     height: 2.813rem;
-  }
-
- 
-  .block.sticky-footer .action-container .turnstile-container:not(:empty) {
-    margin: 0 1.25rem;
   }
 }
