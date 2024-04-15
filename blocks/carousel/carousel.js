@@ -6,9 +6,38 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
 */
 import { fetchPlaceholders } from '../../scripts/aem.js';
 
+/** Extends the block with additional functionality.
+ * @param block - the carousel block
+ * @returns {{autoScrollDelayInMilliseconds: (number|number), isAutoScroll: boolean,
+ * isMultiSlide: boolean, autoScrollCount: number, visibleSlides: (number|number)}}
+ */
+function extendedFunctionality(block) {
+  const visibleSlides = parseInt(block.dataset.visibleSlides, 10) ?? 1;
+  const isMultiSlide = Number.isInteger(visibleSlides) && visibleSlides > 1;
+  let autoScrollCount = parseInt(block.dataset.autoScroll, 10);
+  let isAutoScroll = false;
+  if (autoScrollCount < 0) {
+    autoScrollCount = Infinity;
+    isAutoScroll = true;
+  } else {
+    isAutoScroll = Number.isInteger(autoScrollCount) && autoScrollCount > 0;
+  }
+  const autoScrollDelay = parseInt(block.dataset.autoScrollDelay, 10);
+  const autoScrollDelayInMilliseconds = Number.isInteger(autoScrollDelay)
+    ? autoScrollDelay * 1000
+    : 5000;
+  return {
+    visibleSlides,
+    isMultiSlide,
+    autoScrollCount,
+    isAutoScroll,
+    autoScrollDelayInMilliseconds,
+  };
+}
+
 /**
  * Extends the block for MultiSlide functionality.
- * @param block
+ * @param block - the carousel block
  */
 function decorateMultiSiteCarousel(carouselBlock) {
   const visibleSlides = parseInt(carouselBlock.dataset.visibleSlides, 10);
@@ -20,8 +49,8 @@ function decorateMultiSiteCarousel(carouselBlock) {
 }
 
 /** Adjusts the indicators based on the current slide index.
- * @param block
- * @param slideIndex
+ * @param block - the carousel block
+ * @param slideIndex - the index of the current slide
  */
 function adjustIndicators(block, slideIndex) {
   const indicators = block.querySelectorAll('.carousel-slide-indicator');
@@ -71,6 +100,42 @@ function showSlide(block, slideIndex = 0) {
     behavior: 'smooth',
   });
   adjustIndicators(block, realSlideIndex);
+}
+
+/** Registers the auto-scroll functionality for the carousel.
+ * @param block - the carousel block
+ * @param totalSlides - the total number of slides
+ * @param visibleSlides - the number of visible slides
+ * @param autoScrollCount - the number of times to auto-scroll
+ * @param autoRotateDelay - the delay between auto-scrolls
+ */
+function registerAutoScroll(
+  block,
+  totalSlides,
+  visibleSlides,
+  autoScrollCount,
+  autoRotateDelay = 5000,
+) {
+  let autoRotateCounter = 1;
+  let numberOfRotations = 0;
+  const rotateInterval = setInterval(() => {
+    const activeSlide = parseInt(block?.dataset?.activeSlide ?? '0', 10);
+    const lenOfSlidesWindow = visibleSlides ? visibleSlides - 1 : 0;
+    const nextSlide = (activeSlide + 1) % (totalSlides - lenOfSlidesWindow);
+    block.dataset.activeSlide = nextSlide;
+    showSlide(block, nextSlide);
+    autoRotateCounter += 1;
+    if (autoRotateCounter >= totalSlides - lenOfSlidesWindow) {
+      autoRotateCounter = 0;
+      numberOfRotations += 1;
+    }
+    if (
+      autoScrollCount !== 'Infinity'
+        && numberOfRotations >= parseInt(autoScrollCount, 10)
+    ) {
+      clearInterval(rotateInterval);
+    }
+  }, autoRotateDelay);
 }
 
 function bindEvents(block, isMultiSlide) {
@@ -133,52 +198,15 @@ function createSlide(row, slideIndex, carouselId) {
   return slide;
 }
 
-function registerAutoScroll(
-  block,
-  totalSlides,
-  isMultiSlide,
-  visibleSlides,
-  autoScrollCount,
-  autoRotateDelay = 5000,
-) {
-  let autoRotateCounter = 1;
-  let numberOfRotations = 0;
-  const rotateInterval = setInterval(() => {
-    const activeSlide = parseInt(block?.dataset?.activeSlide ?? '0', 10);
-    const lenOfSlidesWindow = visibleSlides ? visibleSlides - 1 : 0;
-    const nextSlide = (activeSlide + 1) % (totalSlides - lenOfSlidesWindow);
-    block.dataset.activeSlide = nextSlide;
-    showSlide(block, nextSlide);
-    autoRotateCounter += 1;
-    if (autoRotateCounter >= totalSlides - lenOfSlidesWindow) {
-      autoRotateCounter = 0;
-      numberOfRotations += 1;
-    }
-    if (
-      autoScrollCount !== 'Infinity'
-      && numberOfRotations >= parseInt(autoScrollCount, 10)
-    ) {
-      clearInterval(rotateInterval);
-    }
-  }, autoRotateDelay);
-}
-
 let carouselId = 0;
 export default async function decorate(block) {
-  const visibleSlides = parseInt(block.dataset.visibleSlides, 10);
-  const isMultiSlide = Number.isInteger(visibleSlides) && visibleSlides > 1;
-  let autoScrollCount = parseInt(block.dataset.autoScroll, 10);
-  let isAutoScroll = false;
-  if (autoScrollCount < 0) {
-    autoScrollCount = Infinity;
-    isAutoScroll = true;
-  } else {
-    isAutoScroll = Number.isInteger(autoScrollCount) && autoScrollCount > 0;
-  }
-  const autoScrollDelay = parseInt(block.dataset.autoScrollDelay, 10);
-  const autoScrollDelayInMilliseconds = Number.isInteger(autoScrollDelay)
-    ? autoScrollDelay * 1000
-    : 5000;
+  const {
+    visibleSlides,
+    isMultiSlide,
+    autoScrollCount,
+    isAutoScroll,
+    autoScrollDelayInMilliseconds,
+  } = extendedFunctionality(block);
   carouselId += 1;
   block.setAttribute('id', `carousel-${carouselId}`);
   const rows = block.querySelectorAll(':scope > div');
@@ -260,7 +288,6 @@ export default async function decorate(block) {
     registerAutoScroll(
       block,
       totalSlides,
-      isMultiSlide,
       visibleSlides,
       autoScrollCount,
       autoScrollDelayInMilliseconds,
