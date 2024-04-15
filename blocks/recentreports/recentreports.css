@@ -24,10 +24,9 @@
   border: var(--line-width-hairline) solid var(--color-light-gray-dark);
   border-radius: var(--space-8px);
   padding: 1.25rem 1rem 4.06rem;
-  transition: all ease-in-out 0.3s;
   position: relative;
-  max-width: 240px;
-  display:inline-block;
+  max-width: 15rem; 
+  height:100%;
 }
 
 .block.recentreports .discover-more {
@@ -60,22 +59,6 @@
 
 .block.recentreports .discover-more .link-color .icon-up-arrow::before {
   content: "\e900";
-}
-
-@media (width >= 48rem) {
-  .block.recentreports .box {
-    max-width: 13.875rem;   
-  }
-
-.block.recentreports .discover-more {
-  text-align: right;
-  }
-}
-
-@media (width >= 64rem) {
-  .block.recentreports .box {
-    max-width: 18.375rem;
-  }
 }
 
 .block.recentreports .box .row > div {
@@ -121,6 +104,8 @@
   font-size: var(--heading-font-size-m);
   color: var(--color-gray-light-text);
   font-weight: var(--font-weight-medium);
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .block.recentreports .box .value-content .label-value.positive {
@@ -131,19 +116,13 @@
   position: relative;
   width: 100%;
   padding-right: var(--space-15px);
-  padding-left: var(--space-15px)
+  padding-left: var(--space-15px);
+  
 }
 
 .block.recentreports .target-price-div {
   flex: 0 0 50%;
   max-width: 50%;
-}
-
-@media (width >= 36rem) {
-  .block.recentreports .target-price-div {
-    flex: 0 0 66.6667%;
-    max-width: 66.6667%;
-  }
 }
 
 .block.recentreports .ratings-div {
@@ -156,5 +135,46 @@
   max-width: 100%;
 }
 
+main .section .block.recentreports .block.carousel.multi-slide .carousel-slide {
+  padding:var(--space-8px) var(--space-12px);
+ }
 
+@media (width >= 36rem) {
+  .block.recentreports .target-price-div {
+    flex: 0 0 66.6667%;
+    max-width: 66.6667%;
+  }
+}
+
+@media (width >= 48rem) {
+  .block.recentreports .box {
+    max-width: 13.875rem;   
+  }
+
+.block.recentreports .discover-more {
+  text-align: right;
+  }
+
+  main .section .block.recentreports .block.carousel.multi-slide .carousel-slides {
+    margin-inline: calc((100vw - ((var(--visible-slides) + 1) * 0.75rem + (var(--visible-slides) * 13.875rem))) / 2);
+    justify-content: flex-start;
+  }
+}
+
+@media (width >= 64rem) {
+  .block.recentreports .box {
+    max-width: 18.375rem;
+  }
+  main .section .block.recentreports .block.carousel.multi-slide .carousel-slides { 
+    margin: 0px;
+  }
+}
+
+main .section .block.recentreports .block.carousel.multi-slide .carousel-slide-indicators {
+  margin-top: 1.25rem;
+}
+
+main .section .block.recentreports .block.carousel.multi-slide.content-center .carousel-slides {
+  justify-content: center;
+}
 

@@ -79,7 +79,7 @@ function decorateBox(targetPrice, rating, date) {
   const targetPriceDiv = decorateDataInBox('Target Price', targetPrice, 'target-price-div');
   row.appendChild(targetPriceDiv);
 
-  const ratingDiv = decorateDataInBox('Rating', rating, 'rating-div');
+  const ratingDiv = decorateDataInBox('Rating', rating, 'ratings-div');
   row.appendChild(ratingDiv);
 
   const dateDiv = decorateDataInBox('Date', date, 'date-div');
@@ -102,9 +102,14 @@ function createReportBox(title, targetPrice, rating, date, reportLink, buttontit
   return slideDiv;
 }
 
-function renderRecentReportsCards( recentReportsDataArray, carouselItems, blockCfg) {
+function renderRecentReportsCards( recentReportsDataArray, carouselItems, maxLimit = 20, blockCfg) {
+  let slideCount = 0;
   const { buttontitle } = blockCfg;
-  recentReportsDataArray.Data.Table.forEach((item) => {
+  recentReportsDataArray.Data.Table.slice(0,6).forEach((item) => {
+    if (slideCount >= maxLimit) return;
+    const slide = document.createElement('li');
+    slide.classList.add('carousel-slide');
+
     const reportBox = createReportBox(
       item.COM_NAME,
       formatPriceInRupees(item.TARGET_PRICE),
@@ -113,12 +118,20 @@ function renderRecentReportsCards( recentReportsDataArray, carouselItems, blockC
       item.REPORT_PDF_LINK,
       buttontitle,
     );
-    carouselItems.append(reportBox);
+    slide.innerHTML = reportBox.innerHTML;
+    carouselItems.append(slide);
+    
+    slideCount += 1;
   });
+  
+
 }
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
+  carouselBlock.dataset.visibleSlides = block.dataset.visibleSlides || '';
+  carouselBlock.dataset.autoScroll = block.dataset.autoScroll || '';
+  carouselBlock.dataset.autoScrollDelay = block.dataset.autoScrollDelay || '';
   carouselBlock.innerHTML = '';
   block.classList.forEach((className) => {
     carouselBlock.classList.add(className);
@@ -137,6 +150,10 @@ async function loadCarousel(block, carouselItems) {
   carouselBlockParent.appendChild(carouselBlock);
   block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
   decorateBlock(carouselBlock);
+  if(carouselBlock.dataset.visibleSlides && carouselBlock.dataset.visibleSlides >= carouselItems.children.length){
+    carouselBlock.classList.add("content-center");
+  }
+  
   return loadBlock(carouselBlock);
 }
 
@@ -170,6 +187,7 @@ function addDiscoverLink(discoverMoreDiv, block) {
 }
 
 export default async function decorate(block) {
+ 
   const configElementsArray = Array.from(block.children);
   configElementsArray.map(async (configElement) => {
     configElement.style.display = 'none';
@@ -182,7 +200,7 @@ export default async function decorate(block) {
       const apiName = configNameElement.nextElementSibling.textContent.trim();
       getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
         if (recentReportsDataArray) {
-          renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCfg);
+          renderRecentReportsCards(recentReportsDataArray, carouselItems,block?.dataset?.maxLimit, blockCfg);
           observe(block, loadCarousel, carouselItems);
         }
       });
@@ -191,6 +209,19 @@ export default async function decorate(block) {
       handleTitleConfig(titleElement, block);
     } else if (configName === 'discoverlink') {
       addDiscoverLink(configNameElement.nextElementSibling, block);
+    } else if (configName === 'visible slides') {
+      const visibleSlides = configNameElement.nextElementSibling.textContent.trim();
+     
+      block.dataset.visibleSlides = visibleSlides;
+    } else if (configName === 'auto scroll') {
+      const autoScroll = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.autoScroll = autoScroll;
+    } else if (configName === 'auto scroll delay') {
+      const autoScrollDelay = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.autoScrollDelay = autoScrollDelay;
+    } else if (configName === 'max limit') {
+      const maxLimit = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.maxLimit = maxLimit;
     }
   });
 }
