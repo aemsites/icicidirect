@@ -1,8 +1,10 @@
 import { toClassName } from '../../scripts/aem.js';
 import {
   Viewport, createPictureElement, observe, getDataFromAPI, getResearchAPIUrl, parseResponse,
+  fetchData,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
+import { getHostUrl } from '../../scripts/mockapi.js';
 
 const ICICI_DIRECT_VIDEOS_HOST = 'https://www.icicidirect.com/research/videos/';
 const ICICI_DIRECT_PODCASTS_HOST = 'https://www.icicidirect.com/research/podcasts/';
@@ -50,7 +52,7 @@ function startCaraousal() {
   let nextIndex = 1;
   let direction = 1;
   const intervalId = setInterval(() => {
-    const tabPanel = document.querySelector('.tabs-panel[aria-hidden="false"]');
+    const tabPanel = document.querySelector('.block.media.tabs .tabs-panel[aria-hidden="false"]');
     const track = tabPanel.querySelector('.track');
     const trackWidth = track.offsetWidth;
     const dotsContainer = tabPanel.querySelector('.dots-container');
@@ -82,7 +84,7 @@ function startCaraousal() {
 
 function clearIntervalAndReset(intervalId) {
   clearInterval(intervalId);
-  const tabPanel = document.querySelector('.tabs-panel[aria-hidden="true"]');
+  const tabPanel = document.querySelector('.block.media.tabs .tabs-panel[aria-hidden="true"]');
   const dotsContainer = tabPanel.querySelector('.dots-container');
   const track = tabPanel.querySelector('.track');
   track.style.transform = 'translateX(-0px)';
@@ -99,7 +101,7 @@ let intervalId = 1;
 function targetedDotView(event) {
   const targetDotIndex = event.currentTarget.dataset.index;
   clearInterval(intervalId);
-  const tabPanel = document.querySelector('.tabs-panel[aria-hidden="false"]');
+  const tabPanel = document.querySelector('.block.media.tabs tabs-panel[aria-hidden="false"]');
   const track = tabPanel.querySelector('.track');
   const dotsContainer = tabPanel.querySelector('.dots-container');
   dotsContainer.querySelector('.active').classList.remove('active');
@@ -149,7 +151,7 @@ async function createPicture(imageUrl, mediaWrapper) {
   mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
 }
 
-function createCards(container, data, tabId, cardWidth) {
+function createMediaCards(container, data, tabId, cardWidth) {
   data.forEach((item) => {
     // Create slide element
     const card = document.createElement('div');
@@ -202,7 +204,7 @@ function createCards(container, data, tabId, cardWidth) {
   });
 }
 
-function createDots(totalCards, maxAllowedCards, dots) {
+function createMediaDots(totalCards, maxAllowedCards, dots) {
   const numberOfDotsToBeCreated = numberOfDots(totalCards, maxAllowedCards);
   let index = 1;
   while (index <= numberOfDotsToBeCreated) {
@@ -221,8 +223,8 @@ function createDots(totalCards, maxAllowedCards, dots) {
   }
 }
 
-async function createTabPanel(block) {
-  const tabsPanel = block.querySelectorAll('.tabs-panel');
+async function createMediaTabPanel(block) {
+  const tabsPanel = block.querySelectorAll('.block.media.tabs .tabs-panel');
   let cardWidth;
 
   for (let index = 0; index < tabsPanel.length; index += 1) {
@@ -266,8 +268,8 @@ async function createTabPanel(block) {
     const callback = async (error, apiResponse = []) => {
       if (apiResponse) {
         const jsonResult = parseResponse(apiResponse);
-        createCards(track, jsonResult, tabId, cardWidth);
-        createDots(jsonResult.length, allowedCardsCount(), dots);
+        createMediaCards(track, jsonResult, tabId, cardWidth);
+        createMediaDots(jsonResult.length, allowedCardsCount(), dots);
       }
     };
     switch (tabId) {
@@ -282,6 +284,151 @@ async function createTabPanel(block) {
     }
   }
   intervalId = startCaraousal();
+}
+
+function updateTrack(event) {
+  const targetDotIndex = event.currentTarget.dataset.index;
+  const tabPanel = document.querySelector('.block.ipo.tabs .tabs-panel[aria-hidden="false"]');
+  const track = tabPanel.querySelector('.track');
+  track.scrollTo({
+    top: 0,
+    left: track.children[targetDotIndex].offsetLeft,
+    behavior: 'smooth',
+  });
+}
+
+function setActiveDot(index) {
+  const tabPanel = document.querySelector('.block.ipo.tabs .tabs-panel[aria-hidden="false"]');
+  const dotsContainer = tabPanel.querySelector('.dots-container');
+  if (!dotsContainer.querySelector(`.dot[data-index='${index}']`).classList.contains('active')) {
+    dotsContainer.querySelector('.active')?.classList.remove('active');
+    dotsContainer.querySelector(`.dot[data-index='${index}']`).classList.add('active');
+  }
+}
+
+function createIPODots(block, apiKey, totalCards, maxAllowedCards, dots) {
+  const numberOfDotsToBeCreated = numberOfDots(totalCards, maxAllowedCards);
+  let index = 0;
+  while (index < numberOfDotsToBeCreated) {
+    const dot = document.createElement('button');
+    dot.className = 'dot';
+    dot.dataset.index = index;
+    dot.setAttribute('aria-label', `dot-${index}`);
+    dots.appendChild(dot);
+    dot.addEventListener('click', (event) => {
+      updateTrack(event);
+    });
+    index += 1;
+  }
+  const slideObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        setActiveDot(parseInt(entry.target.getAttribute('index'), 10));
+      });
+    },
+    { threshold: 0.8 },
+  );
+  block.querySelectorAll(`.slide-card.${apiKey}`).forEach((card) => {
+    slideObserver.observe(card);
+  });
+  if (numberOfDotsToBeCreated > 0) {
+    dots.firstElementChild.classList.add('active');
+  }
+}
+
+function createIPOCards(container, apiKey, data) {
+  let cardIndex = 0;
+  data.forEach((item) => {
+    const card = document.createElement('div');
+    card.classList.add('slide-card', apiKey);
+    card.setAttribute('id', `slide-card-${apiKey}-slide-${cardIndex}`);
+    card.setAttribute('index', cardIndex);
+    cardIndex += 1;
+    const ipoItemsDiv = document.createElement('div');
+    ipoItemsDiv.classList.add('ipo-items');
+
+    // Create the logo wrapper div
+    const logoWrapDiv = document.createElement('div');
+    logoWrapDiv.classList.add('logo-wrap');
+
+    const logoImg = createPictureElement(item.IPOLogoImage, 'Logo', false);
+
+    // Append the logo image to the logo wrapper div
+    logoWrapDiv.appendChild(logoImg);
+
+    // Create the heading element
+    const heading = document.createElement('h3');
+    heading.textContent = item.IpoFullName;
+
+    const ipoDetailsDiv = document.createElement('div');
+    ipoDetailsDiv.classList.add('ipo-details');
+
+    // Create and append the opening date paragraph
+    const openingDate = document.createElement('p');
+    openingDate.classList.add('open-close-text');
+    openingDate.innerHTML = `<strong>Opening Date</strong> ${item.IPOEventStartDate}`;
+
+    // Create and append the closing date paragraph
+    const closingDate = document.createElement('p');
+    closingDate.classList.add('open-close-text');
+    closingDate.innerHTML = `<strong>Closing Date</strong> ${item.IPOEventEndDate}`;
+
+    const btnWrapDiv = document.createElement('div');
+    btnWrapDiv.classList.add('btn-wrap');
+
+    // Create the "Know More" button
+    const knowMoreBtn = document.createElement('a');
+    knowMoreBtn.setAttribute('href', 'https://www.icicidirect.com/ipo');
+    knowMoreBtn.setAttribute('class', 'discover-more');
+    knowMoreBtn.setAttribute('target', '_blank');
+    knowMoreBtn.setAttribute('tabindex', '0');
+    knowMoreBtn.textContent = 'KNOW MORE';
+
+    // Append the "Know More" button to the button wrapper div
+    btnWrapDiv.appendChild(knowMoreBtn);
+
+    // Append all elements to the IPO details container div
+    ipoDetailsDiv.appendChild(openingDate);
+    ipoDetailsDiv.appendChild(closingDate);
+    ipoDetailsDiv.appendChild(btnWrapDiv);
+
+    // Append all elements to the IPO items container div
+    ipoItemsDiv.appendChild(logoWrapDiv);
+    ipoItemsDiv.appendChild(heading);
+    ipoItemsDiv.appendChild(ipoDetailsDiv);
+    card.appendChild(ipoItemsDiv);
+    container.appendChild(card);
+  });
+}
+
+async function createIPOTabPanel(block) {
+  const tabsPanel = block.querySelectorAll('.block.ipo.tabs .tabs-panel');
+
+  for (let index = 0; index < tabsPanel.length; index += 1) {
+    const tab = tabsPanel[index];
+    tab.textContent = '';
+    const apiKey = tab.getAttribute('api-key');
+    const slider = document.createElement('div');
+    slider.className = 'slider';
+    tab.appendChild(slider);
+    const track = document.createElement('div');
+    track.className = 'track';
+    const dots = document.createElement('div');
+    dots.className = 'dots-container';
+    slider.appendChild(track);
+    slider.appendChild(dots);
+
+    /* eslint-disable no-loop-func */
+    const callback = async (error, apiResponse = []) => {
+      if (apiResponse) {
+        createIPOCards(track, apiKey, apiResponse);
+        createIPODots(block, apiKey, apiResponse.length, 1, dots);
+      }
+    };
+    // TODO: replace with api response
+    if (apiKey === 'upcomingipo') fetchData(`${getHostUrl()}/scripts/mock-upcoming-ipodata.json`, callback);
+    else if (apiKey === 'recentipo') fetchData(`${getHostUrl()}/scripts/mock-recent-ipodata.json`, callback);
+  }
 }
 
 export default async function decorate(block) {
@@ -334,5 +481,7 @@ export default async function decorate(block) {
     tab.remove();
   });
   block.prepend(tablist);
-  observe(block, createTabPanel);
+
+  if (block.classList.contains('ipo')) observe(block, createIPOTabPanel);
+  else if (block.classList.contains('media')) observe(block, createMediaTabPanel);
 }
