@@ -229,7 +229,7 @@ export default async function decorate(block) {
   block.prepend(slidesWrapper);
 
   let slideIndicators;
-  if (!isSingleSlide || (isMultiSlide && totalSlides > visibleSlides)) {
+  if (!(isMultiSlide ? totalSlides <= visibleSlides : isSingleSlide)) {
     const slideIndicatorsNav = document.createElement('nav');
     slideIndicatorsNav.setAttribute(
       'aria-label',
