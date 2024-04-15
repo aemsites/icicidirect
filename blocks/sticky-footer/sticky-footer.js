@@ -97,9 +97,6 @@ export default async function decorate(block) {
   mobileNumberField.addEventListener('input', handleMobileNumberValidation);
   stickyFooterContainer.appendChild(mobileNumberField);
 
-  const tunrstileContainer = div({ class: 'turnstile-container' });
-  stickyFooterContainer.appendChild(tunrstileContainer);
-
   const openAccountButton = div({ class: 'open-account' });
   const aLink = a({ class: 'discover-more-button' });
   aLink.href = openAccountUrl;

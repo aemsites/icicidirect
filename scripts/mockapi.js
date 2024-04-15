@@ -86,10 +86,6 @@ async function fetchRapidResultMockData() {
   }
 }
 
-async function callMockBlogAPI() {
-  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-blogdata.json`);
-}
-
 async function callAPI(apiName) {
   const endpoint = apiEndPoints[apiName];
   if (!endpoint) {
@@ -100,6 +96,10 @@ async function callAPI(apiName) {
 
 function getMarginActionUrl(actionName) {
   return marginActions[actionName];
+}
+
+async function globalSearchAPI() {
+  return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-global-search.json`);
 }
 
 const fetchDynamicStockIndexData = () => [
@@ -124,8 +124,8 @@ export {
   getMarginActionUrl,
   mockPredicationConstant,
   fetchDynamicStockIndexData,
-  callMockBlogAPI,
   callAPI,
   fetchRapidResultMockData,
   getHostUrl,
+  globalSearchAPI,
 };
