@@ -538,6 +538,25 @@ main .section.background-gray {
   background: var(--background-color-deep-light-grey);
 }
 
+main .section.layout-60-40 .section-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+  
+main .section.layout-60-40 .section-container > div {
+   padding: 0 1rem;
+}
+  
+main .section.layout-60-40 .section-container > div:first-child {
+  flex: 0 0 58%;
+  max-width: 58%;
+}
+  
+main .section.layout-60-40 .section-container > div:nth-child(2) {
+  flex: 0 0 41%;
+  max-width: 41%;
+}
+
   @media (width >= 36rem) {
     main .section.top-bottom-padded {
       padding: 2.5rem 0;
@@ -609,4 +628,3 @@ main .section.background-gray {
       display: block;
     }
   }
-

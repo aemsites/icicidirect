@@ -17,3 +17,16 @@ main .section .block.image-link-slider .block.carousel .carousel-slides img:not(
 main .section .block.image-link-slider .block.carousel.multi-slide .carousel-slides .carousel-slide {
     padding: 2rem;
 }
+
+main .section .block.image-link-slider:not(.carousel) {
+    border: var(--space-1px) solid var(--border-color-gray);
+    border-radius: var(--space-10px);
+    margin: 1rem;
+}
+
+@media (width >= 48rem) {
+    main .section .block.image-link-slider {
+        margin: 0;
+        height: 100%;
+    }
+}
