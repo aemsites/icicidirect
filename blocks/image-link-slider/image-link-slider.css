@@ -20,6 +20,10 @@ main .section .block.image-link-slider {
     margin: 1rem;
 }
 
+main .section .block.image-link-slider .block.carousel {
+    border: 0;
+}
+
 @media (width >= 48rem) {
     main .section .block.image-link-slider {
         margin: 0;
