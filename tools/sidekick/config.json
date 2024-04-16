@@ -18,6 +18,15 @@
       "includePaths": [ "**.docx**" ],
       "passConfig": true,
       "paletteRect": "top: 50px; bottom: 10px; right: 10px; left: auto; width:400px; height: calc(100vh - 60px)"
+    },
+    {
+      "id": "validation",
+      "title": "Data Validation",
+      "environments": [ "edit", "preview" ],
+      "url": "/tools/sidekick/validation.html",
+      "includePaths": [ "**.docx**" ],
+      "isPalette": true,
+      "event": "foo"
     }
   ]
 }
