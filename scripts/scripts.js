@@ -14,7 +14,7 @@ import {
   loadScript,
 } from './aem.js';
 
-import { decorateQuickLinks } from './blocks-utils.js';
+import { decorateQuickLinks, getEnvType } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -133,6 +133,16 @@ async function loadEager(doc) {
   }
 }
 
+function loadAdobeLaunch() {
+  const adobeLaunchSrc = {
+    dev: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    preview: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    live: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+  };
+  loadScript(adobeLaunchSrc[getEnvType()], { async: true });
+}
+
 /**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
@@ -154,6 +164,7 @@ async function loadLazy(doc) {
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
+  loadAdobeLaunch();
 }
 
 /**
