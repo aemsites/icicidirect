@@ -14,7 +14,7 @@ import {
   loadScript,
 } from './aem.js';
 
-import { decorateQuickLinks } from './blocks-utils.js';
+import { decorateQuickLinks, getEnvType } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -165,9 +165,19 @@ function loadDelayed() {
   window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
 }
+function loadAdobeLaunch() {
+  const adobeLaunchSrc = {
+    dev: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    preview: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    live: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+  };
+  loadScript(adobeLaunchSrc[getEnvType()], { async: true });
+}
 
 async function loadPage() {
   await loadEager(document);
+  setTimeout(loadAdobeLaunch, 1500);
   await loadLazy(document);
   loadDelayed();
 }
