@@ -14,14 +14,10 @@ main .section .block.image-link-slider .block.carousel .carousel-slides img:not(
     visibility: hidden;
 }
 
-main .section .block.image-link-slider {
+main .section .block.image-link-slider:not(.carousel) {
     border: var(--space-1px) solid var(--border-color-gray);
     border-radius: var(--space-10px);
     margin: 1rem;
-}
-
-main .section .block.image-link-slider .block.carousel {
-    border: 0;
 }
 
 @media (width >= 48rem) {
