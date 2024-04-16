@@ -186,7 +186,7 @@
   --space-12px: 0.75rem;
   --space-13px: 0.813rem;
   --space-14px: 0.875rem;
-  --space-15px: 0.938rem;  
+  --space-15px: 0.938rem;
 }
 
 /*
@@ -609,4 +609,4 @@ main .section.background-gray {
       display: block;
     }
   }
-}
+
