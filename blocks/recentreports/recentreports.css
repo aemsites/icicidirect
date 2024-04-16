@@ -165,8 +165,9 @@ main .section .block.recentreports .block.carousel.multi-slide .carousel-slide {
   .block.recentreports .box {
     max-width: 18.375rem;
   }
+
   main .section .block.recentreports .block.carousel.multi-slide .carousel-slides { 
-    margin: 0px;
+    margin: 0;
   }
 }
 

@@ -1,7 +1,9 @@
 import {
   buildBlock, decorateBlock, loadBlock, readBlockConfig,
 } from '../../scripts/aem.js';
-import { createElement, observe, getResearchAPIUrl, getDataFromAPI } from '../../scripts/blocks-utils.js';
+import {
+  createElement, observe, getResearchAPIUrl, getDataFromAPI,
+} from '../../scripts/blocks-utils.js';
 
 function decorateBoxHeader(title, reportLink) {
   const heading = createElement('h3', '');
@@ -20,30 +22,29 @@ function decorateBoxHeader(title, reportLink) {
  * @returns {string} The formatted date string.
  */
 function formatDate(dateString) {
-  if(dateString){
+  if (dateString) {
     const date = new Date(dateString);
     const day = date.getDate().toString().padStart(2, '0');
     const month = new Intl.DateTimeFormat('en-US', { month: 'short' }).format(date);
     const year = date.getFullYear();
     const hour = date.getHours().toString().padStart(2, '0');
     const minute = date.getMinutes().toString().padStart(2, '0');
-    
+
     return `${day} ${month} ${year} | ${hour}:${minute}`;
   }
-  return "";
+  return '';
 }
 
 function formatPriceInRupees(price) {
   // Check for empty or null input
-  if (price === null || price === "") {
-      return "";
+  if (price === null || price === '') {
+    return '';
   }
   const numericPrice = Number(price);
   const formattedPrice = numericPrice.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
   // Remove the rupee sign
   return formattedPrice.slice(1);
 }
-
 
 function decorateDataInBox(label, value, rowClass) {
   const div = createElement('div', rowClass);
@@ -102,10 +103,10 @@ function createReportBox(title, targetPrice, rating, date, reportLink, buttontit
   return slideDiv;
 }
 
-function renderRecentReportsCards( recentReportsDataArray, carouselItems, maxLimit = 20, blockCfg) {
+function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCfg, maxLimit = 20) {
   let slideCount = 0;
   const { buttontitle } = blockCfg;
-  recentReportsDataArray.Data.Table.slice(0,6).forEach((item) => {
+  recentReportsDataArray.Data.Table.slice(0, 6).forEach((item) => {
     if (slideCount >= maxLimit) return;
     const slide = document.createElement('li');
     slide.classList.add('carousel-slide');
@@ -120,11 +121,9 @@ function renderRecentReportsCards( recentReportsDataArray, carouselItems, maxLim
     );
     slide.innerHTML = reportBox.innerHTML;
     carouselItems.append(slide);
-    
+
     slideCount += 1;
   });
-  
-
 }
 
 async function loadCarousel(block, carouselItems) {
@@ -150,10 +149,10 @@ async function loadCarousel(block, carouselItems) {
   carouselBlockParent.appendChild(carouselBlock);
   block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
   decorateBlock(carouselBlock);
-  if(carouselBlock.dataset.visibleSlides && carouselBlock.dataset.visibleSlides >= carouselItems.children.length){
-    carouselBlock.classList.add("content-center");
+  if (carouselBlock.dataset.visibleSlides
+    && carouselBlock.dataset.visibleSlides >= carouselItems.children.length) {
+    carouselBlock.classList.add('content-center');
   }
-  
   return loadBlock(carouselBlock);
 }
 
@@ -168,6 +167,7 @@ function handleTitleConfig(titleElement, container) {
 
   container.insertBefore(titleWrapper, container.firstChild);
 }
+
 function addDiscoverLink(discoverMoreDiv, block) {
   const discoverMoreAnchor = discoverMoreDiv.querySelector('a');
   if (discoverMoreAnchor) {
@@ -187,7 +187,6 @@ function addDiscoverLink(discoverMoreDiv, block) {
 }
 
 export default async function decorate(block) {
- 
   const configElementsArray = Array.from(block.children);
   configElementsArray.map(async (configElement) => {
     configElement.style.display = 'none';
@@ -198,9 +197,14 @@ export default async function decorate(block) {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
+      getDataFromAPI(getResearchAPIUrl(), apiName, async (error, recentReportsDataArray = []) => {
         if (recentReportsDataArray) {
-          renderRecentReportsCards(recentReportsDataArray, carouselItems,block?.dataset?.maxLimit, blockCfg);
+          renderRecentReportsCards(
+            recentReportsDataArray,
+            carouselItems,
+            blockCfg,
+            block?.dataset?.maxLimit,
+          );
           observe(block, loadCarousel, carouselItems);
         }
       });
@@ -211,7 +215,7 @@ export default async function decorate(block) {
       addDiscoverLink(configNameElement.nextElementSibling, block);
     } else if (configName === 'visible slides') {
       const visibleSlides = configNameElement.nextElementSibling.textContent.trim();
-     
+
       block.dataset.visibleSlides = visibleSlides;
     } else if (configName === 'auto scroll') {
       const autoScroll = configNameElement.nextElementSibling.textContent.trim();
