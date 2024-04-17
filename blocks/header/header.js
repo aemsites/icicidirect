@@ -824,6 +824,15 @@ const addHeaderEventHandlers = () => {
   }), 1000);
 
   /**
+   * Handler for disabling the default behaviour when ENTER is pressed in the search bar
+   */
+  searchBarInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  });
+
+  /**
    * Handler to dismiss the search bar when clicked outside
    * */
   document.addEventListener('click', (event) => {
