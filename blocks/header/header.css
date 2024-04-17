@@ -454,9 +454,17 @@
   border-radius: var(--space-10px);
 }
 
+.block.header .search-bar .search-box .search-result-none.hidden {
+  display: none;
+}
+
 .block.header .search-bar .search-box .search-result-none {
   font-size: var(--body-font-size-s);
   color: var(--color-gray);
+}
+
+.block.header .search-bar .search-results-popup .category.hidden {
+  display: none;
 }
 
 .block.header .search-bar .search-results-popup .category > span {

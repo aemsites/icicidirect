@@ -1,7 +1,13 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchDynamicStockIndexData, globalSearchAPI } from '../../scripts/mockapi.js';
-import { formatDateTime, debounce } from '../../scripts/blocks-utils.js';
+import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
+import { processEquityType, ENIITY_TYPE } from './headerutil.js';
+import {
+  formatDateTime,
+  debounce,
+  postFormData,
+  getResearchAPIUrl,
+} from '../../scripts/blocks-utils.js';
 
 /**
  * Decorator for global navigation on top the page
@@ -142,42 +148,38 @@ const getSearchCategoryDropDown = (fragment) => {
 };
 
 /**
- * Build the search results popup
+ * Build the search results popup to reset the result set
  */
-const buildSearchResultsPopup = (block) => {
-  const searchResultsPopup = document.createElement('div');
-  searchResultsPopup.className = 'search-results-popup';
-  searchResultsPopup.id = 'search-results-popup';
-  const searchResultsPopupContainer = document.createElement('div');
-  searchResultsPopupContainer.className = 'search-results-popup-container';
+const buildSearchResultsPopup = (searchResultsPopupContainer) => {
   searchResultsPopupContainer.innerHTML = `
-    <div class="category equity">
+    <div class="category equity hidden">
       <span>Equity</span>
       <ul class="equity-list"></ul>
     </div>
-    <div class="category mf">
+    <div class="category mf hidden">
       <span>Mutual Fund</span>
       <ul class="mf-list"></ul>
     </div>
-    <div class="category currency">
+    <div class="category currency hidden">
       <span>Currency</span>
       <ul class="currency-list"></ul>
     </div>
-    <div class="category commodity">
+    <div class="category commodity hidden">
       <span>Commodity</span>
       <ul class="commodity-list"></ul>
     </div>
-    <div class="category knowledge_center">
+    <div class="category knowledge_center hidden">
       <span>iLearn</span>
       <ul class="knowledge_center-list"></ul>
     </div>
-    <div class="category bonds">
+    <div class="category bonds hidden">
       <span>Bonds</span>
       <ul class="bonds-list"></ul>
     </div>
+    <span class='search-result-none hidden'>
+      No records found
+    </span>
   `;
-  searchResultsPopup.appendChild(searchResultsPopupContainer);
-  block.appendChild(searchResultsPopup);
 };
 
 /**
@@ -205,8 +207,11 @@ const decorateTopSearchBar = (fragment) => {
     <div>
       <img class="search-icon" src="../../icons/icon-search.svg" alt="Search">
     </div>
+    <div class='search-results-popup' id='search-results-popup'>
+      <div class='search-results-popup-container'>
+      </div>
+    </div>
   `;
-  buildSearchResultsPopup(searchBoxDiv);
   searchBarContainer.appendChild(categoryPickerDiv);
   searchBarContainer.appendChild(searchBoxDiv);
   searchBarDiv.appendChild(searchBarContainer);
@@ -528,26 +533,26 @@ const decorateShareIndexPanel = (fragment, block) => {
 };
 
 const buildEquityList = (equityList) => {
-  const equityListContainer = document.querySelector('.equity-list');
+  const equityListContainer = document.querySelector('.block.header .equity-list');
   equityListContainer.innerHTML = '';
-  equityList.forEach((equity) => {
+  processEquityType(equityList).forEach((equity) => {
     const equityItem = document.createElement('li');
     equityItem.className = 'list-item';
     equityItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${equity.label}' href=${equity.url} target='_blank'>${equity.label}</a>
+      <a class='item-name' title='${equity.name}' href=${equity.url} target='_blank'>${equity.name}</a>
       <a class='link' href=${equity.url} target='_blank'>
-        <span class='item-value'>${equity.ltp}</span>
+        <span class='item-value'>${equity.lastTradingPrice}</span>
       </a>
       <span class='change-value ${equity.change >= 0 ? 'positive' : 'negative'}'>
-        ${equity.change} (${equity.changeper}%)
+        ${equity.change} (${equity.changePercentage}%)
       </span>
     </div>
     <div class='action-section'>
-      <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${equity.buyLink}', '_blank')">
         BUY
       </button>
-      <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${equity.sellLink}', '_blank')">
         SELL
       </button>
     </div>
@@ -556,10 +561,11 @@ const buildEquityList = (equityList) => {
     equityItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     equityListContainer.appendChild(equityItem);
   });
+  equityListContainer.parentElement.classList.remove('hidden');
 };
 
 const buildMutualFundsList = (mutualFundsList) => {
-  const mutualFundsListContainer = document.querySelector('.mf-list');
+  const mutualFundsListContainer = document.querySelector('.block.header .mf-list');
   mutualFundsListContainer.innerHTML = '';
   mutualFundsList.forEach((mutualFund) => {
     const mutualFundItem = document.createElement('li');
@@ -587,7 +593,7 @@ const buildMutualFundsList = (mutualFundsList) => {
 };
 
 const buildCurrencyList = (currencyList) => {
-  const currencyListContainer = document.querySelector('.currency-list');
+  const currencyListContainer = document.querySelector('.block.header .currency-list');
   currencyListContainer.innerHTML = '';
   currencyList.forEach((currency) => {
     const currencyItem = document.createElement('li');
@@ -608,7 +614,7 @@ const buildCurrencyList = (currencyList) => {
 };
 
 const buildCommodityList = (commodityList) => {
-  const commodityListContainer = document.querySelector('.commodity-list');
+  const commodityListContainer = document.querySelector('.block.header .commodity-list');
   commodityListContainer.innerHTML = '';
   commodityList.forEach((commodity) => {
     const commodityItem = document.createElement('li');
@@ -629,7 +635,7 @@ const buildCommodityList = (commodityList) => {
 };
 
 const buildKnowledgeCenterList = (knowledgeCenterList) => {
-  const knowledgeCenterListContainer = document.querySelector('.knowledge_center-list');
+  const knowledgeCenterListContainer = document.querySelector('.block.header .knowledge_center-list');
   knowledgeCenterListContainer.innerHTML = '';
   knowledgeCenterList.forEach((knowledgeCenter) => {
     const knowledgeCenterItem = document.createElement('li');
@@ -644,7 +650,7 @@ const buildKnowledgeCenterList = (knowledgeCenterList) => {
 };
 
 const buildBondsList = (bondsList) => {
-  const bondsListContainer = document.querySelector('.bonds-list');
+  const bondsListContainer = document.querySelector('.block.header .bonds-list');
   bondsListContainer.innerHTML = '';
   bondsList.forEach((bond) => {
     const bondItem = document.createElement('li');
@@ -675,33 +681,50 @@ const buildBondsList = (bondsList) => {
 };
 
 const buildNoResultsFound = () => {
-  const searchResultsContainer = document.querySelector('.block.header .search-results-popup-container');
-  searchResultsContainer.innerHTML = `
-    <span class='search-result-none'>
-      No records found
-    </span>
-  `;
+  const searchResultsNoneItem = document.querySelector('.block.header .search-results-popup-container .search-result-none');
+  searchResultsNoneItem.classList.remove('hidden');
 };
+
+const processResponse = (error, data) => {
+  const searchBoxDiv = document.querySelector('.block.header .search-box .search-results-popup-container');
+  buildSearchResultsPopup(searchBoxDiv);
+  if (!data || error) {
+    buildNoResultsFound();
+    return;
+  }
+  const results = data.Data;
+  if (results.length === 0) {
+    buildNoResultsFound();
+    return;
+  }
+  buildEquityList(results.filter((result) => result.TYPE === ENIITY_TYPE.EQUITY));
+  buildMutualFundsList(results.filter((result) => result.TYPE === ENIITY_TYPE.MUTUAL_FUND));
+  buildCurrencyList(results.filter((result) => result.TYPE === ENIITY_TYPE.CURRENCY));
+  buildCommodityList(results.filter((result) => result.TYPE === ENIITY_TYPE.COMMODITY));
+  buildKnowledgeCenterList(results.filter(
+    (result) => result.TYPE === ENIITY_TYPE.KNOWLEDGE_CENTER,
+  ));
+  buildBondsList(results.filter((result) => result.TYPE === ENIITY_TYPE.BONDS));
+};
+
 /**
  * Returns the result of the global search data
  * @param {*} category the category within which to search
  * @param {*} keyword the keyword to be searched
  */
-const handleSearchData = async (category, keyword) => {
+const callGlobalSearch = async (category, keyword) => {
   if (!keyword) {
     return;
   }
-  const results = await globalSearchAPI(category, keyword);
-  if (!results) {
-    buildNoResultsFound();
-    return;
-  }
-  buildEquityList(results.filter((result) => result.type === 'eq'));
-  buildMutualFundsList(results.filter((result) => result.type === 'mf'));
-  buildCurrencyList(results.filter((result) => result.type === 'currency'));
-  buildCommodityList(results.filter((result) => result.type === 'commodity'));
-  buildKnowledgeCenterList(results.filter((result) => result.type === 'ilearn'));
-  buildBondsList(results.filter((result) => result.type === 'bonds'));
+  const jsonFormData = {
+    apiName: 'GetGlobalSearchResults',
+    inputJson: JSON.stringify({
+      term: keyword.trim(),
+      type: category,
+    }),
+  };
+  await postFormData(getResearchAPIUrl(), jsonFormData, processResponse);
+  // const results = await globalSearchAPI(category, keyword);
 };
 
 /**
@@ -749,14 +772,14 @@ const addHeaderEventHandlers = () => {
    * Handler for searching the keyword in the search bar
    */
   const searchBarInput = document.getElementById('global-search');
-  searchBarInput.addEventListener('input', debounce((event) => {
+  searchBarInput.addEventListener('input', debounce(async (event) => {
     const searchValue = event.target.value;
     if (searchValue === '') {
       document.getElementById('search-results-popup').classList.remove('visible');
       return;
     }
     const selectedCategoryId = document.querySelector('.block.header .category-picker .selected-category').id;
-    handleSearchData(selectedCategoryId, searchValue);
+    await callGlobalSearch(selectedCategoryId, searchValue);
     document.getElementById('search-results-popup').classList.add('visible');
   }), 500);
 

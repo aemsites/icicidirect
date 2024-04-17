@@ -1,3 +1,15 @@
+const ENIITY_TYPE = {
+  ALL: 'all',
+  EQUITY: '',
+  MUTUAL_FUND: 'MF',
+  CURRENCY: 'currency',
+  COMMODITY: 'commodity',
+  KNOWLEDGE_CENTER: 'ilearn',
+  IDX: 'IDX',
+  DERIVATIVE: 'derivative',
+  BONDS: 'bonds',
+};
+
 const SITE_ROOT = 'https://www.icicidirect.com';
 const EQUITY_BUY_URL = 'https://secure.icicidirect.com/trading/equity/cashbuy';
 const EQUITY_SELL_URL = 'https://secure.icicidirect.com/trading/equity/cashsell';
@@ -33,38 +45,38 @@ const getCompanyUrl = (item, name) => {
   } = item;
   let url = name || '';
   switch (type) {
-    case '': {
+    case ENIITY_TYPE.EQUITY: {
       url = `${SITE_ROOT}/stocks/${url.toLowerCase()}-share-price`;
       break;
     }
-    case 'IDX': {
+    case ENIITY_TYPE.IDX: {
       url = `${SITE_ROOT}/equity/index/${exchange.toLowerCase()}/${name.toLowerCase()}/${Number(value)}`;
       break;
     }
-    case 'MF': {
+    case ENIITY_TYPE.MUTUAL_FUND: {
       url = `${SITE_ROOT}/mutual-funds/nav-details/${name.toLowerCase()}-${Number(value)}`;
       break;
     }
-    case 'currency': {
+    case ENIITY_TYPE.CURRENCY: {
       if (value.toLowerCase() === 'optcur') {
         url = `${SITE_ROOT}/currency-forex-trading/pricequote/${value.toLowerCase()}/${symbol.toLowerCase()}/${expdate}/${strikePrice}/${optType}`;
       }
       url = `${SITE_ROOT}/currency-forex-trading/pricequote/${value.toLowerCase()}/${symbol.toLowerCase()}/${expdate}/0/xx`;
       break;
     }
-    case 'commodity': {
+    case ENIITY_TYPE.COMMODITY: {
       url = `${SITE_ROOT}/commodities-market/pricequote/${exchange.toLowerCase()}/${value.toLowerCase()}/${symbol.toLowerCase()}/${expdate}`;
       break;
     }
-    case 'derivative': {
+    case ENIITY_TYPE.DERIVATIVE: {
       url = `${SITE_ROOT}/derivatives-market/get-quote/${value.toLowerCase()}/${symbol.toLowerCase()}/${expdate}/0/xx`;
       break;
     }
-    case 'knowledge_center': {
+    case ENIITY_TYPE.KNOWLEDGE_CENTER: {
       url = urlText;
       break;
     }
-    case 'bonds': {
+    case ENIITY_TYPE.BONDS: {
       url = itemUrl;
       break;
     }
@@ -88,16 +100,16 @@ const getBuySellInvestUrl = (item) => {
     investLink: '',
   };
   switch (type) {
-    case 'equity': {
+    case ENIITY_TYPE.EQUITY: {
       obj.buyLink = `${EQUITY_BUY_URL}/${code}`;
       obj.sellLink = `${EQUITY_SELL_URL}/${code}`;
       break;
     }
-    case 'mf': {
+    case ENIITY_TYPE.MUTUAL_FUND: {
       obj.investLink = MF_INVEST_URL;
       break;
     }
-    case 'bonds': {
+    case ENIITY_TYPE.BONDS: {
       if (iciciCode) {
         obj.buyLink = `https://secure.icicidirect.com/trading/equity/cashbuy/${iciciCode}`;
         obj.sellLink = `https://secure.icicidirect.com/trading/equity/cashsell/${iciciCode}`;
@@ -272,7 +284,7 @@ const processBondsType = (items) => {
   return processedData;
 };
 
-export default {
+export {
   processEquityType,
   processMutualFundsType,
   processCurrencyType,
@@ -280,4 +292,5 @@ export default {
   processDerivativeType,
   processKnowledgeCenterType,
   processBondsType,
+  ENIITY_TYPE,
 };
