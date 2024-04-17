@@ -187,7 +187,7 @@ function formDataToJSON(formData) {
  *  }
  *
  */
-async function postFormData(url, formData, callback, options = {}) {
+function postFormData(url, formData, callback, options = {}) {
   let formDataString;
   if (formData instanceof FormData) {
     formDataString = formDataToJSON(formData);
@@ -203,7 +203,7 @@ async function postFormData(url, formData, callback, options = {}) {
     ...options, // Override any additional options provided
   };
 
-  await fetch(url, requestOptions)
+  fetch(url, requestOptions)
     .then((response) => {
       if (!response.ok) {
         throw new Error('Network response was not ok');

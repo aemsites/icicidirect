@@ -35,7 +35,7 @@ const getCompanyUrl = (item, name) => {
   const {
     TYPE: type,
     EXCHANGE: exchange,
-    VALUE: value,
+    value,
     SYMBOL: symbol,
     EXPDATE: expdate,
     STRIKEPRICE: strikePrice,
@@ -73,11 +73,11 @@ const getCompanyUrl = (item, name) => {
       break;
     }
     case ENIITY_TYPE.KNOWLEDGE_CENTER: {
-      url = urlText;
+      url = `${SITE_ROOT}/${urlText}`;
       break;
     }
     case ENIITY_TYPE.BONDS: {
-      url = itemUrl;
+      url = `${SITE_ROOT}/${itemUrl}`;
       break;
     }
     default: {
@@ -131,6 +131,7 @@ const processEquityType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const eq = {
+      title: item.LONG_NAME || '',
       name: '',
       lastTradingPrice: '',
       url: '',
@@ -162,17 +163,22 @@ const processMutualFundsType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const mf = {
+      title: item.LONG_NAME || '',
       name: '',
       lastTradingPrice: '',
       url: '',
-      buyLink: '',
-      sellLink: '',
+      investLink: '',
       change: '',
       changePercentage: '',
     };
     mf.name = replaceSpecialChars(item.LONG_NAME);
     mf.name = mf.name.split(' ').join('-');
     mf.url = getCompanyUrl(item, mf.name);
+    const { investLink } = getBuySellInvestUrl(item);
+    mf.investLink = investLink;
+    mf.lastTradingPrice = item.LTP;
+    mf.change = item.CHANGE;
+    mf.changePercentage = item.CHANGEPER;
     processedData.push(mf);
   });
   return processedData;
@@ -185,17 +191,19 @@ const processCurrencyType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const curr = {
+      title: item.LONG_NAME || '',
       name: '',
       lastTradingPrice: '',
       url: '',
-      buyLink: '',
-      sellLink: '',
       change: '',
       changePercentage: '',
     };
     curr.name = replaceSpecialChars(item.LONG_NAME);
     curr.name = curr.name.split(' ').join('-');
     curr.url = getCompanyUrl(item, curr.name);
+    curr.lastTradingPrice = item.LTP;
+    curr.change = item.CHANGE;
+    curr.changePercentage = item.CHANGEPER;
     processedData.push(curr);
   });
   return processedData;
@@ -208,17 +216,19 @@ const processCommodityType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const comm = {
+      title: item.LONG_NAME || '',
       name: '',
       lastTradingPrice: '',
       url: '',
-      buyLink: '',
-      sellLink: '',
       change: '',
       changePercentage: '',
     };
     comm.name = replaceSpecialChars(item.LONG_NAME);
     comm.name = comm.name.split(' ').join('-');
     comm.url = getCompanyUrl(item, comm.name);
+    comm.lastTradingPrice = item.LTP;
+    comm.change = item.CHANGE;
+    comm.changePercentage = item.CHANGEPER;
     processedData.push(comm);
   });
   return processedData;
@@ -231,6 +241,7 @@ const processDerivativeType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const deri = {
+      title: item.LONG_NAME || '',
       name: '',
       url: '',
     };
@@ -249,6 +260,7 @@ const processKnowledgeCenterType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const know = {
+      title: item.Title || '',
       name: '',
       url: '',
     };
@@ -266,6 +278,7 @@ const processBondsType = (items) => {
   const processedData = [];
   items.forEach((item) => {
     const bond = {
+      title: item.label || '',
       name: '',
       url: '',
       buyLink: '',

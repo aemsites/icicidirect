@@ -1,7 +1,14 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
-import { processEquityType, ENIITY_TYPE } from './headerutil.js';
+import {
+  processEquityType,
+  processMutualFundsType,
+  processCurrencyType,
+  processCommodityType,
+  processKnowledgeCenterType,
+  processBondsType, ENIITY_TYPE,
+} from './headerutil.js';
 import {
   formatDateTime,
   debounce,
@@ -540,7 +547,7 @@ const buildEquityList = (equityList) => {
     equityItem.className = 'list-item';
     equityItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${equity.name}' href=${equity.url} target='_blank'>${equity.name}</a>
+      <a class='item-name' title='${equity.title}' href=${equity.url} target='_blank'>${equity.title}</a>
       <a class='link' href=${equity.url} target='_blank'>
         <span class='item-value'>${equity.lastTradingPrice}</span>
       </a>
@@ -561,27 +568,29 @@ const buildEquityList = (equityList) => {
     equityItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     equityListContainer.appendChild(equityItem);
   });
-  equityListContainer.parentElement.classList.remove('hidden');
+  if (equityList.length) {
+    equityListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildMutualFundsList = (mutualFundsList) => {
   const mutualFundsListContainer = document.querySelector('.block.header .mf-list');
   mutualFundsListContainer.innerHTML = '';
-  mutualFundsList.forEach((mutualFund) => {
+  processMutualFundsType(mutualFundsList).forEach((mutualFund) => {
     const mutualFundItem = document.createElement('li');
     mutualFundItem.className = 'list-item';
     mutualFundItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${mutualFund.label}' href=${mutualFund.url} target='_blank'>${mutualFund.label}</a>
+      <a class='item-name' title='${mutualFund.title}' href=${mutualFund.url} target='_blank'>${mutualFund.title}</a>
       <a class='link' href=${mutualFund.url} target='_blank'>
-        <span class='item-value'>${mutualFund.ltp}</span>
+        <span class='item-value'>${mutualFund.lastTradingPrice}</span>
       </a>
       <span class='change-value ${mutualFund.change >= 0 ? 'positive' : 'negative'}'>
-        ${mutualFund.change} (${mutualFund.changeper}%)
+        ${mutualFund.change} (${mutualFund.changePercentage}%)
       </span>
     </div>
     <div class='action-section'>
-      <button class='action-button' onclick="window.open('${mutualFund.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${mutualFund.investLink}', '_blank')">
         INVEST
       </button>
     </div>
@@ -590,59 +599,68 @@ const buildMutualFundsList = (mutualFundsList) => {
     mutualFundItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     mutualFundsListContainer.appendChild(mutualFundItem);
   });
+  if (mutualFundsList.length) {
+    mutualFundsListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildCurrencyList = (currencyList) => {
   const currencyListContainer = document.querySelector('.block.header .currency-list');
   currencyListContainer.innerHTML = '';
-  currencyList.forEach((currency) => {
+  processCurrencyType(currencyList).forEach((currency) => {
     const currencyItem = document.createElement('li');
     currencyItem.className = 'list-item';
     currencyItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${currency.label}' href=${currency.url} target='_blank'>${currency.label}</a>
+      <a class='item-name' title='${currency.title}' href=${currency.url} target='_blank'>${currency.title}</a>
       <a class='link' href=${currency.url} target='_blank'>
-        <span class='item-value'>${currency.ltp}</span>
+        <span class='item-value'>${currency.lastTradingPrice}</span>
       </a>
       <span class='change-value ${currency.change >= 0 ? 'positive' : 'negative'}'>
-        ${currency.change} (${currency.changeper}%)
+        ${currency.change} (${currency.changePercentage}%)
       </span>
     </div>
     `;
     currencyListContainer.appendChild(currencyItem);
   });
+  if (currencyList.length) {
+    currencyListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildCommodityList = (commodityList) => {
   const commodityListContainer = document.querySelector('.block.header .commodity-list');
   commodityListContainer.innerHTML = '';
-  commodityList.forEach((commodity) => {
+  processCommodityType(commodityList).forEach((commodity) => {
     const commodityItem = document.createElement('li');
     commodityItem.className = 'list-item';
     commodityItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${commodity.label}' href=${commodity.url} target='_blank'>${commodity.label}</a>
+      <a class='item-name' title='${commodity.title}' href=${commodity.url} target='_blank'>${commodity.title}</a>
       <a class='link' href=${commodity.url} target='_blank'>
-        <span class='item-value'>${commodity.ltp}</span>
+        <span class='item-value'>${commodity.lastTradingPrice}</span>
       </a>
       <span class='change-value ${commodity.change >= 0 ? 'positive' : 'negative'}'>
-        ${commodity.change} (${commodity.changeper}%)
+        ${commodity.change} (${commodity.changePercentage}%)
       </span>
     </div>
     `;
     commodityListContainer.appendChild(commodityItem);
   });
+  if (commodityList.length) {
+    commodityListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildKnowledgeCenterList = (knowledgeCenterList) => {
   const knowledgeCenterListContainer = document.querySelector('.block.header .knowledge_center-list');
   knowledgeCenterListContainer.innerHTML = '';
-  knowledgeCenterList.forEach((knowledgeCenter) => {
+  processKnowledgeCenterType(knowledgeCenterList).forEach((knowledgeCenter) => {
     const knowledgeCenterItem = document.createElement('li');
     knowledgeCenterItem.className = 'list-item';
     knowledgeCenterItem.innerHTML = `
     <div class='details-section'>
-      <a class='full-item-name' title='${knowledgeCenter.label}' href=${knowledgeCenter.url} target='_blank'>${knowledgeCenter.label}</a>
+      <a class='full-item-name' title='${knowledgeCenter.title}' href=${knowledgeCenter.url} target='_blank'>${knowledgeCenter.title}</a>
     </div>
     `;
     knowledgeCenterListContainer.appendChild(knowledgeCenterItem);
@@ -652,24 +670,24 @@ const buildKnowledgeCenterList = (knowledgeCenterList) => {
 const buildBondsList = (bondsList) => {
   const bondsListContainer = document.querySelector('.block.header .bonds-list');
   bondsListContainer.innerHTML = '';
-  bondsList.forEach((bond) => {
+  processBondsType(bondsList).forEach((bond) => {
     const bondItem = document.createElement('li');
     bondItem.className = 'list-item';
     bondItem.innerHTML = `
     <div class='details-section'>
-      <a class='full-item-name' title='${bond.label}' href=${bond.url} target='_blank'>${bond.label}</a>
+      <a class='full-item-name' title='${bond.title}' href=${bond.url} target='_blank'>${bond.title}</a>
       <a class='link' href=${bond.url} target='_blank'>
-        <span class='item-value'>${bond.ISIN}</span>
+        <span class='item-value'>${bond.isin}</span>
       </a>
       <span class='item-value'}'>
-        (${bond.maturity_date}%)
+        (${bond.maturityDate}%)
       </span>
     </div>
     <div class='action-section hidden'>
-      <button class='action-button' onclick="window.open('${bond.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${bond.buyLink}', '_blank')">
         BUY
       </button>
-      <button class='action-button' onclick="window.open('${bond.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${bond.sellLink}', '_blank')">
         SELL
       </button>
     </div>
@@ -678,6 +696,9 @@ const buildBondsList = (bondsList) => {
     bondItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     bondsListContainer.appendChild(bondItem);
   });
+  if (bondsList.length) {
+    bondsListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildNoResultsFound = () => {
@@ -712,7 +733,7 @@ const processResponse = (error, data) => {
  * @param {*} category the category within which to search
  * @param {*} keyword the keyword to be searched
  */
-const callGlobalSearch = async (category, keyword) => {
+const callGlobalSearch = (category, keyword) => {
   if (!keyword) {
     return;
   }
@@ -723,7 +744,7 @@ const callGlobalSearch = async (category, keyword) => {
       type: category,
     }),
   };
-  await postFormData(getResearchAPIUrl(), jsonFormData, processResponse);
+  postFormData(getResearchAPIUrl(), jsonFormData, processResponse);
   // const results = await globalSearchAPI(category, keyword);
 };
 
@@ -772,16 +793,16 @@ const addHeaderEventHandlers = () => {
    * Handler for searching the keyword in the search bar
    */
   const searchBarInput = document.getElementById('global-search');
-  searchBarInput.addEventListener('input', debounce(async (event) => {
+  searchBarInput.addEventListener('input', debounce((event) => {
     const searchValue = event.target.value;
     if (searchValue === '') {
       document.getElementById('search-results-popup').classList.remove('visible');
       return;
     }
     const selectedCategoryId = document.querySelector('.block.header .category-picker .selected-category').id;
-    await callGlobalSearch(selectedCategoryId, searchValue);
+    callGlobalSearch(selectedCategoryId, searchValue);
     document.getElementById('search-results-popup').classList.add('visible');
-  }), 500);
+  }), 1000);
 
   /**
    * Handler to dismiss the search bar when clicked outside
