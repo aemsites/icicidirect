@@ -159,6 +159,9 @@ const getSearchCategoryDropDown = (fragment) => {
  */
 const buildSearchResultsPopup = (searchResultsPopupContainer) => {
   searchResultsPopupContainer.innerHTML = `
+    <div class="loader hidden">
+      Searching...
+    </div>
     <div class="category equity hidden">
       <span>Equity</span>
       <ul class="equity-list"></ul>
@@ -706,9 +709,23 @@ const buildNoResultsFound = () => {
   searchResultsNoneItem.classList.remove('hidden');
 };
 
+/**
+ * Show and hide the loader in the search result popup when response is pending
+ * @param {*} show true when loading, false when done
+ */
+const showIsSearching = (show) => {
+  const loaderItem = document.querySelector('.block.header .search-box .search-results-popup-container .loader');
+  if (loaderItem) {
+    if (show) {
+      loaderItem.classList.remove('hidden');
+    } else {
+      loaderItem.classList.add('hidden');
+    }
+  }
+};
+
 const processResponse = (error, data) => {
-  const searchBoxDiv = document.querySelector('.block.header .search-box .search-results-popup-container');
-  buildSearchResultsPopup(searchBoxDiv);
+  showIsSearching(false);
   if (!data || error) {
     buildNoResultsFound();
     return;
@@ -744,8 +761,10 @@ const callGlobalSearch = (category, keyword) => {
       type: category,
     }),
   };
+  const searchBoxDiv = document.querySelector('.block.header .search-box .search-results-popup-container');
+  buildSearchResultsPopup(searchBoxDiv);
+  showIsSearching(true);
   postFormData(getResearchAPIUrl(), jsonFormData, processResponse);
-  // const results = await globalSearchAPI(category, keyword);
 };
 
 /**
