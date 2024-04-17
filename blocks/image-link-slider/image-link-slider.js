@@ -4,8 +4,10 @@ import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import { callAPI } from '../../scripts/mockapi.js';
 import { observe } from '../../scripts/blocks-utils.js';
 
-function renderImageLinkVariant({ data }, carouselItems) {
+function renderImageLinkVariant({ data }, carouselItems, maxLimit = 20) {
+  let slideCount = 0;
   data.forEach((item) => {
+    if (slideCount >= maxLimit) return;
     const slide = document.createElement('li');
     slide.classList.add('carousel-slide');
     slide.innerHTML = `
@@ -28,11 +30,15 @@ function renderImageLinkVariant({ data }, carouselItems) {
                     </div>
                 `;
     carouselItems.append(slide);
+    slideCount += 1;
   });
 }
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
+  carouselBlock.dataset.visibleSlides = block.dataset.visibleSlides || '';
+  carouselBlock.dataset.autoScroll = block.dataset.autoScroll || '';
+  carouselBlock.dataset.autoScrollDelay = block.dataset.autoScrollDelay || '';
   carouselBlock.style.display = 'none';
   carouselBlock.innerHTML = '';
   block.classList.forEach((className) => {
@@ -88,7 +94,7 @@ export default async function decorate(block) {
       callAPI(apiName)
         .then((data) => {
           if (block.classList.contains('image-link-slider')) {
-            renderImageLinkVariant(data, carouselItems);
+            renderImageLinkVariant(data, carouselItems, block?.dataset?.maxLimit);
           }
           return loadCarousel(block, carouselItems);
         })
@@ -121,6 +127,18 @@ export default async function decorate(block) {
       buttonWrapper.classList.add('button-wrapper');
       buttonWrapper.append(configNameElement.nextElementSibling);
       block.append(buttonWrapper);
+    } else if (configName === 'visible slides') {
+      const visibleSlides = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.visibleSlides = visibleSlides;
+    } else if (configName === 'auto scroll') {
+      const autoScroll = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.autoScroll = autoScroll;
+    } else if (configName === 'auto scroll delay') {
+      const autoScrollDelay = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.autoScrollDelay = autoScrollDelay;
+    } else if (configName === 'max limit') {
+      const maxLimit = configNameElement.nextElementSibling.textContent.trim();
+      block.dataset.maxLimit = maxLimit;
     }
   });
 }
