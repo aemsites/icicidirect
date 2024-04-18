@@ -19,7 +19,7 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     overflow: scroll clip;
-
+   
     --visible-slides: 1;
 }
 

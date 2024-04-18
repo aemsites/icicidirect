@@ -1,3 +1,7 @@
+.block.recentreports {
+  --max-width-box: 15rem;
+}
+
 .block.recentreports .row {
   display: flex;
   flex-wrap: wrap;
@@ -25,7 +29,7 @@
   border-radius: var(--space-8px);
   padding: 1.25rem 1rem 4.06rem;
   position: relative;
-  max-width: 15rem; 
+  max-width: var( --max-width-box); 
   height:100%;
 }
 
@@ -135,8 +139,13 @@
   max-width: 100%;
 }
 
+main .section .block.recentreports .block.carousel.multi-slide .carousel-slide-indicators {
+  margin-top: 1.25rem;
+}
+
 main .section .block.recentreports .block.carousel.multi-slide .carousel-slide {
   padding:var(--space-8px) var(--space-12px);
+  flex: 0 0 calc(100% / var(--displayed-slides));
  }
 
 @media (width >= 36rem) {
@@ -147,35 +156,23 @@ main .section .block.recentreports .block.carousel.multi-slide .carousel-slide {
 }
 
 @media (width >= 48rem) {
-  .block.recentreports .box {
-    max-width: 13.875rem;   
+  .block.recentreports .carousel-slides-container {
+    --max-width-box: 13.875rem;   
   }
 
 .block.recentreports .discover-more {
   text-align: right;
   }
 
-  main .section .block.recentreports .block.carousel.multi-slide .carousel-slides {
-    margin-inline: calc((100vw - ((var(--visible-slides) + 1) * 0.75rem + (var(--visible-slides) * 13.875rem))) / 2);
-    justify-content: flex-start;
-  }
+  main .section .block.recentreports .block.carousel.multi-slide .carousel-slides-container {
+    margin-inline: calc((100vw - ((var(--displayed-slides) + 1) * 0.75rem + (var(--displayed-slides) * var(--max-width-box)))) / 2);
+   
+  } 
 }
 
 @media (width >= 64rem) {
-  .block.recentreports .box {
-    max-width: 18.375rem;
+  .block.recentreports .carousel-slides-container {
+    --max-width-box:  18.375rem;   
   }
-
-  main .section .block.recentreports .block.carousel.multi-slide .carousel-slides { 
-    margin: 0;
-  }
+  
 }
-
-main .section .block.recentreports .block.carousel.multi-slide .carousel-slide-indicators {
-  margin-top: 1.25rem;
-}
-
-main .section .block.recentreports .block.carousel.multi-slide.content-center .carousel-slides {
-  justify-content: center;
-}
-

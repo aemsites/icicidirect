@@ -128,6 +128,7 @@ function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCf
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
+  carouselBlock.style.display = 'none';
   carouselBlock.dataset.visibleSlides = block.dataset.visibleSlides || '';
   carouselBlock.dataset.autoScroll = block.dataset.autoScroll || '';
   carouselBlock.dataset.autoScrollDelay = block.dataset.autoScrollDelay || '';
@@ -149,11 +150,15 @@ async function loadCarousel(block, carouselItems) {
   carouselBlockParent.appendChild(carouselBlock);
   block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
   decorateBlock(carouselBlock);
-  if (carouselBlock.dataset.visibleSlides
-    && carouselBlock.dataset.visibleSlides >= carouselItems.children.length) {
-    carouselBlock.classList.add('content-center');
+  if (carouselItems.children.length >= carouselBlock.dataset.visibleSlides) {
+    carouselBlock.style.setProperty('--displayed-slides', carouselBlock.dataset.visibleSlides);
+  } else {
+    carouselBlock.style.setProperty('--displayed-slides', carouselItems.children.length);
   }
-  return loadBlock(carouselBlock);
+
+  loadBlock(carouselBlock).then((recentreportblock) => {
+    recentreportblock.style.display = 'block';
+  });
 }
 
 function handleTitleConfig(titleElement, container) {
