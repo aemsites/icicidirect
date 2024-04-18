@@ -814,7 +814,7 @@ const addHeaderEventHandlers = () => {
   const searchBarInput = document.getElementById('global-search');
   searchBarInput.addEventListener('input', debounce((event) => {
     const searchValue = event.target.value;
-    if (searchValue === '') {
+    if (searchValue === '' || searchValue.length < 2) {
       document.getElementById('search-results-popup').classList.remove('visible');
       return;
     }

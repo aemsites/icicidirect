@@ -1,3 +1,5 @@
+import { SITE_ROOT } from '../../scripts/blocks-utils.js';
+
 const ENIITY_TYPE = {
   ALL: 'all',
   EQUITY: '',
@@ -10,7 +12,6 @@ const ENIITY_TYPE = {
   BONDS: 'bonds',
 };
 
-const SITE_ROOT = 'https://www.icicidirect.com';
 const EQUITY_BUY_URL = 'https://secure.icicidirect.com/trading/equity/cashbuy';
 const EQUITY_SELL_URL = 'https://secure.icicidirect.com/trading/equity/cashsell';
 const MF_INVEST_URL = 'https://secure.icicidirect.com/trading/mf/placeorder';

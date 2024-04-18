@@ -6,6 +6,7 @@ const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.worke
 const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
 const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
+const SITE_ROOT = 'https://www.icicidirect.com';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -352,4 +353,5 @@ export {
   parseResponse,
   debounce,
   ICICI_FINOUX_HOST,
+  SITE_ROOT,
 };
