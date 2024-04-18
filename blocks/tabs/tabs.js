@@ -101,7 +101,7 @@ let intervalId = 1;
 function targetedDotView(event) {
   const targetDotIndex = event.currentTarget.dataset.index;
   clearInterval(intervalId);
-  const tabPanel = document.querySelector('.block.media.tabs tabs-panel[aria-hidden="false"]');
+  const tabPanel = document.querySelector('.block.media.tabs .tabs-panel[aria-hidden="false"]');
   const track = tabPanel.querySelector('.track');
   const dotsContainer = tabPanel.querySelector('.dots-container');
   dotsContainer.querySelector('.active').classList.remove('active');

@@ -6,6 +6,8 @@ import {
   getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport,
 } from '../../scripts/blocks-utils.js';
 
+const isDesktop = Viewport.isDesktop();
+
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
   switch (deviceType) {
@@ -17,10 +19,10 @@ function allowedCardsCount() {
       return 1;
   }
 }
-function updateCarouselView(activeDot) {
+
+function setTrack(activeDot) {
   const dotIndex = parseInt(activeDot.dataset.index, 10);
   const carouselSlider = activeDot.closest('.carousel-slider');
-  const dots = carouselSlider.querySelectorAll('.dot');
   const currentActiveDot = carouselSlider.querySelector('.dot.active');
   if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
     return;
@@ -38,12 +40,41 @@ function updateCarouselView(activeDot) {
     }
     card.style.width = `${cardWidth}px`;
   });
-  const moveDistance = dotIndex * cards[0].offsetWidth;
-  carouselTrack.style.transform = `translateX(-${moveDistance}px)`;
-  dots.forEach((dot) => dot.classList.remove('active'));
-  dots[dotIndex].classList.add('active');
 }
 
+function updateCarouselView(activeDot, scroll) {
+  const dotIndex = parseInt(activeDot.dataset.index, 10);
+  const carouselSlider = activeDot.closest('.carousel-slider');
+  const dots = carouselSlider.querySelectorAll('.dot');
+  setTrack(activeDot);
+  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  const cards = Array.from(carouselTrack.children);
+  const moveDistance = dotIndex * cards[0].offsetWidth;
+  if (Viewport.isMobile() && scroll) {
+    carouselTrack.scrollTo({
+      top: 0,
+      left: carouselTrack.children[activeDot.dataset.index].offsetLeft,
+      behavior: 'smooth',
+    });
+  } else {
+    carouselTrack.style.transform = `translateX(-${moveDistance}px)`;
+    dots.forEach((dot) => dot.classList.remove('active'));
+    dots[dotIndex].classList.add('active');
+  }
+}
+
+function setDotIndex(activeDot) {
+  setTrack(activeDot);
+  const dotIndex = parseInt(activeDot.dataset.index, 10);
+  const carouselSlider = activeDot.closest('.carousel-slider');
+  const dots = carouselSlider.querySelectorAll('.dot');
+  if (!dots[dotIndex].classList.contains('active')) {
+    dots.forEach((dot) => dot.classList.remove('active'));
+    dots[dotIndex].classList.add('active');
+  }
+}
+
+let intervalId;
 function startUpdateCarousel(carouselSlider) {
   const dotsContainer = carouselSlider.querySelector('.dots-container');
   if (!dotsContainer) return; // Exit if dotsContainer doesn't exist
@@ -55,10 +86,8 @@ function startUpdateCarousel(carouselSlider) {
     return;
   }
 
-  const isDesktop = Viewport.isDesktop();
   let movingForward = true;
-
-  const intervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     if (isDesktop) {
       if (activeDotIndex === dots.length - 1) {
         clearInterval(intervalId); // Stop if it's desktop and reaches the last dot
@@ -77,8 +106,9 @@ function startUpdateCarousel(carouselSlider) {
       }
     }
     const activeDot = dots[activeDotIndex];
-    updateCarouselView(activeDot);
+    updateCarouselView(activeDot, Viewport.isMobile());
   }, 2000);
+  carouselSlider.setAttribute('data-interval-id', intervalId);
 }
 
 function setCarouselView(type, carouselSlider) {
@@ -86,6 +116,7 @@ function setCarouselView(type, carouselSlider) {
   const cards = Array.from(carouselTrack.children);
   const visibleCards = allowedCardsCount();
   const numberOfDots = cards.length - visibleCards + 1;
+  const isMobile = Viewport.isMobile();
   if (numberOfDots > 1) {
     const dotsContainer = document.createElement('div');
     dotsContainer.className = 'dots-container border-box';
@@ -93,16 +124,37 @@ function setCarouselView(type, carouselSlider) {
     for (let i = 0; i < numberOfDots; i++) {
       const dot = document.createElement('button');
       dot.className = 'dot border-box';
+      cards[i].dataset.index = i;
       dot.dataset.index = i;
       dot.setAttribute('aria-label', `dot-${i}`);
       dotsContainer.appendChild(dot);
       dot.addEventListener('click', (event) => {
-        updateCarouselView(event.currentTarget);
+        clearInterval(carouselSlider.getAttribute('data-interval-id'));
+        updateCarouselView(event.currentTarget, Viewport.isMobile());
       });
     }
 
     carouselSlider.appendChild(dotsContainer);
-    updateCarouselView(dotsContainer.firstChild);
+    updateCarouselView(dotsContainer.firstChild, Viewport.isMobile());
+    dotsContainer.firstElementChild.classList.add('active');
+    if (isMobile) {
+      carouselTrack.classList.add('scrollable');
+      const slideObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const dots = entry.target.closest('.carousel-slider')
+              .querySelector('.dots-container');
+            const activeDot = dots.querySelector(`.dot[data-index='${entry.target.dataset.index}']`);
+            setDotIndex(activeDot);
+          });
+        },
+        { threshold: 0.8 },
+      );
+      cards.forEach((card) => {
+        card.classList.add('scrollable');
+        slideObserver.observe(card);
+      });
+    }
     startUpdateCarousel(carouselSlider);
   }
 }
