@@ -571,35 +571,6 @@ main .section.background-gray {
       box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
     }
 
-  @media (width >= 36rem) {
-    main .section.top-bottom-padded {
-      padding: 2.5rem 0;
-    }
-
-    main .section.bottom-padded {
-      padding-bottom: 2.5rem;
-    }
-  }
-
-  /* Media Queries - Tablet */
-  @media (width >= 48rem) {
-    .mobile {
-      display: none;
-    }
-
-    .tablet {
-      display: block;
-    }
-
-    .desktop {
-      display: none;
-    }
-
-    main .section.shadow {
-      background: var(--background-color-light-orange);
-      box-shadow: 0 1.25rem 2.5rem var(--box-shadow);
-    }
-
     header {
       min-height: 8.4rem;
     }
