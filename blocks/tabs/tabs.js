@@ -48,11 +48,11 @@ function openUrl(event) {
   window.location.href = event.currentTarget.getAttribute('share-link');
 }
 
-function startCaraousal() {
+function startCarousel(block) {
   let nextIndex = 1;
   let direction = 1;
   const intervalId = setInterval(() => {
-    const tabPanel = document.querySelector('.block.media.tabs .tabs-panel[aria-hidden="false"]');
+    const tabPanel = block.querySelector('.block.media.tabs .tabs-panel[aria-hidden="false"]');
     const track = tabPanel.querySelector('.track');
     const trackWidth = track.offsetWidth;
     const dotsContainer = tabPanel.querySelector('.dots-container');
@@ -79,12 +79,14 @@ function startCaraousal() {
       else nextIndex -= 1;
     }
   }, 4000);
+  const tabPanel = block.querySelector('.block.media.tabs .tabs-panel[aria-hidden="false"]');
+  tabPanel.setAttribute('interval-id', intervalId);
   return intervalId;
 }
 
-function clearIntervalAndReset(intervalId) {
-  clearInterval(intervalId);
-  const tabPanel = document.querySelector('.block.media.tabs .tabs-panel[aria-hidden="true"]');
+function clearIntervalAndReset(block) {
+  const tabPanel = block.querySelector('.block.media.tabs .tabs-panel[aria-hidden="true"]');
+  clearInterval(tabPanel.getAttribute('interval-id'));
   const dotsContainer = tabPanel.querySelector('.dots-container');
   const track = tabPanel.querySelector('.track');
   track.style.transform = 'translateX(-0px)';
@@ -96,12 +98,10 @@ function clearIntervalAndReset(intervalId) {
   }
 }
 
-let intervalId = 1;
-
 function targetedDotView(event) {
   const targetDotIndex = event.currentTarget.dataset.index;
-  clearInterval(intervalId);
-  const tabPanel = document.querySelector('.block.media.tabs tabs-panel[aria-hidden="false"]');
+  const tabPanel = event.currentTarget.closest('.block.media.tabs').querySelector('.tabs-panel[aria-hidden="false"]');
+  clearInterval(tabPanel.getAttribute('interval-id'));
   const track = tabPanel.querySelector('.track');
   const dotsContainer = tabPanel.querySelector('.dots-container');
   dotsContainer.querySelector('.active').classList.remove('active');
@@ -283,12 +283,12 @@ async function createMediaTabPanel(block) {
         break;
     }
   }
-  intervalId = startCaraousal();
+  startCarousel(block);
 }
 
 function updateTrack(event) {
   const targetDotIndex = event.currentTarget.dataset.index;
-  const tabPanel = document.querySelector('.block.ipo.tabs .tabs-panel[aria-hidden="false"]');
+  const tabPanel = event.currentTarget.closest('.block.ipo.tabs').querySelector('.tabs-panel[aria-hidden="false"]');
   const track = tabPanel.querySelector('.track');
   track.scrollTo({
     top: 0,
@@ -297,8 +297,9 @@ function updateTrack(event) {
   });
 }
 
-function setActiveDot(index) {
-  const tabPanel = document.querySelector('.block.ipo.tabs .tabs-panel[aria-hidden="false"]');
+function setActiveDot(target) {
+  const tabPanel = target.closest('.block.ipo.tabs').querySelector('.tabs-panel[aria-hidden="false"]');
+  const index = parseInt(target.getAttribute('index'), 10);
   const dotsContainer = tabPanel.querySelector('.dots-container');
   if (!dotsContainer.querySelector(`.dot[data-index='${index}']`).classList.contains('active')) {
     dotsContainer.querySelector('.active')?.classList.remove('active');
@@ -323,7 +324,7 @@ function createIPODots(block, apiKey, totalCards, maxAllowedCards, dots) {
   const slideObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        setActiveDot(parseInt(entry.target.getAttribute('index'), 10));
+        setActiveDot(entry.target);
       });
     },
     { threshold: 0.8 },
@@ -474,8 +475,8 @@ export default async function decorate(block) {
       });
       tabpanel.setAttribute('aria-hidden', false);
       button.setAttribute('aria-selected', true);
-      clearIntervalAndReset(intervalId);
-      intervalId = startCaraousal();
+      clearIntervalAndReset(block);
+      startCarousel(block);
     });
     tablist.append(button);
     tab.remove();
