@@ -45,11 +45,23 @@
 }
 
 .block.carousel-section .carousel-highlight p {
-    margin-left: 0.5rem;
+    margin-left: var(--space-8px);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--heading-font-size-ms);
+}
+
+.block.carousel-section .carousel-highlight p strong {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--heading-font-size-ms);
 }
 
 .block.carousel-section .carousel-highlight p:last-child {
     margin-bottom: 0;
+}
+
+.block.carousel-section .carousel-highlight.green-highlight p strong {
+   color: var(--color-light-green);
+   font-weight: var(--font-weight-regular);
 }
 
 .block.carousel-section .row {
@@ -78,7 +90,7 @@
 }
 
 .block.carousel-section .carousel-header {
-    background-color: var(--primary);
+    background-color: var(--color-orange);
     padding: 0.6rem 0.9rem;
 }
 
