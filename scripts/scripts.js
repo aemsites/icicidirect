@@ -34,6 +34,40 @@ function buildHeroBlock(main) {
 }
 
 /**
+ * Set the JSON-LD script in the body
+ * @param {*} data To be appended json
+ * @param {string} name The data-name of the script tag
+ */
+export function setJsonLd(data, name) {
+  const existingScript = document.body.querySelector(`script[data-name="${name}"]`);
+  if (existingScript) return;
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  script.dataset.name = name;
+  document.body.appendChild(script);
+}
+
+/**
+ * Builds HowTo schema and append it to body.
+ */
+async function buildHowToSchema() {
+  // Get Howto schema from schema excel
+  const response = await fetch('/howto-schema.json?sheet=data&sheet=step');
+  const json = await response.json();
+  const jsonLD = {};
+  if (json) {
+    if (json.data.data) {
+      Object.assign(jsonLD, json.data.data[0]);
+    }
+    if (json.step.data) {
+      jsonLD.step = json.step.data;
+    }
+  }
+  setJsonLd(jsonLD, 'howto');
+}
+
+/**
  * load fonts.css and set a session storage flag
  */
 async function loadFonts() {
@@ -52,6 +86,7 @@ async function loadFonts() {
 function buildAutoBlocks(main) {
   try {
     buildHeroBlock(main);
+    buildHowToSchema();
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
