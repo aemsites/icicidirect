@@ -113,8 +113,8 @@ function updateRecommedations(selectedDropDownItem) {
   dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
 }
 
-function closeAllDropDowns(clickedElement) {
-  document.querySelectorAll('.dropdown-select').forEach((container) => {
+function closeAllDropDowns(clickedElement, dropdownsDiv) {
+  dropdownsDiv.querySelectorAll('.dropdown-select').forEach((container) => {
     if (!container.contains(clickedElement)) {
       container.querySelector('.dropdown-menu-container').classList.remove('visible');
     }
@@ -436,8 +436,8 @@ function addCarouselHeader(carouselContainer, title, dropdowns) {
       dropdownsDiv.appendChild(dropDownEle);
     });
     rowDiv.appendChild(dropdownsDiv);
-    document.addEventListener('click', (event) => {
-      closeAllDropDowns(event.target);
+    dropdownsDiv.addEventListener('click', (event) => {
+      closeAllDropDowns(event.target, dropdownsDiv);
     });
   }
 

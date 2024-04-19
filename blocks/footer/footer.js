@@ -1,20 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 
-function onClick() {
-  const disclaimerDiv = document.querySelector('.panel-body');
-  const iconDiv = document.querySelector('.toggle-icon');
-  if (disclaimerDiv.classList.contains('slide-up')) {
-    // If the content is currently hidden, slide it down
-    disclaimerDiv.classList.remove('slide-up');
-    iconDiv.textContent = '-';
-  } else {
-    // If the content is currently visible, slide it up
-    disclaimerDiv.classList.add('slide-up');
-    iconDiv.textContent = '+';
-  }
-}
-
 function decorateFooterTop(block) {
   const footerTop = block.querySelector('.footer-top');
   const sectionContainer = footerTop.querySelector('.section-container');
@@ -80,7 +66,18 @@ function decorateDisclaimer(block) {
   headerDiv.classList.add('panel-header');
   const icon = document.createElement('icon');
   icon.classList.add('toggle-icon');
-  icon.onclick = onClick;
+  icon.addEventListener('click', () => {
+    const panelBody = headerDiv.nextElementSibling;
+    if (panelBody.classList.contains('slide-up')) {
+      panelBody.classList.remove('slide-up');
+      panelBody.classList.add('slide-down');
+      icon.textContent = '-';
+    } else {
+      panelBody.classList.remove('slide-down');
+      panelBody.classList.add('slide-up');
+      icon.textContent = '+';
+    }
+  });
   icon.textContent = '+';
   const disclaimerHeading = document.createElement('strong');
   disclaimerHeading.textContent = children[0].textContent;

@@ -137,8 +137,8 @@ function addSecondDropDown(dropdownsDiv, dropdownValue) {
   }
 }
 
-function closeAllDropDowns(clickedElement) {
-  document.querySelectorAll('.dropdown-select').forEach((container) => {
+function closeAllDropDowns(clickedElement, dropdownsDiv) {
+  dropdownsDiv.querySelectorAll('.dropdown-select').forEach((container) => {
     if (!container.contains(clickedElement)) {
       container.querySelector('.dropdown-menu-container').classList.remove('visible');
     }
@@ -160,8 +160,8 @@ function addHeader(ilensContainer, dropdowns) {
     });
 
     rowDiv.appendChild(dropdownsDiv);
-    document.addEventListener('click', (event) => {
-      closeAllDropDowns(event.target);
+    dropdownsDiv.addEventListener('click', (event) => {
+      closeAllDropDowns(event.target, dropdownsDiv);
     });
   }
 

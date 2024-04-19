@@ -8,6 +8,18 @@ const placeholders = await fetchPlaceholders();
 const ICICI_DIRECT_NEWS_HOST = 'https://www.icicidirect.com/research/equity/trending-news/';
 const ICICI_NEWS_THUMBNAIL_ICICI_HOST = 'https://www.icicidirect.com/images/';
 
+function allowedCardsCount() {
+  const deviceType = Viewport.getDeviceType();
+  switch (deviceType) {
+    case 'Desktop':
+      return 4;
+    case 'Tablet':
+      return 2;
+    default:
+      return 1;
+  }
+}
+
 function getNewsShareLink(permLink) {
   return ICICI_DIRECT_NEWS_HOST + permLink;
 }
@@ -102,6 +114,60 @@ async function generateNewsCard(block) {
       });
     }
   });
+  let currentIndex = 0;
+  let shift = 0;
+  const intervalId = setInterval(() => {
+    const cards = newsTrack.children;
+    const firstCard = newsTrack.firstChild;
+    const cardSize = firstCard ? firstCard.offsetWidth : 0;
+    const offset = allowedCardsCount();
+    const cardsArray = Array.from(cards);
+    if (offset >= 4) {
+      cardsArray.forEach(((card) => {
+        card.style.opacity = 1;
+      }));
+      newsTrack.style.transform = 'translateX(0px)';
+      clearInterval(intervalId);
+    }
+
+    if (currentIndex >= cards.length) currentIndex = 0;
+    if ((shift === 0 || shift !== allowedCardsCount()) && !(shift < 0)) {
+      currentIndex = 0;
+      shift = allowedCardsCount();
+    }
+    if (currentIndex === cards.length - offset && shift > 0) {
+      shift = -shift; // Change direction when reaching the end
+    } else if (currentIndex === 0 && shift < 0) {
+      shift = -shift; // Change direction when reaching the beginning
+    }
+    currentIndex += shift;
+    const moveDistance = currentIndex * (cardSize);
+    newsTrack.style.transform = `translateX(-${moveDistance}px)`;
+    let index = 0;
+    if (allowedCardsCount() < 4) {
+      if (allowedCardsCount() === 2) {
+        while (index < cards.length) {
+          if (index === currentIndex) {
+            cards[index].style.opacity = 1;
+            cards[index + 1].style.opacity = 1;
+          } else {
+            cards[index].style.opacity = 0;
+            cards[index + 1].style.opacity = 0;
+          }
+          index += 2;
+        }
+      } else {
+        while (index < cards.length) {
+          if (index === currentIndex) {
+            cards[index].style.opacity = 1;
+          } else {
+            cards[index].style.opacity = 0;
+          }
+          index += 1;
+        }
+      }
+    }
+  }, 3000);
 }
 
 export default function decorate(block) {
@@ -133,71 +199,3 @@ export default function decorate(block) {
   block.appendChild(container);
   observe(block, generateNewsCard, placeholders);
 }
-
-function allowedCardsCount() {
-  const deviceType = Viewport.getDeviceType();
-  switch (deviceType) {
-    case 'Desktop':
-      return 4;
-    case 'Tablet':
-      return 2;
-    default:
-      return 1;
-  }
-}
-
-let currentIndex = 0;
-let shift = 0;
-const intervalId = setInterval(() => {
-  const newsTrack = document.querySelector('.news-track');
-  const cards = newsTrack.children;
-  const firstCard = document.querySelector('.news-track .news-card');
-  const cardSize = firstCard ? firstCard.offsetWidth : 0;
-  const offset = allowedCardsCount();
-  const cardsArray = Array.from(cards);
-  if (offset >= 4) {
-    cardsArray.forEach(((card) => {
-      card.style.opacity = 1;
-    }));
-    newsTrack.style.transform = 'translateX(0px)';
-    clearInterval(intervalId);
-  }
-
-  if (currentIndex >= cards.length) currentIndex = 0;
-  if ((shift === 0 || shift !== allowedCardsCount()) && !(shift < 0)) {
-    currentIndex = 0;
-    shift = allowedCardsCount();
-  }
-  if (currentIndex === cards.length - offset && shift > 0) {
-    shift = -shift; // Change direction when reaching the end
-  } else if (currentIndex === 0 && shift < 0) {
-    shift = -shift; // Change direction when reaching the beginning
-  }
-  currentIndex += shift;
-  const moveDistance = currentIndex * (cardSize);
-  newsTrack.style.transform = `translateX(-${moveDistance}px)`;
-  let index = 0;
-  if (allowedCardsCount() < 4) {
-    if (allowedCardsCount() === 2) {
-      while (index < cards.length) {
-        if (index === currentIndex) {
-          cards[index].style.opacity = 1;
-          cards[index + 1].style.opacity = 1;
-        } else {
-          cards[index].style.opacity = 0;
-          cards[index + 1].style.opacity = 0;
-        }
-        index += 2;
-      }
-    } else {
-      while (index < cards.length) {
-        if (index === currentIndex) {
-          cards[index].style.opacity = 1;
-        } else {
-          cards[index].style.opacity = 0;
-        }
-        index += 1;
-      }
-    }
-  }
-}, 3000);
