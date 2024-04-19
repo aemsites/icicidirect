@@ -1,5 +1,5 @@
 import {
-  createOptimizedPicture, readBlockConfig, toCamelCase, toClassName,
+  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName,
 } from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
@@ -334,6 +334,50 @@ function debounce(func, timeout = 200) {
   };
 }
 
+async function loadGTM() {
+  const scriptTag = document.createElement('script');
+  scriptTag.innerHTML = `
+        (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+        }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
+    `;
+  document.head.prepend(scriptTag);
+}
+
+function loadAdobeLaunch() {
+  const adobeLaunchSrc = {
+    dev: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    preview: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    live: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+  };
+  loadScript(adobeLaunchSrc[getEnvType()], { async: true });
+}
+
+/**
+ * Get query param from URL
+ * @param param {string} The query param to get
+ * @returns {string} The value of the query param
+ */
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+function loadAnalyticsEager() {
+  return getQueryParam('analytics') === 'eager';
+}
+
 export {
   isInViewport,
   Viewport,
@@ -354,4 +398,8 @@ export {
   debounce,
   ICICI_FINOUX_HOST,
   SITE_ROOT,
+  loadAdobeLaunch,
+  loadGTM,
+  getQueryParam,
+  loadAnalyticsEager,
 };
