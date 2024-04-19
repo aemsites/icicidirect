@@ -102,17 +102,21 @@ function updateDots(block) {
   }
 }
 
-async function generateCardsView(block, placeholders) {
+function updateContainerWithCards(block, marketCommentaryData, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
+  marketCommentaryData.Data.Table.forEach((cardData) => {
+    const card = createMarketCommentaryCard(cardData, placeholders);
+    blogsContainer.appendChild(card);
+  });
+  updateDots(block);
+}
+
+async function generateCardsView(block, placeholders) {
   getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
     if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
       return;
     }
-    marketCommentaryData.Data.Table.forEach((cardData) => {
-      const card = createMarketCommentaryCard(cardData, placeholders);
-      blogsContainer.appendChild(card);
-    });
-    updateDots(block);
+    observe(block, updateContainerWithCards, marketCommentaryData, placeholders);
   });
 }
 export default async function decorate(block) {
@@ -137,5 +141,6 @@ export default async function decorate(block) {
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
   block.appendChild(containerlist);
-  observe(block, generateCardsView, placeholders);
+  generateCardsView(block, placeholders);
+  // observe(block, generateCardsView, placeholders);
 }
