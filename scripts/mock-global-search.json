@@ -1,6 +1,6 @@
 [
   {
-    "type": "eq",
+    "type": "",
     "label": "Britannia Industries Ltd",
     "long_name": "Britannia Industries Ltd",
     "symbol": "BRITANNIA",
@@ -11,7 +11,7 @@
     "url": "https://www.icicidirect.com/stocks/britannia-industries-ltd-share-price"
   },
   {
-    "type": "eq",
+    "type": "",
     "label": "Carborundum Universal Ltd",
     "long_name": "Carborundum Universal Ltd",
     "symbol": "CARBORUNIV",
@@ -22,7 +22,7 @@
     "url": "https://www.icicidirect.com/stocks/carborundum-universal-ltd-share-price"
   },
   {
-    "type": "eq",
+    "type": "",
     "label": "Deepak Nitrite Ltd",
     "long_name": "Deepak Nitrite Ltd",
     "symbol": "DEEPAKNTR",
