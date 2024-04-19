@@ -5,6 +5,8 @@ import { getEnvType } from './blocks-utils.js';
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
+const isSidekickLibrary = (window.location.pathname.includes('srcdoc'));
+
 const onCaptchaloadCallback = () => {
   document.querySelectorAll('.g-recaptcha').forEach((el) => {
   // eslint-disable-next-line no-undef
@@ -19,7 +21,6 @@ const onCaptchaloadCallback = () => {
 
 window.onCaptchaloadCallback = onCaptchaloadCallback;
 
-loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
 loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback&render=explicit');
 
 /**
@@ -47,17 +48,21 @@ async function loadGTM() {
 
 loadScript('/scripts/cookie-script.js');
 
-// TODO: Remove delayed loading of GTM once it stops impacting page performance
-setTimeout(() => {
-  loadGTM();
-}, 2000);
+if (!isSidekickLibrary) {
+  // TODO: Remove delayed loading of GTM once it stops impacting page performance
+  setTimeout(() => {
+    loadGTM();
+  }, 2000);
 
-(function loadAdobeLaunch() {
-  const adobeLaunchSrc = {
-    dev: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
-    preview: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
-    live: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
-    prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
-  };
-  loadScript(adobeLaunchSrc[getEnvType()], { async: true });
-}());
+  (function loadAdobeLaunch() {
+    const adobeLaunchSrc = {
+      dev: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+      preview: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+      live: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+      prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    };
+    loadScript(adobeLaunchSrc[getEnvType()], { async: true });
+  }());
+
+  loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
+}
