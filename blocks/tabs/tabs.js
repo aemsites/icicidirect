@@ -1,10 +1,9 @@
 import { toClassName } from '../../scripts/aem.js';
 import {
-  Viewport, createPictureElement, observe, getDataFromAPI, getResearchAPIUrl, parseResponse,
-  fetchData,
+  Viewport, createPictureElement, observe, getDataFromAPI, getResearchAPIUrl,
+  parseResponse,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
-import { getHostUrl } from '../../scripts/mockapi.js';
 
 const ICICI_DIRECT_VIDEOS_HOST = 'https://www.icicidirect.com/research/videos/';
 const ICICI_DIRECT_PODCASTS_HOST = 'https://www.icicidirect.com/research/podcasts/';
@@ -419,16 +418,19 @@ async function createIPOTabPanel(block) {
     slider.appendChild(track);
     slider.appendChild(dots);
 
-    /* eslint-disable no-loop-func */
     const callback = async (error, apiResponse = []) => {
       if (apiResponse) {
-        createIPOCards(track, apiKey, apiResponse);
-        createIPODots(block, apiKey, apiResponse.length, 1, dots);
+        const result = [];
+        const jsonObject = {};
+        apiResponse.Data.LatestUpcomingIpo.forEach((item) => {
+          jsonObject[item.Key] = item.Value;
+        });
+        result.push(jsonObject);
+        createIPOCards(track, apiKey, result);
+        createIPODots(block, apiKey, result.length, 1, dots);
       }
     };
-    // TODO: replace with api response
-    if (apiKey === 'upcomingipo') fetchData(`${getHostUrl()}/scripts/mock-upcoming-ipodata.json`, callback);
-    else if (apiKey === 'recentipo') fetchData(`${getHostUrl()}/scripts/mock-recent-ipodata.json`, callback);
+    getDataFromAPI(getResearchAPIUrl(), 'GetLatestIPO', callback);
   }
 }
 
