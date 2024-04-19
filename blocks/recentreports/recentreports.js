@@ -128,7 +128,7 @@ function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCf
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
-  carouselBlock.style.display = 'none';
+  carouselBlock.style.visibility = 'hidden';
   carouselBlock.dataset.visibleSlides = block.dataset.visibleSlides || '';
   carouselBlock.dataset.autoScroll = block.dataset.autoScroll || '';
   carouselBlock.dataset.autoScrollDelay = block.dataset.autoScrollDelay || '';
@@ -150,14 +150,31 @@ async function loadCarousel(block, carouselItems) {
   carouselBlockParent.appendChild(carouselBlock);
   block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
   decorateBlock(carouselBlock);
-  if (carouselItems.children.length >= carouselBlock.dataset.visibleSlides) {
-    carouselBlock.style.setProperty('--displayed-slides', carouselBlock.dataset.visibleSlides);
-  } else {
-    carouselBlock.style.setProperty('--displayed-slides', carouselItems.children.length);
-  }
 
   loadBlock(carouselBlock).then((recentreportblock) => {
-    recentreportblock.style.display = 'block';
+    let totalSlidesDisplayed = 0;
+    if (carouselItems.children.length >= carouselBlock.dataset.visibleSlides) {
+      totalSlidesDisplayed = carouselBlock.dataset.visibleSlides;
+      carouselBlock.style.setProperty('--displayed-slides', carouselBlock.dataset.visibleSlides);
+    } else {
+      totalSlidesDisplayed = carouselItems.children.length;
+      carouselBlock.style.setProperty('--displayed-slides', carouselItems.children.length);
+    }
+
+    if (totalSlidesDisplayed > 1) {
+      let maxWidth = 0;
+      carouselBlock.querySelectorAll('.carousel-slide .box').forEach((slide) => {
+        if (maxWidth < slide.offsetWidth) {
+          maxWidth = slide.offsetWidth;
+        }
+      });
+
+      const margin = (carouselBlock.parentElement.offsetWidth
+        - (totalSlidesDisplayed * maxWidth)) / 2;
+      carouselBlock.querySelector('.carousel-slides-container').style
+        .setProperty('margin-inline', `${margin.toString()}px`);
+    }
+    recentreportblock.style.visibility = 'visible';
   });
 }
 
