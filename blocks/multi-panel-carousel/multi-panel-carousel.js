@@ -393,10 +393,13 @@ async function generateCardsView(block, type) {
   });
 }
 
-function addHighLightSection(carouselSection, highLightDiv, highLightIcon) {
+function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type) {
   if (highLightDiv) {
     const div = document.createElement('div');
-    div.className = 'carousel-highlight border-box';
+    div.className = 'carousel-highlight';
+    if (type !== 'trading') {
+      div.classList.add('green-highlight');
+    }
     const span = document.createElement('span');
     const p = document.createElement('p');
     p.innerHTML = highLightDiv.innerHTML;
@@ -484,7 +487,7 @@ export default async function decorate(block) {
     ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
   block.textContent = '';
   block.classList.add('carousel-section');
-  addHighLightSection(block, highlightDiv, highlightIcon);
+  addHighLightSection(block, highlightDiv, highlightIcon, type);
 
   const carouselContainer = document.createElement('div');
   carouselContainer.className = 'carousel-container border-box';
