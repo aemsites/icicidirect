@@ -9,7 +9,7 @@ const defaultCardsCount = 3;
 const MARKETINSIGHT_DIRECTORY = '/research/equity/market-insights/';
 
 function getLink(permLink) {
-  return MARKETINSIGHT_DIRECTORY + SITE_ROOT + permLink;
+  return SITE_ROOT + MARKETINSIGHT_DIRECTORY + permLink;
 }
 function decorateTitle(blockCfg) {
   const { title } = blockCfg;
