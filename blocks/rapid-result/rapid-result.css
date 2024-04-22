@@ -1,3 +1,7 @@
+.block.rapid-result {
+    padding-bottom: 3rem;
+}
+
 .block.rapid-result .title {
     margin-bottom: 1.25rem;
     padding-bottom: var(--space-10px);
@@ -36,7 +40,7 @@
 .block.rapid-result .main-wrapper > ul > li .company-result {
     border: var(--space-1px) solid var(--border-color-gray);
     padding: var(--space-15px);
-    padding-bottom: 4.0625rem;
+    padding-bottom: 5.3125rem;
     position: relative;
     min-height: 100%;
     background: var(--background-color-light-grey);
@@ -168,14 +172,26 @@
 }
 
 @media (width >=48rem) {
+    .block.rapid-result {
+        padding-bottom: unset;
+    }
+
     .block.rapid-result .company-result .cards-powerby .view-more-link {
         font-size: var(--body-font-size-xlm);
         line-height: var(--line-height-large);
     }
 
+    .block.rapid-result .main-wrapper {
+        padding: unset;
+    }
+
     .block.rapid-result .main-wrapper > ul > li {
         flex: 0 0 50%;
         max-width: 47%;
+    }
+
+    .block.rapid-result .main-wrapper > ul > li .company-result {
+        padding-bottom: 6.3125rem;
     }
     
     .block.rapid-result .company-result .cards-title h3,
@@ -193,5 +209,9 @@
 
     .block.rapid-result .main-wrapper > ul > li {
         max-width: unset;
+    }
+
+    .block.rapid-result .main-wrapper > ul > li .company-result {
+        padding-bottom: 5.3125rem;
     }
 }
