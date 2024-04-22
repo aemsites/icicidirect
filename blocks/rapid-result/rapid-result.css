@@ -1,6 +1,7 @@
 .block.rapid-result .title {
     margin-bottom: 1.25rem;
     padding-bottom: var(--space-10px);
+    padding-top: 3rem;
 }
 
 .block.rapid-result .title h2 {
@@ -36,7 +37,7 @@
 .block.rapid-result .main-wrapper > ul > li .company-result {
     border: var(--space-1px) solid var(--border-color-gray);
     padding: var(--space-15px);
-    padding-bottom: 4.0625rem;
+    padding-bottom: 5.3125rem;
     position: relative;
     min-height: 100%;
     background: var(--background-color-light-grey);
@@ -172,10 +173,18 @@
         font-size: var(--body-font-size-xlm);
         line-height: var(--line-height-large);
     }
+    
+    .block.rapid-result .title {
+        padding-top: unset;
+    }
+
+    .block.rapid-result .main-wrapper {
+        padding: unset;
+    }
 
     .block.rapid-result .main-wrapper > ul > li {
-        flex: 0 0 50%;
-        max-width: 47%;
+        flex: 0 0 100%;
+        max-width: 100%;
     }
     
     .block.rapid-result .company-result .cards-title h3,
@@ -187,7 +196,7 @@
 @media (width >=62rem) {
     .block.rapid-result .main-wrapper > ul {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(2, 1fr);
         grid-gap: 1.5rem;
     }
 
