@@ -162,6 +162,7 @@ async function loadCarousel(block, carouselItems) {
     }
 
     if (totalSlidesDisplayed > 1) {
+      //if number of display slides is greater than 1 , we need to reduce the number of width of container.
       let maxWidth = 0;
       carouselBlock.querySelectorAll('.carousel-slide .box').forEach((slide) => {
         if (maxWidth < slide.offsetWidth) {
