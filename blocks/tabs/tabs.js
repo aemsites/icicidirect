@@ -300,7 +300,7 @@ function setActiveDot(target) {
   const tabPanel = target.closest('.block.ipo.tabs').querySelector('.tabs-panel[aria-hidden="false"]');
   const index = parseInt(target.getAttribute('index'), 10);
   const dotsContainer = tabPanel.querySelector('.dots-container');
-  if (!dotsContainer.querySelector(`.dot[data-index='${index}']`).classList.contains('active')) {
+  if (dotsContainer.children.length > 0 && !dotsContainer.querySelector(`.dot[data-index='${index}']`)?.classList.contains('active')) {
     dotsContainer.querySelector('.active')?.classList.remove('active');
     dotsContainer.querySelector(`.dot[data-index='${index}']`).classList.add('active');
   }
