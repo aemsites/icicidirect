@@ -25,6 +25,7 @@ const apiEndPoints = {
   muhratpicks: '/draft/anagarwa/muhratpicks.json',
   finace: '/draft/shroti/finace.json',
   rapidresult: '/draft/jiang/rapidresult.json',
+  recentreports: '/draft/sneh/recentreports.json',
 };
 
 function getHostUrl() {

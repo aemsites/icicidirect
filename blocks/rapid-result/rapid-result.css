@@ -10,7 +10,6 @@
 .block.rapid-result .main-wrapper {
     margin: 0 var(--space-2px);
     background: var(--color-white);
-    border: var(--space-1px) solid var(--border-color-dark-grey);
     border-radius: var(--space-8px);
     padding: var(--space-15px);
     height: 100%;
@@ -39,6 +38,7 @@
     padding: var(--space-15px);
     padding-bottom: 4.0625rem;
     position: relative;
+    min-height: 100%;
     background: var(--background-color-light-grey);
 }
 
@@ -172,12 +172,22 @@
         font-size: var(--body-font-size-xlm);
         line-height: var(--line-height-large);
     }
+
+    .block.rapid-result .main-wrapper > ul > li {
+        flex: 0 0 50%;
+        max-width: 47%;
+    }
+    
+    .block.rapid-result .company-result .cards-title h3,
+    .block.rapid-result .company-result .cards-title h3 a {
+        word-break: break-word;
+    }
 }
 
 @media (width >=62rem) {
     .block.rapid-result .main-wrapper > ul {
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         grid-gap: 1.5rem;
     }
 

@@ -121,14 +121,14 @@ export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
   const blockCfg = readBlockConfig(block);
   const { title } = blockCfg;
-  const { subtitle } = blockCfg;
+  // const { subtitle } = blockCfg;
   const cardCount = blockCfg.count ?? 4;
   const topTitle = decorateTitle(title);
   const mainContent = createElement('div', 'main-content');
   const mainWrapper = createElement('div', 'main-wrapper');
-  const contentTitle = decorateTitle(subtitle);
+  // const contentTitle = decorateTitle(subtitle);
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
-  mainWrapper.append(contentTitle);
+  // mainWrapper.append(contentTitle);
   mainWrapper.append(discoverMoreButton);
   mainContent.append(mainWrapper);
   block.textContent = '';

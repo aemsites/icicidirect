@@ -34,7 +34,6 @@
   --color-deep-purple: #1A0D7C;
   --color-white: #FFF;
   --color-green: #259702;
-  --color-light-green: #008000;
   --color-transparent-orange: #ffe3ce;
   --color-text-orange: #D4622C;
   --color-indigo: #6610f2;
@@ -97,6 +96,7 @@
   --image-box-shadow: #878787;
   --title-color: #122E45;
   --title-color-card: #303030;
+  --color-gray-light-text: #4B5057;
 
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -163,6 +163,7 @@
   --line-height-narrow: 10px;
   --line-height-little-small: 14px;
   --line-height-small: 18px;
+  --line-height-regular: 19px;
   --line-height-normal: 20px;
   --line-height-medium: 22px;
   --line-height-large: 24px;
@@ -539,25 +540,6 @@ main .section.background-gray {
   background: var(--background-color-deep-light-grey);
 }
 
-main .section.layout-60-40 .section-container {
-  display: flex;
-  flex-wrap: wrap;
-}
-  
-main .section.layout-60-40 .section-container > div {
-   padding: 0 1rem;
-}
-  
-main .section.layout-60-40 .section-container > div:first-child {
-  flex: 0 0 58%;
-  max-width: 58%;
-}
-  
-main .section.layout-60-40 .section-container > div:nth-child(2) {
-  flex: 0 0 41%;
-  max-width: 41%;
-}
-
   @media (width >= 36rem) {
     main .section.top-bottom-padded {
       padding: 2.5rem 0;
@@ -612,6 +594,25 @@ main .section.layout-60-40 .section-container > div:nth-child(2) {
 
     h5 {
       font-size: var(--h5-font-size-desktop);
+    }
+
+    main .section.layout-60-40 .section-container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+      
+    main .section.layout-60-40 .section-container > div {
+       padding: 0 1rem;
+    }
+      
+    main .section.layout-60-40 .section-container > div:first-child {
+      flex: 0 0 58%;
+      max-width: 58%;
+    }
+      
+    main .section.layout-60-40 .section-container > div:nth-child(2) {
+      flex: 0 0 41%;
+      max-width: 41%;
     }
   }
 
