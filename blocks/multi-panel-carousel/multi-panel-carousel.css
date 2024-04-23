@@ -276,8 +276,18 @@
     min-height: 17.5rem;
 }
 
+.block.carousel-section .carousel-slider .carousel-track.scrollable {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+}
+
 .block.carousel-section .carousel-slider .carousel-track > * {
     opacity: 0;
+}
+
+.block.carousel-section .carousel-slider .carousel-track::-webkit-scrollbar {
+    display: none;
 }
 
 .block.carousel-section .carousel-slider .carousel-track > :first-child {
@@ -287,6 +297,10 @@
 .block.carousel-section .carousel-slider .carousel-card {
     transition: opacity 0.5s ease;
     padding: 0.5rem;
+}
+
+.block.carousel-section .carousel-slider .carousel-card.scrollable {
+    scroll-snap-align: start;
 }
 
 .block.carousel-section .carousel-slider .carousel-card img {
