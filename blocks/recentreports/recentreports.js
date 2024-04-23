@@ -37,7 +37,7 @@ function formatDate(dateString) {
 
 function formatPriceInRupees(price) {
   // Check for empty or null input
-  if (price === null || price === '') {
+  if (!price) {
     return '';
   }
   const numericPrice = Number(price);
@@ -194,7 +194,7 @@ function addDiscoverLink(discoverMoreDiv, block) {
   const discoverMoreAnchor = discoverMoreDiv.querySelector('a');
   if (discoverMoreAnchor) {
     const div = document.createElement('div');
-    div.className = 'discover-more';
+    div.className = 'discover-more-link';
     const anchor = document.createElement('a');
     anchor.href = discoverMoreAnchor.href;
     anchor.className = 'link-color';
