@@ -126,7 +126,7 @@ function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCf
   });
 }
 
-function createCarouselStructure(block){
+async function loadCarousel(block, carouselItems) {
   const carouselBlock = buildBlock('carousel', '');
   carouselBlock.style.visibility = 'hidden';
   carouselBlock.dataset.visibleSlides = block.dataset.visibleSlides || '';
@@ -137,18 +137,6 @@ function createCarouselStructure(block){
     carouselBlock.classList.add(className);
   });
 
-  const carouselBlockParent = document.createElement('div');
-  carouselBlockParent.classList.add('carousel-wrapper');
-  carouselBlockParent.appendChild(carouselBlock);
-  block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
-  decorateBlock(carouselBlock);
-  console.log("here");
- 
-}
-
-async function loadCarousel(block, carouselItems) {
-  
- const carouselBlock=  block.querySelector('.carousel')
   Array.from(carouselItems.children).forEach((carouselItemElement) => {
     const divElement = document.createElement('div');
     Array.from(carouselItemElement.children).forEach((child) => {
@@ -157,7 +145,11 @@ async function loadCarousel(block, carouselItems) {
     carouselBlock.appendChild(divElement);
   });
 
-  
+  const carouselBlockParent = document.createElement('div');
+  carouselBlockParent.classList.add('carousel-wrapper');
+  carouselBlockParent.appendChild(carouselBlock);
+  block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
+  decorateBlock(carouselBlock);
 
   loadBlock(carouselBlock).then((recentreportblock) => {
     let totalSlidesDisplayed = 0;
@@ -185,8 +177,6 @@ async function loadCarousel(block, carouselItems) {
     recentreportblock.style.visibility = 'visible';
   });
 }
-
-
 
 function handleTitleConfig(titleElement, container) {
   const titleText = titleElement.textContent.trim();
@@ -225,7 +215,22 @@ export default async function decorate(block) {
     const configNameElement = configElement.querySelector('div');
     const configName = configNameElement.textContent.trim().toLowerCase();
     const blockCfg = readBlockConfig(block);
-    if (configName === 'title') {
+    if (configName === 'type') {
+      const carouselItems = document.createElement('div');
+      carouselItems.classList.add('carousel-items');
+      const apiName = configNameElement.nextElementSibling.textContent.trim();
+      getDataFromAPI(getResearchAPIUrl(), apiName, async (error, recentReportsDataArray = []) => {
+        if (recentReportsDataArray) {
+          renderRecentReportsCards(
+            recentReportsDataArray,
+            carouselItems,
+            blockCfg,
+            block?.dataset?.maxLimit,
+          );
+          observe(block, loadCarousel, carouselItems);
+        }
+      });
+    } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);
     } else if (configName === 'discoverlink') {
@@ -243,22 +248,6 @@ export default async function decorate(block) {
     } else if (configName === 'max limit') {
       const maxLimit = configNameElement.nextElementSibling.textContent.trim();
       block.dataset.maxLimit = maxLimit;
-    } else if (configName === 'type') {
-      const carouselItems = document.createElement('div');
-      carouselItems.classList.add('carousel-items');
-      const apiName = configNameElement.nextElementSibling.textContent.trim();
-      createCarouselStructure(block);
-      getDataFromAPI(getResearchAPIUrl(), apiName, async (error, recentReportsDataArray = []) => {
-        if (recentReportsDataArray) {
-          renderRecentReportsCards(
-            recentReportsDataArray,
-            carouselItems,
-            blockCfg,
-            block?.dataset?.maxLimit,
-          );
-          observe(block, loadCarousel, carouselItems);
-        }
-      });
     }
   });
 }
