@@ -6,7 +6,7 @@
     justify-content: left;
     padding: var(--space-8px) 0;
 }
-  
+
 .block.tabs.media .tabs-list button {
     flex: 0 0 auto;
     border: var(--space-1px) solid var(--dark-color);
@@ -16,9 +16,9 @@
     color: var(--color-white);
     font-family: var(--body-font-family);
 }
-  
+
 .block.tabs.media .tabs-list button[aria-selected="true"] {
-    position: relative; 
+    position: relative;
     border-bottom: var(--space-1px) solid var(--background-color);
     background-color: var(--background-color);
     cursor: pointer;
@@ -42,7 +42,7 @@
     background-color: var(--background-color);
     cursor: pointer;
 }
-  
+
 .block.tabs.media .tabs-panel {
     max-width: 81.25rem;
     width: 100%;
@@ -108,7 +108,7 @@
 .block.tabs.media .tabs-panel .slider {
     overflow: hidden;
 }
-  
+
 .block.tabs.media .slider .track {
     display: flex;
     transition: transform 1s ease;
@@ -125,7 +125,7 @@
 
 .block.tabs.media .slider .track .slide-card {
     height: 23.5rem;
-    padding: 1rem;  
+    padding: 1rem;
     flex: 0 0 auto;
     transition: opacity 1s ease;
 }
@@ -291,7 +291,7 @@
     position: relative;
     flex-wrap: wrap;
 }
-  
+
 .block.tabs.ipo .tabs-list button {
     flex: 0 0 auto;
     margin: 0;
@@ -352,7 +352,7 @@
 .block.tabs.ipo .slider .dots-container .dot.active{
     background: var(--link-color-orange);
 }
-  
+
 .block.tabs.ipo .slide-card .ipo-items {
     border-radius: 1.5rem;
     height: 100%;
@@ -390,11 +390,11 @@
     color: var(--primary);
     margin: var(--space-10px) var(--space-15px) var(--space-15px);
 }
-  
+
 .block.tabs.ipo .tabs-panel {
     overflow: auto;
 }
-  
+
 .block.tabs.ipo .tabs-panel[aria-hidden="true"] {
     display: none;
 }
@@ -427,7 +427,7 @@
 
 @media (width >= 48rem) {
     .block.tabs.ipo {
-        margin: 0;
+        margin: 1rem 0;
     }
 
     .block.tabs.ipo .tabs-list button {
