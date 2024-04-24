@@ -52,6 +52,7 @@
 
 .block.media .slider .track {
     display: flex;
+    min-height: 23.5rem;
     transition: transform 1s ease;
 }
 
@@ -208,6 +209,10 @@
 
 
 @media (width >=48rem) {
+    .block.media .slider .track {
+        min-height: 24.75rem;
+    }
+
     .block.media .slider .track .slide-card {
         height: 24.75rem;
     }
