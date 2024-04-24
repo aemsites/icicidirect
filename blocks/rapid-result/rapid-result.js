@@ -1,7 +1,15 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
-import { createElement, observe } from '../../scripts/blocks-utils.js';
+import { createElement, observe, SITE_ROOT } from '../../scripts/blocks-utils.js';
 import { fetchRapidResultMockData } from '../../scripts/mockapi.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
+
+const defaultCardsCount = 4;
+const defaultSideBySideCardsCount = 3;
+const MARKETINSIGHT_DIRECTORY = '/research/equity/market-insights/';
+
+function getLink(permLink) {
+  return SITE_ROOT + MARKETINSIGHT_DIRECTORY + permLink;
+}
 
 function decorateTitle(titleContent) {
   const title = createElement('div', 'title');
@@ -25,9 +33,23 @@ function formatDate(date) {
   return result;
 }
 
-async function decorateCards(block, placeholders, cardCount, previousNode) {
-  const queryObj = await fetchRapidResultMockData();
-  const results = queryObj.map((el) => {
+function decorateDiscoverMore(blockCfg, placeholders) {
+  const discoverMoreLink = blockCfg['discover-more-link'];
+  const discoverMore = createElement('div', 'discover-more');
+  const aLink = createElement('a', '');
+  aLink.target = '_blank';
+  aLink.href = discoverMoreLink;
+  aLink.textContent = placeholders.discovermore;
+  aLink.classList.add('discover-more-link');
+  const icon = createElement('icon', 'discover-more-icon');
+  aLink.append(icon);
+  discoverMore.append(aLink);
+  return discoverMore;
+}
+
+function sortResult(sortData) {
+  const results = sortData.map((el) => {
+    if (!el.PublishedOnDate) return el;
     const elArr = el.PublishedOnDate.split(' ');
     const publishDate = elArr[0];
     const publishTime = elArr[1];
@@ -39,9 +61,16 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     const dateB = new Date(b.PublishedOnDate);
     return dateB - dateA;
   });
+  return results;
+}
 
-  const ul = createElement('ul', '');
+function buildCards(results, placeholders, cards, cardCount, blockCfg) {
+  const coverImageConf = blockCfg['cover-image'];
+  const coverImageCountConf = parseInt(blockCfg['number-of-cover-image'] ?? 0, 10);
   const loopNum = results.length > cardCount ? cardCount : results.length;
+  if (cardCount === 1) {
+    cards.classList.add('central-one-cards');
+  }
   for (let index = 0; index < loopNum; index += 1) {
     const result = results[index];
     const li = createElement('li', '');
@@ -59,7 +88,7 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     const titleContent = result.Title ?? '';
     if (result.PermLink) {
       const aLink = createElement('a', '');
-      aLink.href = result.PermLink;
+      aLink.href = getLink(result.PermLink);
       aLink.target = '_blank';
       aLink.append(titleContent);
       h3.append(aLink);
@@ -77,7 +106,7 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     const viewMoreDiv = createElement('div', '');
     const viewMoreLink = createElement('a', 'view-more-link');
     if (result.PermLink) {
-      viewMoreLink.href = result.PermLink;
+      viewMoreLink.href = getLink(result.PermLink);
       viewMoreLink.target = '_blank';
     }
     viewMoreLink.append((placeholders.viewmore ?? '').trim());
@@ -96,43 +125,83 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     liWrapper.append(title);
     liWrapper.append(description);
     liWrapper.append(powerby);
+    if (index >= (loopNum - coverImageCountConf) && coverImageConf) {
+      const coverImage = createElement('div', 'cover-image');
+      coverImage.style.backgroundImage = `url(${coverImageConf})`;
+      liWrapper.classList.add('covered');
+      li.append(coverImage);
+    }
     li.append(liWrapper);
-    ul.append(li);
+    cards.append(li);
   }
-  const parentDiv = previousNode.parentNode;
-  parentDiv.insertBefore(ul, previousNode);
 }
 
-function decorateDiscoverMore(blockCfg, placeholders) {
-  const discoverMoreLink = blockCfg['discover-more-link'];
-  const discoverMore = createElement('div', 'discover-more');
-  const aLink = createElement('a', '');
-  aLink.target = '_blank';
-  aLink.href = discoverMoreLink;
-  aLink.textContent = placeholders.discovermore;
-  aLink.classList.add('discover-more-link');
-  const icon = createElement('icon', 'discover-more-icon');
-  aLink.append(icon);
-  discoverMore.append(aLink);
-  return discoverMore;
+async function decorateCards(block, placeholders, cards, cardCount) {
+  const queryObj = await fetchRapidResultMockData();
+  const results = sortResult(queryObj);
+  if (cardCount < defaultCardsCount) {
+    cards.classList.add('central-cards');
+  }
+  const blockCfg = readBlockConfig(block);
+  buildCards(results, placeholders, cards, cardCount, blockCfg);
 }
 
-export default async function decorate(block) {
-  const placeholders = await fetchPlaceholders();
+async function decorateSideBySideCards(block, placeholders) {
+  const queryObj = await fetchRapidResultMockData();
+  if (!queryObj || queryObj.length <= 1) {
+    block.closest('.section').classList.remove('layout-60-40');
+    block.innerHTML = '';
+    block.style.display = 'none';
+    return;
+  }
   const blockCfg = readBlockConfig(block);
   const { title } = blockCfg;
-  // const { subtitle } = blockCfg;
-  const cardCount = blockCfg.count ?? 4;
+  const cards = createElement('ul', '');
+  const cardCount = parseInt(blockCfg['card-count'] ?? defaultSideBySideCardsCount, 10);
+  if (cardCount < defaultSideBySideCardsCount) {
+    cards.classList.add('central-cards');
+  }
   const topTitle = decorateTitle(title);
   const mainContent = createElement('div', 'main-content');
   const mainWrapper = createElement('div', 'main-wrapper');
-  // const contentTitle = decorateTitle(subtitle);
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
-  // mainWrapper.append(contentTitle);
+  mainWrapper.append(cards);
   mainWrapper.append(discoverMoreButton);
   mainContent.append(mainWrapper);
   block.textContent = '';
   block.append(topTitle);
   block.append(mainContent);
-  observe(block, decorateCards, placeholders, cardCount, discoverMoreButton);
+
+  const results = sortResult(queryObj);
+  buildCards(results, placeholders, cards, cardCount, blockCfg);
+}
+
+export default async function decorate(block) {
+  const sideBySide = block.classList.contains('side-by-side');
+  const placeholders = await fetchPlaceholders();
+  if (sideBySide) {
+    [...block.children].forEach((configElement) => {
+      configElement.style.display = 'none';
+    });
+    observe(block, decorateSideBySideCards, placeholders);
+  } else {
+    const blockCfg = readBlockConfig(block);
+    const { title } = blockCfg;
+    const { subtitle } = blockCfg;
+    const cards = createElement('ul', '');
+    const cardCount = parseInt(blockCfg['card-count'] ?? defaultCardsCount, 10);
+    const topTitle = decorateTitle(title);
+    const mainContent = createElement('div', 'main-content');
+    const mainWrapper = createElement('div', 'main-wrapper');
+    const contentTitle = decorateTitle(subtitle);
+    const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
+    mainWrapper.append(contentTitle);
+    mainWrapper.append(cards);
+    mainWrapper.append(discoverMoreButton);
+    mainContent.append(mainWrapper);
+    block.textContent = '';
+    block.append(topTitle);
+    block.append(mainContent);
+    observe(block, decorateCards, placeholders, cards, cardCount);
+  }
 }
