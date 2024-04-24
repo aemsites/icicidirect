@@ -14,7 +14,9 @@ import {
   loadScript,
 } from './aem.js';
 
-import { decorateQuickLinks } from './blocks-utils.js';
+import {
+  decorateQuickLinks, loadAdobeLaunch, loadAnalyticsEager, loadGTM,
+} from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -165,6 +167,11 @@ async function loadEager(doc) {
     }
   } catch (e) {
     // do nothing
+  }
+
+  if (loadAnalyticsEager()) {
+    loadAdobeLaunch();
+    loadGTM();
   }
 }
 
