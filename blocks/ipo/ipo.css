@@ -1,0 +1,150 @@
+.block.ipo {
+    height: 100%;
+    background: var(--background-color-light-grey);
+    border-radius: var(--space-10px);
+    border: var(--space-1px) solid var(--border-color-gray);
+    padding: 1.25rem 1.875rem 0;
+    margin: 1rem;
+}
+
+.block.ipo .title {
+    text-align: center;
+    margin: 0;
+    border: none;
+    background-color: var(--background-color-light-grey);
+    position: relative;
+    font-size: 1.125rem;
+    line-height: 1.875rem;
+    color: var(--primary);
+    text-transform: uppercase;
+    font-weight: var(--font-weight-bold);
+    font-family: var(--body-font-family);
+}
+
+.block.ipo .ipo-items .logo-wrap img {
+    height: 100%;
+    width: auto;
+}
+
+.block.ipo .slider {
+    padding-top: 2rem;
+    overflow: hidden;
+}
+
+.block.ipo .track .slide-card {
+    padding: var(--space-12px) var(--space-8px);
+    height: inherit;
+    flex: 0 0 100%;
+    transition: opacity 1s ease;
+    scroll-snap-align: start;
+}
+
+.layout-60-40 .block.ipo .track .slide-card {
+    flex: 0 0 100%;
+}
+
+.block.ipo .slider .track {
+    position: relative;
+    left: 0;
+    top: 0;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    transition: transform 1s ease;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For IE and Edge */
+}
+
+.block.ipo .slider .track::-webkit-scrollbar {
+    display: none;
+}
+
+.block.ipo .slider .dots-container {
+    text-align: center;
+    margin: 1.3rem 0;
+}
+
+.block.ipo .slider .dots-container .dot {
+    height: 0.9rem;
+    width: 0.9rem;
+    margin: 0 0.3rem;
+    padding: 0;
+    cursor: pointer;
+    background: var(--background-color-dark-grey);
+    border-radius: 3rem;
+    border: 0;
+}
+
+.block.ipo .slider .dots-container .dot.active{
+    background: var(--link-color-orange);
+}
+
+.block.ipo .slide-card .ipo-items {
+    border-radius: 1.5rem;
+    height: 100%;
+    background-color: var(--background-color-light-grey);
+    box-shadow: 0 var(--space-7px) var(--space-15px) 0 var(--text-color-light-gray);
+    padding: 1.125rem 1.125rem 1.875rem;
+    position: relative;
+}
+
+.block.ipo .ipo-items .logo-wrap {
+    margin-bottom: var(--space-15px);
+    height: 3.75rem;
+    max-width: 16.875rem;
+}
+
+.block.ipo .ipo-items h3 {
+    height: auto;
+}
+
+.block.ipo .ipo-items .ipo-details {
+    margin-top: var(--space-12px);
+    padding-top: var(--space-15px);
+    border-top: var(--space-1px) solid var(--background-color-dark-grey);
+}
+
+.block.ipo .ipo-details .btn-wrap {
+    position: relative;
+    padding: 1.25rem 0 0;
+    border-top: var(--space-1px) solid var(--background-color-dark-grey);
+    width: 100%;
+    text-align: center;
+}
+
+.block.ipo .ipo-items .ipo-details .open-close-text {
+    color: var(--primary);
+    margin: var(--space-10px) var(--space-15px) var(--space-15px);
+}
+
+.block.ipo a.discover-more {
+    min-width: unset;
+}
+
+@media (width >= 48rem) {
+    .block.ipo {
+        margin: 1rem 0;
+    }
+
+    .block.ipo .title {
+        font-size: 2rem;
+    }
+
+    .block.ipo .track .slide-card {
+        padding: var(--space-12px) var(--space-15px) 1.25rem;
+        flex: 0 0 auto;
+    }
+
+    .block.ipo .slide-card .ipo-items{
+        padding: 1.125rem 1.125rem 1.875rem;
+    }
+}
+
+@media (width >= 64rem) {
+    .block.ipo .ipo-items h3 {
+        height: 3.875rem;
+    }
+}
