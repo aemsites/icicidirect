@@ -104,7 +104,7 @@ function createReportBox(title, targetPrice, rating, date, reportLink, buttontit
 function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCfg, maxLimit = 20) {
   let slideCount = 0;
   const { buttontitle } = blockCfg;
-  recentReportsDataArray.Data.Table.slice(0, 6).forEach((item) => {
+  recentReportsDataArray.Data.Table.slice(0, 20).forEach((item) => {
     if (slideCount >= maxLimit) return;
     const slide = document.createElement('li');
     slide.classList.add('carousel-slide');
@@ -216,21 +216,26 @@ export default async function decorate(block) {
     const configName = configNameElement.textContent.trim().toLowerCase();
     const blockCfg = readBlockConfig(block);
     if (configName === 'type') {
-      const carouselItems = document.createElement('div');
-      carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      createCarouselDiv(block);
-      getDataFromAPI(getResearchAPIUrl(), apiName, async (error, recentReportsDataArray = []) => {
-        if (recentReportsDataArray) {
-          renderRecentReportsCards(
-            recentReportsDataArray,
-            carouselItems,
-            blockCfg,
-            block?.dataset?.maxLimit,
-          );
-          observe(block, loadCarousel, carouselItems);
-        }
-      });
+      if (apiName === 'recentreports') {
+        const carouselItems = document.createElement('div');
+        carouselItems.classList.add('carousel-items');
+        createCarouselDiv(block);
+        getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
+          if (recentReportsDataArray) {
+            renderRecentReportsCards(
+              recentReportsDataArray,
+              carouselItems,
+              blockCfg,
+              block?.dataset?.maxLimit,
+            );
+            observe(block, loadCarousel, carouselItems);
+          }
+        });
+      } else {
+        const section = block.closest('.section');
+        section.style.visibility = 'hidden';
+      }
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);
