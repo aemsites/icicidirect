@@ -129,12 +129,12 @@ function createCarouselDiv(block) {
   const carouselBlockParent = document.createElement('div');
   carouselBlockParent.classList.add('carousel-wrapper');
   carouselBlockParent.appendChild(carouselBlock);
-  block.insertBefore(carouselBlockParent, block.firstChild.nextSibling);
+  block.appendChild(carouselBlockParent);
 }
 
 async function loadCarousel(block, carouselItems) {
   const carouselBlock = block.querySelector('.carousel');
-  carouselBlock.style.visibility = 'hidden';
+  carouselBlock.style.opacity = 0;
   carouselBlock.dataset.visibleSlides = block.dataset.visibleSlides || '';
   carouselBlock.dataset.autoScroll = block.dataset.autoScroll || '';
   carouselBlock.dataset.autoScrollDelay = block.dataset.autoScrollDelay || '';
@@ -174,7 +174,7 @@ async function loadCarousel(block, carouselItems) {
       carouselBlock.querySelector('.carousel-slides-container').style
         .setProperty('margin-inline', `${margin.toString()}px`);
     }
-    recentreportblock.style.visibility = 'visible';
+    recentreportblock.style.opacity = 1;
   });
 }
 
