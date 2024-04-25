@@ -1,4 +1,6 @@
-import { createElement, fetchData, observe } from '../../scripts/blocks-utils.js';
+import {
+  createElement, fetchData, getResearchAPIUrl, observe, postFormData,
+} from '../../scripts/blocks-utils.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
 import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 
@@ -16,61 +18,24 @@ function decorateTitle(blockCfg) {
   return blockTitleDiv;
 }
 
-function updateRecommedations(selectedDropDownItem) {
-  const dropdown = selectedDropDownItem.closest('.dropdown-select');
-  const dropdownContainer = selectedDropDownItem.closest('.dropdowns');
-  dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
-  dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
-  if (dropdownContainer.children[0] === dropdown) {
-    // eslint-disable-next-line no-use-before-define
-    addSecondDropDown(dropdownContainer, selectedDropDownItem.textContent);
-  }
-}
-function createDropdown(dropdownValue) {
-  // console.log(dropdownValue);
-  const menuItems = dropdownValue.split(', ');
-  const dropdownText = menuItems[0];
-
-  const dropdownSelectDiv = document.createElement('div');
-  dropdownSelectDiv.className = 'dropdown-select';
-
-  const button = document.createElement('button');
-  button.className = 'dropdown-toggle';
-  button.innerHTML = `<span class="dropdown-text">${dropdownText}</span><span class="icon-down-arrow icon"></span>`;
-
-  const dropdownMenuContainer = document.createElement('div');
-  dropdownMenuContainer.className = 'dropdown-menu-container';
-
-  const ul = document.createElement('ul');
-  ul.className = 'dropdown-menu';
-
-  menuItems.forEach((itemText) => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    const span = document.createElement('span');
-    span.textContent = itemText;
-    a.appendChild(span);
-    li.appendChild(a);
-    li.addEventListener('click', (event) => {
-      updateRecommedations(event.currentTarget);
-    });
-    ul.appendChild(li);
-  });
-
-  dropdownMenuContainer.appendChild(ul);
-  dropdownSelectDiv.appendChild(button);
-  dropdownSelectDiv.appendChild(dropdownMenuContainer);
-  button.addEventListener('click', () => {
-    dropdownMenuContainer.classList.toggle('visible');
-  });
-
-  return dropdownSelectDiv;
-}
-
-function addStocksData(ilensBody, dropdown = 'default') {
+function addStocksData(ilensContainer, key) {
+  const ilensBody = ilensContainer.querySelector('.i-lens-body');
   ilensBody.textContent = '';
-  fetchData(`${getHostUrl()}/scripts/mock-ilensdata.json`, async (error, ilensData = []) => {
-    const { tableData } = ilensData[dropdown].body;
+  if (!key) {
+    return;
+  }
+
+  const apiName = 'GetiLensData';
+  const jsonFormData = {
+    apiName,
+    inputJson: JSON.stringify({
+      screenpk: key,
+    }),
+  };
+
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, ilensStocksData = []) => {
+    const ilensRecommendations = JSON.parse(ilensStocksData.Data).body;
+    const { tableData } = ilensRecommendations;
     // Sort the tableData based on the Operating Revenue Qtr (SR_Q) in descending order
     tableData.sort((a, b) => b[6] - a[6]);
 
@@ -92,7 +57,7 @@ function addStocksData(ilensBody, dropdown = 'default') {
         // eslint-disable-next-line no-shadow
         const label = document.createElement('label');
         // eslint-disable-next-line max-len
-        label.appendChild(document.createTextNode(ilensData[dropdown].body.tableColumns[index + 6].name));
+        label.appendChild(document.createTextNode(ilensRecommendations.tableColumns[index + 6].name));
         listItem.appendChild(label);
 
         // eslint-disable-next-line no-shadow
@@ -114,26 +79,77 @@ function addStocksData(ilensBody, dropdown = 'default') {
   });
 }
 
-function addSecondDropDown(dropdownsDiv, dropdownValue) {
-  const ilensBody = dropdownsDiv.closest('.i-lens-container').querySelector('.i-lens-body');
+function createDropdown(ilensContainer, menuItems, dropDownDetails = []) {
+  // console.log(dropdownValue);
+  // const menuItems = dropdownValue.split(', ');
+  const dropdownText = menuItems[0].text;
+
+  const dropdownSelectDiv = document.createElement('div');
+  dropdownSelectDiv.className = 'dropdown-select';
+
+  const button = document.createElement('button');
+  button.className = 'dropdown-toggle';
+  button.innerHTML = `<span class="dropdown-text">${dropdownText}</span><span class="icon-down-arrow icon"></span>`;
+
+  const dropdownMenuContainer = document.createElement('div');
+  dropdownMenuContainer.className = 'dropdown-menu-container';
+
+  const ul = document.createElement('ul');
+  ul.className = 'dropdown-menu';
+
+  menuItems.forEach((item) => {
+    const li = document.createElement('li');
+    if (item.value) {
+      li.dataset.value = item.value;
+    }
+    const a = document.createElement('a');
+    const span = document.createElement('span');
+    span.textContent = item.text;
+    a.appendChild(span);
+    li.appendChild(a);
+    li.addEventListener('click', (event) => {
+      // eslint-disable-next-line no-use-before-define
+      updateRecommedations(ilensContainer, event.currentTarget, dropDownDetails);
+    });
+    ul.appendChild(li);
+  });
+
+  dropdownMenuContainer.appendChild(ul);
+  dropdownSelectDiv.appendChild(button);
+  dropdownSelectDiv.appendChild(dropdownMenuContainer);
+  button.addEventListener('click', () => {
+    dropdownMenuContainer.classList.toggle('visible');
+  });
+
+  return dropdownSelectDiv;
+}
+
+function addSecondDropDown(ilensContainer, dropdownValue, dropDownDetails = []) {
+  const dropdownsDiv = ilensContainer.querySelector('.dropdowns');
   while (dropdownsDiv.children.length > 1) {
     dropdownsDiv.removeChild(dropdownsDiv.children[1]);
   }
-  fetchData(`${getHostUrl()}/draft/anagarwa/ilensdropdown.json`, async (error, ilensDDData = []) => {
-    const { data } = ilensDDData;
-    data.forEach((item) => {
-      // console.log(item);
-      if (item.primary === dropdownValue) {
-        const secondDropDownValue = JSON.parse(item.secondary).join(', ');
-        const secondDropDown = createDropdown(secondDropDownValue);
-        dropdownsDiv.appendChild(secondDropDown);
-        addStocksData(ilensBody, dropdownValue.toLowerCase());
-      }
-    });
+  const secondaryValues = [];
+  dropDownDetails.forEach((item) => {
+    // console.log(item);
+    if (item.primary === dropdownValue) {
+      secondaryValues.push({ text: item.secondary, value: item.value });
+    }
   });
+  const secondDropDown = createDropdown(ilensContainer, secondaryValues, dropDownDetails);
+  dropdownsDiv.appendChild(secondDropDown);
+  addStocksData(ilensContainer, secondDropDown.querySelector('li').dataset.value);
+}
 
-  if (dropdownsDiv.children.length === 1) {
-    addStocksData(ilensBody);
+function updateRecommedations(ilensConatainer, selectedDropDownItem, dropDownDetails = []) {
+  const dropdown = selectedDropDownItem.closest('.dropdown-select');
+  const dropdownContainer = selectedDropDownItem.closest('.dropdowns');
+  dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
+  dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
+  if (dropdownContainer.children[0] === dropdown) {
+    addSecondDropDown(ilensConatainer, selectedDropDownItem.textContent, dropDownDetails);
+  } else if (selectedDropDownItem.dataset.value) {
+    addStocksData(ilensConatainer, selectedDropDownItem.dataset.value);
   }
 }
 
@@ -145,28 +161,35 @@ function closeAllDropDowns(clickedElement) {
   });
 }
 
-function addHeader(ilensContainer, dropdowns) {
-  const header = document.createElement('div');
-  header.className = 'i-lens-header';
-  const rowDiv = document.createElement('div');
-  rowDiv.className = 'row align-items-center';
+function updateDropDownList(ilensContainer, dropDownData) {
+  const rowDiv = ilensContainer.querySelector('.row');
+  const dropDownDetails = [];
+  const primaryDropDown = [];
+  dropDownData.forEach((item) => {
+    // console.log(item);
+    dropDownDetails.push(item);
+    if (!primaryDropDown.some((obj) => obj.text === item.primary)) {
+      primaryDropDown.push({ text: item.primary });
+    }
+  });
 
-  if (dropdowns) {
+  if (primaryDropDown.length > 0) {
     const dropdownsDiv = document.createElement('div');
     dropdownsDiv.className = 'dropdowns col';
-    dropdowns.forEach((dropdownValue) => {
-      const dropDownEle = createDropdown(dropdownValue);
-      dropdownsDiv.appendChild(dropDownEle);
-    });
-
+    const dropDownEle = createDropdown(ilensContainer, primaryDropDown, dropDownDetails);
+    dropdownsDiv.appendChild(dropDownEle);
     rowDiv.appendChild(dropdownsDiv);
     document.addEventListener('click', (event) => {
       closeAllDropDowns(event.target);
     });
   }
+  observe(ilensContainer, updateRecommedations, rowDiv.querySelector('li'), dropDownDetails);
+}
 
-  header.appendChild(rowDiv);
-  ilensContainer.appendChild(header);
+function addDropDowns(ilensContainer) {
+  fetchData(`${getHostUrl()}/ilensdropdown.json`, async (error, ilensDDData = []) => {
+    updateDropDownList(ilensContainer, ilensDDData.data);
+  });
 }
 
 function addDiscoverLink(ilensBody, discoverLink) {
@@ -196,18 +219,22 @@ export default async function decorate(block) {
     desc.textContent = description;
     block.appendChild(desc);
   }
-  const dropdowns = Array.isArray(blockConfig.dropdowns)
-    ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
   const discoverLink = blockConfig.discoverlink;
   const ilensContainer = document.createElement('div');
   ilensContainer.className = 'i-lens-container';
   block.appendChild(ilensContainer);
 
-  addHeader(ilensContainer, dropdowns);
+  const header = document.createElement('div');
+  header.className = 'i-lens-header';
+  const rowDiv = document.createElement('div');
+  rowDiv.className = 'row align-items-center';
+
+  header.appendChild(rowDiv);
+  ilensContainer.appendChild(header);
 
   const ilensBody = document.createElement('div');
   ilensBody.className = 'i-lens-body';
   ilensContainer.appendChild(ilensBody);
   addDiscoverLink(block, discoverLink);
-  observe(ilensBody, addStocksData);
+  addDropDowns(ilensContainer);
 }
