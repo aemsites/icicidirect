@@ -4,7 +4,7 @@ import {
   getResearchAPIUrl, observe,
   parseResponse,
   Viewport,
-  SITE_ROOT,
+  SITE_ROOT, readBlockMarkup,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
@@ -240,9 +240,10 @@ async function createMediaPanel(block) {
 
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
+  const blockMarkup = readBlockMarkup(block);
   block.setAttribute('api-key', blockConfig.type);
   const titleText = blockConfig.title.trim();
-  const discoverMoreButton = block.querySelector('.button-container');
+  const discoverMoreButton = blockMarkup.link;
   block.textContent = '';
   const title = document.createElement('div');
   title.className = 'title';
