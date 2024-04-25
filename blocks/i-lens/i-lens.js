@@ -19,12 +19,12 @@ function decorateTitle(blockCfg) {
 }
 
 function addStocksData(ilensContainer, key) {
-  const ilensBody = ilensContainer.querySelector('.i-lens-body');
-  ilensBody.textContent = '';
   if (!key) {
     return;
   }
 
+  const ilensBody = ilensContainer.querySelector('.i-lens-body');
+  ilensBody.textContent = '';
   const apiName = 'GetiLensData';
   const jsonFormData = {
     apiName,
@@ -57,16 +57,24 @@ function addStocksData(ilensContainer, key) {
         // eslint-disable-next-line no-shadow
         const label = document.createElement('label');
         // eslint-disable-next-line max-len
-        label.appendChild(document.createTextNode(ilensRecommendations.tableColumns[index + 6].name));
+        const labelText = ilensRecommendations.tableColumns[index + 6].name;
+        label.appendChild(document.createTextNode(labelText));
         listItem.appendChild(label);
 
         // eslint-disable-next-line no-shadow
         const span = document.createElement('span');
         span.classList.add('value');
-        if (revenue.toLocaleString().endsWith('%') && parseFloat(revenue) > 0) {
-          span.classList.add('green');
+        if (labelText.includes('%')) {
+          if (parseFloat(revenue) > 0) {
+            span.classList.add('green');
+          } else {
+            span.classList.add('red');
+          }
+          span.textContent = `${revenue.toLocaleString()}%`;
+        } else {
+          span.textContent = revenue.toLocaleString();
         }
-        span.textContent = revenue.toLocaleString();
+
         listItem.appendChild(span);
 
         list.appendChild(listItem);
