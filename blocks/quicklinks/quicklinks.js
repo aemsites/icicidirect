@@ -59,14 +59,29 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
  * @param {*} section that needs to be scrolled on top
  */
 const scrollToAdjustedStickyHeader = (section) => {
-  const headerOffset = 70;
+  const sectionContainer = section.closest('.section');
+  const style = window.getComputedStyle(sectionContainer);
+  const paddingTop = parseFloat(style.getPropertyValue('padding-top'));
+  let extraIfNotSticky = 0;
+  if (!document.querySelector('.block.quicklinks.sticky')) {
+    const quickLinkBlock = document.querySelector('.block.quicklinks');
+    const quickLinkStyle = window.getComputedStyle(quickLinkBlock);
+    extraIfNotSticky = parseFloat(quickLinkStyle.getPropertyValue('height'));
+  }
+  const additionalOffset = paddingTop + extraIfNotSticky; // Add your desired offset here
   const elementPosition = section && section.getBoundingClientRect().top;
-  const offsetPosition = elementPosition + window.scrollY - headerOffset;
+  const offsetPosition = elementPosition + window.scrollY - additionalOffset;
+  let scrollBehavior = 'smooth';
+  if (!section.getAttribute('clicked')) {
+    section.setAttribute('clicked', true);
+    scrollBehavior = 'instant';
+  }
 
   window.scrollTo({
     top: offsetPosition,
-    behavior: 'smooth',
+    behavior: scrollBehavior,
   });
+
   if (section) {
     section.click();
   }
@@ -93,7 +108,7 @@ const enableSectionHighligting = () => {
   const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
   const options = {
     root: null,
-    threshold: 0.5,
+    threshold: 0.8,
   };
   const observer = new IntersectionObserver(handlePageSectionIntersection, options);
   quickLinkEnabledBlocks.forEach((singleBlock) => {
