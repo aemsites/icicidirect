@@ -209,6 +209,45 @@ function loadDelayed() {
 }
 
 async function loadPage() {
+  const prefetchUrls = [
+    'https://www.google-analytics.com/analytics.js',
+    //'https://www.googletagmanager.com/gtm.js',
+  ];
+  // Preconnect to essential origins asynchronously
+  async function preconnect(urls) {
+    const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = url;
+      link.onload = resolve;
+      link.onerror = reject;
+      document.head.appendChild(link);
+    }));
+    Promise.all(linkPromises);
+  }
+  async function prefetch(urls) {
+    const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
+      link.onload = resolve;
+      link.onerror = reject;
+      document.head.appendChild(link);
+    }));
+
+    Promise.all(linkPromises);
+  }
+
+  // Execute asynchronously
+  (async () => {
+    try {
+      preconnect(preconnectUrls);
+      prefetch(prefetchUrls);
+      console.log('Preconnection and prefetching completed successfully.');
+    } catch (error) {
+      console.error('Error occurred while preconnecting/prefetching:', error);
+    }
+  })();
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
@@ -221,45 +260,6 @@ const preconnectUrls = [
   'https://www.googletagmanager.com',
 ];
 
-const prefetchUrls = [
-  'https://www.google-analytics.com/analytics.js',
-  //'https://www.googletagmanager.com/gtm.js',
-];
-// Preconnect to essential origins asynchronously
-async function preconnect(urls) {
-  const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
-    const link = document.createElement('link');
-    link.rel = 'preconnect';
-    link.href = url;
-    link.onload = resolve;
-    link.onerror = reject;
-    document.head.appendChild(link);
-  }));
-  Promise.all(linkPromises);
-}
-async function prefetch(urls) {
-  const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
-    const link = document.createElement('link');
-    link.rel = 'prefetch';
-    link.href = url;
-    link.onload = resolve;
-    link.onerror = reject;
-    document.head.appendChild(link);
-  }));
-
-  Promise.all(linkPromises);
-}
-
-// Execute asynchronously
-(async () => {
-  try {
-    preconnect(preconnectUrls);
-    prefetch(prefetchUrls);
-    console.log('Preconnection and prefetching completed successfully.');
-  } catch (error) {
-    console.error('Error occurred while preconnecting/prefetching:', error);
-  }
-})();
 loadPage();
 
 window.validateuserToken = '';
