@@ -2,7 +2,8 @@ import {
   buildBlock, decorateBlock, loadBlock, readBlockConfig,
 } from '../../scripts/aem.js';
 import {
-  createElement, observe, getResearchAPIUrl, getDataFromAPI,
+  createElement, observe, getResearchAPIUrl, getDataFromAPI, readBlockMarkup,
+  Viewport,
 } from '../../scripts/blocks-utils.js';
 
 function decorateBoxHeader(title, reportLink) {
@@ -178,16 +179,13 @@ async function loadCarousel(block, carouselItems) {
   });
 }
 
-function handleTitleConfig(titleElement, container) {
-  const titleText = titleElement.textContent.trim();
-  const title = document.createElement('h2');
-  title.textContent = titleText;
-
+function handleTitleConfig(title, block) {
+  const titleDiv = document.createElement('h2');
+  titleDiv.textContent = title;
   const titleWrapper = document.createElement('div');
   titleWrapper.classList.add('title-wrapper');
-  titleWrapper.appendChild(title);
-
-  container.insertBefore(titleWrapper, container.firstChild);
+  titleWrapper.appendChild(titleDiv);
+  block.appendChild(titleWrapper);
 }
 
 function addDiscoverLink(discoverMoreDiv, block) {
@@ -208,52 +206,82 @@ function addDiscoverLink(discoverMoreDiv, block) {
   }
 }
 
-export default async function decorate(block) {
-  const configElementsArray = Array.from(block.children);
-  configElementsArray.map(async (configElement) => {
-    configElement.style.display = 'none';
-    const configNameElement = configElement.querySelector('div');
-    const configName = configNameElement.textContent.trim().toLowerCase();
-    const blockCfg = readBlockConfig(block);
-    if (configName === 'type') {
-      const apiName = configNameElement.nextElementSibling.textContent.trim();
-      if (apiName === 'recentreports') {
-        const carouselItems = document.createElement('div');
-        carouselItems.classList.add('carousel-items');
-        createCarouselDiv(block);
-        getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
-          if (recentReportsDataArray) {
-            renderRecentReportsCards(
-              recentReportsDataArray,
-              carouselItems,
-              blockCfg,
-              block?.dataset?.maxLimit,
-            );
-            observe(block, loadCarousel, carouselItems);
-          }
-        });
-      } else {
-        const section = block.closest('.section');
-        section.style.visibility = 'hidden';
+function addCardsDiv(block, blockConfig) {
+  if (blockConfig.type === 'recentreports') {
+    const carouselItems = document.createElement('div');
+    carouselItems.classList.add('carousel-items');
+    createCarouselDiv(block);
+    getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
+      if (recentReportsDataArray) {
+        renderRecentReportsCards(
+          recentReportsDataArray,
+          carouselItems,
+          blockConfig,
+          block?.dataset?.maxLimit,
+        );
+        observe(block, loadCarousel, carouselItems);
       }
-    } else if (configName === 'title') {
-      const titleElement = configNameElement.nextElementSibling;
-      handleTitleConfig(titleElement, block);
-    } else if (configName === 'discoverlink') {
-      addDiscoverLink(configNameElement.nextElementSibling, block);
-    } else if (configName === 'visible slides') {
-      const visibleSlides = configNameElement.nextElementSibling.textContent.trim();
+    });
+  } else {
+    const section = block.closest('.section');
+    section.style.visibility = 'hidden';
+  }
+}
 
-      block.dataset.visibleSlides = visibleSlides;
-    } else if (configName === 'auto scroll') {
-      const autoScroll = configNameElement.nextElementSibling.textContent.trim();
-      block.dataset.autoScroll = autoScroll;
-    } else if (configName === 'auto scroll delay') {
-      const autoScrollDelay = configNameElement.nextElementSibling.textContent.trim();
-      block.dataset.autoScrollDelay = autoScrollDelay;
-    } else if (configName === 'max limit') {
-      const maxLimit = configNameElement.nextElementSibling.textContent.trim();
-      block.dataset.maxLimit = maxLimit;
+function setAutoScrollBasedOnViewport(autoscrollString) {
+  let autoscroll = '-1';
+  if (autoscrollString && autoscrollString.split(':').length === 3) {
+    const autoScrollValues = autoscrollString.split(':');
+    const [mobileAutoscroll, tabletAutoscroll, desktopAutoscroll] = autoScrollValues;
+    if (Viewport.isMobile()) {
+      autoscroll = mobileAutoscroll;
+    } else if (Viewport.isTablet()) {
+      autoscroll = tabletAutoscroll;
+    } else {
+      autoscroll = desktopAutoscroll;
     }
-  });
+  } else if (Viewport.isDesktop()) autoscroll = '1';
+  return autoscroll;
+}
+
+function setVisibleSlidesBasedOnViewport(visibleSlidesString) {
+  let visibleSlides = '1';
+  if (visibleSlidesString && visibleSlidesString.split(':').length === 3) {
+    const visibleSlidesValues = visibleSlidesString.split(':');
+    const [mobileVisibleSlides, tabletVisibleSlides, desktopVisibleSlides] = visibleSlidesValues;
+    if (Viewport.isMobile()) {
+      visibleSlides = mobileVisibleSlides;
+    } else if (Viewport.isTablet()) {
+      visibleSlides = tabletVisibleSlides;
+    } else {
+      visibleSlides = desktopVisibleSlides;
+    }
+  } else if (Viewport.isDesktop()) {
+    visibleSlides = '4';
+  } else if (Viewport.isTablet()) {
+    visibleSlides = '2';
+  }
+  return visibleSlides;
+}
+
+export default async function decorate(block) {
+  const blockConfig = readBlockConfig(block);
+  const blockMarkup = readBlockMarkup(block);
+  block.textContent = '';
+  const {
+    title, visibleslides, autoscroll, autoscrolldelay, maxlimit, discoverlink,
+  } = blockConfig;
+  handleTitleConfig(title, block);
+  block.dataset.autoScroll = setAutoScrollBasedOnViewport(autoscroll);
+  block.dataset.visibleSlides = setVisibleSlidesBasedOnViewport(visibleslides);
+  if (autoscrolldelay) {
+    block.dataset.autoScrollDelay = autoscrolldelay;
+  }
+  if (maxlimit) {
+    block.dataset.maxLimit = maxlimit;
+  }
+  addCardsDiv(block, blockConfig);
+  if (discoverlink) {
+    addDiscoverLink(blockMarkup.discoverlink, block);
+  }
 }
