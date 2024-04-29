@@ -223,7 +223,7 @@ const preconnectUrls = [
 
 const prefetchUrls = [
   'https://www.google-analytics.com/analytics.js',
-  'https://www.googletagmanager.com/gtm.js',
+  //'https://www.googletagmanager.com/gtm.js',
 ];
 // Preconnect to essential origins asynchronously
 async function preconnect(urls) {
