@@ -1,12 +1,12 @@
 import {
   getDataFromAPI, getResearchAPIUrl, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
-import { fetchPlaceholders } from '../../scripts/aem.js';
+import { readBlockConfig } from '../../scripts/aem.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
 
-function createMarketCommentaryCard(cardData, placeholders) {
+function createMarketCommentaryCard(cardData, blockConfig) {
   const {
     articleUrl = 'https://www.icicidirect.com/share-market-today/market-news-commentary',
     HEADING,
@@ -25,10 +25,10 @@ function createMarketCommentaryCard(cardData, placeholders) {
         div(
           { class: 'info' },
           p(
-            span(`${placeholders.powerby}`),
+            span(`${blockConfig.powerby}`),
           ),
           p(
-            span(`${placeholders.publishedon} ${NEWS_DATE}`),
+            span(`${blockConfig.publishedon} ${NEWS_DATE}`),
           ),
         ),
       ),
@@ -102,26 +102,26 @@ function updateDots(block) {
   }
 }
 
-async function generateCardsView(block, placeholders) {
+async function generateCardsView(block, blockConfig) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
     if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
       return;
     }
     marketCommentaryData.Data.Table.forEach((cardData) => {
-      const card = createMarketCommentaryCard(cardData, placeholders);
+      const card = createMarketCommentaryCard(cardData, blockConfig);
       blogsContainer.appendChild(card);
     });
     updateDots(block);
   });
 }
 export default async function decorate(block) {
+  const blockConfig = readBlockConfig(block);
   block.textContent = '';
-  const placeholders = await fetchPlaceholders();
   const titleWrap = document.createElement('div');
   titleWrap.className = 'title text-center';
   const h2 = document.createElement('h2');
-  h2.textContent = placeholders.marketcommentary;
+  h2.textContent = blockConfig.title;
   titleWrap.appendChild(h2);
   block.appendChild(titleWrap);
 
@@ -137,5 +137,5 @@ export default async function decorate(block) {
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
   block.appendChild(containerlist);
-  observe(block, generateCardsView, placeholders);
+  observe(block, generateCardsView, blockConfig);
 }
