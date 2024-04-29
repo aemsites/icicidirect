@@ -221,6 +221,10 @@ const preconnectUrls = [
   //'https://www.googletagmanager.com',
 ];
 
+const prefetchUrls = [
+  'https://www.google-analytics.com/analytics.js',
+  //'https://www.googletagmanager.com/gtm.js',
+];
 // Preconnect to essential origins asynchronously
 async function preconnect(urls) {
   const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
@@ -233,11 +237,24 @@ async function preconnect(urls) {
   }));
   Promise.all(linkPromises);
 }
+async function prefetch(urls) {
+  const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
+    const link = document.createElement('link');
+    link.rel = 'prefetch';
+    link.href = url;
+    link.onload = resolve;
+    link.onerror = reject;
+    document.head.appendChild(link);
+  }));
+
+  await Promise.all(linkPromises);
+}
 
 // Execute asynchronously
 (async () => {
   try {
-    preconnect(preconnectUrls);
+    //preconnect(preconnectUrls);
+    prefetch(prefetchUrls);
     console.log('Preconnection and prefetching completed successfully.');
   } catch (error) {
     console.error('Error occurred while preconnecting/prefetching:', error);
