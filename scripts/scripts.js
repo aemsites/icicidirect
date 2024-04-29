@@ -253,7 +253,7 @@ async function prefetch(urls) {
 // Execute asynchronously
 (async () => {
   try {
-    //preconnect(preconnectUrls);
+    preconnect(preconnectUrls);
     prefetch(prefetchUrls);
     console.log('Preconnection and prefetching completed successfully.');
   } catch (error) {
