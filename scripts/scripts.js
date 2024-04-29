@@ -216,6 +216,33 @@ async function loadPage() {
 
 // TODO: Remove once chatbot is compatible with Helix domain
 loadScript('/scripts/mockxmlhttprequest.js');
+const preconnectUrls = [
+  'https://www.google-analytics.com',
+  //'https://www.googletagmanager.com',
+];
+
+// Preconnect to essential origins asynchronously
+async function preconnect(urls) {
+  const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
+    const link = document.createElement('link');
+    link.rel = 'preconnect';
+    link.href = url;
+    link.onload = resolve;
+    link.onerror = reject;
+    document.head.appendChild(link);
+  }));
+  Promise.all(linkPromises);
+}
+
+// Execute asynchronously
+(async () => {
+  try {
+    preconnect(preconnectUrls);
+    console.log('Preconnection and prefetching completed successfully.');
+  } catch (error) {
+    console.error('Error occurred while preconnecting/prefetching:', error);
+  }
+})();
 loadPage();
 
 window.validateuserToken = '';
