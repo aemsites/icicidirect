@@ -88,8 +88,6 @@ function addStocksData(ilensContainer, key) {
 }
 
 function createDropdown(ilensContainer, menuItems, dropDownDetails = []) {
-  // console.log(dropdownValue);
-  // const menuItems = dropdownValue.split(', ');
   const dropdownText = menuItems[0].text;
 
   const dropdownSelectDiv = document.createElement('div');
@@ -139,7 +137,6 @@ function addSecondDropDown(ilensContainer, dropdownValue, dropDownDetails = []) 
   }
   const secondaryValues = [];
   dropDownDetails.forEach((item) => {
-    // console.log(item);
     if (item.primary === dropdownValue) {
       secondaryValues.push({ text: item.secondary, value: item.value });
     }
@@ -174,7 +171,6 @@ function updateDropDownList(ilensContainer, dropDownData) {
   const dropDownDetails = [];
   const primaryDropDown = [];
   dropDownData.forEach((item) => {
-    // console.log(item);
     dropDownDetails.push(item);
     if (!primaryDropDown.some((obj) => obj.text === item.primary)) {
       primaryDropDown.push({ text: item.primary });
