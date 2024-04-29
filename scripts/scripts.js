@@ -218,7 +218,7 @@ async function loadPage() {
 loadScript('/scripts/mockxmlhttprequest.js');
 const preconnectUrls = [
   'https://www.google-analytics.com',
-  //'https://www.googletagmanager.com',
+  'https://www.googletagmanager.com',
 ];
 
 const prefetchUrls = [
