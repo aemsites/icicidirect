@@ -254,7 +254,7 @@ async function prefetch(urls) {
 (async () => {
   try {
     preconnect(preconnectUrls);
-    //prefetch(prefetchUrls);
+    prefetch(prefetchUrls);
     console.log('Preconnection and prefetching completed successfully.');
   } catch (error) {
     console.error('Error occurred while preconnecting/prefetching:', error);
