@@ -3,7 +3,7 @@ import {
   fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant,
 } from '../../scripts/mockapi.js';
 import {
-  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport,
+  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport, fetchData,
 } from '../../scripts/blocks-utils.js';
 
 const isDesktop = Viewport.isDesktop();
@@ -173,9 +173,8 @@ function closeAllDropDowns(clickedElement) {
   });
 }
 
-function createDropdown(dropdownValue) {
-  const menuItems = dropdownValue.split(', ');
-  const dropdownText = menuItems[0];
+function createDropdown(menuItems) {
+  const dropdownText = menuItems[0].label;
 
   const dropdownSelectDiv = document.createElement('div');
   dropdownSelectDiv.className = 'dropdown-select border-box';
@@ -190,11 +189,13 @@ function createDropdown(dropdownValue) {
   const ul = document.createElement('ul');
   ul.className = 'dropdown-menu border-box';
 
-  menuItems.forEach((itemText) => {
+  menuItems.forEach((item) => {
     const li = document.createElement('li');
+    li.dataset.type = item.type;
+    li.dataset.value = item.value;
     const a = document.createElement('a');
     const span = document.createElement('span');
-    span.textContent = itemText;
+    span.textContent = item.label;
     a.appendChild(span);
     li.appendChild(a);
     li.addEventListener('click', (event) => {
@@ -389,6 +390,36 @@ function getRecommendationsCard(companies, type) {
   });
 }
 
+function updateCardsInView(block, type, recommendationArray) {
+  const carouselSlider = block.querySelector('.carousel-slider');
+  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  const companiesArray = [];
+  recommendationArray.forEach((company) => {
+    const companyObj = {};
+    companyObj.name = company.COM_NAME;
+    companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
+    companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
+    companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
+    companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
+
+    if (type === 'trading') {
+      companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
+    } else if (type === 'investing') {
+      companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
+      companyObj.reportLink = !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
+    }
+
+    companiesArray.push(companyObj);
+  });
+  if (companiesArray) {
+    const recommendationsCard = getRecommendationsCard(companiesArray, type);
+    recommendationsCard.forEach((div) => {
+      carouselTrack.appendChild(div);
+    });
+    setCarouselView(type, carouselSlider);
+  }
+}
+
 async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
@@ -414,35 +445,42 @@ async function generateCardsView(block, type) {
   };
 
   postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-    if (error === null) {
-      const recommendationArray = tradingData.Data.Table;
-      const companiesArray = [];
-      recommendationArray.forEach((company) => {
-        const companyObj = {};
-        companyObj.name = company.COM_NAME;
-        companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
-        companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
-        companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
-        companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
-
-        if (type === 'trading') {
-          companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
-        } else if (type === 'investing') {
-          companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
-          companyObj.reportLink = !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
-        }
-
-        companiesArray.push(companyObj);
-      });
-      if (companiesArray) {
-        const recommendationsCard = getRecommendationsCard(companiesArray, type);
-        recommendationsCard.forEach((div) => {
-          carouselTrack.appendChild(div);
-        });
-        setCarouselView(type, carouselSlider);
-      }
+    if (error === null && tradingData.Data && tradingData.Data.Table) {
+      updateCardsInView(block, type, tradingData.Data.Table);
     }
   });
+}
+
+async function generateDropDowns(block, type) {
+  fetchData(`${getHostUrl()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
+    const restructuredData = {};
+    DDData.data.forEach((item) => {
+      const { Type, Label, Value } = item;
+
+      // Check if the Type key exists in restructuredData
+      if (!(Type in restructuredData)) {
+        restructuredData[Type] = []; // If not, create an empty array
+      }
+      restructuredData[Type].push({ type: Type, label: Label, value: Value });
+    });
+
+    const dropdownsDiv = block.querySelector('.dropdowns');
+    // eslint-disable-next-line guard-for-in,no-restricted-syntax
+    for (const dropdownType in restructuredData) {
+      const items = restructuredData[dropdownType];
+      const dropDownEle = createDropdown(items);
+      dropdownsDiv.appendChild(dropDownEle);
+      document.addEventListener('click', (event) => {
+        closeAllDropDowns(event.target);
+      });
+    }
+
+    console.log(restructuredData);
+  });
+}
+async function generateDynamicContent(block, type) {
+  generateDropDowns(block, type);
+  generateCardsView(block, type);
 }
 
 function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type) {
@@ -479,15 +517,15 @@ function addCarouselHeader(carouselContainer, title, dropdowns) {
   colDiv.appendChild(heading);
 
   rowDiv.appendChild(colDiv);
+  const dropdownsDiv = document.createElement('div');
+  dropdownsDiv.className = 'dropdowns col border-box';
+  rowDiv.appendChild(dropdownsDiv);
 
-  if (dropdowns) {
-    const dropdownsDiv = document.createElement('div');
-    dropdownsDiv.className = 'dropdowns col border-box';
-    dropdowns.forEach((dropdownValue) => {
-      const dropDownEle = createDropdown(dropdownValue);
-      dropdownsDiv.appendChild(dropDownEle);
-    });
-    rowDiv.appendChild(dropdownsDiv);
+  // eslint-disable-next-line no-restricted-syntax,guard-for-in
+  for (const type in dropdowns) {
+    const items = dropdowns[type];
+    const dropDownEle = createDropdown(items);
+    dropdownsDiv.appendChild(dropDownEle);
     document.addEventListener('click', (event) => {
       closeAllDropDowns(event.target);
     });
@@ -527,6 +565,18 @@ function addDiscoverLink(carouselBody, discoverLink) {
   }
 }
 
+function restructureDropDown(inputArray) {
+  const restructuredData = {};
+
+  inputArray.forEach((str, index) => {
+    const labels = str.split(', ');
+    const type = `Type${index + 1}`;
+    restructuredData[type] = labels.map((label) => ({ type, label, value: '' }));
+  });
+
+  return restructuredData;
+}
+
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const blockMarkup = readBlockMarkup(block);
@@ -537,6 +587,7 @@ export default async function decorate(block) {
   const discoverLink = blockConfig.discoverlink;
   const dropdowns = Array.isArray(blockConfig.dropdowns)
     ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
+  const restructuredDropDown = restructureDropDown(dropdowns);
   block.textContent = '';
   block.classList.add('carousel-section');
   addHighLightSection(block, highlightDiv, highlightIcon, type);
@@ -545,7 +596,7 @@ export default async function decorate(block) {
   carouselContainer.className = 'carousel-container border-box';
   block.appendChild(carouselContainer);
 
-  addCarouselHeader(carouselContainer, title, dropdowns);
+  addCarouselHeader(carouselContainer, title, restructuredDropDown);
 
   const carouselBody = document.createElement('div');
   carouselBody.className = 'carousel-body border-box';
@@ -553,5 +604,5 @@ export default async function decorate(block) {
 
   addCarouselCards(carouselBody);
   addDiscoverLink(carouselBody, discoverLink);
-  observe(block, generateCardsView, type);
+  observe(block, generateDynamicContent, type);
 }
