@@ -118,8 +118,16 @@ function setCarouselView(type, carouselSlider) {
   const numberOfDots = cards.length - visibleCards + 1;
   const isMobile = Viewport.isMobile();
   if (numberOfDots > 1) {
-    const dotsContainer = document.createElement('div');
-    dotsContainer.className = 'dots-container border-box';
+    let dotsContainer = document.querySelector('.dots-container');
+    if (!dotsContainer) {
+      dotsContainer = document.createElement('div');
+      dotsContainer.className = 'dots-container border-box';
+    } else {
+      // If dotsContainer exists, clear its children
+      while (dotsContainer.firstChild) {
+        dotsContainer.removeChild(dotsContainer.firstChild);
+      }
+    }
     // eslint-disable-next-line no-plusplus
     for (let i = 0; i < numberOfDots; i++) {
       const dot = document.createElement('button');
@@ -159,10 +167,27 @@ function setCarouselView(type, carouselSlider) {
   }
 }
 
-function updateRecommedations(selectedDropDownItem) {
+function updateRecommedations(selectedDropDownItem, type) {
   const dropdown = selectedDropDownItem.closest('.dropdown-select');
   dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
+  const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
+  dropdownToggle.dataset.type = selectedDropDownItem.dataset.type;
+  dropdownToggle.dataset.value = selectedDropDownItem.dataset.value;
   dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
+  const dropdownDiv = dropdown.closest('.dropdowns');
+  const dropdowns = dropdownDiv.querySelectorAll('.dropdown-toggle');
+  let rating = '';
+  let timeFrame = '';
+  dropdowns.forEach((drop) => {
+    if (drop.dataset.type === 'rating') {
+      rating = drop.dataset.value;
+    } else if (drop.dataset.type === 'timeFrame') {
+      timeFrame = drop.dataset.value;
+    }
+  });
+  const block = dropdown.closest('.block');
+  // eslint-disable-next-line no-use-before-define
+  fetchCardsData(block, type, rating, timeFrame);
 }
 
 function closeAllDropDowns(clickedElement) {
@@ -173,13 +198,16 @@ function closeAllDropDowns(clickedElement) {
   });
 }
 
-function createDropdown(menuItems) {
+function createDropdown(menuItems, type) {
   const dropdownText = menuItems[0].label;
 
   const dropdownSelectDiv = document.createElement('div');
   dropdownSelectDiv.className = 'dropdown-select border-box';
 
   const button = document.createElement('button');
+  button.dataset.type = menuItems[0].type;
+  button.dataset.value = menuItems[0].value;
+
   button.className = 'dropdown-toggle border-box';
   button.innerHTML = `<span class="dropdown-text">${dropdownText}</span><span class="icon-down-arrow icon"></span>`;
 
@@ -199,7 +227,7 @@ function createDropdown(menuItems) {
     a.appendChild(span);
     li.appendChild(a);
     li.addEventListener('click', (event) => {
-      updateRecommedations(event.currentTarget);
+      updateRecommedations(event.currentTarget, type);
     });
     ul.appendChild(li);
   });
@@ -413,11 +441,33 @@ function updateCardsInView(block, type, recommendationArray) {
   });
   if (companiesArray) {
     const recommendationsCard = getRecommendationsCard(companiesArray, type);
+    while (carouselTrack.firstChild) {
+      carouselTrack.removeChild(carouselTrack.firstChild);
+    }
     recommendationsCard.forEach((div) => {
       carouselTrack.appendChild(div);
     });
     setCarouselView(type, carouselSlider);
   }
+}
+
+async function fetchCardsData(block, type, rating, timeFrame) {
+  // eslint-disable-next-line no-param-reassign
+  rating = rating || '';
+  // eslint-disable-next-line no-param-reassign
+  timeFrame = timeFrame || '';
+  const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
+  const jsonFormData = {
+    apiName,
+    inputJson: JSON.stringify({
+      rating, timeFrame, pageNo: '1', pageSize: '5',
+    }),
+  };
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+    if (error === null && tradingData.Data && tradingData.Data.Table) {
+      updateCardsInView(block, type, tradingData.Data.Table);
+    }
+  });
 }
 
 async function generateCardsView(block, type) {
@@ -436,19 +486,20 @@ async function generateCardsView(block, type) {
     });
     return;
   }
-  const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
-  const jsonFormData = {
-    apiName,
-    inputJson: JSON.stringify({
-      rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
-    }),
-  };
-
-  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-    if (error === null && tradingData.Data && tradingData.Data.Table) {
-      updateCardsInView(block, type, tradingData.Data.Table);
-    }
-  });
+  fetchCardsData(block, type);
+  // const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
+  // const jsonFormData = {
+  //   apiName,
+  //   inputJson: JSON.stringify({
+  //     rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
+  //   }),
+  // };
+  //
+  // postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+  //   if (error === null && tradingData.Data && tradingData.Data.Table) {
+  //     updateCardsInView(block, type, tradingData.Data.Table);
+  //   }
+  // });
 }
 
 async function generateDropDowns(block, type) {
@@ -468,7 +519,7 @@ async function generateDropDowns(block, type) {
     // eslint-disable-next-line guard-for-in,no-restricted-syntax
     for (const dropdownType in restructuredData) {
       const items = restructuredData[dropdownType];
-      const dropDownEle = createDropdown(items);
+      const dropDownEle = createDropdown(items, type);
       dropdownsDiv.appendChild(dropDownEle);
       document.addEventListener('click', (event) => {
         closeAllDropDowns(event.target);
@@ -505,7 +556,7 @@ function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type)
   }
 }
 
-function addCarouselHeader(carouselContainer, title, dropdowns) {
+function addCarouselHeader(carouselContainer, title, dropdowns, type) {
   const carouselHeader = document.createElement('div');
   carouselHeader.className = 'carousel-header border-box';
   const rowDiv = document.createElement('div');
@@ -522,9 +573,9 @@ function addCarouselHeader(carouselContainer, title, dropdowns) {
   rowDiv.appendChild(dropdownsDiv);
 
   // eslint-disable-next-line no-restricted-syntax,guard-for-in
-  for (const type in dropdowns) {
-    const items = dropdowns[type];
-    const dropDownEle = createDropdown(items);
+  for (const dropdownsKey in dropdowns) {
+    const items = dropdowns[dropdownsKey];
+    const dropDownEle = createDropdown(items, type);
     dropdownsDiv.appendChild(dropDownEle);
     document.addEventListener('click', (event) => {
       closeAllDropDowns(event.target);
@@ -596,7 +647,7 @@ export default async function decorate(block) {
   carouselContainer.className = 'carousel-container border-box';
   block.appendChild(carouselContainer);
 
-  addCarouselHeader(carouselContainer, title, restructuredDropDown);
+  addCarouselHeader(carouselContainer, title, restructuredDropDown, type);
 
   const carouselBody = document.createElement('div');
   carouselBody.className = 'carousel-body border-box';

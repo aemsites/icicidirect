@@ -37,6 +37,7 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+  getDeviceType();
 
   function isDesktop() {
     return deviceType === 'Desktop';
