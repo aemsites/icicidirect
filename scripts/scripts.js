@@ -168,7 +168,7 @@ async function loadEager(doc) {
   } catch (e) {
     // do nothing
   }
-
+  sampleRUM('top', { source: document.referrer, target: window.location.href });
   if (loadAnalyticsEager()) {
     loadAdobeLaunch();
     loadGTM();
