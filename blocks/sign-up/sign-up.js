@@ -5,14 +5,14 @@ import { createElement } from '../../scripts/blocks-utils.js';
  * Handler for submit button click
  * @param {*} event
  */
-const handleOpenAccountSubmit = async (event) => {
+const handleOpenAccountSubmit = async (event, block) => {
   event.preventDefault();
-  const mobileNumberInput = document.querySelector('.block.sign-up .phonenumber-textbox');
+  const mobileNumberInput = block.querySelector('.sign-up .phonenumber-textbox');
   const mobileNumber = mobileNumberInput.value;
   const accountCreationUrl = event.target.href;
   // Check for valid mobile number format
   const mobileRegex = /^([0]|\+91)?[6789]\d{9}$/;
-  const validationMessage = document.querySelector('.block.sign-up .signup-container .error-message');
+  const validationMessage = block.querySelector('.signup-container .error-message');
   if (!mobileNumber || mobileNumber.length < 10 || !mobileRegex.test(mobileNumber)) {
     validationMessage.classList.add('invalid');
   } else {
@@ -42,11 +42,11 @@ function createMobileNumberInput(placeholderText) {
   return inputElement;
 }
 
-function createSubmitButton(buttontitle, accountcreationurl) {
+function createSubmitButton(block, buttontitle, accountcreationurl) {
   const submitButton = createElement('button', 'signupbtn');
   submitButton.textContent = buttontitle;
   submitButton.href = accountcreationurl;
-  submitButton.addEventListener('click', handleOpenAccountSubmit);
+  submitButton.addEventListener('click', (event) => { handleOpenAccountSubmit(event, block); });
   return submitButton;
 }
 
@@ -74,6 +74,7 @@ function createReCaptcha() {
 }
 
 function createSignUpElement(
+  block,
   signupString,
   promotionaltext,
   placeholderText,
@@ -95,7 +96,7 @@ function createSignUpElement(
   const formFieldsDiv = createElement('div', '');
   const mobileInput = createMobileNumberInput(placeholderText);
 
-  const submitButton = createSubmitButton(buttontitle, accountcreationurl);
+  const submitButton = createSubmitButton(block, buttontitle, accountcreationurl);
   const errorSpan = createErrorSpan(errormessage);
   const captcha = createReCaptcha();
   formFieldsDiv.appendChild(mobileInput);
@@ -127,6 +128,7 @@ export default async function decorate(block) {
 
   const titleField = createTitle(titleHTML);
   const signupElementDiv = createSignUpElement(
+    block,
     signupstringHTML,
     promotionaltext,
     placeholdertext,

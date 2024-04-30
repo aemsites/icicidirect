@@ -134,7 +134,7 @@ export default async function decorate(block) {
   block.append(quickLinkContainerDiv);
 
   // enable sticky quicklinks when page is scrolled
-  const parentContainer = document.querySelector('.section.quicklinks-container');
+  const parentContainer = block.closest('.section.quicklinks-container');
   enableStickyBehaviorForQuickLinks(parentContainer, block);
   // enable the section highlighting when quicklinks comes into viewport
   // this gives the quicklinks sometime so that other sections are ready
