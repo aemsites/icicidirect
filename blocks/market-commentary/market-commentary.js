@@ -1,7 +1,7 @@
 import {
   getDataFromAPI, getResearchAPIUrl, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
-import { fetchPlaceholders } from '../../scripts/aem.js';
+import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
@@ -116,12 +116,13 @@ async function generateCardsView(block, placeholders) {
   });
 }
 export default async function decorate(block) {
+  const blockConfig = readBlockConfig(block);
   block.textContent = '';
   const placeholders = await fetchPlaceholders();
   const titleWrap = document.createElement('div');
   titleWrap.className = 'title text-center';
   const h2 = document.createElement('h2');
-  h2.textContent = placeholders.marketcommentary;
+  h2.textContent = blockConfig.title;
   titleWrap.appendChild(h2);
   block.appendChild(titleWrap);
 
