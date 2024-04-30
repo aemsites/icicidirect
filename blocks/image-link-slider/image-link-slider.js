@@ -1,5 +1,7 @@
 // Map of API names and their respective endpoint URLs
-import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
+import {
+  buildBlock, decorateBlock, loadBlock, updateSectionsStatus,
+} from '../../scripts/aem.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import { callAPI } from '../../scripts/mockapi.js';
 import { observe } from '../../scripts/blocks-utils.js';
@@ -111,6 +113,7 @@ export default async function decorate(block) {
           });
         }).then(() => {
           block.querySelector('.block.carousel').style.display = 'block';
+          updateSectionsStatus(document.querySelector('main'));
         })
         .catch((error) => {
           // eslint-disable-next-line no-console
