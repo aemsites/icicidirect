@@ -1,12 +1,12 @@
 import {
   getDataFromAPI, getResearchAPIUrl, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
-import { readBlockConfig } from '../../scripts/aem.js';
+import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
 
-function createMarketCommentaryCard(cardData, blockConfig) {
+function createMarketCommentaryCard(cardData, placeholders) {
   const {
     articleUrl = 'https://www.icicidirect.com/share-market-today/market-news-commentary',
     HEADING,
@@ -25,10 +25,10 @@ function createMarketCommentaryCard(cardData, blockConfig) {
         div(
           { class: 'info' },
           p(
-            span(`${blockConfig.powerby}`),
+            span(`${placeholders.powerby}`),
           ),
           p(
-            span(`${blockConfig.publishedon} ${NEWS_DATE}`),
+            span(`${placeholders.publishedon} ${NEWS_DATE}`),
           ),
         ),
       ),
@@ -102,14 +102,14 @@ function updateDots(block) {
   }
 }
 
-async function generateCardsView(block, blockConfig) {
+async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
     if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
       return;
     }
     marketCommentaryData.Data.Table.forEach((cardData) => {
-      const card = createMarketCommentaryCard(cardData, blockConfig);
+      const card = createMarketCommentaryCard(cardData, placeholders);
       blogsContainer.appendChild(card);
     });
     updateDots(block);
@@ -118,6 +118,7 @@ async function generateCardsView(block, blockConfig) {
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   block.textContent = '';
+  const placeholders = await fetchPlaceholders();
   const titleWrap = document.createElement('div');
   titleWrap.className = 'title text-center';
   const h2 = document.createElement('h2');
@@ -137,5 +138,5 @@ export default async function decorate(block) {
   dotsContainer.className = 'dots-container';
   containerlist.appendChild(dotsContainer);
   block.appendChild(containerlist);
-  observe(block, generateCardsView, blockConfig);
+  observe(block, generateCardsView, placeholders);
 }
