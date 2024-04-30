@@ -378,6 +378,15 @@ function loadAnalyticsEager() {
   return getQueryParam('analytics') === 'eager';
 }
 
+function loadAnalyticsDelayed() {
+  if (getQueryParam('analytics') === 'delayed') {
+    if (getQueryParam('delayTime')) {
+      return parseInt(getQueryParam('delayTime'), 10);
+    }
+  }
+  return -1;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -402,4 +411,5 @@ export {
   loadGTM,
   getQueryParam,
   loadAnalyticsEager,
+  loadAnalyticsDelayed,
 };
