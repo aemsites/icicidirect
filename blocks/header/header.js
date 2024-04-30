@@ -886,6 +886,49 @@ const addHeaderEventHandlers = () => {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
+  const preconnectUrls = [
+    'https://www.google-analytics.com',
+    'https://www.googletagmanager.com',
+  ];
+  const prefetchUrls = [
+    'https://www.google-analytics.com/analytics.js',
+    //'https://www.googletagmanager.com/gtm.js',
+  ];
+  // Preconnect to essential origins asynchronously
+  async function preconnect(urls) {
+    const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
+      const link = document.createElement('link');
+      link.rel = 'preconnect';
+      link.href = url;
+      link.onload = resolve;
+      link.onerror = reject;
+      document.head.appendChild(link);
+    }));
+    Promise.all(linkPromises);
+  }
+  async function prefetch(urls) {
+    const linkPromises = urls.map((url) => new Promise((resolve, reject) => {
+      const link = document.createElement('link');
+      link.rel = 'prefetch';
+      link.href = url;
+      link.onload = resolve;
+      link.onerror = reject;
+      document.head.appendChild(link);
+    }));
+
+    Promise.all(linkPromises);
+  }
+
+  // Execute asynchronously
+  (async () => {
+    try {
+      preconnect(preconnectUrls);
+      prefetch(prefetchUrls);
+      console.log('Preconnection and prefetching completed successfully.');
+    } catch (error) {
+      console.error('Error occurred while preconnecting/prefetching:', error);
+    }
+  })();
   // load nav as fragment
   const navMeta = getMetadata('nav');
   const navPath = navMeta ? new URL(navMeta).pathname : '/nav';
