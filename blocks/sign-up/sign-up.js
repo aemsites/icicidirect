@@ -79,6 +79,7 @@ function createReCaptcha() {
 function createSignUpElement(
   block,
   signupString,
+  signupSubstringHTML,
   promotionaltext,
   placeholderText,
   buttontitle,
@@ -90,8 +91,14 @@ function createSignUpElement(
   const formGroupDiv = createElement('div', 'signup-form-group');
   formGroupDiv.classList.add('text-center');
 
-  const signupStringElement = createElement('label', '');
+  const signupStringElement = createElement('label', 'title');
   signupStringElement.innerHTML = signupString.innerHTML;
+
+  let signupSubStringElement;
+  if (signupSubstringHTML) {
+    signupSubStringElement = createElement('label', 'subtitle');
+    signupSubStringElement.innerHTML = signupSubstringHTML.innerHTML;
+  }
 
   const promotionalSpan = createElement('span', 'promotional-text');
   promotionalSpan.textContent = promotionaltext;
@@ -107,6 +114,9 @@ function createSignUpElement(
   formFieldsDiv.appendChild(submitButton);
 
   formGroupDiv.appendChild(signupStringElement);
+  if (signupSubStringElement) {
+    formGroupDiv.appendChild(signupSubStringElement);
+  }
   formGroupDiv.appendChild(promotionalSpan);
   formGroupDiv.appendChild(formFieldsDiv);
   formGroupDiv.appendChild(errorSpan);
@@ -122,11 +132,13 @@ export default async function decorate(block) {
   } = blockConfig;
   let titleHTML;
   let signupstringHTML;
+  let signupSubstringHTML;
   if (title) {
     [, titleHTML] = block.querySelectorAll(':scope > div')[0].children;
     [, signupstringHTML] = block.querySelectorAll(':scope > div')[1].children;
   } else {
     [, signupstringHTML] = block.querySelectorAll(':scope > div')[0].children;
+    [, signupSubstringHTML] = block.querySelectorAll(':scope > div')[1].children;
   }
   const sectionDiv = createElement('div', 'section');
   sectionDiv.classList.add('margin', 'signup-container');
@@ -140,6 +152,7 @@ export default async function decorate(block) {
   const signupElementDiv = createSignUpElement(
     block,
     signupstringHTML,
+    signupSubstringHTML,
     promotionaltext,
     placeholdertext,
     buttontitle,
