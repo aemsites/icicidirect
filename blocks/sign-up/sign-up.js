@@ -57,6 +57,9 @@ function createErrorSpan(errormessage) {
 }
 
 function createTitle(titleHTML) {
+  if (!titleHTML) {
+    return null;
+  }
   const col1Div = createElement('div', 'signupsections');
   const titleWrapDiv = createElement('div', 'title-wrap');
   const h2Element = createElement('h2', '');
@@ -115,17 +118,24 @@ function createSignUpElement(
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const {
-    promotionaltext, placeholdertext, buttontitle, errormessage, accountcreationurl,
+    title, promotionaltext, placeholdertext, buttontitle, errormessage, accountcreationurl,
   } = blockConfig;
-  const titleHTML = block.querySelectorAll(':scope > div')[0].children[1];
-  const signupstringHTML = block.querySelectorAll(':scope > div')[1].children[1];
+  let titleHTML;
+  let signupstringHTML;
+  if (title) {
+    [, titleHTML] = block.querySelectorAll(':scope > div')[0].children;
+    [, signupstringHTML] = block.querySelectorAll(':scope > div')[1].children;
+  } else {
+    [, signupstringHTML] = block.querySelectorAll(':scope > div')[0].children;
+  }
   const sectionDiv = createElement('div', 'section');
   sectionDiv.classList.add('margin', 'signup-container');
 
   const articleElement = createElement('article', '');
   const rowDiv = createElement('div', 'row');
-  rowDiv.classList.add('justify-content-center', 'align-items-center');
-
+  if (!block.classList.contains('hero')) {
+    rowDiv.classList.add('justify-content-center', 'align-items-center');
+  }
   const titleField = createTitle(titleHTML);
   const signupElementDiv = createSignUpElement(
     block,
@@ -136,7 +146,9 @@ export default async function decorate(block) {
     errormessage,
     accountcreationurl,
   );
-  rowDiv.appendChild(titleField);
+  if (titleField) {
+    rowDiv.appendChild(titleField);
+  }
   rowDiv.appendChild(signupElementDiv);
   articleElement.appendChild(rowDiv);
   sectionDiv.appendChild(articleElement);

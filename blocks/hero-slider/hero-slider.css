@@ -5,12 +5,12 @@
 .block.hero-slider.carousel > nav {
   position: absolute;
   bottom: 0;
-  left: 40%;
+  left: 50%;
 } 
 
 .block.hero-slider:not(.carousel){
   height: 100%;
-  box-shadow: 0 0 40px 5px var(--box-shadow-footer-top-gray);
+  box-shadow: 0 0 2.5rem var(--space-5px) var(--box-shadow-footer-top-gray);
   border-radius: var(--space-10px);
 }
 
@@ -31,14 +31,14 @@
   position: absolute;
   margin: 0;
   width: 100%;
-  color: white;
+  color: var(--color-white);
   background-color: unset;
 }
 
-.block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay p, a{
-  font-size: 26px;
-  color: black;
-  font-weight: 600;
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay p, a:any-link {
+  font-size: var(--body-font-size-xxxl);
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner {
