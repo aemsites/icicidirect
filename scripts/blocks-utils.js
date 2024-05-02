@@ -38,6 +38,8 @@ const Viewport = (function initializeViewport() {
     return deviceType;
   }
 
+  getDeviceType();
+
   function isDesktop() {
     return deviceType === 'Desktop';
   }
@@ -378,6 +380,24 @@ function loadAnalyticsEager() {
   return getQueryParam('analytics') === 'eager';
 }
 
+function sanitizeCompanyName(companyName) {
+  const formattedCompanyName = companyName.replace(/[^a-zA-Z0-9 ]/g, '')
+    .trim().replace(/\s+/g, '-').toLowerCase();
+  return formattedCompanyName;
+}
+
+function generateReportLink(companyName, reportId) {
+  const formattedCompanyName = sanitizeCompanyName(companyName);
+  // Trim trailing .0 from RES_REPORT_ID
+  const trimmedReportId = reportId.toString().replace(/\.0$/, '');
+
+  // Generate report link
+  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
+                      + `${formattedCompanyName}/${trimmedReportId}`;
+
+  return reportLink;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -402,4 +422,6 @@ export {
   loadGTM,
   getQueryParam,
   loadAnalyticsEager,
+  generateReportLink,
+  sanitizeCompanyName,
 };
