@@ -15,7 +15,10 @@ import {
 } from './aem.js';
 
 import {
-  decorateQuickLinks, loadAdobeLaunch, loadAnalyticsDelayed, loadGTM,
+  decorateQuickLinks,
+  defaultAnalyticsLoadDisabled,
+  loadAdobeLaunchAndGTM,
+  loadAnalyticsDelayed,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
@@ -169,12 +172,15 @@ async function loadEager(doc) {
     // do nothing
   }
 
-  const delayTime = loadAnalyticsDelayed();
-  if (delayTime >= 0) {
-    setTimeout(() => {
-      loadAdobeLaunch();
-      loadGTM();
-    }, delayTime * 1000);
+  if (defaultAnalyticsLoadDisabled()) {
+    const delayTime = loadAnalyticsDelayed();
+    if (delayTime === 0) {
+      loadAdobeLaunchAndGTM();
+    } else if (delayTime > 0) {
+      setTimeout(() => {
+        loadAdobeLaunchAndGTM();
+      }, delayTime * 1000);
+    }
   }
 }
 

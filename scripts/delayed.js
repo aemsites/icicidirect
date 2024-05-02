@@ -2,7 +2,7 @@
 import { loadScript, sampleRUM } from './aem.js';
 import {
   // eslint-disable-next-line import/named
-  loadGTM, loadAdobeLaunch, loadAnalyticsDelayed,
+  loadGTM, loadAdobeLaunch, defaultAnalyticsLoadDisabled,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
@@ -33,12 +33,11 @@ loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback
 loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
-  if (loadAnalyticsDelayed() < 0) {
+  if (!defaultAnalyticsLoadDisabled()) {
     // TODO: Remove delayed loading of GTM once it stops impacting page performance
     setTimeout(() => {
       loadGTM();
     }, 2000);
-
     loadAdobeLaunch();
   }
   loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
