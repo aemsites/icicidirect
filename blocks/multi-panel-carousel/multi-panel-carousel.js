@@ -3,7 +3,7 @@ import {
   fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant,
 } from '../../scripts/mockapi.js';
 import {
-  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport, fetchData,
+  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport, fetchData, ICICI_FINOUX_HOST,
 } from '../../scripts/blocks-utils.js';
 
 const isDesktop = Viewport.isDesktop();
@@ -292,21 +292,27 @@ function addActionButton(boxFooter, company, type) {
 }
 
 function addFooterLabel(boxFooter, company, type) {
-  if (type !== 'trading') {
+  if (type !== 'trading' || company.RES_TIME_FRAME_ID !== 100) {
     return;
   }
   const footerLabel = document.createElement('div');
   footerLabel.className = 'footer-label border-box';
-  if (!company.exit) {
-    footerLabel.classList.add('disable');
-  }
   const label = document.createElement('label');
-  label.textContent = mockPredicationConstant.profitExit;
   footerLabel.appendChild(label);
   const span = document.createElement('span');
   span.className = 'label-value';
-  span.textContent = company.exit;
   footerLabel.appendChild(span);
+
+  if (company.Exit_Price && parseInt(company.Exit_Price, 10) > 0) {
+    label.textContent = mockPredicationConstant.profitExit;
+    span.textContent = company.Exit_Price;
+  } else if (company.Book_Profit_Price && parseInt(company.Book_Profit_Price, 10) > 0) {
+    label.textContent = mockPredicationConstant.bookProfit;
+    span.textContent = company.Book_Profit_Price;
+  } else {
+    footerLabel.classList.add('disable');
+  }
+
   boxFooter.appendChild(footerLabel);
 }
 
@@ -418,23 +424,45 @@ function getRecommendationsCard(companies, type) {
   });
 }
 
+function gerateReportLink(company) {
+  const formattedCompanyName = company.COM_NAME.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
+
+  // Trim trailing .0 from RES_REPORT_ID
+  const trimmedReportId = company.RES_REPORT_ID.toString().replace(/\.0$/, '');
+
+  // Generate report link
+  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/${formattedCompanyName}/${trimmedReportId}`;
+
+  return reportLink;
+}
+
 function updateCardsInView(block, type, recommendationArray) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
   const companiesArray = [];
   recommendationArray.forEach((company) => {
     const companyObj = {};
-    companyObj.name = company.COM_NAME;
-    companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
-    companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
-    companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
-    companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
 
-    if (type === 'trading') {
-      companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
-    } else if (type === 'investing') {
-      companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
-      companyObj.reportLink = !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
+    if (type === 'oneclickportfolio') {
+      companyObj.name = company.Pf_Name;
+      companyObj.returns = !company.CAGR ? 'NA' : `${company.CAGR}%`;
+      companyObj.minAmount = !company.Min_invest_value ? '0' : company.Min_invest_value;
+      companyObj.riskProfile = !company.RISK_PROFILE ? 'NA' : company.RISK_PROFILE;
+      companyObj.action = 'Buy';
+    } else {
+      companyObj.name = company.COM_NAME;
+      companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
+      companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
+      companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
+      companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
+
+      if (type === 'trading') {
+        companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
+      } else if (type === 'investing') {
+        companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
+        // eslint-disable-next-line max-len
+        companyObj.reportLink = gerateReportLink(company); // !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
+      }
     }
 
     companiesArray.push(companyObj);
@@ -452,20 +480,41 @@ function updateCardsInView(block, type, recommendationArray) {
 }
 
 async function fetchCardsData(block, type, rating, timeFrame) {
+
+  const dropdownText = block.querySelector('.dropdown-text');
+  if (toggleBtn) {
+
   // eslint-disable-next-line no-param-reassign
   rating = rating || '';
   // eslint-disable-next-line no-param-reassign
   timeFrame = timeFrame || '';
-  const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
-  const jsonFormData = {
-    apiName,
-    inputJson: JSON.stringify({
-      rating, timeFrame, pageNo: '1', pageSize: '5',
-    }),
-  };
+  const option = 'NewlyLaunched';
+  let jsonFormData;
+  if (type === 'oneclickportfolio') {
+    jsonFormData = {
+      apiName: 'GetOneClickPortfolio',
+      inputJson: JSON.stringify({ option }),
+    };
+  } else {
+    jsonFormData = {
+      apiName: type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas',
+      inputJson: JSON.stringify({
+        rating, timeFrame, pageNo: '1', pageSize: '5',
+      }),
+    };
+  }
+
   postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-    if (error === null && tradingData.Data && tradingData.Data.Table) {
-      updateCardsInView(block, type, tradingData.Data.Table);
+    console.log(tradingData);
+    if (error === null && tradingData.Data) {
+      let resultData;
+      if (type === 'oneclickportfolio') {
+        resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
+        console.log(resultData);
+      } else {
+        resultData = tradingData.Data.Table;
+      }
+      updateCardsInView(block, type, resultData);
     }
   });
 }
@@ -474,35 +523,25 @@ async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
   // to be removed once oneclickportfolio api is ready
-  if (type === 'oneclickportfolio') {
-    fetchRecommendations(type).then((companies) => {
-      if (companies) {
-        const recommendationsCard = getRecommendationsCard(companies, type);
-        recommendationsCard.forEach((div) => {
-          carouselTrack.appendChild(div);
-        });
-        setCarouselView(type, carouselSlider);
-      }
-    });
-    return;
-  }
+  // if (type === 'oneclickportfolio') {
+  //   fetchRecommendations(type).then((companies) => {
+  //     if (companies) {
+  //       const recommendationsCard = getRecommendationsCard(companies, type);
+  //       recommendationsCard.forEach((div) => {
+  //         carouselTrack.appendChild(div);
+  //       });
+  //       setCarouselView(type, carouselSlider);
+  //     }
+  //   });
+  //   return;
+  // }
   fetchCardsData(block, type);
-  // const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
-  // const jsonFormData = {
-  //   apiName,
-  //   inputJson: JSON.stringify({
-  //     rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
-  //   }),
-  // };
-  //
-  // postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-  //   if (error === null && tradingData.Data && tradingData.Data.Table) {
-  //     updateCardsInView(block, type, tradingData.Data.Table);
-  //   }
-  // });
 }
 
 async function generateDropDowns(block, type) {
+  if (type !== 'investing') {
+    return;
+  }
   fetchData(`${getHostUrl()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
     const restructuredData = {};
     DDData.data.forEach((item) => {
