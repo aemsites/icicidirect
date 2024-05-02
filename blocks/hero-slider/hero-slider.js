@@ -65,18 +65,12 @@ const buildIndividualBanner = (bannerItems, container, maxLimit = MAX_BANNERS) =
                     <div class="carousel-slide-image">
                         ${bannerAttributes.imageNode.outerHTML}
                     </div>
-                    <div class="carousel-slide-content">
-                        <h3><a href="${bannerAttributes.link}">${bannerAttributes.link}</a></h3>
-                        <div class="carousel-slide-content-footer copyright">
-                        <div>
-                            <div>${bannerAttributes.overlayText.outerHTML}</div>
-                            <div>${bannerAttributes.template}</div>
-                        </div>
-                        <div class="socialshare">
-                            <a class="social-share">
-                                <img src="/icons/gray-share-icon.svg" alt="Social Share" >
-                            </a>
-                        </div>
+                    <div class="carousel-slide-content ${bannerAttributes.template}">
+                        <a href="${bannerAttributes.link}">
+                          <div class="carousel-slide-content-overlay">
+                            ${bannerAttributes.overlayText.outerHTML}
+                          </div>
+                        </a>
                     </div>
                     </div>
                 `;
