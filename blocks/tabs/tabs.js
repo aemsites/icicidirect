@@ -66,8 +66,10 @@ export default async function decorate(block) {
   });
   block.prepend(tablist);
   const mediaBlocks = Array.from(block.querySelectorAll('.block.media'));
-  await Promise.all(mediaBlocks.map(async (mediaBlock) => {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const mediaBlock of mediaBlocks) {
     decorateBlock(mediaBlock);
+    // eslint-disable-next-line no-await-in-loop
     await loadBlock(mediaBlock);
-  }));
+  }
 }
