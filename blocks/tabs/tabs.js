@@ -65,8 +65,9 @@ export default async function decorate(block) {
     tab.remove();
   });
   block.prepend(tablist);
-  block.querySelectorAll('.block.media').forEach((mediaBlock) => {
+  const mediaBlocks = Array.from(block.querySelectorAll('.block.media'));
+  await Promise.all(mediaBlocks.map(async (mediaBlock) => {
     decorateBlock(mediaBlock);
-    loadBlock(mediaBlock);
-  });
+    await loadBlock(mediaBlock);
+  }));
 }
