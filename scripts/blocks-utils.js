@@ -317,10 +317,17 @@ function parseResponse(apiResponse) {
   const result = [];
   apiResponse.Data.forEach((item) => {
     const jsonObject = {};
+    let excludeItem = false;
     item.forEach((data) => {
+      if (data.Key === 'TOTAL_COUNT') {
+        excludeItem = true;
+        return;
+      }
       jsonObject[data.Key] = data.Value;
     });
-    result.push(jsonObject);
+    if (!excludeItem) {
+      result.push(jsonObject);
+    }
   });
   return result;
 }
