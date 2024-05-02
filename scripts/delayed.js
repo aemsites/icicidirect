@@ -2,7 +2,7 @@
 import { loadScript, sampleRUM } from './aem.js';
 import {
   // eslint-disable-next-line import/named
-  loadGTM, loadAdobeLaunch, loadAnalyticsEager, loadAnalyticsDelayed,
+  loadGTM, loadAdobeLaunch, loadAnalyticsDelayed,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
@@ -33,7 +33,7 @@ loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback
 loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
-  if (!loadAnalyticsEager() && loadAnalyticsDelayed() === -1) {
+  if (loadAnalyticsDelayed() < 0) {
     // TODO: Remove delayed loading of GTM once it stops impacting page performance
     setTimeout(() => {
       loadGTM();

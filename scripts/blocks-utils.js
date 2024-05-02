@@ -374,17 +374,13 @@ function getQueryParam(param) {
   return urlParams.get(param);
 }
 
-function loadAnalyticsEager() {
-  return getQueryParam('analytics') === 'eager';
-}
-
 function loadAnalyticsDelayed() {
-  if (getQueryParam('analytics') === 'delayed') {
-    if (getQueryParam('delayTime')) {
-      return parseInt(getQueryParam('delayTime'), 10);
-    }
+  let delayTime = -1;
+  const delayMartech = getQueryParam('delayMartech');
+  if (delayMartech && !Number.isNaN(parseInt(delayMartech, 10))) {
+    delayTime = parseInt(delayMartech, 10);
   }
-  return -1;
+  return delayTime;
 }
 
 export {
@@ -410,6 +406,5 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
-  loadAnalyticsEager,
   loadAnalyticsDelayed,
 };
