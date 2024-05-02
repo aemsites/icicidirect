@@ -3,13 +3,22 @@ import {
 } from '../../scripts/aem.js';
 import {
   createElement, observe, getResearchAPIUrl, getDataFromAPI, readBlockMarkup,
-  Viewport,
+  Viewport, generateReportLink, sanitizeCompanyName, ICICI_FINOUX_HOST,
 } from '../../scripts/blocks-utils.js';
 
-function decorateBoxHeader(title, reportLink) {
+function generateTitleLink(company) {
+  const formattedCompanyName = sanitizeCompanyName(company);
+
+  // Generate  link
+  const link = `https://${ICICI_FINOUX_HOST}/stocks/`
+                      + `${formattedCompanyName}-share-price`;
+  return link;
+}
+
+function decorateBoxHeader(title) {
   const heading = createElement('h3', '');
   const anchor = createElement('a', '');
-  anchor.href = reportLink;
+  anchor.href = generateTitleLink(title);
   anchor.target = '_blank';
   anchor.tabIndex = 0;
   anchor.textContent = title;
@@ -62,10 +71,10 @@ function decorateDataInBox(label, value, rowClass) {
   return div;
 }
 
-function decorateBoxFooter(reportLink, buttontitle) {
+function decorateBoxFooter(companyName, reportId, buttontitle) {
   const footer = createElement('div', 'box-footer');
   const reportBtn = createElement('a', 'btn');
-  reportBtn.href = reportLink;
+  reportBtn.href = generateReportLink(companyName, reportId);
   reportBtn.target = '_blank';
   reportBtn.tabIndex = 0;
   reportBtn.textContent = buttontitle;
@@ -88,15 +97,15 @@ function decorateBox(targetPrice, rating, date) {
   return row;
 }
 
-function createReportBox(title, targetPrice, rating, date, reportLink, buttontitle) {
+function createReportBox(title, targetPrice, rating, date, reportId, buttontitle) {
   const slideDiv = createElement('div', 'carousel-card');
   const box = createElement('div', 'box');
   slideDiv.appendChild(box);
-  const header = decorateBoxHeader(title, reportLink);
+  const header = decorateBoxHeader(title);
   box.appendChild(header);
-  const rowDiv = decorateBox(targetPrice, rating, date, reportLink);
+  const rowDiv = decorateBox(targetPrice, rating, date);
   box.appendChild(rowDiv);
-  const footer = decorateBoxFooter(reportLink, buttontitle);
+  const footer = decorateBoxFooter(title, reportId, buttontitle);
   box.appendChild(footer);
 
   return slideDiv;
@@ -115,7 +124,7 @@ function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCf
       formatPriceInRupees(item.TARGET_PRICE),
       item.RATING,
       formatDate(item.REP_RELEASE_DTM),
-      item.REPORT_PDF_LINK,
+      item.RES_REPORT_ID,
       buttontitle,
     );
     slide.innerHTML = reportBox.innerHTML;
