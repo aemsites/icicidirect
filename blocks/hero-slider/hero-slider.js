@@ -1,7 +1,7 @@
 import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
 
-const MAX_BANNERS = 5;
-const AUTO_SCROLL_COUNT = 3;
+const MAX_BANNERS = 15;
+const AUTO_SCROLL_COUNT = -1;
 
 const handleSocialShareClick = () => {
 };
