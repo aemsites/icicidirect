@@ -24,13 +24,42 @@ const LCP_BLOCKS = []; // add your LCP blocks to the list
 // Add you plugins below
 // window.hlx.plugins.add('/plugins/my-plugin.js');
 
-/**
- * Builds hero block and prepends to main in a new section.
- * @param {Element} main The container element
- */
+// eslint-disable-next-line no-shadow
+// const position = navigator.geolocation.getCurrentPosition((position) => {
+//   console.log(position.coords.latitude, position.coords.longitude);
+//   return position;
+// });
+
 const AUDIENCES = {
   mobile: () => window.innerWidth < 600,
   desktop: () => window.innerWidth >= 600,
+  delhi: async () => {
+    try {
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      console.log(position.coords.latitude, position.coords.longitude);
+      const { latitude, longitude } = position.coords;
+      return (latitude >= 28.3 && latitude <= 28.9) && (longitude >= 77 && longitude <= 77.4);
+    } catch (error) {
+      console.error('Error getting location:', error);
+      return false; // Return a default value in case of error
+    }
+  },
+  mumbai: async () => {
+    try {
+      const position = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject);
+      });
+      console.log(position.coords.latitude, position.coords.longitude);
+      const { latitude, longitude } = position.coords;
+      return (latitude >= 18.9 && latitude <= 19.3) && (longitude >= 72.75 && longitude <= 72.95);
+    } catch (error) {
+      console.error('Error getting location:', error);
+      return false; // Return a default value in case of error
+    }
+  },
+
   // define your custom audiences here as needed
 };
 
