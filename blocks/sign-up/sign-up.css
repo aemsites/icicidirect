@@ -208,6 +208,11 @@
         max-width: 50%;
     }
 
+    .block.sign-up.hero .signupsections {
+      flex: unset;
+      max-width: unset;
+  }
+
     .block.sign-up.hero .section.margin {
       margin: 0;
     }
@@ -247,6 +252,11 @@
         flex: 0 0 41.6667%;
         max-width: 41.6667%;
         margin-bottom: 0;
+    }
+
+    .block.sign-up.hero .signupsections {
+        flex: unset;
+        max-width: unset;
     }
 
     .block.sign-up .signup-container .signup-form-group {
