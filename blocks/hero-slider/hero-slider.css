@@ -75,8 +75,8 @@
   font-size: var(--body-font-size-xs);
 }
 
-/* CSS styles to apply when the screen width is more than 576 px and less than 768px */
-@media screen and (width >= 36rem) and  (width < 48rem) {
+/* CSS styles to apply when the screen width is more than 576 px */
+@media screen and (width >= 36rem) {
   .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner {
     padding-left: 1rem;
   }
