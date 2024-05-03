@@ -71,15 +71,10 @@ const scrollToAdjustedStickyHeader = (section) => {
   const additionalOffset = paddingTop + extraIfNotSticky; // Add your desired offset here
   const elementPosition = section && section.getBoundingClientRect().top;
   const offsetPosition = elementPosition + window.scrollY - additionalOffset;
-  let scrollBehavior = 'smooth';
-  if (!section.getAttribute('clicked')) {
-    section.setAttribute('clicked', true);
-    scrollBehavior = 'instant';
-  }
 
   window.scrollTo({
     top: offsetPosition,
-    behavior: scrollBehavior,
+    behavior: 'smooth',
   });
 
   if (section) {
