@@ -1,4 +1,12 @@
-import { createOptimizedPicture, readBlockConfig, toCamelCase } from './aem.js';
+import {
+  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName,
+} from './aem.js';
+
+const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
+const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
+const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
+const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
+const SITE_ROOT = 'https://www.icicidirect.com';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -29,6 +37,8 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+
+  getDeviceType();
 
   function isDesktop() {
     return deviceType === 'Desktop';
@@ -104,10 +114,22 @@ function observe(elementToObserve, callback, ...args) {
   observer.observe(elementToObserve);
 }
 
+function getOriginUrl() {
+  return WORKER_ORIGIN_URL;
+}
+
+function getResearchAPIUrl() {
+  return RESEARCH_API_URL;
+}
+
+function getMarketingAPIUrl() {
+  return MARKETING_API_URL;
+}
 /**
  * Fetches data from the given URL and calls the callback function with the response.
  * @param {string} url The URL to fetch data from.
  * @param {Function} callback The callback function to call with the response.
+ * @param {string} apiName The name of the API to be called.
  * returns {void}
  * @example
  * fetchData('https://jsonplaceholder.typicode.com/todos/1', (error, data) => {
@@ -116,6 +138,7 @@ function observe(elementToObserve, callback, ...args) {
  * } else {
  *  console.log(data);
  * }
+ * }); // GET request
  */
 function fetchData(url, callback) {
   fetch(url)
@@ -131,6 +154,93 @@ function fetchData(url, callback) {
     .catch((error) => {
       callback(error, null);
     });
+}
+
+function formDataToJSON(formData) {
+  const jsonObject = {};
+  formData.forEach((value, key) => {
+    // eslint-disable-next-line no-prototype-builtins
+    if (!jsonObject.hasOwnProperty(key)) {
+      jsonObject[key] = value;
+    } else {
+      if (!Array.isArray(jsonObject[key])) {
+        jsonObject[key] = [jsonObject[key]];
+      }
+      jsonObject[key].push(value);
+    }
+  });
+  return JSON.stringify(jsonObject);
+}
+
+/**
+ * Posts form data to the given URL and calls the callback function with the response.
+ * @param url
+ * @param formData
+ * @param callback
+ * @param options
+ * @example
+ * const formData = new FormData();
+ * formData.append('apiName', 'getdata');
+ * postFormData('https://example.com/data', formData, (error, data) => {
+ *  if (error) {
+ *  console.error('Error fetching data:', error);
+ *  }
+ *  else {
+ *  console.log('Data fetched successfully:', data);
+ *  }
+ *
+ */
+function postFormData(url, formData, callback, options = {}) {
+  let formDataString;
+  if (formData instanceof FormData) {
+    formDataString = formDataToJSON(formData);
+  } else {
+    // assuming formData is already a JSON object
+    formDataString = JSON.stringify(formData);
+  }
+
+  const requestOptions = {
+    method: 'POST',
+    headers: options.headers || {},
+    body: formDataString,
+    ...options, // Override any additional options provided
+  };
+
+  fetch(url, requestOptions)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    })
+    .then((data) => {
+      callback(null, data);
+    })
+    .catch((error) => {
+      callback(error, null);
+    });
+}
+
+/**
+ * Fetches data from the given API URL and calls the callback function with the response.
+ * @param url
+ * @param apiName
+ * @param callback
+ * @example
+ * getDataFromAPI('https://example.com/data', 'getdata', (error, data) => {
+ * if (error) {
+ * console.error('Error fetching data:', error);
+ * }
+ * else {
+ * console.log('Data fetched successfully:', data);
+ * }
+ * });
+ *
+ */
+function getDataFromAPI(url, apiName, callback) {
+  const formData = new FormData();
+  formData.append('apiName', apiName);
+  postFormData(url, formData, callback);
 }
 
 /*
@@ -151,7 +261,18 @@ function getEnvType(hostname = window.location.hostname) {
  * @param {Element} main The container element under which quicklinks has to be enabled.
  */
 function decorateQuickLinks(main) {
-  const addQuickLinksMetadata = (block) => {
+  const handQuickLinksMetadataForTabs = (section) => {
+    const quickLinkTitles = section.getAttribute('data-quicklinks-title').split(',');
+    const nestedTabs = section.querySelectorAll('.block.tabs > div > div:first-child');
+    const nestedTabsIndexed = Array.from(nestedTabs);
+    // assign the ids as per the order of tabs
+    quickLinkTitles.forEach((singleTitle, index) => {
+      nestedTabsIndexed[index].id = toCamelCase(singleTitle.trim());
+      nestedTabsIndexed[index].setAttribute('data-quicklinks-title', singleTitle.trim());
+    });
+    section.removeAttribute('data-quicklinks-title');
+  };
+  const addQuickLinksMetadataForBlocks = (block) => {
     // extract the quicklinks details if present
     const blockConfig = readBlockConfig(block);
     const quickLinkTitle = blockConfig['quicklinks-title'];
@@ -160,7 +281,121 @@ function decorateQuickLinks(main) {
       block.id = toCamelCase(quickLinkTitle);
     }
   };
-  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadata);
+  main.querySelectorAll('div.tabs-container[data-quicklinks-title]').forEach(handQuickLinksMetadataForTabs);
+  main.querySelectorAll('div.section-container > div > div').forEach(addQuickLinksMetadataForBlocks);
+}
+
+/**
+ * Reads the block markup and returns the configuration object.
+ * This function returns the second column of each row as the value for the first column.
+ * If there are more than two columns in a row, the function ignores the rest of the columns.
+ * but those can be retrived by nextSibling property of the value column.
+ * @param block - The block element.
+ * @returns {{}} - The configuration object.
+ */
+function readBlockMarkup(block) {
+  const config = {};
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    if (row.children) {
+      const cols = [...row.children];
+      if (cols[1]) {
+        const col = cols[1];
+        const name = toClassName(cols[0].textContent);
+        config[name] = col;
+      }
+    }
+  });
+  return config;
+}
+
+/**
+ * Parses the response from the Secure Worker API.
+ * @param {Object} apiResponse - Response from the Secure Worker API.
+ * @returns {Object} - Parsed JSON object.
+ */
+function parseResponse(apiResponse) {
+  const result = [];
+  apiResponse.Data.forEach((item) => {
+    const jsonObject = {};
+    item.forEach((data) => {
+      jsonObject[data.Key] = data.Value;
+    });
+    result.push(jsonObject);
+  });
+  return result;
+}
+
+/* Helper for delaying something like
+takes function as argument, default timout = 200
+*/
+function debounce(func, timeout = 200) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+  };
+}
+
+async function loadGTM() {
+  const scriptTag = document.createElement('script');
+  scriptTag.innerHTML = `
+        (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src =
+            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+        f.parentNode.insertBefore(j, f);
+        }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
+    `;
+  document.head.prepend(scriptTag);
+}
+
+function loadAdobeLaunch() {
+  const adobeLaunchSrc = {
+    dev: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    preview: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    live: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+    prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
+  };
+  loadScript(adobeLaunchSrc[getEnvType()], { async: true });
+}
+
+/**
+ * Get query param from URL
+ * @param param {string} The query param to get
+ * @returns {string} The value of the query param
+ */
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
+function loadAnalyticsEager() {
+  return getQueryParam('analytics') === 'eager';
+}
+
+function sanitizeCompanyName(companyName) {
+  const formattedCompanyName = companyName.replace(/[^a-zA-Z0-9 ]/g, '')
+    .trim().replace(/\s+/g, '-').toLowerCase();
+  return formattedCompanyName;
+}
+
+function generateReportLink(companyName, reportId) {
+  const formattedCompanyName = sanitizeCompanyName(companyName);
+  // Trim trailing .0 from RES_REPORT_ID
+  const trimmedReportId = reportId.toString().replace(/\.0$/, '');
+
+  // Generate report link
+  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
+                      + `${formattedCompanyName}/${trimmedReportId}`;
+
+  return reportLink;
 }
 
 export {
@@ -173,4 +408,20 @@ export {
   getEnvType,
   decorateQuickLinks,
   fetchData,
+  getOriginUrl,
+  getResearchAPIUrl,
+  getMarketingAPIUrl,
+  getDataFromAPI,
+  postFormData,
+  readBlockMarkup,
+  parseResponse,
+  debounce,
+  ICICI_FINOUX_HOST,
+  SITE_ROOT,
+  loadAdobeLaunch,
+  loadGTM,
+  getQueryParam,
+  loadAnalyticsEager,
+  generateReportLink,
+  sanitizeCompanyName,
 };

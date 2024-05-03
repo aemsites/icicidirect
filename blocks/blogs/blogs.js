@@ -1,8 +1,10 @@
-import { callMockBlogAPI } from '../../scripts/mockapi.js';
+// eslint-disable-next-line import/named
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
-import { createPictureElement, observe } from '../../scripts/blocks-utils.js';
+import {
+  createPictureElement, getOriginUrl, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, postFormData,
+} from '../../scripts/blocks-utils.js';
 
-async function createBlogCard(blogData) {
+function createBlogCard(blogData) {
   const { imageUrl } = blogData;
   const articleUrl = blogData.link;
   const articleTitle = blogData.title;
@@ -47,34 +49,88 @@ async function createBlogCard(blogData) {
   articleInfo.appendChild(articleInfoTime);
 
   const articleInfoPoweredBy = document.createElement('abbr');
-  articleInfoPoweredBy.textContent = (await fetchPlaceholders()).icicisecurities;
+  // articleInfoPoweredBy.textContent = (await fetchPlaceholders()).icicisecurities;
+  fetchPlaceholders().then((placeholders) => {
+    articleInfoPoweredBy.textContent = placeholders.icicisecurities;
+  });
   articleInfo.appendChild(articleInfoPoweredBy);
   articleContent.appendChild(articleInfo);
 
   arcticleDiv.appendChild(articleContent);
   return arcticleDiv;
 }
+function formatDateString(dateString) {
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const [datePart, timePart] = dateString.split(' ');
+  const [day, month, year] = datePart.split('-');
+  const [hour, minute, second] = timePart.split(':');
+
+  // Construct the date object
+  const date = new Date(year, month - 1, day, hour, minute, second);
+
+  // Format the date string
+  const formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()} ${date.getHours()}:${(date.getMinutes() < 10 ? '0' : '') + date.getMinutes()}`;
+
+  return formattedDate;
+}
 
 async function generateCardsView(block) {
   const blogsContainer = block.querySelector('.blogs-cards-container');
-  const blogsDataArray = await callMockBlogAPI();
-  const entriesToProcess = blogsDataArray.length;
-  /**
-   * Loop through the blogsDataArray and create a blog card for each blog entry.
-   * Append the blog card to the blogsContainers column. Each column will have 2 blog cards.
-   */
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i + 1 < entriesToProcess; i += 2) {
-    const blogsColumn = document.createElement('div');
-    blogsColumn.className = 'blogs-container-column';
-    // eslint-disable-next-line no-await-in-loop
-    const blogCard1 = await createBlogCard(blogsDataArray[i]);
-    // eslint-disable-next-line no-await-in-loop
-    const blogCard2 = await createBlogCard(blogsDataArray[i + 1]);
-    blogsColumn.appendChild(blogCard1);
-    blogsColumn.appendChild(blogCard2);
-    blogsContainer.appendChild(blogsColumn);
-  }
+  const blogsDataArray = [];
+  const jsonFormData = {
+    apiName: 'GetBlogs',
+    inputJson: JSON.stringify({
+      pageNo: '1', pageSize: '10',
+    }),
+  };
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, blogsData = []) => {
+    if (!blogsData || !blogsData.Data) {
+      return;
+    }
+    const recommendationArray = blogsData.Data;
+    recommendationArray.forEach((entry) => {
+      // Initialize object to store extracted data for this entry
+      const extractedData = {};
+
+      // Extract required keys
+      entry.forEach((item) => {
+        if (item.Key === 'PermLink') {
+          // Prepend URL to PermLink value
+          extractedData.link = `${ICICI_FINOUX_HOST}/research/equity/blog/${item.Value}`;
+        } else if (item.Key === 'PublishedOnDate') {
+          extractedData.postDate = formatDateString(item.Value);
+        } else if (item.Key === 'ArticleTitle') {
+          extractedData.title = item.Value;
+        } else if (item.Key === 'SmallImage') {
+          // Prepend URL to SmallImage value
+          extractedData.imageUrl = `${getOriginUrl()}/images/${item.Value}`;
+        } else if (item.Key === 'ShortDescription') {
+          const decodedString = decodeURIComponent(item.Value);
+          const tempElement = document.createElement('div');
+          tempElement.innerHTML = decodedString;
+          const textContent = tempElement.textContent || tempElement.innerText;
+          extractedData.description = textContent;
+        }
+      });
+
+      if (Object.keys(extractedData).length > 0) {
+        blogsDataArray.push(extractedData);
+      }
+    });
+
+    const entriesToProcess = blogsDataArray.length;
+    for (let i = 0; i + 1 < entriesToProcess; i += 2) {
+      const blogsColumn = document.createElement('div');
+      blogsColumn.className = 'blogs-container-column';
+      // eslint-disable-next-line no-await-in-loop
+      const blogCard1 = createBlogCard(blogsDataArray[i]);
+      // eslint-disable-next-line no-await-in-loop
+      const blogCard2 = createBlogCard(blogsDataArray[i + 1]);
+      blogsColumn.appendChild(blogCard1);
+      blogsColumn.appendChild(blogCard2);
+      blogsContainer.appendChild(blogsColumn);
+    }
+  });
 }
 
 function addDiscoverLink(blogsContainer, discoverMoreAnchor) {

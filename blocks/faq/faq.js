@@ -1,4 +1,41 @@
 import { createElement } from '../../scripts/blocks-utils.js';
+import { readBlockConfig } from '../../scripts/aem.js';
+
+async function generateFAQSchema(faqData) {
+  // Create an array to store Question-Answer pairs
+  const faqArray = [];
+
+  // Loop through each item in faqData
+  faqData.forEach((item) => {
+    // Create a Question-Answer object
+    const qaObject = {
+      '@type': 'Question',
+      name: item.name,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.text,
+      },
+    };
+
+    // Push the Question-Answer object to the faqArray
+    faqArray.push(qaObject);
+  });
+
+  // Create the JSON-LD object
+  const jsonLD = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqArray,
+  };
+
+  // Create a script element
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(jsonLD);
+
+  // Append the script element to the body tag
+  document.body.appendChild(script);
+}
 
 function addEvent(faqTitle, block) {
   faqTitle.addEventListener('click', () => {
@@ -26,13 +63,18 @@ function decorateTitle(faqTitle, title) {
   faqTitle.append(titleTag);
 }
 
-function decorateContent(faqContents, block) {
+function decorateContent(faqContents, block, schemaData) {
   [...faqContents.children].forEach((faqContent, index) => {
-    if (index > 4) {
-      faqContent.classList.add('no-visible');
-    }
     const itemTitle = faqContent.firstElementChild;
     const itemContent = faqContent.lastElementChild;
+    if (index > 4) {
+      faqContent.classList.add('no-visible');
+    } else {
+      schemaData.push({
+        name: itemTitle.textContent,
+        text: itemContent.textContent,
+      });
+    }
     if (itemTitle) {
       itemTitle.classList.add('faq-item-title');
       const i = createElement('i', '');
@@ -76,28 +118,27 @@ export default async function decorate(block) {
   const faqTitle = createElement('div', 'faq-title');
   const faqContent = createElement('div', 'faq-content');
   const faqButton = createElement('div', 'more-button');
-  let title = '';
-  let buttonTitle = '';
-  let expendButtonTitle = '';
-  [...block.children].forEach((child, i) => {
-    if (i === 0) {
-      title = [...child.children][1].innerHTML;
-    } else if (i === 1) {
-      buttonTitle = [...child.children][1].innerHTML;
-    } else if (i === 2) {
-      expendButtonTitle = [...child.children][1].innerHTML;
-    } else {
-      if ([...child.children].length === 3) {
-        [...child.children][0].remove();
-      }
+  const blockConfig = readBlockConfig(block);
+  const topTitle = blockConfig.title;
+  const buttonTitle = blockConfig['button-title'];
+  const expendButtonTitle = blockConfig['expend-button-title'];
+  let faqContentIndex = false;
+  [...block.children].forEach((child) => {
+    if ([...child.children][0].textContent === 'Contents') {
+      faqContentIndex = true;
+      [...child.children][0].remove();
+    }
+    if (faqContentIndex) {
       faqContent.append(child);
     }
   });
-  decorateTitle(faqTitle, title);
-  decorateContent(faqContent, block);
+  decorateTitle(faqTitle, topTitle);
+  const schemaData = [];
+  decorateContent(faqContent, block, schemaData);
   decorateButton(faqButton, block, buttonTitle, expendButtonTitle);
 
   block.replaceChildren(faqTitle);
   block.appendChild(faqContent);
   block.appendChild(faqButton);
+  generateFAQSchema(schemaData);
 }

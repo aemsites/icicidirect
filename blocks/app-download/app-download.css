@@ -1,0 +1,115 @@
+.block.app-download {
+  padding: 1rem;
+}
+
+.block.app-download > div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 1rem;
+}
+
+.block.app-download h2 {
+  color: var(--link-color-orange);
+  font-weight: var(--font-weight-semibold);
+  padding-bottom: 1.25rem;
+  margin: 0;
+  text-align: center;
+  font-size: 1.625rem;
+}
+
+.block.app-download h3 {
+  font-weight: var(--font-weight-medium);
+  padding-bottom: 1.25rem;
+  text-align: center;
+  font-size: 1.125rem;
+}
+
+.block.app-download > div p {
+  font: var(--font-weight-regular) var(--heading-font-size-ms) / var(--heading-font-size-ml) Poppins, "Poppins Fallback", sans-serif;
+  color: var(--color-gray-dark);
+  margin-bottom: 1.25rem;
+  text-align: center;
+  font-size: var(--heading-font-size-ms);
+} 
+
+.block.app-download .store {
+  text-align: center;
+  margin: var(--space-15px) 0;
+}
+
+.block.app-download .qrcode {
+  position: static;
+  flex: 0 0 8.75rem;
+  max-width: 8.75rem;
+  transform: inherit;
+  height: auto;
+  width: auto;
+  box-shadow: 0 0 var(--space-7px) calc(-1*var(--space-1px)) var(--image-box-shadow);
+}
+
+.block.app-download .qrcode picture {
+  display: flex;
+}
+
+.block.app-download .store a {
+  display: block;
+}
+
+@media (width >= 48rem) {
+  .block.app-download {
+    padding: 0 1rem;
+  }
+
+  .block.app-download > div {
+    justify-content: space-between;
+    padding: 2.5rem 14.375rem 2.5rem 0;
+  }
+
+  .block.app-download > div p {
+    text-align: left;
+    padding-right: 3rem;
+  }
+
+  .block.app-download .store .button {
+    padding: 1rem;
+    vertical-align: middle;
+  }
+
+  .block.app-download .store a {
+    display: inline;
+  }
+
+  .block.app-download h3 {
+    text-align: left;
+    font-size: 1.5rem;
+  }
+
+  .block.app-download h2 {
+    text-align: left;
+    font-size: 2rem;
+  }
+
+  .block.app-download .qrcode {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 100%;
+    background-color: var(--color-white);
+    text-align: center;
+    padding: var(--space-11px);
+  }
+}
+
+@media (width >= 64rem){
+  .block.app-download > div {
+    flex-wrap: nowrap;
+  }
+  
+  .block.app-download .store a {
+    display: contents;
+  }
+}

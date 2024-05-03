@@ -14,7 +14,10 @@ import {
   loadScript, toClassName, getMetadata, toCamelCase,
 } from './aem.js';
 
-import { decorateQuickLinks } from './blocks-utils.js';
+import {
+  decorateQuickLinks, loadAdobeLaunch, loadAnalyticsEager, loadGTM,
+} from './blocks-utils.js';
+import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -74,6 +77,40 @@ function buildHeroBlock(main) {
 }
 
 /**
+ * Set the JSON-LD script in the body
+ * @param {*} data To be appended json
+ * @param {string} name The data-name of the script tag
+ */
+export function setJsonLd(data, name) {
+  const existingScript = document.body.querySelector(`script[data-name="${name}"]`);
+  if (existingScript) return;
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  script.dataset.name = name;
+  document.body.appendChild(script);
+}
+
+/**
+ * Builds HowTo schema and append it to body.
+ */
+async function buildHowToSchema() {
+  // Get Howto schema from schema excel
+  const response = await fetch('/howto-schema.json?sheet=data&sheet=step');
+  const json = await response.json();
+  const jsonLD = {};
+  if (json) {
+    if (json.data.data) {
+      Object.assign(jsonLD, json.data.data[0]);
+    }
+    if (json.step.data) {
+      jsonLD.step = json.step.data;
+    }
+  }
+  setJsonLd(jsonLD, 'howto');
+}
+
+/**
  * load fonts.css and set a session storage flag
  */
 async function loadFonts() {
@@ -92,9 +129,45 @@ async function loadFonts() {
 function buildAutoBlocks(main) {
   try {
     buildHeroBlock(main);
+    buildHowToSchema();
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
+  }
+}
+
+/**
+ * Adds the 'discover-more' class to the specified anchor elements
+ * if their text content contains "Discover More".
+ * @param {Array<Element>} anchorElements - The anchor elements to decorate.
+ * @returns {void}
+ */
+function decorateDiscoverMore(anchorElements) {
+  anchorElements.forEach((anchor) => {
+    anchor.classList.add('discover-more');
+  });
+}
+
+/**
+ * Decorates anchor elements for styling updates via CSS.
+ * @param {Element} [element=document] - The element to decorate.
+ * @returns {void}
+ */
+function decorateAnchors(element = document) {
+  const anchors = Array.from(element.getElementsByTagName('a'));
+  const discoverMoreAnchors = anchors.filter((anchor) => anchor.textContent.includes('DISCOVER MORE') && anchor.childElementCount === 0);
+
+  if (discoverMoreAnchors.length > 0) {
+    decorateDiscoverMore(discoverMoreAnchors);
+  }
+
+  const socialShareAnchors = anchors.filter((anchor) => {
+    const img = anchor.querySelector('img');
+    return img && img.src.includes('/icons/gray-share-icon.svg');
+  });
+
+  if (socialShareAnchors.length > 0) {
+    decorateSocialShare(socialShareAnchors);
   }
 }
 
@@ -106,6 +179,7 @@ function buildAutoBlocks(main) {
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
+  decorateAnchors(document);
   decorateIcons(main);
   buildAutoBlocks(main);
   decorateSections(main);
@@ -145,6 +219,11 @@ async function loadEager(doc) {
     }
   } catch (e) {
     // do nothing
+  }
+
+  if (loadAnalyticsEager()) {
+    loadAdobeLaunch();
+    loadGTM();
   }
 }
 
@@ -208,3 +287,5 @@ loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
 
 window.validateuserToken = '';
+
+window.validateCaptchaToken = '';
