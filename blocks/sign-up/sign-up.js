@@ -57,6 +57,9 @@ function createErrorSpan(errormessage) {
 }
 
 function createTitle(titleHTML) {
+  if (!titleHTML) {
+    return null;
+  }
   const col1Div = createElement('div', 'signupsections');
   const titleWrapDiv = createElement('div', 'title-wrap');
   const h2Element = createElement('h2', '');
@@ -76,6 +79,7 @@ function createReCaptcha() {
 function createSignUpElement(
   block,
   signupString,
+  signupSubstringHTML,
   promotionaltext,
   placeholderText,
   buttontitle,
@@ -87,13 +91,19 @@ function createSignUpElement(
   const formGroupDiv = createElement('div', 'signup-form-group');
   formGroupDiv.classList.add('text-center');
 
-  const signupStringElement = createElement('label', '');
+  const signupStringElement = createElement('label', 'title');
   signupStringElement.innerHTML = signupString.innerHTML;
+
+  let signupSubStringElement;
+  if (signupSubstringHTML) {
+    signupSubStringElement = createElement('label', 'subtitle');
+    signupSubStringElement.innerHTML = signupSubstringHTML.innerHTML;
+  }
 
   const promotionalSpan = createElement('span', 'promotional-text');
   promotionalSpan.textContent = promotionaltext;
 
-  const formFieldsDiv = createElement('div', '');
+  const formFieldsDiv = createElement('div', 'form-fields-container');
   const mobileInput = createMobileNumberInput(placeholderText);
 
   const submitButton = createSubmitButton(block, buttontitle, accountcreationurl);
@@ -104,6 +114,9 @@ function createSignUpElement(
   formFieldsDiv.appendChild(submitButton);
 
   formGroupDiv.appendChild(signupStringElement);
+  if (signupSubStringElement) {
+    formGroupDiv.appendChild(signupSubStringElement);
+  }
   formGroupDiv.appendChild(promotionalSpan);
   formGroupDiv.appendChild(formFieldsDiv);
   formGroupDiv.appendChild(errorSpan);
@@ -115,28 +128,40 @@ function createSignUpElement(
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const {
-    promotionaltext, placeholdertext, buttontitle, errormessage, accountcreationurl,
+    title, promotionaltext, placeholdertext, buttontitle, errormessage, accountcreationurl,
   } = blockConfig;
-  const titleHTML = block.querySelectorAll(':scope > div')[0].children[1];
-  const signupstringHTML = block.querySelectorAll(':scope > div')[1].children[1];
+  let titleHTML;
+  let signupstringHTML;
+  let signupSubstringHTML;
+  if (title) {
+    [, titleHTML] = block.querySelectorAll(':scope > div')[0].children;
+    [, signupstringHTML] = block.querySelectorAll(':scope > div')[1].children;
+  } else {
+    [, signupstringHTML] = block.querySelectorAll(':scope > div')[0].children;
+    [, signupSubstringHTML] = block.querySelectorAll(':scope > div')[1].children;
+  }
   const sectionDiv = createElement('div', 'section');
   sectionDiv.classList.add('margin', 'signup-container');
 
   const articleElement = createElement('article', '');
   const rowDiv = createElement('div', 'row');
-  rowDiv.classList.add('justify-content-center', 'align-items-center');
-
+  if (!block.classList.contains('hero')) {
+    rowDiv.classList.add('justify-content-center', 'align-items-center');
+  }
   const titleField = createTitle(titleHTML);
   const signupElementDiv = createSignUpElement(
     block,
     signupstringHTML,
+    signupSubstringHTML,
     promotionaltext,
     placeholdertext,
     buttontitle,
     errormessage,
     accountcreationurl,
   );
-  rowDiv.appendChild(titleField);
+  if (titleField) {
+    rowDiv.appendChild(titleField);
+  }
   rowDiv.appendChild(signupElementDiv);
   articleElement.appendChild(rowDiv);
   sectionDiv.appendChild(articleElement);
