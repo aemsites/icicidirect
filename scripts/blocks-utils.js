@@ -8,6 +8,8 @@ const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 const SITE_ROOT = 'https://www.icicidirect.com';
 
+const DELAY_MARTECH_PARAMS = 'delayMartech';
+
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
@@ -366,6 +368,11 @@ function loadAdobeLaunch() {
   loadScript(adobeLaunchSrc[getEnvType()], { async: true });
 }
 
+function loadAdobeLaunchAndGTM() {
+  loadAdobeLaunch();
+  loadGTM();
+}
+
 /**
  * Get query param from URL
  * @param param {string} The query param to get
@@ -376,8 +383,18 @@ function getQueryParam(param) {
   return urlParams.get(param);
 }
 
-function loadAnalyticsEager() {
-  return getQueryParam('analytics') === 'eager';
+function defaultAnalyticsLoadDisabled() {
+  const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
+  return delayParam !== null && !Number.isNaN(delayParam);
+}
+
+function loadAnalyticsDelayed() {
+  let delayTime = -1;
+  const delayMartech = getQueryParam(DELAY_MARTECH_PARAMS);
+  if (delayMartech && !Number.isNaN(parseInt(delayMartech, 10))) {
+    delayTime = parseInt(delayMartech, 10);
+  }
+  return delayTime;
 }
 
 function sanitizeCompanyName(companyName) {
@@ -421,7 +438,9 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
-  loadAnalyticsEager,
+  loadAnalyticsDelayed,
+  loadAdobeLaunchAndGTM,
+  defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
 };
