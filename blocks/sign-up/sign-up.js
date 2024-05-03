@@ -103,7 +103,7 @@ function createSignUpElement(
   const promotionalSpan = createElement('span', 'promotional-text');
   promotionalSpan.textContent = promotionaltext;
 
-  const formFieldsDiv = createElement('div', '');
+  const formFieldsDiv = createElement('div', 'form-fields-container');
   const mobileInput = createMobileNumberInput(placeholderText);
 
   const submitButton = createSubmitButton(block, buttontitle, accountcreationurl);

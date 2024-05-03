@@ -176,20 +176,26 @@
     font-size: 1rem;
 }
 
+.block.sign-up .signup-container .form-fields-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .block.sign-up .signup-container .g-recaptcha {
     margin-top: 0.5rem;
-    transform: scale(0.85) translateX(2%);
+    transform: scale(0.85);
 }
 
 @media (width >=20rem) {
   .block.sign-up .signup-container .g-recaptcha {
-      transform: scale(0.85) translateX(-8%);
+      transform: scale(0.85);
   }
 }
 
 @media (width >=26.56rem) {
     .block.sign-up .signup-container .g-recaptcha {
-        transform: scale(0.85) translateX(6%);
+        transform: scale(0.85);
     }
 }
 
@@ -200,7 +206,7 @@
     }
 
     .block.sign-up .signup-container .g-recaptcha {
-        transform: scale(0.85) translateX(7%);
+        transform: scale(0.85);
     }
 
     .block.sign-up .signupsections {
