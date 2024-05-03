@@ -59,16 +59,14 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
  * @param {*} section that needs to be scrolled on top
  */
 const scrollToAdjustedStickyHeader = (section) => {
-  const sectionContainer = section.closest('.section');
-  const style = window.getComputedStyle(sectionContainer);
-  const paddingTop = parseFloat(style.getPropertyValue('padding-top'));
+  const stickyMinWidth = 45;
   let extraIfNotSticky = 0;
   if (!document.querySelector('.block.quicklinks.sticky')) {
     const quickLinkBlock = document.querySelector('.block.quicklinks');
     const quickLinkStyle = window.getComputedStyle(quickLinkBlock);
     extraIfNotSticky = parseFloat(quickLinkStyle.getPropertyValue('height'));
   }
-  const additionalOffset = paddingTop + extraIfNotSticky; // Add your desired offset here
+  const additionalOffset = stickyMinWidth + extraIfNotSticky; // Add your desired offset here
   const elementPosition = section && section.getBoundingClientRect().top;
   const offsetPosition = elementPosition + window.scrollY - additionalOffset;
 
