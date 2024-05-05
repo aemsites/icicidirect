@@ -20,6 +20,7 @@ import {
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
+import loadTargetOffers from './target.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -202,6 +203,7 @@ function loadDelayed() {
 }
 
 async function loadPage() {
+  loadTargetOffers('sitesinternal');
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
