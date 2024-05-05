@@ -28,37 +28,80 @@ const LCP_BLOCKS = []; // add your LCP blocks to the list
 
 // Add you plugins below
 // window.hlx.plugins.add('/plugins/my-plugin.js');
+const targetPromise = (async () => {
+  const targetLocation = getMetadata('experiment-target-location');
+  console.log(`Resolving target audience for location: ${targetLocation}`);
+  const randomString = Math.random().toString(36).substring(7);
+  const resp = await fetch(`https://sitesinternal.tt.omtrdc.net/rest/v1/delivery?client=sitesinternal&sessionId=${randomString}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      context: {
+        channel: 'web',
+      },
+      execute: {
+        pageLoad: {},
+        mboxes: [
+          {
+            name: targetLocation,
+            index: 0,
+          },
+        ],
+      },
+    }),
+  });
+  const payload = await resp.json();
+  console.log(`Received payload: ${JSON.stringify(payload)}`);
+  const mbox = payload.execute.mboxes.find((mbox) => mbox.name === targetLocation);
+  console.log(`Received target offer: ${mbox?.options[0].content}`);
+  const { url } = mbox?.options[0].content ?? { url: null };
+  console.log(`Resolved challenger url: ${url}`);
+
+  if (url) {
+    // Add the current audience to the page
+    const link = document.createElement('meta');
+    link.setAttribute('property', 'audience:current');
+    link.content = url;
+    document.getElementsByTagName('head')[0].appendChild(link);
+  }
+
+  return !!url;
+})();
 
 const AUDIENCES = {
-  mobile: () => window.innerWidth < 600,
-  desktop: () => window.innerWidth >= 600,
-  delhi: async () => {
-    try {
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      console.log(position.coords.latitude, position.coords.longitude);
-      const { latitude, longitude } = position.coords;
-      return (latitude >= 28.3 && latitude <= 28.9) && (longitude >= 77 && longitude <= 77.4);
-    } catch (error) {
-      console.error('Error getting location:', error);
-      return false; // Return a default value in case of error
-    }
-  },
-  mumbai: async () => {
-    try {
-      const position = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
-      console.log(position.coords.latitude, position.coords.longitude);
-      const { latitude, longitude } = position.coords;
-      return (latitude >= 18.9 && latitude <= 19.3) && (longitude >= 72.75 && longitude <= 72.95);
-    } catch (error) {
-      console.error('Error getting location:', error);
-      return false; // Return a default value in case of error
-    }
-  },
+  // mobile: () => window.innerWidth < 600,
+  // desktop: () => window.innerWidth >= 600,
+  // delhi: async () => {
+  //   try {
+  //     const position = await new Promise((resolve, reject) => {
+  //       navigator.geolocation.getCurrentPosition(resolve, reject);
+  //     });
+  //     console.log(position.coords.latitude, position.coords.longitude);
+  //     const { latitude, longitude } = position.coords;
+  //     return (latitude >= 28.3 && latitude <= 28.9) && (longitude >= 77 && longitude <= 77.4);
+  //   } catch (error) {
+  //     console.error('Error getting location:', error);
+  //     return false; // Return a default value in case of error
+  //   }
+  // },
+  // mumbai: async () => {
+  //   try {
+  //     const position = await new Promise((resolve, reject) => {
+  //       navigator.geolocation.getCurrentPosition(resolve, reject);
+  //     });
+  //     console.log(position.coords.latitude, position.coords.longitude);
+  //     const { latitude, longitude } = position.coords;
+  //     return (latitude >= 18.9 && latitude <= 19.3) && (longitude >= 72.75 && longitude <= 72.95);
+  //   } catch (error) {
+  //     console.error('Error getting location:', error);
+  //     return false; // Return a default value in case of error
+  //   }
+  // },
+
   // define your custom audiences here as needed
+  current: () => targetPromise.then(() => true),
 };
 
 /**
@@ -94,7 +137,6 @@ window.hlx.plugins.add('experimentation', {
   options: { audiences: AUDIENCES },
   url: '/plugins/experimentation/src/index.js',
 });
-
 
 // Define an execution context
 
