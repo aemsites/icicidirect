@@ -197,7 +197,7 @@ async function loadEager(doc) {
     await runEager(document, { audiences: AUDIENCES }, pluginContext);
   }
 
-  await window.hlx.plugins.run('loadEager');
+  // await window.hlx.plugins.run('loadEager');
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
