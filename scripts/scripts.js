@@ -136,8 +136,8 @@ export function decorateMain(main) {
 function initWebSDK(path, config) {
   return new Promise((resolve) => {
     import(path)
-        .then(() => window.alloy('configure', config))
-        .then(resolve);
+      .then(() => window.alloy('configure', config))
+      .then(resolve);
   });
 }
 
@@ -201,10 +201,10 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
-let alloyLoadedPromise = initWebSDK('./alloy.js', {
+const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.js`, {
   datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
   orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
-});;
+});
 
 if (getMetadata('target')) {
   alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
