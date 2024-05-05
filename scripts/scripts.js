@@ -136,8 +136,17 @@ export function decorateMain(main) {
 function initWebSDK(path, config) {
   return new Promise((resolve) => {
     import(path)
-      .then(() => window.alloy('configure', config))
-      .then(resolve);
+      .then(() => {
+        console.log('Alloy SDK loaded successfully');
+        return window.alloy('configure', config);
+      })
+      .then(() => {
+        console.log('Alloy configured successfully');
+        resolve();
+      })
+      .catch((error) => {
+        console.error('Error loading or configuring Alloy SDK:', error);
+      });
   });
 }
 
@@ -219,16 +228,10 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
-    decorateMain(main);
     await alloyLoadedPromise;
-    await new Promise((res) => {
-      window.requestAnimationFrame(async () => {
-        await waitForLCP(LCP_BLOCKS);
-        res();
-      });
-    });
+    decorateMain(main);
     document.body.classList.add('appear');
-    // await waitForLCP(LCP_BLOCKS);
+    await waitForLCP(LCP_BLOCKS);
   }
 
   try {
