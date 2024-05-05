@@ -10,7 +10,7 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  loadScript,
+  loadScript, getMetadata,
 } from './aem.js';
 
 import {
@@ -20,6 +20,15 @@ import {
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
+
+import {
+  analyticsTrack404,
+  analyticsTrackConversion,
+  analyticsTrackCWV,
+  analyticsTrackError,
+  initAnalyticsTrackingQueue,
+  setupAnalyticsTrackingWithAlloy,
+} from './analytics/lib-analytics.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -133,6 +142,76 @@ export function decorateMain(main) {
   decorateQuickLinks(main);
 }
 
+function initWebSDK(path, config) {
+  return Promise.resolve(window.alloy('configure', config));
+  // return new Promise((resolve) => {
+  //   import(path)
+  //       .then(() => window.alloy('configure', config))
+  //       .then(resolve);
+  // });
+}
+function onDecoratedElement(fn) {
+  // Apply propositions to all already decorated blocks/sections
+  if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
+    fn();
+  }
+
+  const observer = new MutationObserver((mutations) => {
+    if (mutations.some((m) => m.target.tagName === 'BODY'
+        || m.target.dataset.sectionStatus === 'loaded'
+        || m.target.dataset.blockStatus === 'loaded')) {
+      fn();
+    }
+  });
+  // Watch sections and blocks being decorated async
+  observer.observe(document.querySelector('main'), {
+    subtree: true,
+    attributes: true,
+    attributeFilter: ['data-block-status', 'data-section-status'],
+  });
+  // Watch anything else added to the body
+  observer.observe(document.querySelector('body'), { childList: true });
+}
+
+function toCssSelector(selector) {
+  return selector.replace(/(\.\S+)?:eq\((\d+)\)/g, (_, clss, i) => `:nth-child(${Number(i) + 1}${clss ? ` of ${clss})` : ''}`);
+}
+
+async function getElementForProposition(proposition) {
+  const selector = proposition.data.prehidingSelector
+      || toCssSelector(proposition.data.selector);
+  return document.querySelector(selector);
+}
+
+async function getAndApplyRenderDecisions() {
+  // Get the decisions, but don't render them automatically
+  // so we can hook up into the AEM EDS page load sequence
+  const response = await window.alloy('sendEvent', { renderDecisions: false });
+  const { propositions } = response;
+  onDecoratedElement(async () => {
+    await window.alloy('applyPropositions', { propositions });
+    // keep track of propositions that were applied
+    propositions.forEach((p) => {
+      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
+    });
+  });
+
+  // Reporting is deferred to avoid long tasks
+  window.setTimeout(() => {
+    // Report shown decisions
+    window.alloy('sendEvent', {
+      xdm: {
+        eventType: 'decisioning.propositionDisplay',
+        _experience: {
+          decisioning: { propositions },
+        },
+      },
+    });
+  });
+}
+
+
+
 /**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
@@ -142,6 +221,15 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
+    await initAnalyticsTrackingQueue();
+    const alloyLoadedPromise = initWebSDK('', {
+      datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
+      orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
+    });
+    await alloyLoadedPromise;
+    if (getMetadata('target')) {
+      getAndApplyRenderDecisions();
+    }
     decorateMain(main);
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
@@ -204,7 +292,13 @@ function loadDelayed() {
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
+  // const setupAnalytics = setupAnalyticsTrackingWithAlloy(document);
+  // await setupAnalytics;
+  // if (getMetadata('target')) {
+  //   getAndApplyRenderDecisions();
+  // }
   loadDelayed();
+  console.log('i am here');
 }
 
 // TODO: Remove once chatbot is compatible with Helix domain
