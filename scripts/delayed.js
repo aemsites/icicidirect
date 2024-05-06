@@ -2,7 +2,8 @@
 import { loadScript, sampleRUM } from './aem.js';
 import {
   // eslint-disable-next-line import/named
-  loadGTM, loadAdobeLaunch, defaultAnalyticsLoadDisabled, getQueryParam,
+  defaultAnalyticsLoadDisabled,
+  loadAdobeLaunchAndGTM,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
@@ -34,15 +35,7 @@ loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
   if (!defaultAnalyticsLoadDisabled()) {
-    if (getQueryParam('omitGTM') === '1') {
-      // Omit GTM
-    } else {
-      setTimeout(() => {
-        loadGTM();
-      }, 100);
-    }
-
-    loadAdobeLaunch();
+    loadAdobeLaunchAndGTM();
   }
   loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
 }
