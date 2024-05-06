@@ -38,10 +38,7 @@ if (!isSidekickLibrary) {
       // eslint-disable-next-line no-console
       console.log('Skipping GTM load');
     } else {
-      // TODO: Remove delayed loading of GTM once it stops impacting page performance
-      setTimeout(() => {
-        loadGTM();
-      }, 2000);
+      loadGTM();
     }
 
     loadAdobeLaunch();
