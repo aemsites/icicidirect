@@ -375,11 +375,6 @@ function loadAdobeLaunch() {
   loadScript(adobeLaunchSrc[getEnvType()], { async: true });
 }
 
-function loadAdobeLaunchAndGTM() {
-  loadAdobeLaunch();
-  loadGTM();
-}
-
 /**
  * Get query param from URL
  * @param param {string} The query param to get
@@ -388,6 +383,15 @@ function loadAdobeLaunchAndGTM() {
 function getQueryParam(param) {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get(param);
+}
+
+function loadAdobeLaunchAndGTM() {
+  loadAdobeLaunch();
+  if (getQueryParam('omitGTM') === '1') {
+    // Skip GTM
+  } else {
+    loadGTM();
+  }
 }
 
 function defaultAnalyticsLoadDisabled() {
@@ -417,7 +421,7 @@ function generateReportLink(companyName, reportId) {
 
   // Generate report link
   const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
-                      + `${formattedCompanyName}/${trimmedReportId}`;
+    + `${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
 }
