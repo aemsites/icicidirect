@@ -39,7 +39,7 @@ if (!isSidekickLibrary) {
     } else {
       setTimeout(() => {
         loadGTM();
-      }, 500);
+      }, 100);
     }
 
     loadAdobeLaunch();
