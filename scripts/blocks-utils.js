@@ -388,7 +388,8 @@ function getQueryParam(param) {
 function loadAdobeLaunchAndGTM() {
   loadAdobeLaunch();
   if (getQueryParam('omitGTM') === '1') {
-    // Skip GTM
+    // eslint-disable-next-line no-console
+    console.log('Skipping GTM load');
   } else {
     loadGTM();
   }
