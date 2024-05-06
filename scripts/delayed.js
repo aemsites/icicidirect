@@ -37,7 +37,9 @@ if (!isSidekickLibrary) {
     if (getQueryParam('omitGTM') === '1') {
       // Omit GTM
     } else {
-      loadGTM();
+      setTimeout(() => {
+        loadGTM();
+      });
     }
 
     loadAdobeLaunch();
