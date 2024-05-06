@@ -35,8 +35,7 @@ loadScript('/scripts/cookie-script.js');
 if (!isSidekickLibrary) {
   if (!defaultAnalyticsLoadDisabled()) {
     if (getQueryParam('omitGTM') === '1') {
-      // eslint-disable-next-line no-console
-      console.log('Skipping GTM load');
+      // Omit GTM
     } else {
       loadGTM();
     }
