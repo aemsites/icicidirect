@@ -9,6 +9,7 @@ const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 const SITE_ROOT = 'https://www.icicidirect.com';
 
 const DELAY_MARTECH_PARAMS = 'delayMartech';
+const LOAD_MARTECH_PARAM = 'loadMartech';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -346,23 +347,25 @@ function debounce(func, timeout = 200) {
 }
 
 async function loadGTM() {
-  const scriptTag = document.createElement('script');
-  scriptTag.innerHTML = `
-        (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-        }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
-    `;
-  document.head.prepend(scriptTag);
+  setTimeout(() => {
+    const scriptTag = document.createElement('script');
+    scriptTag.innerHTML = `
+          (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({
+              'gtm.start':
+                  new Date().getTime(), event: 'gtm.js'
+          });
+          var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async = true;
+          j.src =
+              'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+          f.parentNode.insertBefore(j, f);
+          }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
+      `;
+    document.head.prepend(scriptTag);
+  }, 1000);
 }
 
 function loadAdobeLaunch() {
@@ -375,11 +378,6 @@ function loadAdobeLaunch() {
   loadScript(adobeLaunchSrc[getEnvType()], { async: true });
 }
 
-function loadAdobeLaunchAndGTM() {
-  loadAdobeLaunch();
-  loadGTM();
-}
-
 /**
  * Get query param from URL
  * @param param {string} The query param to get
@@ -390,9 +388,24 @@ function getQueryParam(param) {
   return urlParams.get(param);
 }
 
+function loadAdobeLaunchAndGTM() {
+  const loadMartech = getQueryParam(LOAD_MARTECH_PARAM) ?? 'all';
+  if (loadMartech === 'adobe') {
+    loadAdobeLaunch();
+  } else if (loadMartech === 'gtm') {
+    loadGTM();
+  } else if (loadMartech === 'all') {
+    loadAdobeLaunch();
+    loadGTM();
+  }
+}
+
 function defaultAnalyticsLoadDisabled() {
   const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
-  return delayParam !== null && !Number.isNaN(delayParam);
+  const result = delayParam !== null && !Number.isNaN(delayParam);
+  // eslint-disable-next-line no-console
+  console.log('defaultAnalyticsLoadDisabled', result);
+  return result;
 }
 
 function loadAnalyticsDelayed() {
@@ -417,7 +430,7 @@ function generateReportLink(companyName, reportId) {
 
   // Generate report link
   const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
-                      + `${formattedCompanyName}/${trimmedReportId}`;
+    + `${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
 }
