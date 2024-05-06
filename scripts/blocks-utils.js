@@ -402,7 +402,7 @@ function loadAdobeLaunchAndGTM() {
 
 function defaultAnalyticsLoadDisabled() {
   const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
-  const result =  delayParam !== null && !Number.isNaN(delayParam);
+  const result = delayParam !== null && !Number.isNaN(delayParam);
   // eslint-disable-next-line no-console
   console.log('defaultAnalyticsLoadDisabled', result);
   return result;
