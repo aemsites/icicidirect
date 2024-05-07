@@ -431,7 +431,7 @@ function gerateReportLink(company) {
   const trimmedReportId = company.RES_REPORT_ID.toString().replace(/\.0$/, '');
 
   // Generate report link
-  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/${formattedCompanyName}/${trimmedReportId}`;
+  const reportLink = `${ICICI_FINOUX_HOST}/research/equity/${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
 }
@@ -447,7 +447,7 @@ function updateCardsInView(block, type, recommendationArray) {
       companyObj.name = company.Pf_Name;
       companyObj.returns = !company.CAGR ? 'NA' : `${company.CAGR}%`;
       companyObj.minAmount = !company.Min_invest_value ? '0' : company.Min_invest_value;
-      companyObj.riskProfile = !company.RISK_PROFILE ? 'NA' : company.RISK_PROFILE;
+      companyObj.riskProfile = !company.RISK_PROFILE ? 'low' : company.RISK_PROFILE;
       companyObj.action = 'Buy';
     } else {
       companyObj.name = company.COM_NAME;
@@ -479,62 +479,60 @@ function updateCardsInView(block, type, recommendationArray) {
   }
 }
 
-async function fetchCardsData(block, type, rating, timeFrame) {
-  const dropdownText = block.querySelector('.dropdown-text');
-  if (toggleBtn) {
-  // eslint-disable-next-line no-param-reassign
-    rating = rating || '';
-    // eslint-disable-next-line no-param-reassign
-    timeFrame = timeFrame || '';
-    const option = 'NewlyLaunched';
-    let jsonFormData;
-    if (type === 'oneclickportfolio') {
+async function fetchCardsData(block, type) {
+  const toggleBtn = block.querySelectorAll('.dropdown-toggle');
+  let rating = '';
+  let timeFrame = '';
+  let option = 'BestPerforming';
+  let jsonFormData;
+  toggleBtn.forEach((btn) => {
+    if (btn.dataset.type === 'rating') {
+      rating = btn.dataset.value;
+    } else if (btn.dataset.type === 'timeFrame') {
+      timeFrame = btn.dataset.value;
+    } else if (btn.dataset.type === 'option') {
+      option = btn.dataset.value;
+    }
+  });
+  if (type === 'trading') {
+    if (timeFrame === 'intraday') {
       jsonFormData = {
-        apiName: 'GetOneClickPortfolio',
-        inputJson: JSON.stringify({ option }),
+        apiName: 'GetTradingIdeasIntraday',
       };
     } else {
       jsonFormData = {
-        apiName: type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas',
+        apiName: 'GetTradingIdeas',
         inputJson: JSON.stringify({
-          rating, timeFrame, pageNo: '1', pageSize: '5',
+          rating, timeFrame, pageNo: 1, pageSize: 5,
         }),
       };
     }
-
-    postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-      if (error === null && tradingData.Data) {
-        let resultData;
-        if (type === 'oneclickportfolio') {
-          resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
-        } else {
-          resultData = tradingData.Data.Table;
-        }
-        updateCardsInView(block, type, resultData);
-      }
-    });
+  } else if (type === 'oneclickportfolio') {
+    jsonFormData = {
+      apiName: 'GetOneClickPortfolio',
+      inputJson: JSON.stringify({ option }),
+    };
+  } else if (type === 'investing') {
+    jsonFormData = {
+      apiName: 'GetInvestingIdeas',
+      inputJson: JSON.stringify({
+        rating, timeFrame, pageNo: 1, pageSize: 5,
+      }),
+    };
   }
-}
 
-async function generateCardsView(block, type) {
-  const carouselSlider = block.querySelector('.carousel-slider');
-  const carouselTrack = carouselSlider.querySelector('.carousel-track');
-  // to be removed once oneclickportfolio api is ready
-  // if (type === 'oneclickportfolio') {
-  //   fetchRecommendations(type).then((companies) => {
-  //     if (companies) {
-  //       const recommendationsCard = getRecommendationsCard(companies, type);
-  //       recommendationsCard.forEach((div) => {
-  //         carouselTrack.appendChild(div);
-  //       });
-  //       setCarouselView(type, carouselSlider);
-  //     }
-  //   });
-  //   return;
-  // }
-  fetchCardsData(block, type);
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+    if (error === null && tradingData.Data) {
+      let resultData;
+      if (type === 'oneclickportfolio') {
+        resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
+      } else {
+        resultData = tradingData.Data.Table;
+      }
+      updateCardsInView(block, type, resultData);
+    }
+  });
 }
-
 async function addingDynamicDropDowns(block, type, restructuredData) {
   const dropdownsDiv = block.querySelector('.dropdowns');
   // eslint-disable-next-line guard-for-in,no-restricted-syntax
@@ -551,8 +549,8 @@ async function generateDropDowns(block, type) {
   // const restructuredData = {};
   if (type === 'investing') {
     const investingDropDowns = [
-      { dropdownType: 'ratings', apiName: 'GetRatings' },
-      { dropdownType: 'timeframe', apiName: 'GetTimeFrames' },
+      { dropdownType: 'rating', apiName: 'GetRatings' },
+      { dropdownType: 'timeFrame', apiName: 'GetTimeFrames' },
     ];
     investingDropDowns.forEach((dropDownDetails) => {
       const jsonFormData = {
@@ -565,17 +563,16 @@ async function generateDropDowns(block, type) {
         if (error === null && DDData.Data && DDData.Data.Table) {
           let count = 0;
           DDData.Data.Table.forEach((dropDownOption) => {
-            if (dropDownDetails.dropdownType === 'ratings' && count >= 4) {
-              // If dropdownType is 'ratings' and count is 4 or more, break out of the loop
-              return;
+            if (dropDownDetails.dropdownType === 'rating') {
+              if (count >= 4) {
+                return;
+              }
+              // eslint-disable-next-line max-len
+              restructuredData[dropDownDetails.dropdownType].push({ type: dropDownDetails.dropdownType, label: dropDownOption.RATING_TYPE_NM, value: dropDownOption.RES_RATINGS_TYPE_ID });
+            } else {
+              // eslint-disable-next-line max-len
+              restructuredData[dropDownDetails.dropdownType].push({ type: dropDownDetails.dropdownType, label: dropDownOption.TIME_FRAME_NM, value: dropDownOption.RES_TIME_FRAME_ID });
             }
-            // eslint-disable-next-line max-len
-            const { TIME_FRAME_NM: Label = dropDownOption.RATING_TYPE_NM, RES_TIME_FRAME_ID: Value } = dropDownOption;
-            if (!(dropDownDetails.dropdownType in restructuredData)) {
-              restructuredData[dropDownDetails.dropdownType] = []; // If not, create an empty array
-            }
-            // eslint-disable-next-line max-len
-            restructuredData[dropDownDetails.dropdownType].push({ type: dropDownDetails.dropdownType, label: Label, value: Value });
             count += 1;
           });
         }
@@ -600,7 +597,7 @@ async function generateDropDowns(block, type) {
 }
 async function generateDynamicContent(block, type) {
   generateDropDowns(block, type);
-  generateCardsView(block, type);
+  fetchCardsData(block, type);
 }
 
 function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type) {
