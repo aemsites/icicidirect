@@ -1,5 +1,6 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
 import {
   processEquityType,
   processMutualFundsType,
