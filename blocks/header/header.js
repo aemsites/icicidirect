@@ -1,7 +1,20 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
-import { formatDateTime } from '../../scripts/blocks-utils.js';
+import {
+  processEquityType,
+  processMutualFundsType,
+  processCurrencyType,
+  processCommodityType,
+  processKnowledgeCenterType,
+  processBondsType, ENIITY_TYPE,
+} from './headerutil.js';
+import {
+  formatDateTime,
+  debounce,
+  postFormData,
+  getResearchAPIUrl,
+} from '../../scripts/blocks-utils.js';
 
 /**
  * Decorator for global navigation on top the page
@@ -142,6 +155,44 @@ const getSearchCategoryDropDown = (fragment) => {
 };
 
 /**
+ * Build the search results popup to reset the result set
+ */
+const buildSearchResultsPopup = (searchResultsPopupContainer) => {
+  searchResultsPopupContainer.innerHTML = `
+    <div class="loader hidden">
+      Searching...
+    </div>
+    <div class="category equity hidden">
+      <span>Equity</span>
+      <ul class="equity-list"></ul>
+    </div>
+    <div class="category mf hidden">
+      <span>Mutual Fund</span>
+      <ul class="mf-list"></ul>
+    </div>
+    <div class="category currency hidden">
+      <span>Currency</span>
+      <ul class="currency-list"></ul>
+    </div>
+    <div class="category commodity hidden">
+      <span>Commodity</span>
+      <ul class="commodity-list"></ul>
+    </div>
+    <div class="category knowledge_center hidden">
+      <span>iLearn</span>
+      <ul class="knowledge_center-list"></ul>
+    </div>
+    <div class="category bonds hidden">
+      <span>Bonds</span>
+      <ul class="bonds-list"></ul>
+    </div>
+    <span class='search-result-none hidden'>
+      No records found
+    </span>
+  `;
+};
+
+/**
  * Builds the top search bar section
  * @returns the search bar wrapped in div
  */
@@ -165,6 +216,10 @@ const decorateTopSearchBar = (fragment) => {
     </div>
     <div>
       <img class="search-icon" src="../../icons/icon-search.svg" alt="Search">
+    </div>
+    <div class='search-results-popup' id='search-results-popup'>
+      <div class='search-results-popup-container'>
+      </div>
     </div>
   `;
   searchBarContainer.appendChild(categoryPickerDiv);
@@ -193,6 +248,7 @@ const buildSearchIcon = () => {
   searchImageIcon.classList.add('search-icon', 'mobile-element');
   searchImageIcon.src = '../../icons/icon-search.svg';
   searchImageIcon.alt = 'Search';
+  searchImageIcon.id = 'collapsed-search-icon';
   return searchImageIcon;
 };
 
@@ -486,6 +542,231 @@ const decorateShareIndexPanel = (fragment, block) => {
   block.appendChild(shareIndexPanelDiv);
 };
 
+const buildEquityList = (equityList) => {
+  const equityListContainer = document.querySelector('.block.header .equity-list');
+  equityListContainer.innerHTML = '';
+  processEquityType(equityList).forEach((equity) => {
+    const equityItem = document.createElement('li');
+    equityItem.className = 'list-item';
+    equityItem.innerHTML = `
+    <div class='details-section'>
+      <a class='item-name' title='${equity.title}' href=${equity.url} target='_blank'>${equity.title}</a>
+      <a class='link' href=${equity.url} target='_blank'>
+        <span class='item-value'>${equity.lastTradingPrice}</span>
+      </a>
+      <span class='change-value ${equity.change >= 0 ? 'positive' : 'negative'}'>
+        ${equity.change} (${equity.changePercentage}%)
+      </span>
+    </div>
+    <div class='action-section'>
+      <button class='action-button' onclick="window.open('${equity.buyLink}', '_blank')">
+        BUY
+      </button>
+      <button class='action-button' onclick="window.open('${equity.sellLink}', '_blank')">
+        SELL
+      </button>
+    </div>
+    `;
+    equityItem.addEventListener('mouseenter', (event) => { event.target.classList.add('hovered'); });
+    equityItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
+    equityListContainer.appendChild(equityItem);
+  });
+  if (equityList.length) {
+    equityListContainer.parentElement.classList.remove('hidden');
+  }
+};
+
+const buildMutualFundsList = (mutualFundsList) => {
+  const mutualFundsListContainer = document.querySelector('.block.header .mf-list');
+  mutualFundsListContainer.innerHTML = '';
+  processMutualFundsType(mutualFundsList).forEach((mutualFund) => {
+    const mutualFundItem = document.createElement('li');
+    mutualFundItem.className = 'list-item';
+    mutualFundItem.innerHTML = `
+    <div class='details-section'>
+      <a class='item-name' title='${mutualFund.title}' href=${mutualFund.url} target='_blank'>${mutualFund.title}</a>
+      <a class='link' href=${mutualFund.url} target='_blank'>
+        <span class='item-value'>${mutualFund.lastTradingPrice}</span>
+      </a>
+      <span class='change-value ${mutualFund.change >= 0 ? 'positive' : 'negative'}'>
+        ${mutualFund.change} (${mutualFund.changePercentage}%)
+      </span>
+    </div>
+    <div class='action-section'>
+      <button class='action-button' onclick="window.open('${mutualFund.investLink}', '_blank')">
+        INVEST
+      </button>
+    </div>
+    `;
+    mutualFundItem.addEventListener('mouseenter', (event) => { event.target.classList.add('hovered'); });
+    mutualFundItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
+    mutualFundsListContainer.appendChild(mutualFundItem);
+  });
+  if (mutualFundsList.length) {
+    mutualFundsListContainer.parentElement.classList.remove('hidden');
+  }
+};
+
+const buildCurrencyList = (currencyList) => {
+  const currencyListContainer = document.querySelector('.block.header .currency-list');
+  currencyListContainer.innerHTML = '';
+  processCurrencyType(currencyList).forEach((currency) => {
+    const currencyItem = document.createElement('li');
+    currencyItem.className = 'list-item';
+    currencyItem.innerHTML = `
+    <div class='details-section'>
+      <a class='item-name' title='${currency.title}' href=${currency.url} target='_blank'>${currency.title}</a>
+      <a class='link' href=${currency.url} target='_blank'>
+        <span class='item-value'>${currency.lastTradingPrice}</span>
+      </a>
+      <span class='change-value ${currency.change >= 0 ? 'positive' : 'negative'}'>
+        ${currency.change} (${currency.changePercentage}%)
+      </span>
+    </div>
+    `;
+    currencyListContainer.appendChild(currencyItem);
+  });
+  if (currencyList.length) {
+    currencyListContainer.parentElement.classList.remove('hidden');
+  }
+};
+
+const buildCommodityList = (commodityList) => {
+  const commodityListContainer = document.querySelector('.block.header .commodity-list');
+  commodityListContainer.innerHTML = '';
+  processCommodityType(commodityList).forEach((commodity) => {
+    const commodityItem = document.createElement('li');
+    commodityItem.className = 'list-item';
+    commodityItem.innerHTML = `
+    <div class='details-section'>
+      <a class='item-name' title='${commodity.title}' href=${commodity.url} target='_blank'>${commodity.title}</a>
+      <a class='link' href=${commodity.url} target='_blank'>
+        <span class='item-value'>${commodity.lastTradingPrice}</span>
+      </a>
+      <span class='change-value ${commodity.change >= 0 ? 'positive' : 'negative'}'>
+        ${commodity.change} (${commodity.changePercentage}%)
+      </span>
+    </div>
+    `;
+    commodityListContainer.appendChild(commodityItem);
+  });
+  if (commodityList.length) {
+    commodityListContainer.parentElement.classList.remove('hidden');
+  }
+};
+
+const buildKnowledgeCenterList = (knowledgeCenterList) => {
+  const knowledgeCenterListContainer = document.querySelector('.block.header .knowledge_center-list');
+  knowledgeCenterListContainer.innerHTML = '';
+  processKnowledgeCenterType(knowledgeCenterList).forEach((knowledgeCenter) => {
+    const knowledgeCenterItem = document.createElement('li');
+    knowledgeCenterItem.className = 'list-item';
+    knowledgeCenterItem.innerHTML = `
+    <div class='details-section'>
+      <a class='full-item-name' title='${knowledgeCenter.title}' href=${knowledgeCenter.url} target='_blank'>${knowledgeCenter.title}</a>
+    </div>
+    `;
+    knowledgeCenterListContainer.appendChild(knowledgeCenterItem);
+  });
+};
+
+const buildBondsList = (bondsList) => {
+  const bondsListContainer = document.querySelector('.block.header .bonds-list');
+  bondsListContainer.innerHTML = '';
+  processBondsType(bondsList).forEach((bond) => {
+    const bondItem = document.createElement('li');
+    bondItem.className = 'list-item';
+    bondItem.innerHTML = `
+    <div class='details-section'>
+      <a class='full-item-name' title='${bond.title}' href=${bond.url} target='_blank'>${bond.title}</a>
+      <a class='link' href=${bond.url} target='_blank'>
+        <span class='item-value'>${bond.isin}</span>
+      </a>
+      <span class='item-value'}'>
+        (${bond.maturityDate}%)
+      </span>
+    </div>
+    <div class='action-section hidden'>
+      <button class='action-button' onclick="window.open('${bond.buyLink}', '_blank')">
+        BUY
+      </button>
+      <button class='action-button' onclick="window.open('${bond.sellLink}', '_blank')">
+        SELL
+      </button>
+    </div>
+    `;
+    bondItem.addEventListener('mouseenter', (event) => { event.target.classList.add('hovered'); });
+    bondItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
+    bondsListContainer.appendChild(bondItem);
+  });
+  if (bondsList.length) {
+    bondsListContainer.parentElement.classList.remove('hidden');
+  }
+};
+
+const buildNoResultsFound = () => {
+  const searchResultsNoneItem = document.querySelector('.block.header .search-results-popup-container .search-result-none');
+  searchResultsNoneItem.classList.remove('hidden');
+};
+
+/**
+ * Show and hide the loader in the search result popup when response is pending
+ * @param {*} show true when loading, false when done
+ */
+const showIsSearching = (show) => {
+  const loaderItem = document.querySelector('.block.header .search-box .search-results-popup-container .loader');
+  if (loaderItem) {
+    if (show) {
+      loaderItem.classList.remove('hidden');
+    } else {
+      loaderItem.classList.add('hidden');
+    }
+  }
+};
+
+const processResponse = (error, data) => {
+  showIsSearching(false);
+  if (!data || error) {
+    buildNoResultsFound();
+    return;
+  }
+  const results = data.Data;
+  if (results.length === 0) {
+    buildNoResultsFound();
+    return;
+  }
+  buildEquityList(results.filter((result) => result.TYPE === ENIITY_TYPE.EQUITY));
+  buildMutualFundsList(results.filter((result) => result.TYPE === ENIITY_TYPE.MUTUAL_FUND));
+  buildCurrencyList(results.filter((result) => result.TYPE === ENIITY_TYPE.CURRENCY));
+  buildCommodityList(results.filter((result) => result.TYPE === ENIITY_TYPE.COMMODITY));
+  buildKnowledgeCenterList(results.filter(
+    (result) => result.TYPE === ENIITY_TYPE.KNOWLEDGE_CENTER,
+  ));
+  buildBondsList(results.filter((result) => result.TYPE === ENIITY_TYPE.BONDS));
+};
+
+/**
+ * Returns the result of the global search data
+ * @param {*} category the category within which to search
+ * @param {*} keyword the keyword to be searched
+ */
+const callGlobalSearch = (category, keyword) => {
+  if (!keyword) {
+    return;
+  }
+  const jsonFormData = {
+    apiName: 'GetGlobalSearchResults',
+    inputJson: JSON.stringify({
+      term: keyword.trim(),
+      type: category,
+    }),
+  };
+  const searchBoxDiv = document.querySelector('.block.header .search-box .search-results-popup-container');
+  buildSearchResultsPopup(searchBoxDiv);
+  showIsSearching(true);
+  postFormData(getResearchAPIUrl(), jsonFormData, processResponse);
+};
+
 /**
  * Event handlers specific to header blocks
  */
@@ -526,6 +807,78 @@ const addHeaderEventHandlers = () => {
     }
   };
   document.addEventListener('click', hamburgerCloseHandler);
+
+  /**
+   * Handler for searching the keyword in the search bar
+   */
+  const searchBarInput = document.getElementById('global-search');
+  searchBarInput.addEventListener('input', debounce((event) => {
+    const searchValue = event.target.value;
+    if (searchValue === '' || searchValue.length < 2) {
+      document.getElementById('search-results-popup').classList.remove('visible');
+      return;
+    }
+    const selectedCategoryId = document.querySelector('.block.header .category-picker .selected-category').id;
+    callGlobalSearch(selectedCategoryId, searchValue);
+    document.getElementById('search-results-popup').classList.add('visible');
+  }), 1000);
+
+  /**
+   * Handler for disabling the default behaviour when ENTER is pressed in the search bar
+   */
+  searchBarInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  });
+
+  /**
+   * Handler to dismiss the search bar when clicked outside
+   * */
+  document.addEventListener('click', (event) => {
+    const searchResultsPopup = document.getElementById('search-results-popup');
+    const isClickedOnSearchBar = searchBarInput.contains(event.target);
+    const isClickedOnSearchResults = searchResultsPopup?.contains(event.target);
+    if (!isClickedOnSearchBar && !isClickedOnSearchResults) {
+      searchResultsPopup?.classList.remove('visible');
+    }
+  });
+
+  /**
+   * Handler for opening floating search bar when search icon is clicked
+   */
+  const collapsedSearchIcon = document.getElementById('collapsed-search-icon');
+  collapsedSearchIcon.addEventListener('click', () => {
+    const searchBarConatiner = document.querySelector('.block.header .search-bar .search-bar-container');
+    searchBarConatiner.classList.toggle('floating-visible');
+  });
+
+  /**
+   * Handler for dismissing the floating search bar when clicked outside
+   */
+  document.addEventListener('click', (event) => {
+    const floatingSearchBar = document.querySelector('.block.header .search-bar-container.floating-visible');
+    if (!floatingSearchBar) {
+      return;
+    }
+    const isClickedOnFloatingSearchBar = floatingSearchBar.contains(event.target);
+    const isClickedOnSearchIcon = collapsedSearchIcon.contains(event.target);
+    if (!isClickedOnFloatingSearchBar && !isClickedOnSearchIcon) {
+      floatingSearchBar?.classList.remove('floating-visible');
+    }
+  });
+
+  /**
+   * Hide the floating search bar when window size is more than 768px
+   */
+  window.addEventListener('resize', () => {
+    if (window.innerWidth >= 768) {
+      const floatingSearchBar = document.querySelector('.block.header .search-bar-container.floating-visible');
+      if (floatingSearchBar) {
+        floatingSearchBar.classList.remove('floating-visible');
+      }
+    }
+  });
 };
 
 /**

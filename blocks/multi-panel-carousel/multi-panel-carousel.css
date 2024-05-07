@@ -45,11 +45,23 @@
 }
 
 .block.carousel-section .carousel-highlight p {
-    margin-left: 0.5rem;
+    margin-left: var(--space-8px);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--heading-font-size-ms);
+}
+
+.block.carousel-section .carousel-highlight p strong {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--heading-font-size-ms);
 }
 
 .block.carousel-section .carousel-highlight p:last-child {
     margin-bottom: 0;
+}
+
+.block.carousel-section .carousel-highlight.green-highlight p strong {
+   color: var(--color-light-green);
+   font-weight: var(--font-weight-regular);
 }
 
 .block.carousel-section .row {
@@ -78,7 +90,7 @@
 }
 
 .block.carousel-section .carousel-header {
-    background-color: var(--primary);
+    background-color: var(--color-orange);
     padding: 0.6rem 0.9rem;
 }
 
@@ -224,13 +236,24 @@
     color: var(--link-color-orange);
 }
 
+.block.carousel-section .discover-more .icon {
+    font-family: icomoon, sans-serif;
+    speak: none;
+    font-style: normal;
+    font-weight: var(--font-weight-medium);
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    display: inline-block;
+    vertical-align: middle;
+}
 
-.block.carousel-section .discover-more .link-color .icon-up-arrow {
+.block.carousel-section .discover-more .icon-up-arrow {
     transform: rotate(90deg);
     margin-left: 0.3rem;
 }
 
-.block.carousel-section.discover-more .link-color .icon-up-arrow::before {
+.block.carousel-section .discover-more .icon-up-arrow::before {
     content: "\e900";
 }
 
@@ -253,8 +276,18 @@
     min-height: 17.5rem;
 }
 
+.block.carousel-section .carousel-slider .carousel-track.scrollable {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+}
+
 .block.carousel-section .carousel-slider .carousel-track > * {
     opacity: 0;
+}
+
+.block.carousel-section .carousel-slider .carousel-track::-webkit-scrollbar {
+    display: none;
 }
 
 .block.carousel-section .carousel-slider .carousel-track > :first-child {
@@ -264,6 +297,10 @@
 .block.carousel-section .carousel-slider .carousel-card {
     transition: opacity 0.5s ease;
     padding: 0.5rem;
+}
+
+.block.carousel-section .carousel-slider .carousel-card.scrollable {
+    scroll-snap-align: start;
 }
 
 .block.carousel-section .carousel-slider .carousel-card img {

@@ -2,6 +2,14 @@ import { fetchPlaceholders } from './aem.js';
 
 let isSocialShareDialogInitializing = false;
 
+function handleBodyScroll(isModalOpen) {
+  if (isModalOpen && !document.body.classList.contains('modal-open')) {
+    document.body.classList.add('modal-open');
+  } else if (!isModalOpen && document.body.classList.contains('modal-open')) {
+    document.body.classList.remove('modal-open');
+  }
+}
+
 /**
  * Click event handler for social share anchors.
  * Opens the social share dialog having social buttons.
@@ -23,6 +31,7 @@ export async function handleSocialShareClick(anchor) {
     if (d.dataset?.link === link) {
       d.showModal();
       dialogAlreadyExists = true;
+      handleBodyScroll(true);
     }
   });
 
@@ -45,10 +54,19 @@ export async function handleSocialShareClick(anchor) {
   function handleDialogClose() {
     isSocialShareDialogInitializing = false;
     dialog.close();
+    handleBodyScroll(false);
+  }
+
+  function handleDialogClick(event) {
+    // Close the dialog if the user clicks outside the dialog
+    if (event.target === dialog) {
+      handleDialogClose();
+    }
   }
 
   closeButton.addEventListener('click', () => handleDialogClose());
   dialog.addEventListener('close', () => handleDialogClose());
+  dialog.addEventListener('click', handleDialogClick);
 
   divContainer.appendChild(closeButton);
 
@@ -107,6 +125,7 @@ export async function handleSocialShareClick(anchor) {
   document.body.appendChild(dialog);
 
   dialog.showModal();
+  handleBodyScroll(true);
 }
 
 /**

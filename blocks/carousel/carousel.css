@@ -19,6 +19,8 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
     scroll-behavior: smooth;
     scroll-snap-type: x mandatory;
     overflow: scroll clip;
+
+    --visible-slides: 1;
 }
 
 .carousel.block-padded {
@@ -30,7 +32,7 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
 }
 
 .carousel .carousel-slide {
-    flex: 0 0 100%;
+    flex: 0 0 calc(100% / var(--visible-slides));
     scroll-snap-align: start;
     display: flex;
     flex-direction: column;

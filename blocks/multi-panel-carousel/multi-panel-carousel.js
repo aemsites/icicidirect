@@ -1,6 +1,12 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import { fetchRecommendations, getMarginActionUrl, mockPredicationConstant } from '../../scripts/mockapi.js';
-import { observe, Viewport } from '../../scripts/blocks-utils.js';
+import {
+  fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant,
+} from '../../scripts/mockapi.js';
+import {
+  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport,
+} from '../../scripts/blocks-utils.js';
+
+const isDesktop = Viewport.isDesktop();
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -13,10 +19,10 @@ function allowedCardsCount() {
       return 1;
   }
 }
-function updateCarouselView(activeDot) {
+
+function setTrack(activeDot) {
   const dotIndex = parseInt(activeDot.dataset.index, 10);
   const carouselSlider = activeDot.closest('.carousel-slider');
-  const dots = carouselSlider.querySelectorAll('.dot');
   const currentActiveDot = carouselSlider.querySelector('.dot.active');
   if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
     return;
@@ -34,12 +40,41 @@ function updateCarouselView(activeDot) {
     }
     card.style.width = `${cardWidth}px`;
   });
-  const moveDistance = dotIndex * cards[0].offsetWidth;
-  carouselTrack.style.transform = `translateX(-${moveDistance}px)`;
-  dots.forEach((dot) => dot.classList.remove('active'));
-  dots[dotIndex].classList.add('active');
 }
 
+function updateCarouselView(activeDot, scroll) {
+  const dotIndex = parseInt(activeDot.dataset.index, 10);
+  const carouselSlider = activeDot.closest('.carousel-slider');
+  const dots = carouselSlider.querySelectorAll('.dot');
+  setTrack(activeDot);
+  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  const cards = Array.from(carouselTrack.children);
+  const moveDistance = dotIndex * cards[0].offsetWidth;
+  if (Viewport.isMobile() && scroll) {
+    carouselTrack.scrollTo({
+      top: 0,
+      left: carouselTrack.children[activeDot.dataset.index].offsetLeft,
+      behavior: 'smooth',
+    });
+  } else {
+    carouselTrack.style.transform = `translateX(-${moveDistance}px)`;
+    dots.forEach((dot) => dot.classList.remove('active'));
+    dots[dotIndex].classList.add('active');
+  }
+}
+
+function setDotIndex(activeDot) {
+  setTrack(activeDot);
+  const dotIndex = parseInt(activeDot.dataset.index, 10);
+  const carouselSlider = activeDot.closest('.carousel-slider');
+  const dots = carouselSlider.querySelectorAll('.dot');
+  if (!dots[dotIndex].classList.contains('active')) {
+    dots.forEach((dot) => dot.classList.remove('active'));
+    dots[dotIndex].classList.add('active');
+  }
+}
+
+let intervalId;
 function startUpdateCarousel(carouselSlider) {
   const dotsContainer = carouselSlider.querySelector('.dots-container');
   if (!dotsContainer) return; // Exit if dotsContainer doesn't exist
@@ -51,10 +86,8 @@ function startUpdateCarousel(carouselSlider) {
     return;
   }
 
-  const isDesktop = Viewport.isDesktop();
   let movingForward = true;
-
-  const intervalId = setInterval(() => {
+  intervalId = setInterval(() => {
     if (isDesktop) {
       if (activeDotIndex === dots.length - 1) {
         clearInterval(intervalId); // Stop if it's desktop and reaches the last dot
@@ -73,8 +106,9 @@ function startUpdateCarousel(carouselSlider) {
       }
     }
     const activeDot = dots[activeDotIndex];
-    updateCarouselView(activeDot);
+    updateCarouselView(activeDot, Viewport.isMobile());
   }, 2000);
+  carouselSlider.setAttribute('data-interval-id', intervalId);
 }
 
 function setCarouselView(type, carouselSlider) {
@@ -82,6 +116,7 @@ function setCarouselView(type, carouselSlider) {
   const cards = Array.from(carouselTrack.children);
   const visibleCards = allowedCardsCount();
   const numberOfDots = cards.length - visibleCards + 1;
+  const isMobile = Viewport.isMobile();
   if (numberOfDots > 1) {
     const dotsContainer = document.createElement('div');
     dotsContainer.className = 'dots-container border-box';
@@ -89,16 +124,37 @@ function setCarouselView(type, carouselSlider) {
     for (let i = 0; i < numberOfDots; i++) {
       const dot = document.createElement('button');
       dot.className = 'dot border-box';
+      cards[i].dataset.index = i;
       dot.dataset.index = i;
       dot.setAttribute('aria-label', `dot-${i}`);
       dotsContainer.appendChild(dot);
       dot.addEventListener('click', (event) => {
-        updateCarouselView(event.currentTarget);
+        clearInterval(carouselSlider.getAttribute('data-interval-id'));
+        updateCarouselView(event.currentTarget, Viewport.isMobile());
       });
     }
 
     carouselSlider.appendChild(dotsContainer);
-    updateCarouselView(dotsContainer.firstChild);
+    updateCarouselView(dotsContainer.firstChild, Viewport.isMobile());
+    dotsContainer.firstElementChild.classList.add('active');
+    if (isMobile) {
+      carouselTrack.classList.add('scrollable');
+      const slideObserver = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const dots = entry.target.closest('.carousel-slider')
+              .querySelector('.dots-container');
+            const activeDot = dots.querySelector(`.dot[data-index='${entry.target.dataset.index}']`);
+            setDotIndex(activeDot);
+          });
+        },
+        { threshold: 0.8 },
+      );
+      cards.forEach((card) => {
+        card.classList.add('scrollable');
+        slideObserver.observe(card);
+      });
+    }
     startUpdateCarousel(carouselSlider);
   }
 }
@@ -256,7 +312,7 @@ function createValueContent(row, labelText, valueText, colType = 'value') {
   h5.innerHTML = valueText; // Using innerHTML to include <span> if necessary
 
   // Adding 'negative' or 'positive' class based on valueText for 'profit' and 'return'
-  if (colType !== 'value' && valueText.includes('-')) {
+  if (colType !== 'value' && valueText.toString().includes('-')) {
     h5.classList.add('negative');
   } else if (colType !== 'value') {
     h5.classList.add('positive');
@@ -336,21 +392,66 @@ function getRecommendationsCard(companies, type) {
 async function generateCardsView(block, type) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
-  fetchRecommendations(type).then((companies) => {
-    if (companies) {
-      const recommendationsCard = getRecommendationsCard(companies, type);
-      recommendationsCard.forEach((div) => {
-        carouselTrack.appendChild(div);
+  // to be removed once oneclickportfolio api is ready
+  if (type === 'oneclickportfolio') {
+    fetchRecommendations(type).then((companies) => {
+      if (companies) {
+        const recommendationsCard = getRecommendationsCard(companies, type);
+        recommendationsCard.forEach((div) => {
+          carouselTrack.appendChild(div);
+        });
+        setCarouselView(type, carouselSlider);
+      }
+    });
+    return;
+  }
+  const apiName = type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas';
+  const jsonFormData = {
+    apiName,
+    inputJson: JSON.stringify({
+      rating: '1', timeFrame: '', pageNo: '1', pageSize: '5',
+    }),
+  };
+
+  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+    if (error === null) {
+      const recommendationArray = tradingData.Data.Table;
+      const companiesArray = [];
+      recommendationArray.forEach((company) => {
+        const companyObj = {};
+        companyObj.name = company.COM_NAME;
+        companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
+        companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
+        companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
+        companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
+
+        if (type === 'trading') {
+          companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
+        } else if (type === 'investing') {
+          companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
+          companyObj.reportLink = !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
+        }
+
+        companiesArray.push(companyObj);
       });
-      setCarouselView(type, carouselSlider);
+      if (companiesArray) {
+        const recommendationsCard = getRecommendationsCard(companiesArray, type);
+        recommendationsCard.forEach((div) => {
+          carouselTrack.appendChild(div);
+        });
+        setCarouselView(type, carouselSlider);
+      }
     }
   });
 }
 
-function addHighLightSection(carouselSection, highLightDiv, highLightIcon) {
+function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type) {
   if (highLightDiv) {
     const div = document.createElement('div');
-    div.className = 'carousel-highlight border-box';
+    div.className = 'carousel-highlight';
+    if (type !== 'trading') {
+      div.classList.add('green-highlight');
+    }
     const span = document.createElement('span');
     const p = document.createElement('p');
     p.innerHTML = highLightDiv.innerHTML;
@@ -426,27 +527,19 @@ function addDiscoverLink(carouselBody, discoverLink) {
   }
 }
 
-function getHighlightDiv(block) {
-  const predicationDiv = block.querySelectorAll(':scope > div')[2].children[1];
-  return predicationDiv;
-}
-
-function getHighlightIcon(block) {
-  const iconElement = block.querySelector('picture');
-  return iconElement;
-}
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
+  const blockMarkup = readBlockMarkup(block);
   const { type } = blockConfig;
   const { title } = blockConfig;
-  const highlightDiv = getHighlightDiv(block);
-  const highlightIcon = getHighlightIcon(block);
+  const highlightDiv = blockMarkup.predication;
+  const highlightIcon = blockMarkup.targeticon.querySelector('picture');
   const discoverLink = blockConfig.discoverlink;
   const dropdowns = Array.isArray(blockConfig.dropdowns)
     ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
   block.textContent = '';
   block.classList.add('carousel-section');
-  addHighLightSection(block, highlightDiv, highlightIcon);
+  addHighLightSection(block, highlightDiv, highlightIcon, type);
 
   const carouselContainer = document.createElement('div');
   carouselContainer.className = 'carousel-container border-box';

@@ -1,288 +1,6 @@
-import { toClassName } from '../../scripts/aem.js';
 import {
-  Viewport, createPictureElement, observe, getDataFromAPI, getResearchAPIUrl, parseResponse,
-} from '../../scripts/blocks-utils.js';
-import { handleSocialShareClick } from '../../scripts/social-utils.js';
-
-const ICICI_DIRECT_VIDEOS_HOST = 'https://www.icicidirect.com/research/videos/';
-const ICICI_DIRECT_PODCASTS_HOST = 'https://www.icicidirect.com/research/podcasts/';
-const ICICI_DIRECT_VIDEOS_THUMBNAIL = 'https://img.youtube.com/vi/{id}/mqdefault.jpg';
-const ICICI_DIRECT_PODCASTS_THUMBNAIL_HOST = 'https://www.icicidirect.com/images/';
-
-function getVideosShareLink(permLink) {
-  return ICICI_DIRECT_VIDEOS_HOST + permLink;
-}
-
-function getPodcastsShareLink(permLink) {
-  return ICICI_DIRECT_PODCASTS_HOST + permLink;
-}
-
-function getVideosThumbnail(id) {
-  return ICICI_DIRECT_VIDEOS_THUMBNAIL.replace('{id}', id);
-}
-
-function getPodcastsThumbnail(image) {
-  return ICICI_DIRECT_PODCASTS_THUMBNAIL_HOST + image;
-}
-
-function allowedCardsCount() {
-  const deviceType = Viewport.getDeviceType();
-  switch (deviceType) {
-    case 'Desktop':
-      return 3;
-    case 'Tablet':
-      return 2;
-    default:
-      return 1;
-  }
-}
-
-function numberOfDots(totalCards, maxAllowedCards) {
-  if (totalCards > maxAllowedCards) return totalCards - maxAllowedCards + 1;
-  return 0;
-}
-
-function openUrl(event) {
-  window.location.href = event.currentTarget.getAttribute('share-link');
-}
-
-function startCaraousal() {
-  let nextIndex = 1;
-  let direction = 1;
-  const intervalId = setInterval(() => {
-    const tabPanel = document.querySelector('.tabs-panel[aria-hidden="false"]');
-    const track = tabPanel.querySelector('.track');
-    const trackWidth = track.offsetWidth;
-    const dotsContainer = tabPanel.querySelector('.dots-container');
-    const dotsArray = dotsContainer.children;
-    const cardWidth = trackWidth / allowedCardsCount();
-    const cards = Array.from(track.children);
-    cards.forEach((card) => {
-      card.style.width = `${cardWidth}px`;
-    });
-    const totalCards = track.children.length;
-
-    const totalMoves = numberOfDots(totalCards, allowedCardsCount()) - 1;
-    if (nextIndex === totalMoves) {
-      direction = -1;
-    } else if (nextIndex === 0) {
-      direction = 1;
-    }
-    if (nextIndex <= totalMoves) {
-      dotsContainer.querySelector('.active').classList.remove('active');
-      dotsArray[nextIndex].classList.add('active');
-      const moveDistance = cardWidth * nextIndex;
-      track.style.transform = `translateX(-${moveDistance}px)`;
-      if (direction === 1) nextIndex += 1;
-      else nextIndex -= 1;
-    }
-  }, 4000);
-  return intervalId;
-}
-
-function clearIntervalAndReset(intervalId) {
-  clearInterval(intervalId);
-  const tabPanel = document.querySelector('.tabs-panel[aria-hidden="true"]');
-  const dotsContainer = tabPanel.querySelector('.dots-container');
-  const track = tabPanel.querySelector('.track');
-  track.style.transform = 'translateX(-0px)';
-  Array.from(dotsContainer.querySelectorAll('.active')).forEach((dot) => {
-    dot.classList.remove('active');
-  });
-  if (dotsContainer.firstElementChild) {
-    dotsContainer.firstElementChild.classList.add('active');
-  }
-}
-
-let intervalId = 1;
-
-function targetedDotView(event) {
-  const targetDotIndex = event.currentTarget.dataset.index;
-  clearInterval(intervalId);
-  const tabPanel = document.querySelector('.tabs-panel[aria-hidden="false"]');
-  const track = tabPanel.querySelector('.track');
-  const dotsContainer = tabPanel.querySelector('.dots-container');
-  dotsContainer.querySelector('.active').classList.remove('active');
-  event.currentTarget.classList.add('active');
-  const cardSize = track.firstElementChild.offsetWidth;
-  const moveDistance = (targetDotIndex - 1) * cardSize;
-  track.style.transform = `translateX(-${moveDistance}px)`;
-}
-
-function createCardMetaElement(...cardMetaValues) {
-  const postMeta = document.createElement('div');
-  postMeta.classList.add('card-meta');
-  // Iterate through the values
-  cardMetaValues.forEach((value) => {
-    const abbr = document.createElement('abbr');
-    abbr.textContent = value;
-    postMeta.appendChild(abbr);
-  });
-  return postMeta;
-}
-
-function createPostTitle(title, shareLink) {
-  const postTitle = document.createElement('h3');
-  postTitle.classList.add('card-title');
-  const postLink = document.createElement('a');
-  postLink.setAttribute('href', shareLink);
-  postLink.setAttribute('target', '_blank');
-  postLink.textContent = title;
-  postTitle.appendChild(postLink);
-  return postTitle;
-}
-
-function createSocialLinkElement(shareLink) {
-  const socialLink = document.createElement('div');
-  socialLink.classList.add('social-link');
-  const socialAnchor = document.createElement('a');
-  const socialIcon = document.createElement('i');
-  socialIcon.classList.add('fa', 'fa-share', 'icon');
-  socialAnchor.dataset.href = shareLink;
-  socialAnchor.addEventListener('click', () => handleSocialShareClick(socialAnchor));
-  socialAnchor.appendChild(socialIcon);
-  socialLink.appendChild(socialAnchor);
-  return socialLink;
-}
-
-async function createPicture(imageUrl, mediaWrapper) {
-  mediaWrapper.appendChild(createPictureElement(imageUrl, 'mqdefault', false));
-}
-
-function createCards(container, data, tabId, cardWidth) {
-  data.forEach((item) => {
-    // Create slide element
-    const card = document.createElement('div');
-    card.className = 'slide-card';
-    card.style.width = `${cardWidth}px`;
-
-    // Create cardInfo element
-    const cardInfo = document.createElement('div');
-    cardInfo.classList.add('card-info', `${tabId}-card`);
-
-    // Create picture-wrapper element
-    const mediaWrapper = document.createElement('div');
-    mediaWrapper.classList.add('picture-wrapper');
-    mediaWrapper.addEventListener('click', (event) => {
-      openUrl(event);
-    });
-
-    // Create text-content element
-    const textContent = document.createElement('div');
-    textContent.classList.add('text-content');
-
-    switch (tabId.toLowerCase()) {
-      case 'videos':
-        textContent.appendChild(createCardMetaElement(item.PublishedOn, item.Author));
-        textContent.appendChild(createPostTitle(item.Title, getVideosShareLink(item.PermLink)));
-        textContent.appendChild(createSocialLinkElement(getVideosShareLink(item.PermLink)));
-        mediaWrapper.setAttribute('share-link', getVideosShareLink(item.PermLink));
-        createPicture(getVideosThumbnail(item.Link), mediaWrapper);
-        break;
-      case 'podcasts':
-        textContent.appendChild(createCardMetaElement(item.PublishedOn, '10:00 Minutes'));
-        textContent.appendChild(createPostTitle(item.Title, getPodcastsShareLink(item.PermLink)));
-        textContent.appendChild(createSocialLinkElement(getPodcastsShareLink(item.PermLink)));
-        mediaWrapper.setAttribute('share-link', getPodcastsShareLink(item.PermLink));
-        createPicture(getPodcastsThumbnail(item.Image), mediaWrapper);
-        break;
-      default:
-        break;
-    }
-
-    // Append picture-wrapper and text-content to cardInfo
-    cardInfo.appendChild(mediaWrapper);
-    cardInfo.appendChild(textContent);
-
-    // Append cardInfo to slide
-    card.appendChild(cardInfo);
-
-    // Append slide to container
-    container.appendChild(card);
-  });
-}
-
-function createDots(totalCards, maxAllowedCards, dots) {
-  const numberOfDotsToBeCreated = numberOfDots(totalCards, maxAllowedCards);
-  let index = 1;
-  while (index <= numberOfDotsToBeCreated) {
-    const dot = document.createElement('button');
-    dot.className = 'dot';
-    dot.dataset.index = index;
-    dot.setAttribute('aria-label', `dot-${index}`);
-    dots.appendChild(dot);
-    dot.addEventListener('click', (event) => {
-      targetedDotView(event);
-    });
-    index += 1;
-  }
-  if (numberOfDotsToBeCreated > 0) {
-    dots.firstElementChild.classList.add('active');
-  }
-}
-
-async function createTabPanel(block) {
-  const tabsPanel = block.querySelectorAll('.tabs-panel');
-  let cardWidth;
-
-  for (let index = 0; index < tabsPanel.length; index += 1) {
-    const tab = tabsPanel[index];
-    const discoverMoreButton = tab.lastElementChild;
-    tab.textContent = '';
-    const tabId = tab.getAttribute('api-key');
-    const title = document.createElement('div');
-    title.className = 'title';
-    const h2 = document.createElement('h2');
-    const img = document.createElement('img');
-    img.src = '/icons/video-icon.svg';
-    img.alt = 'video-icon';
-    const picture = document.createElement('picture');
-    picture.appendChild(img);
-    const textNode = document.createTextNode(tabId);
-    h2.appendChild(picture);
-    h2.appendChild(textNode);
-    title.append(h2);
-    tab.appendChild(title);
-    const slider = document.createElement('div');
-    slider.className = 'slider';
-    tab.appendChild(slider);
-    const track = document.createElement('div');
-    track.className = 'track';
-    const dots = document.createElement('div');
-    dots.className = 'dots-container';
-    slider.appendChild(track);
-    slider.appendChild(dots);
-    discoverMoreButton.className = 'discovermore';
-    if (discoverMoreButton.firstElementChild && discoverMoreButton.firstElementChild.tagName === 'A') {
-      discoverMoreButton.firstElementChild.className = 'discover-more-button';
-    }
-    tab.appendChild(discoverMoreButton);
-
-    if (track.offsetWidth) {
-      cardWidth = track.offsetWidth / allowedCardsCount();
-    }
-
-    /* eslint-disable no-loop-func */
-    const callback = async (error, apiResponse = []) => {
-      if (apiResponse) {
-        const jsonResult = parseResponse(apiResponse);
-        createCards(track, jsonResult, tabId, cardWidth);
-        createDots(jsonResult.length, allowedCardsCount(), dots);
-      }
-    };
-    switch (tabId) {
-      case 'videos':
-        getDataFromAPI(getResearchAPIUrl(), 'GetVideos', callback);
-        break;
-      case 'podcasts':
-        getDataFromAPI(getResearchAPIUrl(), 'GetPodcasts', callback);
-        break;
-      default:
-        break;
-    }
-  }
-  intervalId = startCaraousal();
-}
+  buildBlock, decorateBlock, loadBlock, toClassName,
+} from '../../scripts/aem.js';
 
 export default async function decorate(block) {
   // build tablist
@@ -293,7 +11,7 @@ export default async function decorate(block) {
   // decorate tabs and tabpanels
   const tabs = [...block.children].map((child) => child.firstElementChild);
   const types = [...block.children].map((child) => child.children[1]);
-
+  const links = [...block.children].map((child) => child.children[2]);
   tabs.forEach((tab, i) => {
     const id = toClassName(tab.textContent);
 
@@ -304,8 +22,23 @@ export default async function decorate(block) {
     tabpanel.setAttribute('aria-hidden', !!i);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
-    tabpanel.setAttribute('api-key', types[i].textContent.toLowerCase());
-
+    tabpanel.textContent = '';
+    const mediaBlock = buildBlock('media', '');
+    mediaBlock.classList.add('media', 'block');
+    mediaBlock.dataset.blockName = 'media';
+    mediaBlock.innerHTML = `<div>
+            <div>Title</div>
+            <div>${tab.innerHTML}</div>
+          </div>
+          <div>
+            <div>Type</div>
+            <div>${types[i].textContent.toLowerCase()}</div>
+          </div>
+          <div>
+            <div>Link</div>
+            <div class='button-container'>${links[i].innerHTML}</div>
+          </div>`;
+    tabpanel.append(mediaBlock);
     // build tab button
     const button = document.createElement('button');
     // copy all existing attributes of div into button
@@ -327,12 +60,13 @@ export default async function decorate(block) {
       });
       tabpanel.setAttribute('aria-hidden', false);
       button.setAttribute('aria-selected', true);
-      clearIntervalAndReset(intervalId);
-      intervalId = startCaraousal();
     });
     tablist.append(button);
     tab.remove();
   });
   block.prepend(tablist);
-  observe(block, createTabPanel);
+  block.querySelectorAll('.block.media').forEach((mediaBlock) => {
+    decorateBlock(mediaBlock);
+    loadBlock(mediaBlock);
+  });
 }
