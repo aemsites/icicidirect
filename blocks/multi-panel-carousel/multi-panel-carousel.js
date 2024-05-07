@@ -1,9 +1,8 @@
-import { readBlockConfig } from '../../scripts/aem.js';
+import { fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import {
-  fetchRecommendations, getHostUrl, getMarginActionUrl, mockPredicationConstant,
-} from '../../scripts/mockapi.js';
-import {
-  getResearchAPIUrl, readBlockMarkup, observe, postFormData, Viewport, fetchData, ICICI_FINOUX_HOST,
+  getResearchAPIUrl, getCurrentHost,
+  readBlockMarkup, observe, postFormData,
+  Viewport, fetchData, ICICI_FINOUX_HOST,
 } from '../../scripts/blocks-utils.js';
 
 const isDesktop = Viewport.isDesktop();
@@ -167,27 +166,16 @@ function setCarouselView(type, carouselSlider) {
   }
 }
 
-function updateRecommedations(selectedDropDownItem, type) {
+function updateRecommedations(selectedDropDownItem, type, marginActions) {
   const dropdown = selectedDropDownItem.closest('.dropdown-select');
   dropdown.querySelector('.dropdown-text').textContent = selectedDropDownItem.textContent;
   const dropdownToggle = dropdown.querySelector('.dropdown-toggle');
   dropdownToggle.dataset.type = selectedDropDownItem.dataset.type;
   dropdownToggle.dataset.value = selectedDropDownItem.dataset.value;
   dropdown.querySelector('.dropdown-menu-container').classList.remove('visible');
-  const dropdownDiv = dropdown.closest('.dropdowns');
-  const dropdowns = dropdownDiv.querySelectorAll('.dropdown-toggle');
-  let rating = '';
-  let timeFrame = '';
-  dropdowns.forEach((drop) => {
-    if (drop.dataset.type === 'rating') {
-      rating = drop.dataset.value;
-    } else if (drop.dataset.type === 'timeFrame') {
-      timeFrame = drop.dataset.value;
-    }
-  });
   const block = dropdown.closest('.block');
   // eslint-disable-next-line no-use-before-define
-  fetchCardsData(block, type, rating, timeFrame);
+  fetchCardsData(block, type, marginActions);
 }
 
 function closeAllDropDowns(clickedElement) {
@@ -198,7 +186,7 @@ function closeAllDropDowns(clickedElement) {
   });
 }
 
-function createDropdown(menuItems, type) {
+function createDropdown(menuItems, type, marginActions) {
   const dropdownText = menuItems[0].label;
 
   const dropdownSelectDiv = document.createElement('div');
@@ -227,7 +215,7 @@ function createDropdown(menuItems, type) {
     a.appendChild(span);
     li.appendChild(a);
     li.addEventListener('click', (event) => {
-      updateRecommedations(event.currentTarget, type);
+      updateRecommedations(event.currentTarget, type, marginActions);
     });
     ul.appendChild(li);
   });
@@ -272,14 +260,14 @@ function companyCardHeader(company) {
   return headingWrap;
 }
 
-function addActionButton(boxFooter, company, type) {
+function addActionButton(boxFooter, company, type, marginActions) {
   const { action } = company;
   const btnWrap = document.createElement('div');
   if (type === 'trading') {
     btnWrap.className = 'btn-wrap border-box';
   }
   const aSell = document.createElement('a');
-  aSell.href = getMarginActionUrl(action.toLowerCase());
+  aSell.href = marginActions[action.toLowerCase()];
   aSell.className = `btn border-box btn-${action.toLowerCase()}`;
   if (company.exit) {
     aSell.classList.add('disabled');
@@ -291,7 +279,7 @@ function addActionButton(boxFooter, company, type) {
   boxFooter.appendChild(btnWrap);
 }
 
-function addFooterLabel(boxFooter, company, type) {
+function addFooterLabel(boxFooter, company, type, placeholders) {
   if (type !== 'trading' || company.RES_TIME_FRAME_ID !== 100) {
     return;
   }
@@ -304,10 +292,10 @@ function addFooterLabel(boxFooter, company, type) {
   footerLabel.appendChild(span);
 
   if (company.Exit_Price && parseInt(company.Exit_Price, 10) > 0) {
-    label.textContent = mockPredicationConstant.profitExit;
+    label.textContent = placeholders.profitexit;
     span.textContent = company.Exit_Price;
   } else if (company.Book_Profit_Price && parseInt(company.Book_Profit_Price, 10) > 0) {
-    label.textContent = mockPredicationConstant.bookProfit;
+    label.textContent = placeholders.bookprofit;
     span.textContent = company.Book_Profit_Price;
   } else {
     footerLabel.classList.add('disable');
@@ -365,20 +353,20 @@ function createValueContent(row, labelText, valueText, colType = 'value') {
   row.appendChild(colDiv);
 }
 
-function getRow(company) {
+function getRow(company, placeholders) {
   const rowDiv = document.createElement('div');
   rowDiv.className = 'row border-box';
 
   const contentData = [
-    { label: mockPredicationConstant.recoPrice, value: company.recoPrice },
-    { label: mockPredicationConstant.profitPotential, value: company.profitPotential, type: 'profit' },
-    { label: mockPredicationConstant.buyingRange, value: company.buyingRange },
-    { label: mockPredicationConstant.returns, value: company.returns, type: 'return' },
-    { label: mockPredicationConstant.cmp, value: company.cmp ? `<span class="icon icon-rupee"></span>${company.cmp}` : '' },
-    { label: mockPredicationConstant.minAmount, value: company.minAmount ? `<span class="icon icon-rupee"></span>${company.minAmount}` : '' },
-    { label: mockPredicationConstant.targetPrice, value: company.targetPrice ? `<span class="icon icon-rupee"></span>${company.targetPrice}` : '' },
-    { label: mockPredicationConstant.riskProfile, value: company.riskProfile },
-    { label: mockPredicationConstant.stopLoss, value: company.stopLoss ? `<span class="icon icon-rupee"></span>${company.stopLoss}` : '' },
+    { label: placeholders.recoprice, value: company.recoPrice },
+    { label: placeholders.profitpotential, value: company.profitPotential, type: 'profit' },
+    { label: placeholders.buyingrange, value: company.buyingRange },
+    { label: placeholders.returns, value: company.returns, type: 'return' },
+    { label: placeholders.cmp, value: company.cmp ? `<span class="icon icon-rupee"></span>${company.cmp}` : '' },
+    { label: placeholders.minamount, value: company.minAmount ? `<span class="icon icon-rupee"></span>${company.minAmount}` : '' },
+    { label: placeholders.targetprice, value: company.targetPrice ? `<span class="icon icon-rupee"></span>${company.targetPrice}` : '' },
+    { label: placeholders.riskprofile, value: company.riskProfile },
+    { label: placeholders.stoploss, value: company.stopLoss ? `<span class="icon icon-rupee"></span>${company.stopLoss}` : '' },
   ];
 
   contentData.forEach((data) => {
@@ -390,7 +378,7 @@ function getRow(company) {
   return rowDiv;
 }
 
-function getRecommendationsCard(companies, type) {
+function getRecommendationsCard(companies, type, placeholders, marginActions) {
   return companies.map((company) => {
     const cardDiv = document.createElement('div');
     cardDiv.className = 'carousel-card border-box';
@@ -402,7 +390,7 @@ function getRecommendationsCard(companies, type) {
 
     boxDiv.appendChild(companyCardHeader(company));
 
-    const rowDiv = getRow(company);
+    const rowDiv = getRow(company, placeholders);
     boxDiv.appendChild(rowDiv);
 
     const boxFooter = document.createElement('div');
@@ -414,8 +402,8 @@ function getRecommendationsCard(companies, type) {
     }
 
     addReportLink(boxFooter, company);
-    addActionButton(boxFooter, company, type);
-    addFooterLabel(boxFooter, company, type);
+    addActionButton(boxFooter, company, type, marginActions);
+    addFooterLabel(boxFooter, company, type, placeholders);
 
     boxDiv.appendChild(boxFooter);
 
@@ -436,7 +424,7 @@ function gerateReportLink(company) {
   return reportLink;
 }
 
-function updateCardsInView(block, type, recommendationArray) {
+function updateCardsInView(block, type, recommendationArray, placeholders, marginActions) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
   const companiesArray = [];
@@ -461,14 +449,19 @@ function updateCardsInView(block, type, recommendationArray) {
       } else if (type === 'investing') {
         companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
         // eslint-disable-next-line max-len
-        companyObj.reportLink = gerateReportLink(company); // !company.REPORT_PDF_LINK ? getHostUrl() : company.REPORT_PDF_LINK;
+        companyObj.reportLink = gerateReportLink(company);
       }
     }
 
     companiesArray.push(companyObj);
   });
   if (companiesArray) {
-    const recommendationsCard = getRecommendationsCard(companiesArray, type);
+    const recommendationsCard = getRecommendationsCard(
+      companiesArray,
+      type,
+      placeholders,
+      marginActions,
+    );
     while (carouselTrack.firstChild) {
       carouselTrack.removeChild(carouselTrack.firstChild);
     }
@@ -479,7 +472,7 @@ function updateCardsInView(block, type, recommendationArray) {
   }
 }
 
-async function fetchCardsData(block, type) {
+async function fetchCardsData(block, type, marginActions) {
   const toggleBtn = block.querySelectorAll('.dropdown-toggle');
   let rating = '';
   let timeFrame = '';
@@ -521,6 +514,7 @@ async function fetchCardsData(block, type) {
     };
   }
 
+  const placeholders = await fetchPlaceholders();
   postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
     if (error === null && tradingData.Data) {
       let resultData;
@@ -529,23 +523,23 @@ async function fetchCardsData(block, type) {
       } else {
         resultData = tradingData.Data.Table;
       }
-      updateCardsInView(block, type, resultData);
+      updateCardsInView(block, type, resultData, placeholders, marginActions);
     }
   });
 }
-async function addingDynamicDropDowns(block, type, restructuredData) {
+async function addingDynamicDropDowns(block, type, restructuredData, marginActions) {
   const dropdownsDiv = block.querySelector('.dropdowns');
   // eslint-disable-next-line guard-for-in,no-restricted-syntax
   for (const dropdownType in restructuredData) {
     const items = restructuredData[dropdownType];
-    const dropDownEle = createDropdown(items, type);
+    const dropDownEle = createDropdown(items, type, marginActions);
     dropdownsDiv.appendChild(dropDownEle);
     document.addEventListener('click', (event) => {
       closeAllDropDowns(event.target);
     });
   }
 }
-async function generateDropDowns(block, type) {
+async function generateDropDowns(block, type, marginActions) {
   // const restructuredData = {};
   if (type === 'investing') {
     const investingDropDowns = [
@@ -576,11 +570,11 @@ async function generateDropDowns(block, type) {
             count += 1;
           });
         }
-        addingDynamicDropDowns(block, type, restructuredData);
+        addingDynamicDropDowns(block, type, restructuredData, marginActions);
       });
     });
   } else {
-    fetchData(`${getHostUrl()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
+    fetchData(`${getCurrentHost()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
       const restructuredData = {};
       DDData.data.forEach((item) => {
         const { Type, Label, Value } = item;
@@ -591,13 +585,13 @@ async function generateDropDowns(block, type) {
         }
         restructuredData[Type].push({ type: Type, label: Label, value: Value });
       });
-      addingDynamicDropDowns(block, type, restructuredData);
+      addingDynamicDropDowns(block, type, restructuredData, marginActions);
     });
   }
 }
-async function generateDynamicContent(block, type) {
-  generateDropDowns(block, type);
-  fetchCardsData(block, type);
+async function generateDynamicContent(block, type, marginActions) {
+  generateDropDowns(block, type, marginActions);
+  fetchCardsData(block, type, marginActions);
 }
 
 function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type) {
@@ -699,6 +693,10 @@ export default async function decorate(block) {
   const blockMarkup = readBlockMarkup(block);
   const { type } = blockConfig;
   const { title } = blockConfig;
+  const marginActions = {
+    buy: blockConfig['buy-action'],
+    sell: blockConfig['sell-action'],
+  };
   const highlightDiv = blockMarkup.predication;
   const highlightIcon = blockMarkup.targeticon.querySelector('picture');
   const discoverLink = blockConfig.discoverlink;
@@ -721,5 +719,5 @@ export default async function decorate(block) {
 
   addCarouselCards(carouselBody);
   addDiscoverLink(carouselBody, discoverLink);
-  observe(block, generateDynamicContent, type);
+  observe(block, generateDynamicContent, type, marginActions);
 }

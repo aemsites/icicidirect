@@ -379,6 +379,15 @@ function loadAnalyticsEager() {
   return getQueryParam('analytics') === 'eager';
 }
 
+function getCurrentHost() {
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
+  return hostUrl;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -403,4 +412,5 @@ export {
   loadGTM,
   getQueryParam,
   loadAnalyticsEager,
+  getCurrentHost,
 };

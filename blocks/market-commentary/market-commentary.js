@@ -26,7 +26,7 @@ function generateNewsLink(cardData) {
   const trimmedNewsId = cardData.NEWS_ID.toString().replace(/\.0$/, '');
 
   // Generate news link
-  const newsLink = `https://${ICICI_FINOUX_HOST}/equity/market-news-list/${sessionCode}/${formattedHeading}/${trimmedNewsId}`;
+  const newsLink = `${ICICI_FINOUX_HOST}/equity/market-news-list/${sessionCode}/${formattedHeading}/${trimmedNewsId}`;
 
   return newsLink;
 }
