@@ -503,12 +503,10 @@ async function fetchCardsData(block, type, rating, timeFrame) {
     }
 
     postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-      console.log(tradingData);
       if (error === null && tradingData.Data) {
         let resultData;
         if (type === 'oneclickportfolio') {
           resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
-          console.log(resultData);
         } else {
           resultData = tradingData.Data.Table;
         }
@@ -537,35 +535,68 @@ async function generateCardsView(block, type) {
   fetchCardsData(block, type);
 }
 
-async function generateDropDowns(block, type) {
-  if (type !== 'investing') {
-    return;
-  }
-  fetchData(`${getHostUrl()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
-    const restructuredData = {};
-    DDData.data.forEach((item) => {
-      const { Type, Label, Value } = item;
-
-      // Check if the Type key exists in restructuredData
-      if (!(Type in restructuredData)) {
-        restructuredData[Type] = []; // If not, create an empty array
-      }
-      restructuredData[Type].push({ type: Type, label: Label, value: Value });
+async function addingDynamicDropDowns(block, type, restructuredData) {
+  const dropdownsDiv = block.querySelector('.dropdowns');
+  // eslint-disable-next-line guard-for-in,no-restricted-syntax
+  for (const dropdownType in restructuredData) {
+    const items = restructuredData[dropdownType];
+    const dropDownEle = createDropdown(items, type);
+    dropdownsDiv.appendChild(dropDownEle);
+    document.addEventListener('click', (event) => {
+      closeAllDropDowns(event.target);
     });
-
-    const dropdownsDiv = block.querySelector('.dropdowns');
-    // eslint-disable-next-line guard-for-in,no-restricted-syntax
-    for (const dropdownType in restructuredData) {
-      const items = restructuredData[dropdownType];
-      const dropDownEle = createDropdown(items, type);
-      dropdownsDiv.appendChild(dropDownEle);
-      document.addEventListener('click', (event) => {
-        closeAllDropDowns(event.target);
+  }
+}
+async function generateDropDowns(block, type) {
+  // const restructuredData = {};
+  if (type === 'investing') {
+    const investingDropDowns = [
+      { dropdownType: 'ratings', apiName: 'GetRatings' },
+      { dropdownType: 'timeframe', apiName: 'GetTimeFrames' },
+    ];
+    investingDropDowns.forEach((dropDownDetails) => {
+      const jsonFormData = {
+        apiName: dropDownDetails.apiName,
+        inputJson: JSON.stringify({ researchType: 1 }),
+      };
+      postFormData(getResearchAPIUrl(), jsonFormData, (error, DDData = []) => {
+        const restructuredData = {};
+        restructuredData[dropDownDetails.dropdownType] = [{ type: dropDownDetails.dropdownType, label: 'All', value: '' }];
+        if (error === null && DDData.Data && DDData.Data.Table) {
+          let count = 0;
+          DDData.Data.Table.forEach((dropDownOption) => {
+            if (dropDownDetails.dropdownType === 'ratings' && count >= 4) {
+              // If dropdownType is 'ratings' and count is 4 or more, break out of the loop
+              return;
+            }
+            // eslint-disable-next-line max-len
+            const { TIME_FRAME_NM: Label = dropDownOption.RATING_TYPE_NM, RES_TIME_FRAME_ID: Value } = dropDownOption;
+            if (!(dropDownDetails.dropdownType in restructuredData)) {
+              restructuredData[dropDownDetails.dropdownType] = []; // If not, create an empty array
+            }
+            // eslint-disable-next-line max-len
+            restructuredData[dropDownDetails.dropdownType].push({ type: dropDownDetails.dropdownType, label: Label, value: Value });
+            count += 1;
+          });
+        }
+        addingDynamicDropDowns(block, type, restructuredData);
       });
-    }
+    });
+  } else {
+    fetchData(`${getHostUrl()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
+      const restructuredData = {};
+      DDData.data.forEach((item) => {
+        const { Type, Label, Value } = item;
 
-    console.log(restructuredData);
-  });
+        // Check if the Type key exists in restructuredData
+        if (!(Type in restructuredData)) {
+          restructuredData[Type] = []; // If not, create an empty array
+        }
+        restructuredData[Type].push({ type: Type, label: Label, value: Value });
+      });
+      addingDynamicDropDowns(block, type, restructuredData);
+    });
+  }
 }
 async function generateDynamicContent(block, type) {
   generateDropDowns(block, type);
