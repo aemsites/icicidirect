@@ -435,6 +435,15 @@ function generateReportLink(companyName, reportId) {
   return reportLink;
 }
 
+function getHostUrl() {
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
+  return hostUrl;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -463,4 +472,5 @@ export {
   defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
+  getHostUrl,
 };

@@ -1,5 +1,5 @@
 import {
-  createElement, fetchData, getResearchAPIUrl, observe, postFormData,
+  createElement, fetchData, getResearchAPIUrl, observe, postFormData, getHostUrl,
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 

@@ -1,5 +1,5 @@
 import {
-  createPictureElement, fetchData,
+  createPictureElement,
   // eslint-disable-next-line no-unused-vars
   getDataFromAPI,
   // eslint-disable-next-line no-unused-vars

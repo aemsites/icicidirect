@@ -1,4 +1,5 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
+import { getHostUrl } from '../../scripts/blocks-utils.js';
 
 export default function decorate(block) {
   const qrImage = block.querySelector('picture');
