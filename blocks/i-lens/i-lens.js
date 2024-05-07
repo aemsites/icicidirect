@@ -1,7 +1,6 @@
 import {
   createElement, fetchData, getResearchAPIUrl, observe, postFormData,
 } from '../../scripts/blocks-utils.js';
-import { getHostUrl } from '../../scripts/mockapi.js';
 import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 
 function decorateTitle(blockCfg) {

@@ -6,7 +6,6 @@ import {
   getResearchAPIUrl, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
-import { getHostUrl } from '../../scripts/mockapi.js';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -147,8 +146,7 @@ async function createIPOPanel(block, knowMoreButton) {
     createIPODots(block, apiResponse.length, allowedCardsCount(), dots);
     // }
   };
-  /** getDataFromAPI(getResearchAPIUrl(), 'GetLatestIPO', callback);* */
-  fetchData(`${getHostUrl()}/scripts/mock-upcoming-ipodata.json`, callback);
+  getDataFromAPI(getResearchAPIUrl(), 'GetLatestIPO', callback);
 }
 
 export default async function decorate(block) {
