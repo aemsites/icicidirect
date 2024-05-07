@@ -480,43 +480,42 @@ function updateCardsInView(block, type, recommendationArray) {
 }
 
 async function fetchCardsData(block, type, rating, timeFrame) {
-
   const dropdownText = block.querySelector('.dropdown-text');
   if (toggleBtn) {
-
   // eslint-disable-next-line no-param-reassign
-  rating = rating || '';
-  // eslint-disable-next-line no-param-reassign
-  timeFrame = timeFrame || '';
-  const option = 'NewlyLaunched';
-  let jsonFormData;
-  if (type === 'oneclickportfolio') {
-    jsonFormData = {
-      apiName: 'GetOneClickPortfolio',
-      inputJson: JSON.stringify({ option }),
-    };
-  } else {
-    jsonFormData = {
-      apiName: type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas',
-      inputJson: JSON.stringify({
-        rating, timeFrame, pageNo: '1', pageSize: '5',
-      }),
-    };
-  }
-
-  postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-    console.log(tradingData);
-    if (error === null && tradingData.Data) {
-      let resultData;
-      if (type === 'oneclickportfolio') {
-        resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
-        console.log(resultData);
-      } else {
-        resultData = tradingData.Data.Table;
-      }
-      updateCardsInView(block, type, resultData);
+    rating = rating || '';
+    // eslint-disable-next-line no-param-reassign
+    timeFrame = timeFrame || '';
+    const option = 'NewlyLaunched';
+    let jsonFormData;
+    if (type === 'oneclickportfolio') {
+      jsonFormData = {
+        apiName: 'GetOneClickPortfolio',
+        inputJson: JSON.stringify({ option }),
+      };
+    } else {
+      jsonFormData = {
+        apiName: type === 'trading' ? 'GetTradingIdeas' : 'GetInvestingIdeas',
+        inputJson: JSON.stringify({
+          rating, timeFrame, pageNo: '1', pageSize: '5',
+        }),
+      };
     }
-  });
+
+    postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
+      console.log(tradingData);
+      if (error === null && tradingData.Data) {
+        let resultData;
+        if (type === 'oneclickportfolio') {
+          resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
+          console.log(resultData);
+        } else {
+          resultData = tradingData.Data.Table;
+        }
+        updateCardsInView(block, type, resultData);
+      }
+    });
+  }
 }
 
 async function generateCardsView(block, type) {
