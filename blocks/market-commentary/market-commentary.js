@@ -1,5 +1,5 @@
 import {
-  getDataFromAPI, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, Viewport,
+  getDataFromAPI, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, sanitizeCompanyName, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
@@ -20,7 +20,7 @@ function generateNewsLink(cardData) {
   }
 
   // Format heading
-  const formattedHeading = cardData.HEADING.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
+  const formattedHeading = sanitizeCompanyName(cardData.HEADING);
 
   // Trim trailing .0 from NEWS_ID
   const trimmedNewsId = cardData.NEWS_ID.toString().replace(/\.0$/, '');

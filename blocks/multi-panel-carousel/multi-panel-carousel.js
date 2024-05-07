@@ -2,7 +2,7 @@ import { fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import {
   getResearchAPIUrl, getCurrentHost,
   readBlockMarkup, observe, postFormData,
-  Viewport, fetchData, ICICI_FINOUX_HOST,
+  Viewport, fetchData, generateReportLink,
 } from '../../scripts/blocks-utils.js';
 
 const isDesktop = Viewport.isDesktop();
@@ -412,18 +412,6 @@ function getRecommendationsCard(companies, type, placeholders, marginActions) {
   });
 }
 
-function gerateReportLink(company) {
-  const formattedCompanyName = company.COM_NAME.replace(/[^a-zA-Z0-9 ]/g, '').trim().replace(/\s+/g, '-').toLowerCase();
-
-  // Trim trailing .0 from RES_REPORT_ID
-  const trimmedReportId = company.RES_REPORT_ID.toString().replace(/\.0$/, '');
-
-  // Generate report link
-  const reportLink = `${ICICI_FINOUX_HOST}/research/equity/${formattedCompanyName}/${trimmedReportId}`;
-
-  return reportLink;
-}
-
 function updateCardsInView(block, type, recommendationArray, placeholders, marginActions) {
   const carouselSlider = block.querySelector('.carousel-slider');
   const carouselTrack = carouselSlider.querySelector('.carousel-track');
@@ -449,7 +437,7 @@ function updateCardsInView(block, type, recommendationArray, placeholders, margi
       } else if (type === 'investing') {
         companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
         // eslint-disable-next-line max-len
-        companyObj.reportLink = gerateReportLink(company);
+        companyObj.reportLink = generateReportLink(company.COM_NAME, company.RES_REPORT_ID);
       }
     }
 
