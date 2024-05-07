@@ -230,6 +230,14 @@
     display: block;
 }
 
+.block.i-lens .i-lens-body .box .value.green {
+    color: var(--color-green);
+}
+
+.block.i-lens .i-lens-body .box .value.red {
+    color: var(--color-red);
+}
+
 .block.i-lens .title .icon {
     vertical-align: middle;
 }

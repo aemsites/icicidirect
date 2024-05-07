@@ -22,7 +22,7 @@ const showStickyFooterWhenScrolled = (block) => {
     });
   };
   const observer = new IntersectionObserver(intersectionHandler, stickyFooterOptions);
-  const parentDiv = document.querySelector('.section.sticky-footer-container');
+  const parentDiv = block.closest('.section.sticky-footer-container');
   observer.observe(parentDiv);
 };
 
@@ -40,13 +40,13 @@ const initiateAccountCreation = (url, mobileNumber) => {
  * Handler for submit button click
  * @param {*} event
  */
-const handleOpenAccountSubmit = (event) => {
+const handleOpenAccountSubmit = (event, block) => {
   event.preventDefault();
-  const mobileNumberInput = document.querySelector('.block.sticky-footer .action-container input');
+  const mobileNumberInput = block.querySelector('.action-container input');
   const mobileNumber = mobileNumberInput.value;
   // Check for valid mobile number format
   const mobileRegex = /^([0]|\+91)?[6789]\d{9}$/;
-  const validationMessage = document.querySelector('.block.sticky-footer .message-container .validation-message');
+  const validationMessage = block.querySelector('.message-container .validation-message');
   if (!mobileNumber || mobileNumber.length < 10 || !mobileRegex.test(mobileNumber)) {
     validationMessage.classList.add('invalid');
   } else {
@@ -101,7 +101,7 @@ export default async function decorate(block) {
   const aLink = a({ class: 'discover-more-button' });
   aLink.href = openAccountUrl;
   aLink.textContent = placeholders[toCamelCase('OpenAccountButton')];
-  aLink.addEventListener('click', handleOpenAccountSubmit);
+  aLink.addEventListener('click', (event) => handleOpenAccountSubmit(event, block));
   openAccountButton.appendChild(aLink);
   stickyFooterContainer.appendChild(openAccountButton);
   stickyFooterWrapper.appendChild(stickyFooterContainer);

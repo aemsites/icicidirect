@@ -8,6 +8,9 @@ const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 const SITE_ROOT = 'https://www.icicidirect.com';
 
+const DELAY_MARTECH_PARAMS = 'delayMartech';
+const LOAD_MARTECH_PARAM = 'loadMartech';
+
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
   return (
@@ -37,6 +40,8 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+  getDeviceType();
+
   getDeviceType();
 
   function isDesktop() {
@@ -316,10 +321,17 @@ function parseResponse(apiResponse) {
   const result = [];
   apiResponse.Data.forEach((item) => {
     const jsonObject = {};
+    let excludeItem = false;
     item.forEach((data) => {
+      if (data.Key === 'TOTAL_COUNT') {
+        excludeItem = true;
+        return;
+      }
       jsonObject[data.Key] = data.Value;
     });
-    result.push(jsonObject);
+    if (!excludeItem) {
+      result.push(jsonObject);
+    }
   });
   return result;
 }
@@ -336,23 +348,25 @@ function debounce(func, timeout = 200) {
 }
 
 async function loadGTM() {
-  const scriptTag = document.createElement('script');
-  scriptTag.innerHTML = `
-        (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-        }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
-    `;
-  document.head.prepend(scriptTag);
+  setTimeout(() => {
+    const scriptTag = document.createElement('script');
+    scriptTag.innerHTML = `
+          (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({
+              'gtm.start':
+                  new Date().getTime(), event: 'gtm.js'
+          });
+          var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async = true;
+          j.src =
+              'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+          f.parentNode.insertBefore(j, f);
+          }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
+      `;
+    document.head.prepend(scriptTag);
+  }, 1000);
 }
 
 function loadAdobeLaunch() {
@@ -375,8 +389,51 @@ function getQueryParam(param) {
   return urlParams.get(param);
 }
 
-function loadAnalyticsEager() {
-  return getQueryParam('analytics') === 'eager';
+function loadAdobeLaunchAndGTM() {
+  const loadMartech = getQueryParam(LOAD_MARTECH_PARAM) ?? 'all';
+  if (loadMartech === 'adobe') {
+    loadAdobeLaunch();
+  } else if (loadMartech === 'gtm') {
+    loadGTM();
+  } else if (loadMartech === 'all') {
+    loadAdobeLaunch();
+    loadGTM();
+  }
+}
+
+function defaultAnalyticsLoadDisabled() {
+  const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
+  const result = delayParam !== null && !Number.isNaN(delayParam);
+  // eslint-disable-next-line no-console
+  console.log('defaultAnalyticsLoadDisabled', result);
+  return result;
+}
+
+function loadAnalyticsDelayed() {
+  let delayTime = -1;
+  const delayMartech = getQueryParam(DELAY_MARTECH_PARAMS);
+  if (delayMartech && !Number.isNaN(parseInt(delayMartech, 10))) {
+    delayTime = parseInt(delayMartech, 10);
+  }
+  return delayTime;
+}
+
+function sanitizeCompanyName(companyName) {
+  const formattedCompanyName = companyName.replace(/[^a-zA-Z0-9 ]/g, '')
+    .trim().replace(/\s+/g, '-').toLowerCase();
+  return formattedCompanyName;
+}
+
+function generateReportLink(companyName, reportId) {
+  const formattedCompanyName = sanitizeCompanyName(companyName);
+  // Trim trailing .0 from RES_REPORT_ID
+  const trimmedReportId = reportId.toString().replace(/\.0$/, '');
+
+  // Generate report link
+  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
+    + `${formattedCompanyName}/${trimmedReportId}`;
+
+  return reportLink;
 }
 
 function getCurrentHost() {
@@ -411,6 +468,10 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
-  loadAnalyticsEager,
   getCurrentHost,
+  loadAnalyticsDelayed,
+  loadAdobeLaunchAndGTM,
+  defaultAnalyticsLoadDisabled,
+  generateReportLink,
+  sanitizeCompanyName,
 };

@@ -2,7 +2,8 @@
 import { loadScript, sampleRUM } from './aem.js';
 import {
   // eslint-disable-next-line import/named
-  loadGTM, loadAdobeLaunch, loadAnalyticsEager,
+  defaultAnalyticsLoadDisabled,
+  loadAdobeLaunchAndGTM,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
@@ -12,7 +13,7 @@ const isSidekickLibrary = (window.location.pathname.includes('srcdoc'));
 
 const onCaptchaloadCallback = () => {
   document.querySelectorAll('.g-recaptcha').forEach((el) => {
-  // eslint-disable-next-line no-undef
+    // eslint-disable-next-line no-undef
     grecaptcha.render(el, {
       sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-', // TODO: Replace with actual sitekey
       callback(token) {
@@ -33,13 +34,8 @@ loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback
 loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
-  if (!loadAnalyticsEager()) {
-    // TODO: Remove delayed loading of GTM once it stops impacting page performance
-    setTimeout(() => {
-      loadGTM();
-    }, 2000);
-
-    loadAdobeLaunch();
+  if (!defaultAnalyticsLoadDisabled()) {
+    loadAdobeLaunchAndGTM();
   }
   loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
 }
