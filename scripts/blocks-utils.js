@@ -369,13 +369,13 @@ async function loadGTM() {
 }
 
 function loadAdobeLaunch() {
-  const adobeLaunchSrc = {
-    dev: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
-    preview: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
-    live: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
-    prod: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
-  };
-  loadScript(adobeLaunchSrc[getEnvType()], { async: true });
+  // const adobeLaunchSrc = {
+  //   dev: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
+  //   preview: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
+  //   live: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
+  //   prod: 'https://assets.adobedtm.com/6196ef54ab10/cc51e2c7aa50/launch-379c9027d113-development.min.js',
+  // };
+  // loadScript(adobeLaunchSrc[getEnvType()], { async: true });
 }
 
 /**
