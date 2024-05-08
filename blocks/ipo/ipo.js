@@ -1,9 +1,7 @@
 import {
   createPictureElement,
-  // eslint-disable-next-line no-unused-vars
   getDataFromAPI,
-  // eslint-disable-next-line no-unused-vars
-  getResearchAPIUrl, observe, Viewport,
+  getResearchAPIUrl, ICICI_FINOUX_HOST, observe, parseResponse, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
 
@@ -64,14 +62,14 @@ function createIPOCards(track, data, knowMoreButton, cardWidth) {
     const logoWrapDiv = document.createElement('div');
     logoWrapDiv.classList.add('logo-wrap');
 
-    const logoImg = createPictureElement(item.IPOLogoImage, 'Logo', false);
+    const logoImg = createPictureElement(`${ICICI_FINOUX_HOST}/images/${item.Image}`, item.AltImage, false);
 
     // Append the logo image to the logo wrapper div
     logoWrapDiv.appendChild(logoImg);
 
     // Create the heading element
     const heading = document.createElement('h3');
-    heading.textContent = item.IpoFullName;
+    heading.textContent = item.IpoName;
 
     const ipoDetailsDiv = document.createElement('div');
     ipoDetailsDiv.classList.add('ipo-details');
@@ -79,12 +77,15 @@ function createIPOCards(track, data, knowMoreButton, cardWidth) {
     // Create and append the opening date paragraph
     const openingDate = document.createElement('p');
     openingDate.classList.add('open-close-text');
-    openingDate.innerHTML = `<strong>Opening Date</strong> ${item.IPOEventStartDate}`;
-
+    openingDate.innerHTML = item.IPOEventStartDate
+      ? `<strong>Opening Date</strong> ${item.IPOEventStartDate}`
+      : '<strong>Opening Date</strong> NA';
     // Create and append the closing date paragraph
     const closingDate = document.createElement('p');
     closingDate.classList.add('open-close-text');
-    closingDate.innerHTML = `<strong>Closing Date</strong> ${item.IPOEventEndDate}`;
+    closingDate.innerHTML = item.IPOEventStartDate
+      ? `<strong>Closing Date</strong> ${item.IPOEventEndDate}`
+      : '<strong>Closing Date</strong> NA';
 
     const btnWrapDiv = document.createElement('div');
     btnWrapDiv.classList.add('btn-wrap');
@@ -135,16 +136,11 @@ async function createIPOPanel(block, knowMoreButton) {
     cardWidth = track.offsetWidth / allowedCardsCount();
   }
   const callback = async (error, apiResponse = []) => {
-    /*  if (apiResponse) {
-      const result = [];
-      const jsonObject = {};
-      apiResponse.Data.LatestUpcomingIpo.forEach((item) => {
-        jsonObject[item.Key] = item.Value;
-      });
-      result.push(jsonObject); */
-    createIPOCards(track, apiResponse, knowMoreButton, cardWidth);
-    createIPODots(block, apiResponse.length, allowedCardsCount(), dots);
-    // }
+    if (apiResponse) {
+      const result = parseResponse(apiResponse);
+      createIPOCards(track, result, knowMoreButton, cardWidth);
+      createIPODots(block, result.length, allowedCardsCount(), dots);
+    }
   };
   getDataFromAPI(getResearchAPIUrl(), 'GetLatestIPO', callback);
 }

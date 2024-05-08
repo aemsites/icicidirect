@@ -113,6 +113,7 @@
     border-top: var(--space-1px) solid var(--background-color-dark-grey);
     width: 100%;
     text-align: center;
+    cursor: pointer;
 }
 
 .block.ipo .ipo-items .ipo-details .open-close-text {
