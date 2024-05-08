@@ -211,8 +211,8 @@ async function getAndApplyRenderDecisions() {
 }
 
 const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.js`, {
-  datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
-  orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
+  datastreamId: '9001',
+  orgId: '0B6930256441790E0A495FFE@AdobeOrg',
 });
 
 if (getMetadata('target')) {
@@ -228,8 +228,8 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
-    await alloyLoadedPromise;
     decorateMain(main);
+    await alloyLoadedPromise;
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
   }
