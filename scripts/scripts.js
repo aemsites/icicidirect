@@ -173,18 +173,18 @@ async function getElementForOffer(offer) {
 }
 
 async function getAndApplyOffers() {
-  // const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
-  // const { options = [], metrics = [] } = response.execute.pageLoad;
-  // onDecoratedElement(() => {
-  //   window.adobe.target.applyOffers({ response });
-  //   // keeping track of offers that were already applied
-  //   options.forEach((o) => o.content = o.content.filter((c) => !getElementForOffer(c)));
-  //   // keeping track of metrics that were already applied
-  //   metrics.map((m, i) => getElementForMetric(m) ? i : -1)
-  //       .filter((i) => i >= 0)
-  //       .reverse()
-  //       .map((i) => metrics.splice(i, 1));
-  // });
+  const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
+  const { options = [], metrics = [] } = response.execute.pageLoad;
+  onDecoratedElement(() => {
+    window.adobe.target.applyOffers({ response });
+    // keeping track of offers that were already applied
+    options.forEach((o) => o.content = o.content.filter((c) => !getElementForOffer(c)));
+    // keeping track of metrics that were already applied
+    metrics.map((m, i) => getElementForMetric(m) ? i : -1)
+        .filter((i) => i >= 0)
+        .reverse()
+        .map((i) => metrics.splice(i, 1));
+  });
 }
 
 let atjsPromise = Promise.resolve();
