@@ -172,11 +172,6 @@ async function getElementForOffer(offer) {
   return document.querySelector(selector);
 }
 
-async function getElementForOffer(offer) {
-  const selector = offer.cssSelector || toCssSelector(offer.selector);
-  return document.querySelector(selector);
-}
-
 async function getAndApplyOffers() {
   const response = await window.adobe.target.getOffers({ request: { execute: { pageLoad: {} } } });
   const { options = [], metrics = [] } = response.execute.pageLoad;
