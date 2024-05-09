@@ -604,7 +604,7 @@ function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type)
   }
 }
 
-function addCarouselHeader(carouselContainer, title, dropdowns, type) {
+function addCarouselHeader(carouselContainer, title) {
   const carouselHeader = document.createElement('div');
   carouselHeader.className = 'carousel-header border-box';
   const rowDiv = document.createElement('div');
@@ -620,15 +620,6 @@ function addCarouselHeader(carouselContainer, title, dropdowns, type) {
   dropdownsDiv.className = 'dropdowns col border-box';
   rowDiv.appendChild(dropdownsDiv);
 
-  // eslint-disable-next-line no-restricted-syntax,guard-for-in
-  for (const dropdownsKey in dropdowns) {
-    const items = dropdowns[dropdownsKey];
-    const dropDownEle = createDropdown(items, type);
-    dropdownsDiv.appendChild(dropDownEle);
-    document.addEventListener('click', (event) => {
-      closeAllDropDowns(event.target);
-    });
-  }
 
   carouselHeader.appendChild(rowDiv);
   carouselContainer.appendChild(carouselHeader);
@@ -664,18 +655,6 @@ function addDiscoverLink(carouselBody, discoverLink) {
   }
 }
 
-function restructureDropDown(inputArray) {
-  const restructuredData = {};
-
-  inputArray.forEach((str, index) => {
-    const labels = str.split(', ');
-    const type = `Type${index + 1}`;
-    restructuredData[type] = labels.map((label) => ({ type, label, value: '' }));
-  });
-
-  return restructuredData;
-}
-
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const blockMarkup = readBlockMarkup(block);
@@ -688,9 +667,6 @@ export default async function decorate(block) {
   const highlightDiv = blockMarkup.predication;
   const highlightIcon = blockMarkup.targeticon.querySelector('picture');
   const discoverLink = blockConfig.discoverlink;
-  const dropdowns = Array.isArray(blockConfig.dropdowns)
-    ? blockConfig.dropdowns : [blockConfig.dropdowns].filter(Boolean);
-  const restructuredDropDown = restructureDropDown(dropdowns);
   block.textContent = '';
   block.classList.add('carousel-section');
   addHighLightSection(block, highlightDiv, highlightIcon, type);
@@ -699,7 +675,7 @@ export default async function decorate(block) {
   carouselContainer.className = 'carousel-container border-box';
   block.appendChild(carouselContainer);
 
-  addCarouselHeader(carouselContainer, title, restructuredDropDown, type);
+  addCarouselHeader(carouselContainer, title);
 
   const carouselBody = document.createElement('div');
   carouselBody.className = 'carousel-body border-box';
