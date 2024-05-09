@@ -426,14 +426,14 @@ function updateCardsInView(block, type, recommendationArray, placeholders, margi
       companyObj.riskProfile = !company.RISK_PROFILE ? 'low' : company.RISK_PROFILE;
       companyObj.action = 'Buy';
     } else {
-      companyObj.name = company.COM_NAME;
-      companyObj.targetPrice = !company.TARGET_PRICE ? 'NA' : company.TARGET_PRICE;
+      companyObj.name = company.COM_NAME || company.StockName;
+      companyObj.targetPrice = company.TARGET_PRICE || company.Target_One_Price || 'NA';
       companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
-      companyObj.stopLoss = !company.STOPLOSS_PRICE ? 'NA' : company.STOPLOSS_PRICE;
-      companyObj.action = !company.RATING_TYPE_NM ? 'Buy' : company.RATING_TYPE_NM;
+      companyObj.stopLoss = company.STOPLOSS_PRICE || company.SLTP_Price || 'NA';
+      companyObj.action = company.RATING_TYPE_NM || (company.Call_Type && company.Call_Type.replace('MARGIN – ', '')) || 'Buy';
 
       if (type === 'trading') {
-        companyObj.recoPrice = !company.RECOM_PRICE ? 'NA' : company.RECOM_PRICE;
+        companyObj.recoPrice = company.RECOM_PRICE || company.Recom_From_Price || 'NA';
       } else if (type === 'investing') {
         companyObj.profitPotential = !company.EXP_RETURN ? 'NA%' : `${company.EXP_RETURN}%`;
         // eslint-disable-next-line max-len
