@@ -509,7 +509,7 @@ async function fetchCardsData(block, type, marginActions) {
       if (type === 'oneclickportfolio') {
         resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
       } else {
-        resultData = tradingData.Data.Table;
+        resultData = tradingData.Data.Table ? tradingData.Data.Table : tradingData.Data;
       }
       updateCardsInView(block, type, resultData, placeholders, marginActions);
     }
