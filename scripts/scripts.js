@@ -220,6 +220,34 @@ if (getMetadata('target')) {
 }
 
 /**
+ * Returns script that initializes a queue for each alloy instance,
+ * in order to be ready to receive events before the alloy library is loaded
+ * Documentation
+ * https://experienceleague.adobe.com/docs/experience-platform/edge/fundamentals/installing-the-sdk.html?lang=en#adding-the-code
+ * @type {string}
+ */
+function getAlloyInitScript() {
+  return `!function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=
+  function(){var u=arguments;return new Promise(function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}(window,["alloy"]);`;
+}
+
+/**
+ * Create inline script
+ * @param document
+ * @param element where to create the script element
+ * @param innerHTML the script
+ * @param type the type of the script element
+ * @returns {HTMLScriptElement}
+ */
+function createInlineScript(document, element, innerHTML, type) {
+  const script = document.createElement('script');
+  script.type = type;
+  script.innerHTML = innerHTML;
+  element.appendChild(script);
+  return script;
+}
+
+/**
  * Loads everything needed to get to LCP.
  * @param {Element} doc The container element
  */
@@ -228,8 +256,13 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
+    createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
+    const response = await alloy('configure', {
+      datastreamId: '9001',
+      orgId: '0B6930256441790E0A495FFE@AdobeOrg',
+    });
+    console.log('Alloy configured', JSON.stringify(response));
     decorateMain(main);
-    await alloyLoadedPromise;
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
   }
