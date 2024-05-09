@@ -469,7 +469,7 @@ async function fetchCardsData(block, type, marginActions) {
   toggleBtn.forEach((btn) => {
     if (btn.dataset.type === 'rating') {
       rating = btn.dataset.value;
-    } else if (btn.dataset.type === 'timeFrame') {
+    } else if (btn.dataset.type === 'timeFrame' || btn.dataset.type === 'timeframe') {
       timeFrame = btn.dataset.value;
     } else if (btn.dataset.type === 'option') {
       option = btn.dataset.value;
