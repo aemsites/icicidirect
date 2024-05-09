@@ -620,7 +620,6 @@ function addCarouselHeader(carouselContainer, title) {
   dropdownsDiv.className = 'dropdowns col border-box';
   rowDiv.appendChild(dropdownsDiv);
 
-
   carouselHeader.appendChild(rowDiv);
   carouselContainer.appendChild(carouselHeader);
 }
