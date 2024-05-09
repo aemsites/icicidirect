@@ -138,7 +138,7 @@ function initWebSDK(path, config) {
     import(path)
       .then(() => {
         console.log('Alloy SDK loaded successfully');
-        return window.alloy('configure', config);
+        // return window.alloy('configure', config);
       })
       .then(() => {
         console.log('Alloy configured successfully');
@@ -258,10 +258,11 @@ async function loadEager(doc) {
   if (main) {
     createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
     const response = await alloy('configure', {
-      datastreamId: '9001',
-      orgId: '0B6930256441790E0A495FFE@AdobeOrg',
+      datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
+      orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
     });
     console.log('Alloy configured', JSON.stringify(response));
+    // await getAndApplyRenderDecisions();
     decorateMain(main);
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
