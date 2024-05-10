@@ -189,10 +189,11 @@ async function getAndApplyRenderDecisions() {
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-  propositions.forEach((p) => {
+  const clonedPropositions = Object.assign([], propositions);
+  clonedPropositions.forEach((p) => {
     p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
   });
-  
+
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
     // keep track of propositions that were applied
