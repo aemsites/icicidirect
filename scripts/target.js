@@ -135,7 +135,7 @@ async function fetchOffers(client, sessionId, useProxy) {
         body: JSON.stringify(payload),
     };
 
-    const host = useProxy ? '/' : `https://${client}.tt.omtrdc.net/`;
+    const host = 'https://icicidirect-secure-worker.franklin-prod.workers.dev/'; // useProxy ? '/' : `https://${client}.tt.omtrdc.net/`;
     console.debug(`Using target host: ${host}`); // eslint-disable-line no-console
     const response = await fetch(`${host}rest/v1/delivery?client=${client}&sessionId=${sessionId}`, options);
     if (!response.ok) {
