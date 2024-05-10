@@ -5,6 +5,7 @@ import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import {
   getOriginUrl,
   getResearchAPIUrl,
+  handleNoResults,
   parseResponse,
   postFormData,
 } from '../../scripts/blocks-utils.js';
@@ -112,7 +113,13 @@ export default async function decorate(block) {
       formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '5' }));
       // eslint-disable-next-line consistent-return
       postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
-        if (apiResponse) {
+        if (error || !apiResponse) {
+          const noResultsContainer = document.createElement('div');
+          noResultsContainer.classList.add('no-results-container');
+          const buttonDiv = block.querySelector('.button-wrapper');
+          block.insertBefore(noResultsContainer, buttonDiv);
+          handleNoResults(block, '.no-results-container');
+        } else {
           const jsonResult = parseResponse(apiResponse);
           if (block.classList.contains('image-link-slider')) {
             renderImageLinkVariant(jsonResult, carouselItems, block?.dataset?.maxLimit);

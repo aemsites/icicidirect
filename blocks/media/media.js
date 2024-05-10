@@ -5,6 +5,7 @@ import {
   parseResponse,
   Viewport,
   SITE_ROOT, readBlockMarkup,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
@@ -219,7 +220,9 @@ async function createMediaPanel(block) {
   const apiKey = block.getAttribute('api-key').toLowerCase();
   /* eslint-disable no-loop-func */
   const callback = async (error, apiResponse = []) => {
-    if (apiResponse) {
+    if (error || !apiResponse) {
+      handleNoResults(block, '.slider');
+    } else {
       const jsonResult = parseResponse(apiResponse);
       createMediaCards(track, jsonResult, apiKey, cardWidth);
       createMediaDots(jsonResult.length, allowedCardsCount(), dots);

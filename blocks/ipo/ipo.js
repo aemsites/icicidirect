@@ -3,7 +3,7 @@ import {
   // eslint-disable-next-line no-unused-vars
   getDataFromAPI,
   // eslint-disable-next-line no-unused-vars
-  getResearchAPIUrl, observe, Viewport,
+  getResearchAPIUrl, handleNoResults, observe, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
 import { getHostUrl } from '../../scripts/mockapi.js';
@@ -143,8 +143,12 @@ async function createIPOPanel(block, knowMoreButton) {
         jsonObject[item.Key] = item.Value;
       });
       result.push(jsonObject); */
-    createIPOCards(track, apiResponse, knowMoreButton, cardWidth);
-    createIPODots(block, apiResponse.length, allowedCardsCount(), dots);
+    if (error || !apiResponse || apiResponse.length === 0) {
+      handleNoResults(block, '.slider');
+    } else {
+      createIPOCards(track, apiResponse, knowMoreButton, cardWidth);
+      createIPODots(block, apiResponse.length, allowedCardsCount(), dots);
+    }
     // }
   };
   /** getDataFromAPI(getResearchAPIUrl(), 'GetLatestIPO', callback);* */
