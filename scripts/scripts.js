@@ -200,7 +200,7 @@ async function getAndApplyRenderDecisions() {
 
   const heroblock = document.querySelector('hero-slider');
   if (heroblock) {
-    heroblock.style.visibility = 'visible';
+    // heroblock.style.visibility = 'visible';
   }
 
   // Reporting is deferred to avoid long tasks
@@ -261,7 +261,7 @@ function createInlineScript(document, element, innerHTML, type) {
 async function loadEager(doc) {
   const heroblock = document.querySelector('hero-slider');
   if (heroblock) {
-    heroblock.style.visibility = 'hidden';
+    // heroblock.style.visibility = 'hidden';
   }
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
