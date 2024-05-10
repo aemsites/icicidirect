@@ -180,6 +180,7 @@ function toCssSelector(selector) {
 async function getElementForProposition(proposition) {
   const selector = proposition.data.prehidingSelector
       || toCssSelector(proposition.data.selector);
+  console.log('selector:', selector);
   return document.querySelector(selector);
 }
 
