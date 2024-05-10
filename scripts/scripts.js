@@ -198,9 +198,9 @@ async function getAndApplyRenderDecisions() {
     });
   });
 
-  const heroblock = document.querySelector('hero-slider');
+  const heroblock = document.querySelector('.hero-slider-wrapper');
   if (heroblock) {
-    // heroblock.style.visibility = 'visible';
+    heroblock.style.visibility = 'visible';
   }
 
   // Reporting is deferred to avoid long tasks
@@ -259,9 +259,9 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  const heroblock = document.querySelector('hero-slider');
+  const heroblock = document.querySelector('.hero-slider-wrapper');
   if (heroblock) {
-    // heroblock.style.visibility = 'hidden';
+    heroblock.style.visibility = 'visible';
   }
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
