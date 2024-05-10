@@ -1,5 +1,5 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
-import { createElement, observe } from '../../scripts/blocks-utils.js';
+import { createElement, handleNoResults, observe } from '../../scripts/blocks-utils.js';
 import { fetchRapidResultMockData } from '../../scripts/mockapi.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
@@ -27,6 +27,14 @@ function formatDate(date) {
 
 async function decorateCards(block, placeholders, cardCount, previousNode) {
   const queryObj = await fetchRapidResultMockData();
+  if (!queryObj) {
+    const mainWrapper = block.querySelector('.main-wrapper');
+    const mainContent = document.createElement('div');
+    mainContent.className = 'no-results-container';
+    mainWrapper.insertBefore(mainContent, previousNode);
+    handleNoResults(block, '.no-results-container');
+    return;
+  }
   const results = queryObj.map((el) => {
     const elArr = el.PublishedOnDate.split(' ');
     const publishDate = elArr[0];

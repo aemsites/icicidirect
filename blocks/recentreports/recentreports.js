@@ -3,7 +3,7 @@ import {
 } from '../../scripts/aem.js';
 import {
   createElement, observe, getResearchAPIUrl, getDataFromAPI, readBlockMarkup,
-  Viewport, generateReportLink, sanitizeCompanyName, ICICI_FINOUX_HOST,
+  Viewport, generateReportLink, sanitizeCompanyName, ICICI_FINOUX_HOST, handleNoResults,
 } from '../../scripts/blocks-utils.js';
 
 function generateTitleLink(company) {
@@ -221,7 +221,9 @@ function addCardsDiv(block, blockConfig) {
     carouselItems.classList.add('carousel-items');
     createCarouselDiv(block);
     getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
-      if (recentReportsDataArray) {
+      if (error || recentReportsDataArray.length === 0) {
+        handleNoResults(block, '.carousel-wrapper');
+      } else {
         renderRecentReportsCards(
           recentReportsDataArray,
           carouselItems,

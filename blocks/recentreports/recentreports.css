@@ -19,6 +19,10 @@
   height: 17.5rem;
 }
 
+.block.block.recentreports .carousel-wrapper.no-results {
+  height: unset;
+}
+
 .block.recentreports .box h3 a {
   color: var(--primary);
   height: var(--heading-font-size-xxl);
