@@ -112,14 +112,14 @@ async function fetchOffers(client, sessionId, useProxy) {
         context: {
             channel: 'web',
             address: {
-                url,
+                'https://target-alloy-1--icicidirect--aemsites.hlx.live/research/equity',
             },
-            userAgent: navigator.userAgent,
-            // clientHints: await getClientHints(),
-            window: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-            },
+            // userAgent: navigator.userAgent,
+            // // clientHints: await getClientHints(),
+            // window: {
+            //     width: window.innerWidth,
+            //     height: window.innerHeight,
+            // },
         },
         execute: {
             pageLoad: {},
