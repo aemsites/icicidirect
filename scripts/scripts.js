@@ -189,10 +189,6 @@ async function getAndApplyRenderDecisions() {
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-  // const clonedPropositions = Object.assign([], propositions);
-  // clonedPropositions.forEach((p) => {
-  //   p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
-  // });
 
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
@@ -201,6 +197,11 @@ async function getAndApplyRenderDecisions() {
       p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
     });
   });
+
+  const heroblock = document.querySelector('hero-slider');
+  if (heroblock) {
+    heroblock.style.visibility = 'visible';
+  }
 
   // Reporting is deferred to avoid long tasks
   window.setTimeout(() => {
@@ -258,6 +259,10 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
+  const heroblock = document.querySelector('hero-slider');
+  if (heroblock) {
+    heroblock.style.visibility = 'hidden';
+  }
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
@@ -267,7 +272,7 @@ async function loadEager(doc) {
       datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
       orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
     });
-    //console.log('Alloy configured', JSON.stringify(response));
+    // console.log('Alloy configured', JSON.stringify(response));
     // await getAndApplyRenderDecisions();
     decorateMain(main);
     document.body.classList.add('appear');
