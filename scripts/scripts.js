@@ -222,10 +222,7 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
-const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.js`, {
-  datastreamId: '9001',
-  orgId: '0B6930256441790E0A495FFE@AdobeOrg',
-});
+const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.js`, {});
 
 if (getMetadata('target')) {
   alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
