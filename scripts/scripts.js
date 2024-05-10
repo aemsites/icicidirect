@@ -222,13 +222,13 @@ async function loadEager(doc) {
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
 
-    await alloyLoadedPromise;
-    await new Promise((res) => {
-      window.requestAnimationFrame(async () => {
-        await waitForLCP(LCP_BLOCKS);
-        res();
-      });
-    });
+    // await alloyLoadedPromise;
+    // await new Promise((res) => {
+    //   window.requestAnimationFrame(async () => {
+    //     await waitForLCP(LCP_BLOCKS);
+    //     res();
+    //   });
+    // });
   }
 
   try {
