@@ -193,10 +193,15 @@ async function getAndApplyRenderDecisions() {
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
 
-    const heroblock = document.querySelector('.hero-slider');
-    if (heroblock && heroblock.style.visibility !== 'visible') {
-      heroblock.style.visibility = 'visible';
+    const heroBlocks = document.querySelectorAll('.target-driven');
+    if (heroBlocks) {
+      heroBlocks.forEach((block) => {
+        if (block.style.visibility !== 'visible') {
+          block.style.visibility = 'visible';
+        }
+      });
     }
+
     // keep track of propositions that were applied
     propositions.forEach((p) => {
       p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
@@ -259,9 +264,11 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  const heroblock = document.querySelector('.hero-slider');
-  if (heroblock) {
-    heroblock.style.visibility = 'hidden';
+  const heroBlocks = document.querySelectorAll('.target-driven');
+  if (heroBlocks) {
+    heroBlocks.forEach((block) => {
+      block.style.visibility = 'hidden';
+    });
   }
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
