@@ -193,7 +193,7 @@ async function getAndApplyRenderDecisions() {
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
 
-    const heroblock = document.querySelector('.hero-slider-wrapper');
+    const heroblock = document.querySelector('.hero-slider');
     if (heroblock && heroblock.style.visibility !== 'visible') {
       heroblock.style.visibility = 'visible';
     }
@@ -259,7 +259,7 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  const heroblock = document.querySelector('.hero-slider-wrapper');
+  const heroblock = document.querySelector('.hero-slider');
   if (heroblock) {
     heroblock.style.visibility = 'hidden';
   }
