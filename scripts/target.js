@@ -223,6 +223,11 @@ function displayOffers(section, offers) {
                 case 'setHtml':
                     console.debug('setting content of', targetElement); // eslint-disable-line no-console
                     targetElement.innerHTML = content;
+                    if (section.style.visibility === 'hidden') {
+                        // eslint-disable-next-line no-console
+                        console.debug('revealing section', section);
+                        section.style.visibility = 'visible';
+                    }
                     break;
                 default:
                     console.warn(`unsupported action type ${type}`); // eslint-disable-line no-console
