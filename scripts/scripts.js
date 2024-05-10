@@ -133,6 +133,16 @@ export function decorateMain(main) {
   decorateQuickLinks(main);
 }
 
+!function (n, o) {
+  o.forEach(function (o) {
+    n[o] || ((n.__alloyNS = n.__alloyNS ||
+      []).push(o), n[o] = function () {
+        var u = arguments; return new Promise(
+          function (i, l) { n[o].q.push([i, l, u]) })
+      }, n[o].q = [])
+  })
+}(window, ["alloy"]);
+
 function initWebSDK(path, config) {
   return new Promise((resolve) => {
     import(path)
@@ -201,12 +211,12 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
-// const alloyLoadedPromise = initWebSDK('./alloy.js', {
-//   datastreamId: '10ccbe2e-b21f-48d6-8e53-2d433fef74ec',
-//   orgId: '42BB036355AD62157F000101@AdobeOrg',
-// });
+const alloyLoadedPromise = initWebSDK('./alloy.js', {
+  datastreamId: '10ccbe2e-b21f-48d6-8e53-2d433fef74ec',
+  orgId: '42BB036355AD62157F000101@AdobeOrg',
+});
 // if (getMetadata('target')) {
-// alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
+alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
 // }
 
 /**
@@ -222,13 +232,13 @@ async function loadEager(doc) {
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
 
-    // await alloyLoadedPromise;
-    // await new Promise((res) => {
-    //   window.requestAnimationFrame(async () => {
-    //     await waitForLCP(LCP_BLOCKS);
-    //     res();
-    //   });
-    // });
+    await alloyLoadedPromise;
+    await new Promise((res) => {
+      window.requestAnimationFrame(async () => {
+        await waitForLCP(LCP_BLOCKS);
+        res();
+      });
+    });
   }
 
   try {
