@@ -192,16 +192,16 @@ async function getAndApplyRenderDecisions() {
 
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
+
+    const heroblock = document.querySelector('.hero-slider-wrapper');
+    if (heroblock && heroblock.style.visibility !== 'visible') {
+      heroblock.style.visibility = 'visible';
+    }
     // keep track of propositions that were applied
     propositions.forEach((p) => {
       p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
     });
   });
-
-  const heroblock = document.querySelector('.hero-slider-wrapper');
-  if (heroblock) {
-    heroblock.style.visibility = 'visible';
-  }
 
   // Reporting is deferred to avoid long tasks
   window.setTimeout(() => {
