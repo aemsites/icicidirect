@@ -206,7 +206,7 @@ const alloyLoadedPromise = initWebSDK('./alloy.js', {
   orgId: '42BB036355AD62157F000101@AdobeOrg',
 });
 // if (getMetadata('target')) {
-alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
+// alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
 // }
 
 /**
