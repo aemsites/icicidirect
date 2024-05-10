@@ -201,10 +201,10 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
-const alloyLoadedPromise = initWebSDK('./alloy.js', {
-  datastreamId: '10ccbe2e-b21f-48d6-8e53-2d433fef74ec',
-  orgId: '42BB036355AD62157F000101@AdobeOrg',
-});
+// const alloyLoadedPromise = initWebSDK('./alloy.js', {
+//   datastreamId: '10ccbe2e-b21f-48d6-8e53-2d433fef74ec',
+//   orgId: '42BB036355AD62157F000101@AdobeOrg',
+// });
 // if (getMetadata('target')) {
 // alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
 // }
