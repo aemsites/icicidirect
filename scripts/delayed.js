@@ -35,7 +35,7 @@ loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
   if (!defaultAnalyticsLoadDisabled()) {
-    loadAdobeLaunchAndGTM();
+    // loadAdobeLaunchAndGTM();
   }
   loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
 }
