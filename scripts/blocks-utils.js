@@ -40,6 +40,7 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+  getDeviceType();
 
   getDeviceType();
 
@@ -429,10 +430,19 @@ function generateReportLink(companyName, reportId) {
   const trimmedReportId = reportId.toString().replace(/\.0$/, '');
 
   // Generate report link
-  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
+  const reportLink = `${ICICI_FINOUX_HOST}/research/equity/`
     + `${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
+}
+
+function getCurrentHost() {
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
+  return hostUrl;
 }
 
 export {
@@ -458,6 +468,7 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
+  getCurrentHost,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
   defaultAnalyticsLoadDisabled,
