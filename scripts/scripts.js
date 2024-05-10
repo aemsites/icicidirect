@@ -261,7 +261,7 @@ function createInlineScript(document, element, innerHTML, type) {
 async function loadEager(doc) {
   const heroblock = document.querySelector('.hero-slider-wrapper');
   if (heroblock) {
-    heroblock.style.visibility = 'visible';
+    heroblock.style.visibility = 'hidden';
   }
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
