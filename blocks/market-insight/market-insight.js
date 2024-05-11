@@ -3,9 +3,6 @@ import {
   createElement, observe, postFormData, getResearchAPIUrl, parseResponse, SITE_ROOT,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
-import {
-  applyRenderDecisionsForDynamicBlocks,
-} from '../../scripts/scripts.js';
 
 const apiName = 'GetMarketInsights';
 const defaultCardsCount = 3;
@@ -116,7 +113,6 @@ async function decorateCards(block, placeholders, cards, cardCount) {
     const formattedData = parseResponse(GetMarketInsights);
     const results = sortResult(formattedData);
     buildCards(results, cards, cardCount, placeholders);
-    applyRenderDecisionsForDynamicBlocks();
   }, apiName);
 }
 

@@ -5,9 +5,6 @@ import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
-import {
-  applyRenderDecisionsForDynamicBlocks,
-} from '../../scripts/scripts.js';
 
 function createMarketCommentaryCard(cardData, placeholders) {
   const {
@@ -116,7 +113,6 @@ async function generateCardsView(block, placeholders) {
       blogsContainer.appendChild(card);
     });
     updateDots(block);
-    applyRenderDecisionsForDynamicBlocks();
   });
 }
 export default async function decorate(block) {
