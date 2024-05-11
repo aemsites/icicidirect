@@ -184,11 +184,14 @@ async function getElementForProposition(proposition) {
   return document.querySelector(selector);
 }
 
+let targetPropositions = [];
+
 async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
+  targetPropositions = response;
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
     // keep track of propositions that were applied
@@ -214,8 +217,8 @@ async function getAndApplyRenderDecisions() {
 export async function applyRenderDecisionsForDynamicBlocks() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
-  const response = await window.alloy('sendEvent', { renderDecisions: true });
-  const { propositions } = response;
+  // const response = await window.alloy('sendEvent', { renderDecisions: true });
+  const propositions = targetPropositions;
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
     // keep track of propositions that were applied
