@@ -11,6 +11,7 @@ import {
   loadBlocks,
   loadCSS,
   loadScript,
+  getMetadata,
 } from './aem.js';
 
 import {
@@ -216,9 +217,9 @@ const alloyLoadedPromise = initWebSDK('./alloy.min.js', {
   datastreamId: '10ccbe2e-b21f-48d6-8e53-2d433fef74ec',
   orgId: '42BB036355AD62157F000101@AdobeOrg',
 });
-// if (getMetadata('target')) {
-alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
-// }
+if (getMetadata('target')) {
+  alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
+}
 
 /**
  * Loads everything needed to get to LCP.

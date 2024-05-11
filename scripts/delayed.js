@@ -3,7 +3,6 @@ import { loadScript, sampleRUM } from './aem.js';
 import {
   // eslint-disable-next-line import/named
   defaultAnalyticsLoadDisabled,
-  loadAdobeLaunchAndGTM,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
