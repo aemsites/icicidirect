@@ -185,14 +185,11 @@ async function getElementForProposition(proposition) {
   return document.querySelector(selector);
 }
 
-let targetPropositions = [];
-
 async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-  targetPropositions = propositions;
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
     // keep track of propositions that were applied
@@ -213,17 +210,6 @@ async function getAndApplyRenderDecisions() {
       },
     });
   });
-}
-
-export async function applyRenderDecisionsForDynamicBlocks() {
-  // Re-render propositions
-  // onDecoratedElement(async () => {
-  //   await window.alloy('applyPropositions', { targetPropositions });
-  //   // keep track of propositions that were applied
-  //   targetPropositions.forEach((p) => {
-  //     p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
-  //   });
-  // });
 }
 
 const alloyLoadedPromise = initWebSDK('./alloy.min.js', {
