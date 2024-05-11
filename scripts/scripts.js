@@ -198,17 +198,17 @@ async function getAndApplyRenderDecisions() {
   });
 
   // Reporting is deferred to avoid long tasks
-  window.setTimeout(() => {
-    // Report shown decisions
-    window.alloy('sendEvent', {
-      xdm: {
-        eventType: 'decisioning.propositionDisplay',
-        _experience: {
-          decisioning: { propositions },
-        },
-      },
-    });
-  });
+  // window.setTimeout(() => {
+  //   // Report shown decisions
+  //   window.alloy('sendEvent', {
+  //     xdm: {
+  //       eventType: 'decisioning.propositionDisplay',
+  //       _experience: {
+  //         decisioning: { propositions },
+  //       },
+  //     },
+  //   });
+  // });
 }
 
 export async function applyRenderDecisionsForDynamicBlocks() {
