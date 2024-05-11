@@ -133,9 +133,8 @@ async function generateCardsView(block) {
       blogsColumn.appendChild(blogCard2);
       blogsContainer.appendChild(blogsColumn);
     }
+    applyRenderDecisionsForDynamicBlocks();
   });
-
-  applyRenderDecisionsForDynamicBlocks();
 }
 
 function addDiscoverLink(blogsContainer, discoverMoreAnchor) {
