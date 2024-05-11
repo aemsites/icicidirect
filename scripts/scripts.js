@@ -191,7 +191,7 @@ async function getAndApplyRenderDecisions() {
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-  targetPropositions = response;
+  targetPropositions = propositions;
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
     // keep track of propositions that were applied
