@@ -4,7 +4,7 @@ import {
   createPictureElement, getOriginUrl, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, postFormData,
 } from '../../scripts/blocks-utils.js';
 import {
-  getAndApplyRenderDecisions,
+  applyRenderDecisionsForDynamicBlocks,
 } from '../../scripts/scripts.js';
 
 function createBlogCard(blogData) {
@@ -135,7 +135,7 @@ async function generateCardsView(block) {
     }
   });
 
-  getAndApplyRenderDecisions();
+  applyRenderDecisionsForDynamicBlocks();
 }
 
 function addDiscoverLink(blogsContainer, discoverMoreAnchor) {

@@ -184,10 +184,37 @@ async function getElementForProposition(proposition) {
   return document.querySelector(selector);
 }
 
-export async function getAndApplyRenderDecisions() {
+async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
+  const { propositions } = response;
+  onDecoratedElement(async () => {
+    await window.alloy('applyPropositions', { propositions });
+    // keep track of propositions that were applied
+    propositions.forEach((p) => {
+      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
+    });
+  });
+
+  // Reporting is deferred to avoid long tasks
+  window.setTimeout(() => {
+    // Report shown decisions
+    window.alloy('sendEvent', {
+      xdm: {
+        eventType: 'decisioning.propositionDisplay',
+        _experience: {
+          decisioning: { propositions },
+        },
+      },
+    });
+  });
+}
+
+export async function applyRenderDecisionsForDynamicBlocks() {
+  // Get the decisions, but don't render them automatically
+  // so we can hook up into the AEM EDS page load sequence
+  const response = await window.alloy('sendEvent', { renderDecisions: true });
   const { propositions } = response;
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
