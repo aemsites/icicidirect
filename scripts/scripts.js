@@ -133,15 +133,15 @@ export function decorateMain(main) {
   decorateQuickLinks(main);
 }
 
-!function (n, o) {
-  o.forEach(function (o) {
-    n[o] || ((n.__alloyNS = n.__alloyNS ||
-      []).push(o), n[o] = function () {
-        var u = arguments; return new Promise(
-          function (i, l) { n[o].q.push([i, l, u]) })
-      }, n[o].q = [])
-  })
-}(window, ["alloy"]);
+// !function (n, o) {
+//   o.forEach(function (o) {
+//     n[o] || ((n.__alloyNS = n.__alloyNS ||
+//       []).push(o), n[o] = function () {
+//         var u = arguments; return new Promise(
+//           function (i, l) { n[o].q.push([i, l, u]) })
+//       }, n[o].q = [])
+//   })
+// }(window, ["alloy"]);
 
 function initWebSDK(path, config) {
   return new Promise((resolve) => {
@@ -211,7 +211,7 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
-const alloyLoadedPromise = initWebSDK('./alloy.js', {
+const alloyLoadedPromise = initWebSDK('./alloy.min.js', {
   datastreamId: '10ccbe2e-b21f-48d6-8e53-2d433fef74ec',
   orgId: '42BB036355AD62157F000101@AdobeOrg',
 });
