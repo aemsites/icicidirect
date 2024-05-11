@@ -16,7 +16,6 @@ import {
 import {
   decorateQuickLinks,
   defaultAnalyticsLoadDisabled,
-  loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
@@ -133,6 +132,7 @@ export function decorateMain(main) {
   decorateQuickLinks(main);
 }
 
+/* eslint-disable */
 !function (n, o) {
   o.forEach(function (o) {
     n[o] || ((n.__alloyNS = n.__alloyNS ||
@@ -142,6 +142,7 @@ export function decorateMain(main) {
       }, n[o].q = [])
   })
 }(window, ["alloy"]);
+/* eslint-enable */
 
 function initWebSDK(path, config) {
   return new Promise((resolve) => {
@@ -216,13 +217,13 @@ async function getAndApplyRenderDecisions() {
 
 export async function applyRenderDecisionsForDynamicBlocks() {
   // Re-render propositions
-  onDecoratedElement(async () => {
-    await window.alloy('applyPropositions', { targetPropositions });
-    // keep track of propositions that were applied
-    targetPropositions.forEach((p) => {
-      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
-    });
-  });
+  // onDecoratedElement(async () => {
+  //   await window.alloy('applyPropositions', { targetPropositions });
+  //   // keep track of propositions that were applied
+  //   targetPropositions.forEach((p) => {
+  //     p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
+  //   });
+  // });
 }
 
 const alloyLoadedPromise = initWebSDK('./alloy.min.js', {
