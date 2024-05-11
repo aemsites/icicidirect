@@ -3,6 +3,9 @@ import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts
 import {
   createPictureElement, getOriginUrl, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, postFormData,
 } from '../../scripts/blocks-utils.js';
+import {
+  getAndApplyRenderDecisions,
+} from '../../scripts/scripts.js';
 
 function createBlogCard(blogData) {
   const { imageUrl } = blogData;
@@ -131,6 +134,8 @@ async function generateCardsView(block) {
       blogsContainer.appendChild(blogsColumn);
     }
   });
+
+  getAndApplyRenderDecisions();
 }
 
 function addDiscoverLink(blogsContainer, discoverMoreAnchor) {

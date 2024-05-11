@@ -184,7 +184,7 @@ async function getElementForProposition(proposition) {
   return document.querySelector(selector);
 }
 
-async function getAndApplyRenderDecisions() {
+export async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
   const response = await window.alloy('sendEvent', { renderDecisions: false });
