@@ -201,33 +201,6 @@ async function getAndApplyRenderDecisions() {
   });
 
   // Reporting is deferred to avoid long tasks
-  // window.setTimeout(() => {
-  //   // Report shown decisions
-  //   window.alloy('sendEvent', {
-  //     xdm: {
-  //       eventType: 'decisioning.propositionDisplay',
-  //       _experience: {
-  //         decisioning: { propositions },
-  //       },
-  //     },
-  //   });
-  // });
-}
-
-export async function applyRenderDecisionsForDynamicBlocks() {
-  // Get the decisions, but don't render them automatically
-  // so we can hook up into the AEM EDS page load sequence
-  // const response = await window.alloy('sendEvent', { renderDecisions: true });
-  const propositions = targetPropositions;
-  onDecoratedElement(async () => {
-    await window.alloy('applyPropositions', { propositions });
-    // keep track of propositions that were applied
-    propositions.forEach((p) => {
-      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
-    });
-  });
-
-  // Reporting is deferred to avoid long tasks
   window.setTimeout(() => {
     // Report shown decisions
     window.alloy('sendEvent', {
@@ -237,6 +210,17 @@ export async function applyRenderDecisionsForDynamicBlocks() {
           decisioning: { propositions },
         },
       },
+    });
+  });
+}
+
+export async function applyRenderDecisionsForDynamicBlocks() {
+  // Re-render propositions
+  onDecoratedElement(async () => {
+    await window.alloy('applyPropositions', { targetPropositions });
+    // keep track of propositions that were applied
+    targetPropositions.forEach((p) => {
+      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
     });
   });
 }
