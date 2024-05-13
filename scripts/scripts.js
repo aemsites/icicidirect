@@ -255,7 +255,7 @@ async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
         pageViews: {
           value: 1,
         },
-        name: `${document.title}`,
+        name: `testpage`,
       },
     },
     [CUSTOM_SCHEMA_NAMESPACE]: {
