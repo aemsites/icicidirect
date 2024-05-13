@@ -6,6 +6,10 @@ main .section .block.image-link-slider.gray-scale-bg {
     background: var(--background-color-gray-scale);
 }
 
+main .section .block.image-link-slider .no-results-container {
+  padding: 0 0 1.5rem;
+}
+
 main .section .block.image-link-slider.align-button-center .button-container {
     text-align: center;
 }

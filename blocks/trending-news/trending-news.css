@@ -35,6 +35,10 @@
     transform: translate3d(0, 0, 0);
 }
 
+.block.trending-news .news-slider.no-results {
+    margin-left: 1rem;
+}
+
 .block.trending-news .news-slider .news-track > * {
     opacity: 0;
  }

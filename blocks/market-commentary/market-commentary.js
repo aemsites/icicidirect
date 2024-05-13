@@ -1,5 +1,6 @@
 import {
-  getDataFromAPI, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, sanitizeCompanyName, Viewport,
+  getDataFromAPI, getResearchAPIUrl, handleNoResults, ICICI_FINOUX_HOST, observe,
+  sanitizeCompanyName, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
@@ -131,6 +132,8 @@ async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
     if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
+      const element = block.querySelector('.market-commentary-container');
+      handleNoResults(element);
       return;
     }
     marketCommentaryData.Data.Table.forEach((cardData) => {

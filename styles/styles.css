@@ -521,6 +521,11 @@ a.discover-more, a.discover-more-button:any-link {
   content: "\e900";
 }
 
+.no-results {
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
+}
+
 main img {
   max-width: 100%;
   width: auto;

@@ -3,6 +3,7 @@ import {
   getResearchAPIUrl, getCurrentHost,
   readBlockMarkup, observe, postFormData,
   Viewport, fetchData, generateReportLink,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 
 const isDesktop = Viewport.isDesktop();
@@ -504,7 +505,10 @@ async function fetchCardsData(block, type, marginActions) {
 
   const placeholders = await fetchPlaceholders();
   postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
-    if (error === null && tradingData.Data) {
+    if (error || !tradingData || !tradingData.Data) {
+      const element = block.querySelector('.carousel-slider');
+      handleNoResults(element);
+    } else {
       let resultData;
       if (type === 'oneclickportfolio') {
         resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);

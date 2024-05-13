@@ -10,6 +10,10 @@
     overflow: hidden;
 }
 
+.block.market-commentary .market-commentary-container.no-results {
+    padding-left: 1rem;
+}
+
 .block.market-commentary .market-commentary-track {
     display: flex;
     flex-direction: row;
