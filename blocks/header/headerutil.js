@@ -1,4 +1,4 @@
-import { SITE_ROOT } from '../../scripts/blocks-utils.js';
+import { SITE_ROOT, CONTENT_FEED_URL, SOCKET_IO_SCRIPT } from '../../scripts/blocks-utils.js';
 
 const ENIITY_TYPE = {
   ALL: 'all',
@@ -299,7 +299,6 @@ const processBondsType = (items) => {
 };
 
 function loadStockFeed(gaTokenId) {
-  const feedURL = 'https://contentfeeds.icicidirect.com/';
   let socket = null;
   const nifty50 = '4.1!NIFTY 50';
   const sensex = '1.1!SENSEX';
@@ -380,8 +379,8 @@ function loadStockFeed(gaTokenId) {
   }
 
   if (feedFlag) {
-    getScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js', () => {
-      connect(feedURL, gaTokenId);
+    getScript(SOCKET_IO_SCRIPT, () => {
+      connect(CONTENT_FEED_URL, gaTokenId);
       watch([nifty50, sensex]);
       onChange(async (stockData) => {
         if (stockData[0].includes(nifty50)) {
