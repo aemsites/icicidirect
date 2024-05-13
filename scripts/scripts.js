@@ -222,7 +222,7 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
-const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.js`, {});
+const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`, {});
 
 if (getMetadata('target')) {
   alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
