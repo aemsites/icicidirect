@@ -1,8 +1,8 @@
 import {
   createPictureElement,
   getDataFromAPI,
-  getResearchAPIUrl, ICICI_FINOUX_HOST, observe, parseResponse, Viewport,
-  handleNoResults,
+  getResearchAPIUrl, observe, Viewport,
+  handleNoResults, getOriginUrl,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
 
@@ -63,14 +63,14 @@ function createIPOCards(track, data, knowMoreButton, cardWidth) {
     const logoWrapDiv = document.createElement('div');
     logoWrapDiv.classList.add('logo-wrap');
 
-    const logoImg = createPictureElement(`${ICICI_FINOUX_HOST}/images/${item.Image}`, item.AltImage, false);
+    const logoImg = createPictureElement(`${getOriginUrl()}/images/${item.IPOLogoImage}`, item.IPOImageAlt ? item.IPOImageAlt : 'ipo_logo', false);
 
     // Append the logo image to the logo wrapper div
     logoWrapDiv.appendChild(logoImg);
 
     // Create the heading element
     const heading = document.createElement('h3');
-    heading.textContent = item.IpoName;
+    heading.textContent = item.IpoFullName;
 
     const ipoDetailsDiv = document.createElement('div');
     ipoDetailsDiv.classList.add('ipo-details');
@@ -140,8 +140,13 @@ async function createIPOPanel(block, knowMoreButton) {
     if (error || !apiResponse) {
       const element = block.querySelector('.slider');
       handleNoResults(element);
-    } else {
-      const result = parseResponse(apiResponse);
+    } else if (apiResponse) {
+      const result = [];
+      const jsonObject = {};
+      apiResponse.Data.LatestUpcomingIpo.forEach((item) => {
+        jsonObject[item.Key] = item.Value;
+      });
+      result.push(jsonObject);
       createIPOCards(track, result, knowMoreButton, cardWidth);
       createIPODots(block, result.length, allowedCardsCount(), dots);
     }
