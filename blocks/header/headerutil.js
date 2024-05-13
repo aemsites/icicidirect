@@ -298,6 +298,109 @@ const processBondsType = (items) => {
   return processedData;
 };
 
+function loadStockFeed(gaTokenId) {
+  const feedURL = 'https://contentfeeds.icicidirect.com/';
+  let socket = null;
+  const nifty50 = '4.1!NIFTY 50';
+  const sensex = '1.1!SENSEX';
+
+  // Get current date in IST timezone
+  const now = new Date();
+  const options = {
+    timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', weekday: 'long', hour12: false,
+  };
+  const formatter = new Intl.DateTimeFormat([], options);
+  const ISTTime = formatter.format(now);
+
+  // Extract day, time from ISTTime
+  const [day, ...timeParts] = ISTTime.split(' ');
+  const time = timeParts.join(' ');
+
+  // Extract hour, minute, and period from time
+  const [hourMinute] = time.split(' ');
+  const [hour, minute] = hourMinute.split(':').map(Number);
+
+  // Set feedFlag based on the time and day
+  const feedFlag = day !== 'Saturday' && day !== 'Sunday' && ((hour > 9 || (hour === 9 && minute >= 15)) && (hour < 15 || (hour === 15 && minute <= 30)));
+
+  const connect = (hostname, token) => {
+    // eslint-disable-next-line no-undef
+    socket = io.connect(hostname, {
+      auth: { token },
+      transports: ['websocket'],
+    });
+  };
+
+  const watch = (symbols) => {
+    socket.emit('join', symbols);
+  };
+
+  const onChange = (callback) => {
+    socket.on('stock', callback);
+  };
+
+  const getScript = (source, callback) => {
+    const script = document.createElement('script');
+    const prior = document.getElementsByTagName('script')[0];
+    script.async = 1;
+    script.src = source;
+    script.onload = callback;
+    prior.parentNode.insertBefore(script, prior);
+  };
+
+  function updateStockInfo(stockName, stockData) {
+    const previousStockValueString = document.querySelector(`.stock-item.${stockName} .share-value`).textContent;
+    const previousStockValue = parseFloat(previousStockValueString.replace(/,/g, ''));
+    const stockValueElement = document.querySelector(`.stock-item.${stockName} .share-value`);
+    const shareChangeSpan = document.querySelector(`.stock-item.${stockName} .share-change`);
+
+    if (stockData[5] > 0) {
+      stockValueElement.classList.remove('negative');
+      stockValueElement.classList.add('positive');
+      shareChangeSpan.classList.remove('share-down');
+      shareChangeSpan.classList.add('share-up');
+    } else if (stockData[5] < 0) {
+      stockValueElement.classList.remove('positive');
+      stockValueElement.classList.add('negative');
+      shareChangeSpan.classList.remove('share-up');
+      shareChangeSpan.classList.add('share-down');
+    }
+
+    if (stockData[2] > previousStockValue) {
+      stockValueElement.classList.remove('negative');
+      stockValueElement.classList.add('positive');
+    } else if (stockData[2] < previousStockValue) {
+      stockValueElement.classList.remove('positive');
+      stockValueElement.classList.add('negative');
+    }
+    // eslint-disable-next-line prefer-destructuring
+    stockValueElement.textContent = stockData[2].toLocaleString();
+    const change = stockData[20] - stockData[2];
+    shareChangeSpan.textContent = `${change.toFixed(2)}(${stockData[5].toFixed(2)}%)`;
+  }
+
+  if (feedFlag) {
+    getScript('https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js', () => {
+      connect(feedURL, gaTokenId);
+      watch([nifty50, sensex]);
+      onChange(async (stockData) => {
+        if (stockData[0].includes(nifty50)) {
+          updateStockInfo('nifty', stockData);
+        } else if (stockData[0].includes(sensex)) {
+          updateStockInfo('sensex', stockData);
+        }
+      });
+    });
+    document.querySelector('.stock-item .spn-date-time').classList.add('market-open');
+  } else {
+    const niftyValue = document.querySelector('.stock-item.nifty .share-value');
+    niftyValue.classList.remove('negative', 'positive');
+    niftyValue.classList.add('market-closed');
+    const sensexValue = document.querySelector('.stock-item.sensex .share-value');
+    sensexValue.classList.remove('negative', 'positive');
+    sensexValue.classList.add('market-closed');
+  }
+}
 export {
   processEquityType,
   processMutualFundsType,
@@ -307,4 +410,5 @@ export {
   processKnowledgeCenterType,
   processBondsType,
   ENIITY_TYPE,
+  loadStockFeed,
 };
