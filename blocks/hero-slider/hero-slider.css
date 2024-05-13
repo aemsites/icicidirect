@@ -8,6 +8,12 @@
   left: 50%;
 } 
 
+
+.block.hero-slider > picture {
+  width: 691px;
+  height: 206px;
+}
+
 .block.hero-slider:not(.carousel){
   height: 100%;
   box-shadow: 0 0 2.5rem var(--space-5px) var(--box-shadow-footer-top-gray);
