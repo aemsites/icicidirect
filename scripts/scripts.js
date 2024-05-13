@@ -235,10 +235,10 @@ async function sendAnalyticsEvent(xdmData) {
     return Promise.resolve();
   }
   // eslint-disable-next-line no-undef
-  return alloy('sendEvent', {
-    documentUnloading: true,
-    xdm: xdmData,
-  });
+  // return alloy('sendEvent', {
+  //   documentUnloading: true,
+  //   xdm: xdmData,
+  // });
 }
 
 /**
