@@ -24,6 +24,12 @@ import { decorateSocialShare } from './social-utils.js';
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
 /**
+ * Customer's XDM schema namespace
+ * @type {string}
+ */
+const CUSTOM_SCHEMA_NAMESPACE = '_sitesinternal';
+
+/**
  * Set the JSON-LD script in the body
  * @param {*} data To be appended json
  * @param {string} name The data-name of the script tag
@@ -222,10 +228,51 @@ async function getAndApplyRenderDecisions() {
   });
 }
 
+async function sendAnalyticsEvent(xdmData) {
+  // eslint-disable-next-line no-undef
+  if (!alloy) {
+    console.log('alloy not initialized, cannot send analytics event');
+    return Promise.resolve();
+  }
+  // eslint-disable-next-line no-undef
+  return alloy('sendEvent', {
+    documentUnloading: true,
+    xdm: xdmData,
+  });
+}
+
+/**
+ * Basic tracking for page views with alloy
+ * @param document
+ * @param additionalXdmFields
+ * @returns {Promise<*>}
+ */
+async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
+  const xdmData = {
+    eventType: 'web.webpagedetails.pageViews',
+    web: {
+      webPageDetails: {
+        pageViews: {
+          value: 1,
+        },
+        name: `${document.title}`,
+      },
+    },
+    [CUSTOM_SCHEMA_NAMESPACE]: {
+      ...additionalXdmFields,
+    },
+  };
+
+  return sendAnalyticsEvent(xdmData);
+}
+
 const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`, {});
 
 if (getMetadata('target')) {
-  alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
+  alloyLoadedPromise.then(() => {
+    getAndApplyRenderDecisions();
+    analyticsTrackPageViews(document);
+  });
 }
 
 /**
