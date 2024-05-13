@@ -40,6 +40,7 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+  getDeviceType();
 
   getDeviceType();
 
@@ -429,7 +430,7 @@ function generateReportLink(companyName, reportId) {
   const trimmedReportId = reportId.toString().replace(/\.0$/, '');
 
   // Generate report link
-  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
+  const reportLink = `${ICICI_FINOUX_HOST}/research/equity/`
     + `${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
@@ -467,10 +468,10 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
+  getHostUrl,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
   defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
-  getHostUrl,
 };
