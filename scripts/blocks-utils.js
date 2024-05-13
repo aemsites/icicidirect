@@ -1,5 +1,5 @@
 import {
-  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName,
+  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName, fetchPlaceholders,
 } from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
@@ -445,6 +445,23 @@ function getHostUrl() {
   return hostUrl;
 }
 
+/**
+ * Util function to append no results message in the block with no data to display
+ * @param {*} element - The element to append the no results message
+ */
+const handleNoResults = (element) => {
+  if (element) {
+    element.innerHTML = '';
+    element.classList.add('no-results');
+    const noResultsDiv = document.createElement('div');
+    noResultsDiv.className = 'no-results';
+    fetchPlaceholders().then((placeholders) => {
+      noResultsDiv.textContent = placeholders.norecordsfound;
+      element.appendChild(noResultsDiv);
+    });
+  }
+};
+
 export {
   isInViewport,
   Viewport,
@@ -474,4 +491,5 @@ export {
   defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
+  handleNoResults,
 };

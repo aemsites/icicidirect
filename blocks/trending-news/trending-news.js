@@ -1,6 +1,7 @@
 import {
   getResearchAPIUrl, postFormData,
   Viewport, createPictureElement, observe, parseResponse, getOriginUrl,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
@@ -101,7 +102,10 @@ async function generateNewsCard(block) {
   formData.append('apiName', 'GetTrendingNews');
   formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '4' }));
   postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
-    if (apiResponse) {
+    if (error || !apiResponse || apiResponse.length === 0) {
+      const element = block.querySelector('.news-slider');
+      handleNoResults(element);
+    } else {
       const jsonResult = parseResponse(apiResponse);
       jsonResult.forEach((item) => {
         if (item.PermLink) {

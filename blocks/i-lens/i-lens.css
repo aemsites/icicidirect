@@ -61,6 +61,10 @@
     list-style-position: inside;
 }
 
+.block.i-lens .i-lens-body.no-results {
+  padding: 1.5rem;
+}
+
 .block.i-lens .dropdowns .dropdown-toggle {
     height: 1.9rem;
     background-color: var(--background-color-transparent);

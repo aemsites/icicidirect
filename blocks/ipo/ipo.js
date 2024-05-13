@@ -2,6 +2,7 @@ import {
   createPictureElement,
   getDataFromAPI,
   getResearchAPIUrl, ICICI_FINOUX_HOST, observe, parseResponse, Viewport,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig } from '../../scripts/aem.js';
 
@@ -136,7 +137,10 @@ async function createIPOPanel(block, knowMoreButton) {
     cardWidth = track.offsetWidth / allowedCardsCount();
   }
   const callback = async (error, apiResponse = []) => {
-    if (apiResponse) {
+    if (error || !apiResponse) {
+      const element = block.querySelector('.slider');
+      handleNoResults(element);
+    } else {
       const result = parseResponse(apiResponse);
       createIPOCards(track, result, knowMoreButton, cardWidth);
       createIPODots(block, result.length, allowedCardsCount(), dots);

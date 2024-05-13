@@ -1,5 +1,6 @@
 import {
   createElement, fetchData, getResearchAPIUrl, observe, postFormData, getHostUrl,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 
@@ -33,6 +34,11 @@ function addStocksData(ilensContainer, key) {
   };
 
   postFormData(getResearchAPIUrl(), jsonFormData, (error, ilensStocksData = []) => {
+    if (error || !ilensStocksData || ilensStocksData.length === 0) {
+      const element = ilensContainer.querySelector('.i-lens-body');
+      handleNoResults(element);
+      return;
+    }
     const ilensRecommendations = JSON.parse(ilensStocksData.Data).body;
     const { tableData } = ilensRecommendations;
     // Sort the tableData based on the Operating Revenue Qtr (SR_Q) in descending order
