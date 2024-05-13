@@ -14,6 +14,7 @@ const mockPredicationConstant = {
   returns: 'Returns',
   action: 'Action',
   profitExit: 'Call Closed and Book Profit Price:',
+  bookProfit: 'Call closed and Book Profit price:',
   minAmount: 'Min. Amount',
   riskProfile: 'Risk Profile',
   buyingRange: 'Buying Range',
