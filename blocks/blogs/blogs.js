@@ -86,7 +86,8 @@ async function generateCardsView(block) {
   };
   postFormData(getResearchAPIUrl(), jsonFormData, (error, blogsData = []) => {
     if (error || !blogsData || !blogsData.Data) {
-      handleNoResults(block, '.blogs-cards-container');
+      const element = block.querySelector('.blogs-cards-container');
+      handleNoResults(element);
       return;
     }
     const recommendationArray = blogsData.Data;

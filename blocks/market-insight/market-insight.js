@@ -111,7 +111,8 @@ async function decorateCards(block, placeholders, cards, cardCount) {
   formData.append('inputJson', `{ pageNo: 1, pageSize: ${cardCount} }`);
   postFormData(getResearchAPIUrl(), formData, (error, GetMarketInsights = []) => {
     if (error || !GetMarketInsights || !GetMarketInsights.Data) {
-      handleNoResults(block, '.cards');
+      const element = block.querySelector('.cards');
+      handleNoResults(element);
     } else {
       const formattedData = parseResponse(GetMarketInsights);
       const results = sortResult(formattedData);

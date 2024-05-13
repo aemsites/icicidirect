@@ -144,7 +144,8 @@ async function createIPOPanel(block, knowMoreButton) {
       });
       result.push(jsonObject); */
     if (error || !apiResponse || apiResponse.length === 0) {
-      handleNoResults(block, '.slider');
+      const element = block.querySelector('.slider');
+      handleNoResults(element);
     } else {
       createIPOCards(track, apiResponse, knowMoreButton, cardWidth);
       createIPODots(block, apiResponse.length, allowedCardsCount(), dots);

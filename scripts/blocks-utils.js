@@ -447,19 +447,17 @@ function getCurrentHost() {
 
 /**
  * Util function to append no results message in the block with no data to display
- * @param {*} block which has no data to display
- * @param {*} containerSelector selector for the container to append no results message
+ * @param {*} element - The element to append the no results message
  */
-const handleNoResults = (block, containerSelector) => {
-  const noResultContainer = block.querySelector(containerSelector);
-  if (noResultContainer) {
-    noResultContainer.innerHTML = '';
-    noResultContainer.classList.add('no-results');
+const handleNoResults = (element) => {
+  if (element) {
+    element.innerHTML = '';
+    element.classList.add('no-results');
     const noResultsDiv = document.createElement('div');
     noResultsDiv.className = 'no-results';
     fetchPlaceholders().then((placeholders) => {
       noResultsDiv.textContent = placeholders.norecordsfound;
-      noResultContainer.appendChild(noResultsDiv);
+      element.appendChild(noResultsDiv);
     });
   }
 };

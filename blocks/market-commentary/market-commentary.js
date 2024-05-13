@@ -132,7 +132,8 @@ async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
     if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
-      handleNoResults(block, '.market-commentary-container');
+      const element = block.querySelector('.market-commentary-container');
+      handleNoResults(element);
       return;
     }
     marketCommentaryData.Data.Table.forEach((cardData) => {

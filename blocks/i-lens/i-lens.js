@@ -35,7 +35,8 @@ function addStocksData(ilensContainer, key) {
 
   postFormData(getResearchAPIUrl(), jsonFormData, (error, ilensStocksData = []) => {
     if (error || !ilensStocksData || ilensStocksData.length === 0) {
-      handleNoResults(ilensContainer, '.i-lens-body');
+      const element = ilensContainer.querySelector('.i-lens-body');
+      handleNoResults(element);
       return;
     }
     const ilensRecommendations = JSON.parse(ilensStocksData.Data).body;

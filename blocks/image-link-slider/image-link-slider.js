@@ -118,7 +118,7 @@ export default async function decorate(block) {
           noResultsContainer.classList.add('no-results-container');
           const buttonDiv = block.querySelector('.button-wrapper');
           block.insertBefore(noResultsContainer, buttonDiv);
-          handleNoResults(block, '.no-results-container');
+          handleNoResults(noResultsContainer);
         } else {
           const jsonResult = parseResponse(apiResponse);
           if (block.classList.contains('image-link-slider')) {

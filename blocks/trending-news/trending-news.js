@@ -103,7 +103,8 @@ async function generateNewsCard(block) {
   formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '4' }));
   postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
     if (error || !apiResponse || apiResponse.length === 0) {
-      handleNoResults(block, '.news-slider');
+      const element = block.querySelector('.news-slider');
+      handleNoResults(element);
     } else {
       const jsonResult = parseResponse(apiResponse);
       jsonResult.forEach((item) => {

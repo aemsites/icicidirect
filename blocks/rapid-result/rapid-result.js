@@ -32,7 +32,7 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     const mainContent = document.createElement('div');
     mainContent.className = 'no-results-container';
     mainWrapper.insertBefore(mainContent, previousNode);
-    handleNoResults(block, '.no-results-container');
+    handleNoResults(mainContent);
     return;
   }
   const results = queryObj.map((el) => {

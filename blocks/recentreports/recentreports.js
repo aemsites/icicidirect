@@ -222,7 +222,8 @@ function addCardsDiv(block, blockConfig) {
     createCarouselDiv(block);
     getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
       if (error || recentReportsDataArray.length === 0) {
-        handleNoResults(block, '.carousel-wrapper');
+        const element = block.querySelector('.carousel-wrapper');
+        handleNoResults(element);
       } else {
         renderRecentReportsCards(
           recentReportsDataArray,

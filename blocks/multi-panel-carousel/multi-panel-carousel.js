@@ -506,7 +506,8 @@ async function fetchCardsData(block, type, marginActions) {
   const placeholders = await fetchPlaceholders();
   postFormData(getResearchAPIUrl(), jsonFormData, (error, tradingData = []) => {
     if (error || !tradingData || !tradingData.Data) {
-      handleNoResults(block, '.carousel-slider');
+      const element = block.querySelector('.carousel-slider');
+      handleNoResults(element);
     } else {
       let resultData;
       if (type === 'oneclickportfolio') {

@@ -221,7 +221,8 @@ async function createMediaPanel(block) {
   /* eslint-disable no-loop-func */
   const callback = async (error, apiResponse = []) => {
     if (error || !apiResponse) {
-      handleNoResults(block, '.slider');
+      const element = block.querySelector('.slider');
+      handleNoResults(element);
     } else {
       const jsonResult = parseResponse(apiResponse);
       createMediaCards(track, jsonResult, apiKey, cardWidth);
