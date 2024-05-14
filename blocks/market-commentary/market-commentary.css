@@ -102,7 +102,7 @@
     margin-bottom: 0;
     font-size: var(--heading-font-size-xxs);
     line-height: normal;
-    color: var(--text-color-gray);
+    color: var(--color-gray-dark);
 }
 
 .block.market-commentary .card .footer-row {
