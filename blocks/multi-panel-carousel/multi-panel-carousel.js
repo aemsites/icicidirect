@@ -118,7 +118,7 @@ function setCarouselView(type, carouselSlider) {
   const numberOfDots = cards.length - visibleCards + 1;
   const isMobile = Viewport.isMobile();
   if (numberOfDots > 1) {
-    let dotsContainer = document.querySelector('.dots-container');
+    let dotsContainer = carouselSlider.querySelector('.dots-container');
     if (!dotsContainer) {
       dotsContainer = document.createElement('div');
       dotsContainer.className = 'dots-container border-box';
