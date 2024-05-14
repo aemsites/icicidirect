@@ -113,11 +113,9 @@ function createDropdown(ilensContainer, menuItems, dropDownDetails = []) {
     if (item.value) {
       li.dataset.value = item.value;
     }
-    const a = document.createElement('a');
     const span = document.createElement('span');
     span.textContent = item.text;
-    a.appendChild(span);
-    li.appendChild(a);
+    li.appendChild(span);
     li.addEventListener('click', (event) => {
       // eslint-disable-next-line no-use-before-define
       updateRecommedations(ilensContainer, event.currentTarget, dropDownDetails);

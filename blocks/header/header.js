@@ -133,11 +133,9 @@ const getSearchCategoryDropDown = (fragment) => {
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
-    const a = document.createElement('a');
     const span = document.createElement('span');
     span.textContent = item.itemText;
-    a.appendChild(span);
-    li.appendChild(a);
+    li.appendChild(span);
     li.addEventListener('click', (event) => {
       updateCategorySelection(event.currentTarget);
     });
