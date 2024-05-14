@@ -1,7 +1,13 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
-import { createElement, handleNoResults, observe } from '../../scripts/blocks-utils.js';
-import { fetchRapidResultMockData } from '../../scripts/mockapi.js';
+import {
+  createElement, handleNoResults, observe, postFormData, getResearchAPIUrl,
+  SITE_ROOT,
+} from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
+
+const apiName = 'GetRapidResults';
+const defaultCardsCount = 4;
+const RAPIDRESULT_DIRECTORY = '/research/equity/rapid-results/';
 
 function decorateTitle(titleContent) {
   const title = createElement('div', 'title');
@@ -25,31 +31,35 @@ function formatDate(date) {
   return result;
 }
 
-async function decorateCards(block, placeholders, cardCount, previousNode) {
-  const queryObj = await fetchRapidResultMockData();
-  if (!queryObj) {
-    const mainWrapper = block.querySelector('.main-wrapper');
-    const mainContent = document.createElement('div');
-    mainContent.className = 'no-results-container';
-    mainWrapper.insertBefore(mainContent, previousNode);
-    handleNoResults(mainContent);
-    return;
-  }
-  const results = queryObj.map((el) => {
-    const elArr = el.PublishedOnDate.split(' ');
-    const publishDate = elArr[0];
-    const publishTime = elArr[1];
-    const formatPublishDate = publishDate.split('-').reverse();
-    el.PublishedOnDate = `${formatPublishDate} ${publishTime}`;
-    return el;
-  }).sort((a, b) => {
-    const dateA = new Date(a.PublishedOnDate);
-    const dateB = new Date(b.PublishedOnDate);
+function sortResult(sortData) {
+  const results = sortData.sort((a, b) => {
+    const dateA = new Date(a.pubDate);
+    const dateB = new Date(b.pubDate);
     return dateB - dateA;
   });
+  return results;
+}
 
-  const ul = createElement('ul', '');
+function generateViewMoreLink(name) {
+  return typeof name === 'string'
+    ? name
+      .toLowerCase()
+      .replace(/[^0-9a-z\s]/gi, '')
+      .replace(/\s/g, '-')
+    : '';
+}
+
+function getLink(stockName) {
+  return SITE_ROOT + RAPIDRESULT_DIRECTORY + generateViewMoreLink(stockName);
+}
+
+function buildCards(results, cards, cardCount, placeholders) {
   const loopNum = results.length > cardCount ? cardCount : results.length;
+  if (loopNum === 1) {
+    cards.classList.add('central-cards-1');
+  } else if (loopNum < defaultCardsCount) {
+    cards.classList.add('central-cards');
+  }
   for (let index = 0; index < loopNum; index += 1) {
     const result = results[index];
     const li = createElement('li', '');
@@ -64,28 +74,20 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     titleIcon.append(titleIconSpan);
     decorateIcons(titleIcon);
     const h3 = createElement('h3', '');
-    const titleContent = result.Title ?? '';
-    if (result.PermLink) {
-      const aLink = createElement('a', '');
-      aLink.href = result.PermLink;
-      aLink.target = '_blank';
-      aLink.append(titleContent);
-      h3.append(aLink);
-    } else {
-      h3.textContent = titleContent;
-    }
+    const titleContent = result.stockName ?? '';
+    h3.textContent = titleContent;
     const pTag = createElement('p', '');
-    pTag.textContent = formatDate(result.PublishedOnDate);
+    pTag.textContent = formatDate(result.pubDate);
     h3.append(pTag);
     title.append(titleIcon);
     title.append(h3);
     // Cards description
-    description.innerHTML = decodeURIComponent(result.ShortDescription ?? '');
+    description.innerHTML = result.title ?? '';
     // Cards powerby
     const viewMoreDiv = createElement('div', '');
     const viewMoreLink = createElement('a', 'view-more-link');
-    if (result.PermLink) {
-      viewMoreLink.href = result.PermLink;
+    if (result.stockName) {
+      viewMoreLink.href = getLink(result.stockName);
       viewMoreLink.target = '_blank';
     }
     viewMoreLink.append((placeholders.viewmore ?? '').trim());
@@ -105,10 +107,22 @@ async function decorateCards(block, placeholders, cardCount, previousNode) {
     liWrapper.append(description);
     liWrapper.append(powerby);
     li.append(liWrapper);
-    ul.append(li);
+    cards.append(li);
   }
-  const parentDiv = previousNode.parentNode;
-  parentDiv.insertBefore(ul, previousNode);
+}
+
+async function decorateCards(block, placeholders, cards, cardCount) {
+  const formData = new FormData();
+  formData.append('apiName', apiName);
+  postFormData(getResearchAPIUrl(), formData, (error, GetRapidResult = []) => {
+    if (!GetRapidResult || !GetRapidResult.Data || cardCount === 0
+      || GetRapidResult.Data.length === 0) {
+      handleNoResults(cards);
+      return;
+    }
+    const results = sortResult(GetRapidResult.Data);
+    buildCards(results, cards, cardCount, placeholders);
+  }, apiName);
 }
 
 function decorateDiscoverMore(blockCfg, placeholders) {
@@ -130,17 +144,20 @@ export default async function decorate(block) {
   const blockCfg = readBlockConfig(block);
   const { title } = blockCfg;
   const { subtitle } = blockCfg;
-  const cardCount = blockCfg.count ?? 4;
+  const cardCountCfg = parseInt(blockCfg.count, 10) ?? defaultCardsCount;
+  const cardCount = cardCountCfg > defaultCardsCount ? defaultCardsCount : cardCountCfg;
   const topTitle = decorateTitle(title);
+  const cards = createElement('ul', '');
   const mainContent = createElement('div', 'main-content');
   const mainWrapper = createElement('div', 'main-wrapper');
   const contentTitle = decorateTitle(subtitle);
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
   mainWrapper.append(contentTitle);
+  mainWrapper.append(cards);
   mainWrapper.append(discoverMoreButton);
   mainContent.append(mainWrapper);
   block.textContent = '';
   block.append(topTitle);
   block.append(mainContent);
-  observe(block, decorateCards, placeholders, cardCount, discoverMoreButton);
+  observe(block, decorateCards, placeholders, cards, cardCount);
 }
