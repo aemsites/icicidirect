@@ -1,3 +1,5 @@
+import { fetchPlaceholders } from './aem.js';
+
 const marginActions = {
   sell: 'https://secure.icicidirect.com/trading/equity/marginsell',
   buy: 'https://secure.icicidirect.com/trading/equity/marginbuy',
@@ -103,30 +105,17 @@ async function globalSearchAPI() {
   return fetchDataFromAPI(`${getHostUrl()}/scripts/mock-global-search.json`);
 }
 
-const fetchDynamicStockIndexData = () => [
-  {
-    id: 'spnNifty_n',
-    indexName: 'NIFTY',
-    stockValue: 22415.15,
-    change: 104.13,
-    changePercentage: 0.35,
-  },
-  {
-    id: 'spnSensex_s',
-    indexName: 'SENSEX',
-    stockValue: 73038.14,
-    change: -145.78,
-    changePercentage: -0.45,
-  },
-];
+function getGAToken() {
+  return fetchPlaceholders.GA_Token;
+}
 
 export {
   fetchRecommendations,
   getMarginActionUrl,
   mockPredicationConstant,
-  fetchDynamicStockIndexData,
   callAPI,
   fetchRapidResultMockData,
   getHostUrl,
   globalSearchAPI,
+  getGAToken,
 };

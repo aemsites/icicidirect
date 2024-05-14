@@ -7,6 +7,8 @@ const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
 const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 const SITE_ROOT = 'https://www.icicidirect.com';
+const CONTENT_FEED_URL = 'https://contentfeeds.icicidirect.com/';
+const SOCKET_IO_SCRIPT = 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js';
 
 const DELAY_MARTECH_PARAMS = 'delayMartech';
 const LOAD_MARTECH_PARAM = 'loadMartech';
@@ -491,5 +493,7 @@ export {
   defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
+  CONTENT_FEED_URL,
+  SOCKET_IO_SCRIPT,
   handleNoResults,
 };
