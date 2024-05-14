@@ -29,7 +29,7 @@
 
 .block.app-download > div p {
   font: var(--font-weight-regular) var(--heading-font-size-ms) / var(--heading-font-size-ml) Poppins, "Poppins Fallback", sans-serif;
-  color: var(--color-gray-dark);
+  color: #474747;
   margin-bottom: 1.25rem;
   text-align: center;
   font-size: var(--heading-font-size-ms);

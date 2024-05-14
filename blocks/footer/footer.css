@@ -157,7 +157,7 @@
 }
 
 .footer.block .footer-links a {
-  color: var(--color-footer-gray);
+  color: #d1d1d1;
   transition: 0.3s;
   line-height: 138%;
   width: 100%;

@@ -56,7 +56,7 @@ const getBannerAttributes = (banner) => {
 
 const buildIndividualBanner = (bannerItems, container, maxLimit = MAX_BANNERS) => {
   let slideCount = 0;
-  bannerItems.forEach((singleBanner) => {
+  bannerItems.forEach((singleBanner, index) => {
     if (slideCount >= maxLimit) return;
     const bannerAttributes = getBannerAttributes(singleBanner);
     const slide = document.createElement('li');
@@ -66,7 +66,7 @@ const buildIndividualBanner = (bannerItems, container, maxLimit = MAX_BANNERS) =
                         ${bannerAttributes.imageNode.outerHTML}
                     </div>
                     <div class="carousel-slide-content ${bannerAttributes.template}">
-                        <a href="${bannerAttributes.link}">
+                        <a href="${bannerAttributes.link}" aria-label="hero slider image ${index}">
                           <div class="carousel-slide-content-overlay">
                             ${bannerAttributes.overlayText.outerHTML}
                           </div>

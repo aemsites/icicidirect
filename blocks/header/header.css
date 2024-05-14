@@ -123,11 +123,11 @@
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-value.negative {
-  color: var(--color-red);
+  color: #b50000;
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-value.positive {
-  color: var(--color-green);
+  color: #196601;
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-value.market-closed {
@@ -135,16 +135,16 @@
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-down {
-  color: var(--color-red);
+  color: #b50000;
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-up {
-  color: var(--color-green);
+  color: #196601;
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-down::before {
   font-family: icomoon, sans-serif;
-  color: var(--color-red);
+  color: #b50000;
   content: "\e900";
   display: inline-block;
   transform: rotate(180deg);
@@ -152,7 +152,7 @@
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-up::before {
   font-family: icomoon, sans-serif;
-  color: var(--color-green);
+  color: #196601;
   content: "\e900";
   display: inline-block;
 }
@@ -413,7 +413,7 @@
   width: 100%;
   outline: none;
   font-size: var(--heading-font-size-xs);
-  color: var(--color-light-gray);
+  color: var(--color-darker-gray);
   user-select: none;
 }
 
