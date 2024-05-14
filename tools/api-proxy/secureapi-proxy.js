@@ -34,7 +34,6 @@ async function getSessionData(url, cache, env) {
     body: JSON.stringify(requestBody)
   });
 
-  // console.log('Response Body:', await response.text());
 
   // Check if the response is successful
   if (!response.ok) {
@@ -50,7 +49,6 @@ async function getSessionData(url, cache, env) {
 
     await cache.put(tokenRequest, new Response(responseData.Data.TokenId));
     // Return the session data from the API response
-    console.log(" token generated");
     return responseData.Data.TokenId;
   } else {
     throw new Error('Session data retrieval failed: TokenId not found in the response');
@@ -75,6 +73,16 @@ async function getCachedAuthHeader(url, env) {
   }
 }
 const handleRequest = async (request, env) => {
+
+  const allowedOriginRegex = /^(https:\/\/.*\.(hlx\.live|hlx\.page|aem\.live|aem\.page))$/;
+
+  const requestOrigin = request.headers.get('Origin');
+
+  // Check if the request origin matches the regex pattern
+  if (!allowedOriginRegex.test(requestOrigin)) {
+    // If not allowed, return a response indicating forbidden access
+    return new Response('Forbidden', { status: 403 });
+  }
 
 
 
@@ -111,22 +119,16 @@ const handleRequest = async (request, env) => {
 
       // Forward the request to the new URL
       const response = await fetch(newUrl, init);
-      //console.log('Response Body:', await response.text());
 
       const responseBody = await response.json();
-      console.log("I am here2");
       if (responseBody.Message === "Session expired. Please create new session.") {
         // Session expired, remove token from cache
-        console.log("I am here3");
         await removeFromCache();
         // Call handleOptions to trigger token generation
         return handleOptions(request, env);
       }
 
-      console.log("I am here4 " + JSON.stringify(responseBody));
       // Return the response from the forwarded request back to the original client
-      console.log(response.status);
-      console.log(response.headers);
       const newResponse = new Response(JSON.stringify(responseBody), {
         status: response.status,
         headers: response.headers
