@@ -210,11 +210,9 @@ function createDropdown(menuItems, type, marginActions) {
     const li = document.createElement('li');
     li.dataset.type = item.type;
     li.dataset.value = item.value;
-    const a = document.createElement('a');
     const span = document.createElement('span');
     span.textContent = item.label;
-    a.appendChild(span);
-    li.appendChild(a);
+    li.appendChild(span);
     li.addEventListener('click', (event) => {
       updateRecommedations(event.currentTarget, type, marginActions);
     });
