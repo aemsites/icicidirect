@@ -1,6 +1,6 @@
 import { fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import {
-  getResearchAPIUrl, getCurrentHost,
+  getResearchAPIUrl, getHostUrl,
   readBlockMarkup, observe, postFormData,
   Viewport, fetchData, generateReportLink,
   handleNoResults,
@@ -566,7 +566,7 @@ async function generateDropDowns(block, type, marginActions) {
       });
     });
   } else {
-    fetchData(`${getCurrentHost()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
+    fetchData(`${getHostUrl()}/dropdowndetails.json?sheet=${type}`, async (error, DDData = []) => {
       const restructuredData = {};
       DDData.data.forEach((item) => {
         const { Type, Label, Value } = item;

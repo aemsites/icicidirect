@@ -438,7 +438,7 @@ function generateReportLink(companyName, reportId) {
   return reportLink;
 }
 
-function getCurrentHost() {
+function getHostUrl() {
   let hostUrl = window.location.origin;
   if (!hostUrl || hostUrl === 'null') {
     // eslint-disable-next-line prefer-destructuring
@@ -487,7 +487,7 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
-  getCurrentHost,
+  getHostUrl,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
   defaultAnalyticsLoadDisabled,
