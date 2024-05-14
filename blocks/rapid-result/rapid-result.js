@@ -144,7 +144,7 @@ export default async function decorate(block) {
   const blockCfg = readBlockConfig(block);
   const { title } = blockCfg;
   const { subtitle } = blockCfg;
-  const cardCountCfg = blockCfg.count ?? defaultCardsCount;
+  const cardCountCfg = parseInt(blockCfg.count, 10) ?? defaultCardsCount;
   const cardCount = cardCountCfg > defaultCardsCount ? defaultCardsCount : cardCountCfg;
   const topTitle = decorateTitle(title);
   const cards = createElement('ul', '');
