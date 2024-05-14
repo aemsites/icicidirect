@@ -374,7 +374,7 @@ function loadStockFeed(gaTokenId) {
     }
     // eslint-disable-next-line prefer-destructuring
     stockValueElement.textContent = stockData[2].toLocaleString();
-    const change = stockData[20] - stockData[2];
+    const change = stockData[2] - stockData[20];
     shareChangeSpan.textContent = `${change.toFixed(2)}(${stockData[5].toFixed(2)}%)`;
   }
 
