@@ -66,7 +66,7 @@ const buildIndividualBanner = (bannerItems, container, maxLimit = MAX_BANNERS) =
                         ${bannerAttributes.imageNode.outerHTML}
                     </div>
                     <div class="carousel-slide-content ${bannerAttributes.template}">
-                        <a href="${bannerAttributes.link}" aria-label="hero slider image ${index}">
+                        <a href="${bannerAttributes.link}" aria-label="hero slider image ${index}" tabindex="-1">
                           <div class="carousel-slide-content-overlay">
                             ${bannerAttributes.overlayText.outerHTML}
                           </div>
