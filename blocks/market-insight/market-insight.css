@@ -8,6 +8,11 @@
   min-height: 18.75rem;
 }
 
+.block.market-insight > ul.no-results {
+  display: block;
+  min-height: unset;
+}
+
 .block.market-insight > ul > li {
   flex: 0 0 100%;
   max-width: 100%;

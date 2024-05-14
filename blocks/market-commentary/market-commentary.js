@@ -1,19 +1,45 @@
 import {
-  getDataFromAPI, getResearchAPIUrl, observe, Viewport,
+  getDataFromAPI, getResearchAPIUrl, handleNoResults, ICICI_FINOUX_HOST, observe,
+  sanitizeCompanyName, Viewport,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
   div, a, h4, p, span,
 } from '../../scripts/dom-builder.js';
 
+function generateNewsLink(cardData) {
+  // Determine session code based on SECTION_NAME
+  let sessionCode;
+  if (cardData.SECTION_NAME.includes('Pre-Session')) {
+    sessionCode = 'p';
+  } else if (cardData.SECTION_NAME.includes('Mid-Session')) {
+    sessionCode = 'm';
+  } else if (cardData.SECTION_NAME.includes('End-Session')) {
+    sessionCode = 'e';
+  } else {
+    sessionCode = '';
+  }
+
+  // Format heading
+  const formattedHeading = sanitizeCompanyName(cardData.HEADING);
+
+  // Trim trailing .0 from NEWS_ID
+  const trimmedNewsId = cardData.NEWS_ID.toString().replace(/\.0$/, '');
+
+  // Generate news link
+  const newsLink = `${ICICI_FINOUX_HOST}/equity/market-news-list/${sessionCode}/${formattedHeading}/${trimmedNewsId}`;
+
+  return newsLink;
+}
+
 function createMarketCommentaryCard(cardData, placeholders) {
   const {
-    articleUrl = 'https://www.icicidirect.com/share-market-today/market-news-commentary',
     HEADING,
     SECTION_NAME,
     NEWS_DATE,
     NEWS_TIME,
   } = cardData;
+  const articleUrl = generateNewsLink(cardData);
   const mainDiv = div(
     { class: 'card' },
     a(
@@ -106,6 +132,8 @@ async function generateCardsView(block, placeholders) {
   const blogsContainer = block.querySelector('.market-commentary-track');
   getDataFromAPI(getResearchAPIUrl(), 'GetResearchEquityMarketCommentary', (error, marketCommentaryData = []) => {
     if (!marketCommentaryData || !marketCommentaryData.Data || !marketCommentaryData.Data.Table) {
+      const element = block.querySelector('.market-commentary-container');
+      handleNoResults(element);
       return;
     }
     marketCommentaryData.Data.Table.forEach((cardData) => {

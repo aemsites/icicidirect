@@ -1,6 +1,6 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
 import {
-  createElement, observe, postFormData, getResearchAPIUrl,
+  createElement, handleNoResults, observe, postFormData, getResearchAPIUrl,
   SITE_ROOT,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
@@ -115,7 +115,11 @@ async function decorateCards(block, placeholders, cards, cardCount) {
   const formData = new FormData();
   formData.append('apiName', apiName);
   postFormData(getResearchAPIUrl(), formData, (error, GetRapidResult = []) => {
-    if (!GetRapidResult || !GetRapidResult.Data) return;
+    if (!GetRapidResult || !GetRapidResult.Data || cardCount === 0
+      || GetRapidResult.Data.length === 0) {
+      handleNoResults(cards);
+      return;
+    }
     const results = sortResult(GetRapidResult.Data);
     buildCards(results, cards, cardCount, placeholders);
   }, apiName);
