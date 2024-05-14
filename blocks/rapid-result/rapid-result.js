@@ -1,11 +1,13 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
 import {
   createElement, observe, postFormData, getResearchAPIUrl,
+  SITE_ROOT,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
 const apiName = 'GetRapidResults';
 const defaultCardsCount = 4;
+const RAPIDRESULT_DIRECTORY = '/research/equity/rapid-results/';
 
 function decorateTitle(titleContent) {
   const title = createElement('div', 'title');
@@ -29,49 +31,35 @@ function formatDate(date) {
   return result;
 }
 
-//TODO
 function sortResult(sortData) {
-  const results = sortData.map((el) => {
-    const elArr = el.PublishedOnDate.split(' ');
-    const publishDate = elArr[0];
-    const publishTime = elArr[1];
-    const formatPublishDate = publishDate.split('-').reverse();
-    el.PublishedOnDate = `${formatPublishDate} ${publishTime}`;
-    return el;
-  }).sort((a, b) => {
-    const dateA = new Date(a.PublishedOnDate);
-    const dateB = new Date(b.PublishedOnDate);
+  const results = sortData.sort((a, b) => {
+    const dateA = new Date(a.pubDate);
+    const dateB = new Date(b.pubDate);
     return dateB - dateA;
   });
   return results;
 }
 
-function parseResponse(apiResponse) {
-  // const result = [];
-  // apiResponse.Data.forEach((item) => {
-  //   const jsonObject = {};
-  //   let excludeItem = false;
-  //   item.forEach((data) => {
-  //     if (data.Key === 'TOTAL_COUNT') {
-  //       excludeItem = true;
-  //       return;
-  //     }
-  //     jsonObject[data.Key] = data.Value;
-  //   });
-  //   if (!excludeItem) {
-  //     result.push(jsonObject);
-  //   }
-  // });
-  return apiResponse.Data;
+function generateViewMoreLink(name) {
+  return typeof name === 'string'
+    ? name
+      .toLowerCase()
+      .replace(/[^0-9a-z\s]/gi, '')
+      .replace(/\s/g, '-')
+    : '';
+}
+
+function getLink(stockName) {
+  return SITE_ROOT + RAPIDRESULT_DIRECTORY + generateViewMoreLink(stockName);
 }
 
 function buildCards(results, cards, cardCount, placeholders) {
-  if (cardCount === 1) {
+  const loopNum = results.length > cardCount ? cardCount : results.length;
+  if (loopNum === 1) {
     cards.classList.add('central-cards-1');
-  } else if (cardCount < defaultCardsCount) {
+  } else if (loopNum < defaultCardsCount) {
     cards.classList.add('central-cards');
   }
-  const loopNum = results.length > cardCount ? cardCount : results.length;
   for (let index = 0; index < loopNum; index += 1) {
     const result = results[index];
     const li = createElement('li', '');
@@ -89,20 +77,17 @@ function buildCards(results, cards, cardCount, placeholders) {
     const titleContent = result.stockName ?? '';
     h3.textContent = titleContent;
     const pTag = createElement('p', '');
-    //TODO
-    pTag.textContent = formatDate(result.PublishedOnDate);
+    pTag.textContent = formatDate(result.pubDate);
     h3.append(pTag);
     title.append(titleIcon);
     title.append(h3);
     // Cards description
-    // description.innerHTML = decodeURIComponent(result.descriptionHTML ?? '');
-    description.innerHTML = result.description ?? '';
+    description.innerHTML = result.title ?? '';
     // Cards powerby
     const viewMoreDiv = createElement('div', '');
     const viewMoreLink = createElement('a', 'view-more-link');
-    //TODO
-    if (result.PermLink) {
-      viewMoreLink.href = result.PermLink;
+    if (result.stockName) {
+      viewMoreLink.href = getLink(result.stockName);
       viewMoreLink.target = '_blank';
     }
     viewMoreLink.append((placeholders.viewmore ?? '').trim());
@@ -131,9 +116,7 @@ async function decorateCards(block, placeholders, cards, cardCount) {
   formData.append('apiName', apiName);
   postFormData(getResearchAPIUrl(), formData, (error, GetRapidResult = []) => {
     if (!GetRapidResult || !GetRapidResult.Data) return;
-    const formattedData = parseResponse(GetRapidResult);
-    // const results = sortResult(formattedData);
-    const results = formattedData;
+    const results = sortResult(GetRapidResult.Data);
     buildCards(results, cards, cardCount, placeholders);
   }, apiName);
 }
