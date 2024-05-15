@@ -37,9 +37,9 @@ function renderImageLinkVariant(data, carouselItems, maxLimit = 20) {
                             <div>${placeholders.publishedon} ${item.PublishedOn}</div>
                         </div>
                         <div class="socialshare">
-                            <a class="social-share">
+                            <div class="social-share">
                                 <img src="/icons/gray-share-icon.svg" alt="Social Share" >
-                            </a>
+                            </div>
                         </div>
                     </div>
                     </div>

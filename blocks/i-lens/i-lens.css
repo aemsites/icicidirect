@@ -129,14 +129,11 @@
     padding-bottom: var(--space-2px);
 }
 
-.block.i-lens .dropdowns .dropdown-menu li a {
+.block.i-lens .dropdowns .dropdown-menu li span {
     color: var(--link-color-dark-blue);
     cursor: pointer;
     text-decoration: none;
-    padding: var(--space-5px) var(--space-10px);
-}
-
-.block.i-lens .dropdowns .dropdown-menu li a span {
+    padding: 0 var(--space-10px);
     white-space: nowrap;
     display: inline-block;
 }
@@ -235,7 +232,7 @@
 }
 
 .block.i-lens .i-lens-body .box .value.green {
-    color: var(--color-green);
+    color: var(--color-dark-green);
 }
 
 .block.i-lens .i-lens-body .box .value.red {
