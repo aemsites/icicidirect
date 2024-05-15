@@ -536,6 +536,8 @@ const decorateShareIndexPanel = (fragment, block) => {
         dynamicStockIndexDiv.appendChild(stockDiv);
       });
       loadStockFeed(placeholders.gaToken);
+    } else {
+      dateTimeSpan.classList.remove('spn-date-time');
     }
   };
 
