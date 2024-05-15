@@ -207,8 +207,8 @@ async function loadPage() {
   loadDelayed();
 }
 
-// TODO: Remove once chatbot is compatible with Helix domain
-loadScript('/scripts/mockxmlhttprequest.js');
+// Needed for chatbot to work in dev environments
+loadScript('/scripts/mockxmlhttprequest.js', { type: 'module' });
 loadPage();
 
 window.validateuserToken = '';
