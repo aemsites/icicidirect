@@ -30,6 +30,11 @@
     min-height: 12.875rem;
 }
 
+.block.rapid-result .main-wrapper > ul.no-results {
+    display: block;
+    min-height: unset;
+}
+
 .block.rapid-result .main-wrapper > ul > li {
     position: relative;
     width: 100%;
