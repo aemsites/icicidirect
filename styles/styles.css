@@ -572,6 +572,11 @@ main .section.background-lighter-gray {
   background: var(--color-lightest-gray);
 }
 
+main .section.background-orange {
+  background: var(--color-orange);
+  padding: var(--space-8px) 0;
+}
+
 main .margin-bottom {
   margin-bottom: 2rem;
 }
