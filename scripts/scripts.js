@@ -206,9 +206,6 @@ async function loadPage() {
   await loadLazy(document);
   loadDelayed();
 }
-
-// Needed for chatbot to work in dev environments
-loadScript('/scripts/mockxmlhttprequest.js', { type: 'module' });
 loadPage();
 
 window.validateuserToken = '';
