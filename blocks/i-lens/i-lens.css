@@ -134,7 +134,6 @@
     cursor: pointer;
     text-decoration: none;
     padding: 0 var(--space-10px);
-    white-space: nowrap;
     display: inline-block;
 }
 
@@ -273,6 +272,10 @@
 
     .block.i-lens .dropdowns .dropdown-toggle {
         width: auto;
+    }
+
+    .block.i-lens .dropdowns .dropdown-menu li span {
+      white-space: nowrap;
     }
 }
 

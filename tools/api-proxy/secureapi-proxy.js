@@ -9,11 +9,89 @@
  * @returns {Promise<Response>}
  */
 
+const TOKEN_ID = 'http://icicidirect.finoux.com/CDNResearchAPI/CallResearchAPI.TokenId';
+
+const tokenRequest = new Request(TOKEN_ID, {
+  method: 'GET',
+});
+
+async function getSessionData(url, cache, env) {
+  // Define the request body
+  const requestBody = {
+    apiName: 'GenerateSession',
+  };
+
+  // Make a POST request to the API to fetch session data
+  const apiurl = 'http://icicidirect.finoux.com/CDNResearchAPI/CallResearchAPI';
+  const response = await fetch(apiurl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: env.Authorization_Research,
+    },
+    body: JSON.stringify(requestBody),
+  });
+
+  // Check if the response is successful
+  if (!response.ok) {
+    throw new Error(`Failed to fetch session data: ${response.statusText}`);
+  }
+
+  // Parse the JSON response
+  const responseData = await response.json();
+
+  // Check if the response contains the TokenId
+  if (responseData && responseData.IsSuccess && responseData.Data && responseData.Data.TokenId) {
+    // Store the TokenId into the cache
+
+    await cache.put(tokenRequest, new Response(responseData.Data.TokenId));
+    // Return the session data from the API response
+    return responseData.Data.TokenId;
+  }
+  throw new Error('Session data retrieval failed: TokenId not found in the response');
+}
+
+async function removeFromCache() {
+  const cache = caches.default;
+  await cache.delete(tokenRequest);
+}
+
+async function getCachedAuthHeader(url, env) {
+  // Retrieve auth header from cache
+  const cache = caches.default;
+  const cachedResponse = await cache.match(TOKEN_ID);
+  if (cachedResponse) {
+    const cachedData = await cachedResponse.text();
+    return cachedData;
+  }
+  const cachedData = await getSessionData(url, cache, env);
+  return cachedData;
+}
+
 // eslint-disable-next-line no-unused-vars
+async function handleOptions(request) {
+  // Handle CORS preflight requests.
+  return new Response(null, {
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': '*',
+    },
+  });
+}
+
 const handleRequest = async (request, env) => {
+  const allowedOriginRegex = /^(https:\/\/.*\.(hlx\.live|hlx\.page|aem\.live|aem\.page))$/;
+
+  const requestOrigin = request.headers.get('Origin');
+
+  // Check if the request origin matches the regex pattern
+  if (!allowedOriginRegex.test(requestOrigin)) {
+    // If not allowed, return a response indicating forbidden access
+    return new Response('Forbidden', { status: 403 });
+  }
+
   if (request.method === 'OPTIONS') {
     // Handle CORS preflight requests
-    // eslint-disable-next-line no-use-before-define
     return handleOptions(request);
   }
   if (request.method === 'POST') {
@@ -25,7 +103,7 @@ const handleRequest = async (request, env) => {
       if (isMarketAPI) {
         authHeader = env.Authorization_Marketing;
       } else {
-        authHeader = env.Authorization_Research;
+        authHeader = await getCachedAuthHeader(newUrl, env);
       }
 
       if (newUrl === `${env.ORIGIN_HOSTNAME}/`) {
@@ -46,11 +124,20 @@ const handleRequest = async (request, env) => {
       // Forward the request to the new URL
       const response = await fetch(newUrl, init);
 
+      const responseBody = await response.json();
+      if (responseBody.Message === 'Session expired. Please create new session.') {
+        // Session expired, remove token from cache
+        await removeFromCache();
+        // Call handleOptions to trigger token generation
+        return handleOptions(request, env);
+      }
+
       // Return the response from the forwarded request back to the original client
-      return new Response(response.body, {
+      const newResponse = new Response(JSON.stringify(responseBody), {
         status: response.status,
         headers: response.headers,
       });
+      return newResponse;
     } catch (error) {
       // Handle any errors that might occur during the request forwarding
       return new Response(`Error forwarding request: ${error.message}`, { status: 500 });
@@ -76,17 +163,6 @@ const handleRequest = async (request, env) => {
     return new Response('Method Not Allowed', { status: 405 });
   }
 };
-
-// eslint-disable-next-line no-unused-vars
-async function handleOptions(request) {
-  // Handle CORS preflight requests.
-  return new Response(null, {
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': '*',
-    },
-  });
-}
 
 export default {
   fetch: handleRequest,
