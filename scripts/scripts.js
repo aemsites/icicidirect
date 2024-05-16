@@ -213,8 +213,6 @@ async function getAndApplyRenderDecisions() {
       },
     },
   });
-  const { destinations } = sendAAEvent;
-  const aa = destinations;
 
   // Reporting is deferred to avoid long tasks
   // window.setTimeout(() => {
