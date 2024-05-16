@@ -189,15 +189,15 @@ async function getElementForProposition(proposition) {
 async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
-  const response = await window.alloy('sendEvent', { renderDecisions: false });
-  const { propositions } = response;
-  onDecoratedElement(async () => {
-    await window.alloy('applyPropositions', { propositions });
-    // keep track of propositions that were applied
-    propositions.forEach((p) => {
-      p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
-    });
-  });
+  // const response = await window.alloy('sendEvent', { renderDecisions: false });
+  // const { propositions } = response;
+  // onDecoratedElement(async () => {
+  //   await window.alloy('applyPropositions', { propositions });
+  //   // keep track of propositions that were applied
+  //   propositions.forEach((p) => {
+  //     p.items = p.items.filter((i) => i.schema !== 'https://ns.adobe.com/personalization/dom-action' || !getElementForProposition(i));
+  //   });
+  // });
 
   const sendAAEvent = await window.alloy('sendEvent', {
     documentUnloading: true,
