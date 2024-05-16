@@ -351,7 +351,22 @@ function debounce(func, timeout = 200) {
 
 async function loadGTM() {
   setTimeout(() => {
-    loadScript('https://icicidirect-secure-worker.franklin-prod.workers.dev/gtmscript', { async: true });
+    const scriptTag = document.createElement('script');
+    scriptTag.innerHTML = `
+          (function (w, d, s, l, i) {
+        w[l] = w[l] || [];
+        w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        });
+        var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+        j.async = true;
+        j.src = 'https://icicidirect-secure-worker.franklin-prod.workers.dev/gtmscript'; // Replace workerHost with your Cloudflare Worker host
+        f.parentNode.insertBefore(j, f);
+        }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
+      `;
+    document.head.prepend(scriptTag);
   }, 1000);
 }
 
