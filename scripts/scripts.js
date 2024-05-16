@@ -199,6 +199,26 @@ async function getAndApplyRenderDecisions() {
     });
   });
 
+  const sendAAEvent = await window.alloy('sendEvent', {
+    documentUnloading: true,
+    renderDecisions: true,
+    type: 'commerce.purchases',
+    xdm: {
+      _experience: {
+        analytics: {
+          event1to100: {
+            event1: {
+              id: 1,
+              value: 'Test event',
+            },
+          },
+        },
+      },
+    },
+  });
+  const { destinations } = sendAAEvent;
+  const aa = destinations;
+
   // Reporting is deferred to avoid long tasks
   window.setTimeout(() => {
     // Report shown decisions
