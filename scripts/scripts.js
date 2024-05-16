@@ -233,11 +233,7 @@ async function getAndApplyRenderDecisions() {
 const alloyLoadedPromise = initWebSDK('./alloy.min.js', {
   datastreamId: '44c743c4-a493-46aa-9747-4bcfd312f757',
   orgId: '42BB036355AD62157F000101@AdobeOrg',
-  clickCollectionEnabled: true,
-  context: ['web', 'device', 'environment', 'placeContext', 'highEntropyUserAgentHints'],
   debugEnabled: true,
-  defaultConsent: 'pending',
-  downloadLinkQualifier: '.(exe|zip|wav|mp3|mov|mpg|avi|wmv|pdf|doc|docx|xls|xlsx|ppt|pptx)$',
 });
 if (getMetadata('target')) {
   alloyLoadedPromise.then(() => getAndApplyRenderDecisions());
