@@ -83,8 +83,8 @@ class MockXMLHttpRequest {
   }
 }
 
-// Mock the XMLHttpRequest object only in the development environment
-if (getEnvType() === 'dev') {
+// Mock the XMLHttpRequest object for non-prod environments
+if (getEnvType() !== 'prod') {
   window.OrigXmlHttpRequest = window.XMLHttpRequest;
   // Override the global XMLHttpRequest with your custom class
   window.XMLHttpRequest = MockXMLHttpRequest;

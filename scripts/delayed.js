@@ -37,7 +37,7 @@ if (!isSidekickLibrary) {
   if (!defaultAnalyticsLoadDisabled()) {
     loadAdobeLaunchAndGTM();
   }
-  // Needed for chatbot to work in dev environments
+  // Needed for chatbot to work in non-prod environments
   loadScript('/scripts/mockxmlhttprequest.js', { type: 'module' });
   loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
 }
