@@ -64,10 +64,9 @@
 
 .block.app-download .store a img {
   width: 183px;
-  height: 54px;
 }
 
-.block.app-download.slim .store a picture{
+.block.app-download.slim .store a picture {
   margin-right: 1.25rem;
 }
 
@@ -121,7 +120,7 @@
   }
 }
 
-@media (width >= 64rem){
+@media (width >= 64rem) {
   .block.app-download > div {
     flex-wrap: nowrap;
   }
