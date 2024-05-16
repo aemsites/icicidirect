@@ -10,7 +10,6 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  loadScript,
 } from './aem.js';
 
 import {
