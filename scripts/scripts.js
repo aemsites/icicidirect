@@ -200,9 +200,6 @@ async function getAndApplyRenderDecisions() {
   // });
 
   const sendAAEvent = await window.alloy('sendEvent', {
-    documentUnloading: true,
-    renderDecisions: true,
-    type: 'commerce.purchases',
     xdm: {
       _experience: {
         analytics: {
@@ -211,9 +208,9 @@ async function getAndApplyRenderDecisions() {
               id: 1,
               value: 'Test event',
             },
-          }
-        }
-      }
+          },
+        },
+      },
     },
   });
   const { destinations } = sendAAEvent;
