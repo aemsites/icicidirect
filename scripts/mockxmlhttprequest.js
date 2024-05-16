@@ -1,4 +1,4 @@
-import { getEnvType } from './blocks-utils.js';
+import { getEnvType, getQueryParam } from './blocks-utils.js';
 
 /**
  * MockXMLHttpRequest class to mock the XMLHttpRequest object
@@ -84,7 +84,7 @@ class MockXMLHttpRequest {
 }
 
 // Mock the XMLHttpRequest object for non-prod environments
-if (getEnvType() !== 'prod') {
+if (getEnvType() !== 'prod' && getQueryParam('dontmockxmlhttprequest') !== 'true') {
   window.OrigXmlHttpRequest = window.XMLHttpRequest;
   // Override the global XMLHttpRequest with your custom class
   window.XMLHttpRequest = MockXMLHttpRequest;
