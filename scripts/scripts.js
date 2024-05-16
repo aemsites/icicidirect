@@ -211,26 +211,26 @@ async function getAndApplyRenderDecisions() {
               id: 1,
               value: 'Test event',
             },
-          },
-        },
-      },
+          }
+        }
+      }
     },
   });
   const { destinations } = sendAAEvent;
   const aa = destinations;
 
   // Reporting is deferred to avoid long tasks
-  window.setTimeout(() => {
-    // Report shown decisions
-    window.alloy('sendEvent', {
-      xdm: {
-        eventType: 'decisioning.propositionDisplay',
-        _experience: {
-          decisioning: { propositions },
-        },
-      },
-    });
-  });
+  // window.setTimeout(() => {
+  //   // Report shown decisions
+  //   window.alloy('sendEvent', {
+  //     xdm: {
+  //       eventType: 'decisioning.propositionDisplay',
+  //       _experience: {
+  //         decisioning: { propositions },
+  //       },
+  //     },
+  //   });
+  // });
 }
 
 const alloyLoadedPromise = initWebSDK('./alloy.min.js', {
