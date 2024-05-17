@@ -91,7 +91,7 @@ async function addCards(block, blogsDataArray) {
   }
 }
 async function generateCardsView(block) {
-  const blogsContainer = block.querySelector('.blogs-cards-container');
+  // const blogsContainer = block.querySelector('.blogs-cards-container');
   const blogsDataArray = [];
   const jsonFormData = {
     apiName: 'GetBlogs',
@@ -189,5 +189,6 @@ export default async function decorate(block) {
   rowDiv.appendChild(blogsContainer);
   addDiscoverLink(rowDiv, discoverMoreAnchor);
   block.appendChild(rowDiv);
-  observe(block, generateCardsView);
+  generateCardsView(block);
+  // observe(block, generateCardsView);
 }

@@ -237,7 +237,8 @@ function updateDropDownList(ilensContainer, dropDownData) {
       closeAllDropDowns(event.target);
     });
   }
-  observe(ilensContainer, updateRecommedations, rowDiv.querySelector('li'), dropDownDetails);
+  updateRecommedations(ilensContainer, rowDiv.querySelector('li'), dropDownDetails);
+  // observe(ilensContainer, updateRecommedations, rowDiv.querySelector('li'), dropDownDetails);
 }
 
 function addDropDowns(ilensContainer) {
