@@ -129,7 +129,7 @@ function createIPODots(block, totalCards, maxAllowedCards, dots) {
   }
 }
 
-async function createIPOPanel(block, knowMoreButton) {
+async function createIPOPanel(block, knowMoreButton, blockConfig) {
   let cardWidth;
   const track = block.querySelector('.track');
   const dots = block.querySelector('.dots-container');
@@ -147,6 +147,24 @@ async function createIPOPanel(block, knowMoreButton) {
         jsonObject[item.Key] = item.Value;
       });
       result.push(jsonObject);
+      const sideViewCardLimit = blockConfig.sideviewcardlimit || 2;
+      if (result.length > sideViewCardLimit) {
+        const { classList } = block.closest('.section.ipo-container');
+        if (!classList.contains('force-layout')) {
+          Array.from(classList).forEach((className) => {
+            if (/^layout-\d+-\d+$/.test(className)) {
+              block.closest('.section.ipo-container').classList.remove(className);
+            }
+          });
+        }
+      }
+      if (track.offsetWidth) {
+        if (result.length < allowedCardsCount()) {
+          cardWidth = track.offsetWidth / result.length;
+        } else {
+          cardWidth = track.offsetWidth / allowedCardsCount();
+        }
+      }
       createIPOCards(track, result, knowMoreButton, cardWidth);
       createIPODots(block, result.length, allowedCardsCount(), dots);
     }
@@ -182,5 +200,5 @@ export default async function decorate(block) {
   dots.className = 'dots-container';
   slider.appendChild(track);
   slider.appendChild(dots);
-  observe(block, createIPOPanel, knowMoreButton);
+  observe(block, createIPOPanel, knowMoreButton, blockConfig);
 }
