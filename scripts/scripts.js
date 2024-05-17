@@ -201,6 +201,7 @@ async function getAndApplyRenderDecisions() {
 
   const sendAAEvent = await window.alloy('sendEvent', {
     xdm: {
+      eventType: 'web.webinteraction.linkClicks',
       _experience: {
         analytics: {
           event1to100: {
