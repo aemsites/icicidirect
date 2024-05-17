@@ -22,7 +22,7 @@
   --color-lightest-gray: #E1E1E1;
   --color-darker-gray:#333;
   --color-gray: #6c757d;
-  --color-gray-dark: #4A4A4A;
+  --color-gray-dark: #474747;
   --color-lighter-gray:#AEB7C1;
   --color-light-gray-dark: #979797;
   --color-strong-gray-light: #6B6B6B;
@@ -35,12 +35,13 @@
   --color-white: #FFF;
   --color-green: #259702;
   --color-light-green: #008000;
+  --color-dark-green: #196601;
   --color-transparent-orange: #ffe3ce;
   --color-text-orange: #D4622C;
   --color-indigo: #6610f2;
   --color-purple: #6f42c1;
   --color-pink: #e83e8c;
-  --color-red: #da0000;
+  --color-red: #b50000;
   --color-maroon: #97291e;
   --color-yellow: #ffc107;
   --color-teal: #20c997;
@@ -74,6 +75,7 @@
   --background-color-dark-grey: #D8D8D8;
   --background-color-grey: #97979733;
   --background-color-light-orange: #FAE4D1;
+  --background-color-light-ivory: #FCF8F5;
   --background-color-light-blue: #EFF6FF;
   --background-color-blue-dark: #183B6A;
   --background-color-blue: #314467;
@@ -86,17 +88,18 @@
   --color-disable-dot: #D1D1D1;
   --color-footer-top-note-blue: #0e1f35;
   --color-footer-top-number-blue: #004c84;
-  --color-footer-gray: #a3a3a3;
+  --color-footer-gray: #D1D1D1;
   --box-shadow-footer-top-gray: #0e1f354d;
   --veritcal-line-footer-top-gray: #9797974d;
   --box-shadow: #97979733;
   --boarder-trendign-news-card: #EAEAEA;
-  --card-post-color: #6B6B6B;
+  --card-post-color: #4B4B4B;
   --card-post-boarder: #d7d7d7;
   --modal-background-color: #000000BF;
   --image-box-shadow: #878787;
   --title-color: #122E45;
   --title-color-card: #303030;
+  --color-gray-light-text: #4B5057;
 
   /* fonts */
   --body-font-family: "Poppins", "Poppins Fallback";
@@ -163,6 +166,7 @@
   --line-height-narrow: 10px;
   --line-height-little-small: 14px;
   --line-height-small: 18px;
+  --line-height-regular: 19px;
   --line-height-normal: 20px;
   --line-height-medium: 22px;
   --line-height-large: 24px;
@@ -448,7 +452,7 @@ sup {
 
 /* links */
 a:any-link {
-  color: var(--color-blue);
+  color: var(--color-deep-blue);
   text-decoration: none;
   background-color: transparent;
 }
@@ -484,6 +488,43 @@ a.discover-more, a.discover-more-button:any-link {
   text-decoration: none;
   cursor: pointer;
   text-align: center;
+}
+
+.discover-more-link {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.discover-more-link .link-color {
+  font-size: var(--body-font-size-xlm);
+  line-height: var(--line-height-large);
+  font-weight: var(--font-weight-bold);
+  color: var(--link-color-orange);
+}
+
+.discover-more-link .icon {
+  font-family: icomoon, sans-serif;
+  font-style: normal;
+  font-weight: var(--font-weight-medium);
+  font-variant: normal;
+  text-transform: none;
+  line-height: var(--space-1px);
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.discover-more-link .link-color .icon-up-arrow {
+  transform: rotate(90deg);
+  margin-left: var(--space-5px);
+}
+
+.discover-more-link .link-color .icon-up-arrow::before {
+  content: "\e900";
+}
+
+.no-results {
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 main img {
@@ -529,6 +570,11 @@ main .section.shadow-gray {
 
 main .section.background-lighter-gray {
   background: var(--color-lightest-gray);
+}
+
+main .section.background-orange {
+  background: var(--color-orange);
+  padding: var(--space-8px) 0;
 }
 
 main .margin-bottom {

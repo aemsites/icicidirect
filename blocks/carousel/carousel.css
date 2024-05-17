@@ -21,6 +21,8 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
     overflow: scroll clip;
 
     --visible-slides: 1;
+
+    scrollbar-width: none; /* hide scroll bar in firefox */
 }
 
 .carousel.block-padded {
@@ -94,7 +96,7 @@ Modifications (preferably avoid) may have been made to fit the specific needs of
 .carousel .carousel-slide .carousel-slide-content .carousel-slide-content-footer.copyright {
     font-size: var(--heading-font-size-xs);
     margin-top: 10px;
-    color: var(--text-color-gray);
+    color: var(--color-darker-gray);
 }
 
 .carousel .carousel-slide-indicators {

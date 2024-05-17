@@ -60,7 +60,7 @@
 }
 
 .block.carousel-section .carousel-highlight.green-highlight p strong {
-   color: var(--color-light-green);
+   color: var(--color-dark-green);
    font-weight: var(--font-weight-regular);
 }
 
@@ -208,7 +208,7 @@
     display: block;
 }
 
-.block.carousel-section .dropdowns .dropdown-menu li a {
+.block.carousel-section .dropdowns .dropdown-menu li span {
     padding: 0.3rem 0.6rem;
     color: var(--link-color-dark-blue);
     cursor: pointer;
@@ -369,7 +369,7 @@
 }
 
 .block.carousel-section .carousel-slider .box .label-value.positive {
-    color: var(--color-green)
+    color: var(--color-dark-green)
 }
 
 .block.carousel-section .carousel-slider .box .label-value.negative {
@@ -479,7 +479,7 @@
 }
 
 .block.carousel-section .carousel-slider .box .box-footer .btn.btn-buy {
-    background-color: var(--color-green);
+    background-color: var(--color-dark-green);
 }
 
 .block.carousel-section .carousel-slider .box .box-footer .btn.disabled {

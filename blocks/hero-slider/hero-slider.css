@@ -1,0 +1,164 @@
+.block.hero-slider.carousel {
+  position: relative;
+}
+
+.block.hero-slider.carousel > nav {
+  position: absolute;
+  bottom: 0;
+  left: 45%;
+} 
+
+.block.hero-slider:not(.carousel){
+  height: 100%;
+  box-shadow: 0 0 2.5rem var(--space-5px) var(--box-shadow-footer-top-gray);
+  border-radius: var(--space-10px);
+  background-color: var(--background-color-light-ivory);
+  margin: 0 var(--space-15px);
+  display: flex;
+  align-items: center;
+}
+
+.block.hero-slider .carousel-slides-container {
+  border-radius: var(--space-10px);
+  overflow: hidden;
+}
+
+.block.hero-slider .carousel-slide-indicators {
+  margin: 1.3rem 0;
+}
+
+.block.hero-slider .carousel .carousel-slide-indicator button {
+  background-color: var(--background-color-dark-grey);
+  border: none;
+}
+
+.block.hero-slider .carousel .carousel-slide-indicator button:disabled,
+.block.hero-slider .carousel .carousel-slide-indicator button:hover,
+.block.hero-slider .carousel .carousel-slide-indicator button:focus-visible {
+  background-color: var(--button-color-orange);
+}
+
+.block.hero-slider .carousel .carousel-slide .carousel-slide-image picture {
+  position: static !important;
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content {
+  position: absolute;
+  margin: 0;
+  width: 100%;
+  color: var(--color-white);
+  background-color: unset;
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay p, 
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay div {
+  font-size: var(--body-font-size-xs);
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner {
+  width: 60%;
+  left: 0;
+  padding-left: 0.5rem;
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(1) {
+  font-size: var(--body-font-size-xs);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--space-5px);
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(2) {
+  color: var(--link-color-orange);
+  font-size: var(--body-font-size-xs);
+  font-weight: var(--font-weight-bold);
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(3) {
+  font-size: var(--body-font-size-xs);
+}
+
+.block.hero-slider .carousel .carousel-slides .carousel-slide-content.right-side-content-banner {
+  width: 60%;
+  right: 0;
+  padding-right: 0.5rem;
+  font-size: var(--body-font-size-xs);
+}
+
+/* CSS styles to apply when the screen width is more than 576 px */
+@media screen and (width >= 36rem) {
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner {
+    padding-left: 1rem;
+  }
+
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay p, 
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay div {
+    font-size: var(--body-font-size-l);
+  }
+
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(1) {
+    font-size: var(--heading-font-size-ml);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(2) {
+    font-size: var(--heading-font-size-ml);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(3) {
+    font-size: var(--body-font-size-l);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.right-side-content-banner {
+    padding-right: 4rem;
+    font-size: var(--heading-font-size-s);
+  }
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 48rem) {
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay p, 
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content .carousel-slide-content-overlay div {
+    font-size: var(--body-font-size-xxl);
+  }
+
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(1) {
+    font-size: var(--heading-font-size-l);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(2) {
+    font-size: var(--heading-font-size-l);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(3) {
+    font-size: var(--body-font-size-l);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.right-side-content-banner {
+    padding-right: 4rem;
+    font-size: var(--heading-font-size-l);
+  }
+
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner {
+    padding-left: 2rem;
+  }
+}
+
+/* CSS styles to apply when the screen width is more than 768px */
+@media screen and (width >= 64rem) {
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(1) {
+    font-size: var(--heading-font-size-xl);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(2) {
+    font-size: var(--heading-font-size-xl);
+    font-weight: var(--font-weight-medium);
+  }
+  
+  .block.hero-slider .carousel .carousel-slides .carousel-slide-content.left-side-content-banner p:nth-child(3) {
+    font-size: var(--body-font-size-xxl);
+  }
+}

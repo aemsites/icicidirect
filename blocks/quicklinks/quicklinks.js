@@ -59,14 +59,22 @@ const enableStickyBehaviorForQuickLinks = (parentContainer, block) => {
  * @param {*} section that needs to be scrolled on top
  */
 const scrollToAdjustedStickyHeader = (section) => {
-  const headerOffset = 70;
+  const stickyMinWidth = 45;
+  let extraIfNotSticky = 0;
+  if (!document.querySelector('.block.quicklinks.sticky')) {
+    const quickLinkBlock = document.querySelector('.block.quicklinks');
+    const quickLinkStyle = window.getComputedStyle(quickLinkBlock);
+    extraIfNotSticky = parseFloat(quickLinkStyle.getPropertyValue('height'));
+  }
+  const additionalOffset = stickyMinWidth + extraIfNotSticky; // Add your desired offset here
   const elementPosition = section && section.getBoundingClientRect().top;
-  const offsetPosition = elementPosition + window.scrollY - headerOffset;
+  const offsetPosition = elementPosition + window.scrollY - additionalOffset;
 
   window.scrollTo({
     top: offsetPosition,
     behavior: 'smooth',
   });
+
   if (section) {
     section.click();
   }
@@ -93,7 +101,7 @@ const enableSectionHighligting = () => {
   const quickLinkEnabledBlocks = document.querySelectorAll('[data-quicklinks-title]');
   const options = {
     root: null,
-    threshold: 0.5,
+    threshold: 0.8,
   };
   const observer = new IntersectionObserver(handlePageSectionIntersection, options);
   quickLinkEnabledBlocks.forEach((singleBlock) => {
@@ -134,7 +142,7 @@ export default async function decorate(block) {
   block.append(quickLinkContainerDiv);
 
   // enable sticky quicklinks when page is scrolled
-  const parentContainer = document.querySelector('.section.quicklinks-container');
+  const parentContainer = block.closest('.section.quicklinks-container');
   enableStickyBehaviorForQuickLinks(parentContainer, block);
   // enable the section highlighting when quicklinks comes into viewport
   // this gives the quicklinks sometime so that other sections are ready
