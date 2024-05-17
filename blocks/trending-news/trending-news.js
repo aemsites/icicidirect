@@ -5,7 +5,6 @@ import {
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
-const placeholders = await fetchPlaceholders();
 const ICICI_DIRECT_NEWS_HOST = 'https://www.icicidirect.com/research/equity/trending-news/';
 const ICICI_NEWS_THUMBNAIL_ICICI_HOST = 'https://www.icicidirect.com/images/';
 
@@ -31,7 +30,7 @@ function getNewsThumbnail(image, author) {
   return '';
 }
 
-function createDiscoverMore(discovermorelink) {
+function createDiscoverMore(discovermorelink, linkText) {
   const discoverMore = document.createElement('div');
   discoverMore.className = 'discover-more text-right';
 
@@ -39,7 +38,7 @@ function createDiscoverMore(discovermorelink) {
   link.href = discovermorelink;
   link.className = 'link-color';
   link.target = '_blank';
-  link.textContent = placeholders.discovermore;
+  link.textContent = linkText;
   const icon = document.createElement('i');
   icon.className = 'icon-up-arrow icon';
   link.appendChild(icon);
@@ -121,7 +120,7 @@ async function generateNewsCard(block) {
       handleNoResults(element);
     } else {
       const jsonResult = parseResponse(apiResponse);
-      observe(block, addCards, jsonResult, placeholders);
+      observe(block, addCards, jsonResult);
     }
   });
   let currentIndex = 0;
@@ -204,9 +203,15 @@ export default function decorate(block) {
 
   slider.appendChild(newsTrack);
   newsSection.appendChild(slider);
-  newsSection.appendChild(createDiscoverMore(blockConfig.discovermorelink));
+  fetchPlaceholders().then((placeholders) => {
+    newsSection.appendChild(createDiscoverMore(
+      blockConfig.discovermorelink,
+      placeholders.discovermorelink,
+    ));
+  });
+
   container.appendChild(newsSection);
   block.appendChild(container);
   generateNewsCard(block);
-  //observe(block, generateNewsCard, placeholders);
+  // observe(block, generateNewsCard, placeholders);
 }
