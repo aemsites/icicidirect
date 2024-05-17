@@ -204,7 +204,7 @@ async function getAndApplyRenderDecisions() {
       eventType: 'web.webinteraction.linkClicks',
       _atag: {
         search: {
-          term: 'Example search term',
+          term: 'Example search term for sendEvent',
         },
       },
       _experience: {
