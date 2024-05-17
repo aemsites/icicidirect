@@ -1,6 +1,5 @@
 import {
   sampleRUM,
-  buildBlock,
   loadHeader,
   loadFooter,
   decorateButtons,
@@ -11,26 +10,50 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  loadScript,
 } from './aem.js';
 
-import { decorateQuickLinks } from './blocks-utils.js';
+import {
+  decorateQuickLinks,
+  defaultAnalyticsLoadDisabled,
+  loadAdobeLaunchAndGTM,
+  loadAnalyticsDelayed,
+} from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
+
 /**
- * Builds hero block and prepends to main in a new section.
- * @param {Element} main The container element
+ * Set the JSON-LD script in the body
+ * @param {*} data To be appended json
+ * @param {string} name The data-name of the script tag
  */
-function buildHeroBlock(main) {
-  const h1 = main.querySelector('h1');
-  const picture = main.querySelector('picture');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
-    const section = document.createElement('div');
-    section.append(buildBlock('hero', { elems: [picture, h1] }));
-    main.prepend(section);
+export function setJsonLd(data, name) {
+  const existingScript = document.body.querySelector(`script[data-name="${name}"]`);
+  if (existingScript) return;
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  script.dataset.name = name;
+  document.body.appendChild(script);
+}
+
+/**
+ * Builds HowTo schema and append it to body.
+ */
+async function buildHowToSchema() {
+  // Get Howto schema from schema excel
+  const response = await fetch('/howto-schema.json?sheet=data&sheet=step');
+  const json = await response.json();
+  const jsonLD = {};
+  if (json) {
+    if (json.data.data) {
+      Object.assign(jsonLD, json.data.data[0]);
+    }
+    if (json.step.data) {
+      jsonLD.step = json.step.data;
+    }
   }
+  setJsonLd(jsonLD, 'howto');
 }
 
 /**
@@ -49,9 +72,9 @@ async function loadFonts() {
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
-function buildAutoBlocks(main) {
+function buildAutoBlocks() {
   try {
-    buildHeroBlock(main);
+    buildHowToSchema();
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
@@ -131,6 +154,17 @@ async function loadEager(doc) {
   } catch (e) {
     // do nothing
   }
+
+  if (defaultAnalyticsLoadDisabled()) {
+    const delayTime = loadAnalyticsDelayed();
+    if (delayTime === 0) {
+      loadAdobeLaunchAndGTM();
+    } else if (delayTime > 0) {
+      setTimeout(() => {
+        loadAdobeLaunchAndGTM();
+      }, delayTime * 1000);
+    }
+  }
 }
 
 /**
@@ -171,9 +205,6 @@ async function loadPage() {
   await loadLazy(document);
   loadDelayed();
 }
-
-// TODO: Remove once chatbot is compatible with Helix domain
-loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
 
 window.validateuserToken = '';

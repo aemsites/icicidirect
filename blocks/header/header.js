@@ -1,7 +1,21 @@
-import { getMetadata } from '../../scripts/aem.js';
+import { fetchPlaceholders, getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchDynamicStockIndexData, globalSearchAPI } from '../../scripts/mockapi.js';
-import { formatDateTime, debounce } from '../../scripts/blocks-utils.js';
+import {
+  processEquityType,
+  processMutualFundsType,
+  processCurrencyType,
+  processCommodityType,
+  processKnowledgeCenterType,
+  processBondsType, ENIITY_TYPE, loadStockFeed,
+} from './headerutil.js';
+import {
+  formatDateTime,
+  debounce,
+  postFormData,
+  getResearchAPIUrl, getDataFromAPI, getMarketingAPIUrl,
+} from '../../scripts/blocks-utils.js';
+
+const placeholders = await fetchPlaceholders();
 
 /**
  * Decorator for global navigation on top the page
@@ -119,11 +133,9 @@ const getSearchCategoryDropDown = (fragment) => {
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
-    const a = document.createElement('a');
     const span = document.createElement('span');
     span.textContent = item.itemText;
-    a.appendChild(span);
-    li.appendChild(a);
+    li.appendChild(span);
     li.addEventListener('click', (event) => {
       updateCategorySelection(event.currentTarget);
     });
@@ -142,42 +154,41 @@ const getSearchCategoryDropDown = (fragment) => {
 };
 
 /**
- * Build the search results popup
+ * Build the search results popup to reset the result set
  */
-const buildSearchResultsPopup = (block) => {
-  const searchResultsPopup = document.createElement('div');
-  searchResultsPopup.className = 'search-results-popup';
-  searchResultsPopup.id = 'search-results-popup';
-  const searchResultsPopupContainer = document.createElement('div');
-  searchResultsPopupContainer.className = 'search-results-popup-container';
+const buildSearchResultsPopup = (searchResultsPopupContainer) => {
   searchResultsPopupContainer.innerHTML = `
-    <div class="category equity">
+    <div class="loader hidden">
+      Searching...
+    </div>
+    <div class="category equity hidden">
       <span>Equity</span>
       <ul class="equity-list"></ul>
     </div>
-    <div class="category mf">
+    <div class="category mf hidden">
       <span>Mutual Fund</span>
       <ul class="mf-list"></ul>
     </div>
-    <div class="category currency">
+    <div class="category currency hidden">
       <span>Currency</span>
       <ul class="currency-list"></ul>
     </div>
-    <div class="category commodity">
+    <div class="category commodity hidden">
       <span>Commodity</span>
       <ul class="commodity-list"></ul>
     </div>
-    <div class="category knowledge_center">
+    <div class="category knowledge_center hidden">
       <span>iLearn</span>
       <ul class="knowledge_center-list"></ul>
     </div>
-    <div class="category bonds">
+    <div class="category bonds hidden">
       <span>Bonds</span>
       <ul class="bonds-list"></ul>
     </div>
+    <span class='search-result-none hidden'>
+      No records found
+    </span>
   `;
-  searchResultsPopup.appendChild(searchResultsPopupContainer);
-  block.appendChild(searchResultsPopup);
 };
 
 /**
@@ -205,8 +216,11 @@ const decorateTopSearchBar = (fragment) => {
     <div>
       <img class="search-icon" src="../../icons/icon-search.svg" alt="Search">
     </div>
+    <div class='search-results-popup' id='search-results-popup'>
+      <div class='search-results-popup-container'>
+      </div>
+    </div>
   `;
-  buildSearchResultsPopup(searchBoxDiv);
   searchBarContainer.appendChild(categoryPickerDiv);
   searchBarContainer.appendChild(searchBoxDiv);
   searchBarDiv.appendChild(searchBarContainer);
@@ -483,44 +497,51 @@ const decorateShareIndexPanel = (fragment, block) => {
   stockItemDiv.className = 'stock-item';
   const dateTimeSpan = document.createElement('span');
   dateTimeSpan.className = 'spn-date-time';
-  dateTimeSpan.innerText = formatDateTime(new Date());
   stockItemDiv.appendChild(dateTimeSpan);
   dynamicStockIndexDiv.appendChild(stockItemDiv);
 
-  // TODO: Get this dynamic data from the web socket API
-  const dynamicStockData = fetchDynamicStockIndexData();
-  dynamicStockData.forEach((singleStock) => {
-    const stockDiv = document.createElement('div');
-    stockDiv.className = 'stock-item';
-    const stockNameSpan = document.createElement('span');
-    stockNameSpan.innerText = `${singleStock.indexName}: `;
-    stockDiv.appendChild(stockNameSpan);
+  const callback = async (error, apiResponse = []) => {
+    if (apiResponse) {
+      apiResponse.Data.Table.forEach((index) => {
+        const stockDiv = document.createElement('div');
+        // eslint-disable-next-line no-unused-expressions
+        index.INDEX_NAME.includes('Nifty') ? stockDiv.classList.add('stock-item', 'nifty') : stockDiv.classList.add('stock-item', 'sensex');
+        const stockNameSpan = document.createElement('span');
+        stockNameSpan.innerText = index.INDEX_NAME.includes('Nifty') ? 'NIFTY: ' : 'SENSEX: ';
+        stockDiv.appendChild(stockNameSpan);
+        if (index.INDEX_NAME.includes('Nifty')) dateTimeSpan.innerText = formatDateTime(index.LTP_DATE);
+        const shareValueSpan = document.createElement('span');
+        shareValueSpan.className = 'share-value';
+        if (index.CHANGE >= 0) {
+          shareValueSpan.classList.remove('negative');
+          shareValueSpan.classList.add('positive');
+        } else {
+          shareValueSpan.classList.remove('positive');
+          shareValueSpan.classList.add('negative');
+        }
+        shareValueSpan.innerText = `${index.LTP.toLocaleString()} `;
+        stockDiv.appendChild(shareValueSpan);
 
-    const shareValueSpan = document.createElement('span');
-    shareValueSpan.className = 'share-value';
-    if (singleStock.change >= 0) {
-      shareValueSpan.classList.remove('negative');
-      shareValueSpan.classList.add('positive');
+        const shareChangeSpan = document.createElement('span');
+        shareChangeSpan.className = 'share-change';
+        shareChangeSpan.innerText = `${index.CHANGE.toLocaleString()}(${index.PER_CHANGE.toFixed(2)}%)`;
+        if (index.CHANGE >= 0) {
+          shareChangeSpan.classList.remove('share-down');
+          shareChangeSpan.classList.add('share-up');
+        } else {
+          shareChangeSpan.classList.remove('share-up');
+          shareChangeSpan.classList.add('share-down');
+        }
+        stockDiv.appendChild(shareChangeSpan);
+        dynamicStockIndexDiv.appendChild(stockDiv);
+      });
+      loadStockFeed(placeholders.gaToken);
     } else {
-      shareValueSpan.classList.remove('positive');
-      shareValueSpan.classList.add('negative');
+      dateTimeSpan.classList.remove('spn-date-time');
     }
-    shareValueSpan.innerText = `${singleStock.stockValue.toLocaleString()} `;
-    stockDiv.appendChild(shareValueSpan);
+  };
 
-    const shareChangeSpan = document.createElement('span');
-    shareChangeSpan.className = 'share-change';
-    shareChangeSpan.innerText = `${singleStock.change.toLocaleString()}(${singleStock.changePercentage}%)`;
-    if (singleStock.change >= 0) {
-      shareChangeSpan.classList.remove('share-down');
-      shareChangeSpan.classList.add('share-up');
-    } else {
-      shareChangeSpan.classList.remove('share-up');
-      shareChangeSpan.classList.add('share-down');
-    }
-    stockDiv.appendChild(shareChangeSpan);
-    dynamicStockIndexDiv.appendChild(stockDiv);
-  });
+  getDataFromAPI(getMarketingAPIUrl(), 'GetEquityNiftySensex', callback);
   shareIndexContainer.appendChild(bigMenuDiv);
   shareIndexContainer.appendChild(dynamicStockIndexDiv);
   shareIndexPanelDiv.appendChild(shareIndexContainer);
@@ -528,26 +549,26 @@ const decorateShareIndexPanel = (fragment, block) => {
 };
 
 const buildEquityList = (equityList) => {
-  const equityListContainer = document.querySelector('.equity-list');
+  const equityListContainer = document.querySelector('.block.header .equity-list');
   equityListContainer.innerHTML = '';
-  equityList.forEach((equity) => {
+  processEquityType(equityList).forEach((equity) => {
     const equityItem = document.createElement('li');
     equityItem.className = 'list-item';
     equityItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${equity.label}' href=${equity.url} target='_blank'>${equity.label}</a>
+      <a class='item-name' title='${equity.title}' href=${equity.url} target='_blank'>${equity.title}</a>
       <a class='link' href=${equity.url} target='_blank'>
-        <span class='item-value'>${equity.ltp}</span>
+        <span class='item-value'>${equity.lastTradingPrice}</span>
       </a>
       <span class='change-value ${equity.change >= 0 ? 'positive' : 'negative'}'>
-        ${equity.change} (${equity.changeper}%)
+        ${equity.change} (${equity.changePercentage}%)
       </span>
     </div>
     <div class='action-section'>
-      <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${equity.buyLink}', '_blank')">
         BUY
       </button>
-      <button class='action-button' onclick="window.open('${equity.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${equity.sellLink}', '_blank')">
         SELL
       </button>
     </div>
@@ -556,26 +577,29 @@ const buildEquityList = (equityList) => {
     equityItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     equityListContainer.appendChild(equityItem);
   });
+  if (equityList.length) {
+    equityListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildMutualFundsList = (mutualFundsList) => {
-  const mutualFundsListContainer = document.querySelector('.mf-list');
+  const mutualFundsListContainer = document.querySelector('.block.header .mf-list');
   mutualFundsListContainer.innerHTML = '';
-  mutualFundsList.forEach((mutualFund) => {
+  processMutualFundsType(mutualFundsList).forEach((mutualFund) => {
     const mutualFundItem = document.createElement('li');
     mutualFundItem.className = 'list-item';
     mutualFundItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${mutualFund.label}' href=${mutualFund.url} target='_blank'>${mutualFund.label}</a>
+      <a class='item-name' title='${mutualFund.title}' href=${mutualFund.url} target='_blank'>${mutualFund.title}</a>
       <a class='link' href=${mutualFund.url} target='_blank'>
-        <span class='item-value'>${mutualFund.ltp}</span>
+        <span class='item-value'>${mutualFund.lastTradingPrice}</span>
       </a>
       <span class='change-value ${mutualFund.change >= 0 ? 'positive' : 'negative'}'>
-        ${mutualFund.change} (${mutualFund.changeper}%)
+        ${mutualFund.change} (${mutualFund.changePercentage}%)
       </span>
     </div>
     <div class='action-section'>
-      <button class='action-button' onclick="window.open('${mutualFund.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${mutualFund.investLink}', '_blank')">
         INVEST
       </button>
     </div>
@@ -584,59 +608,68 @@ const buildMutualFundsList = (mutualFundsList) => {
     mutualFundItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     mutualFundsListContainer.appendChild(mutualFundItem);
   });
+  if (mutualFundsList.length) {
+    mutualFundsListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildCurrencyList = (currencyList) => {
-  const currencyListContainer = document.querySelector('.currency-list');
+  const currencyListContainer = document.querySelector('.block.header .currency-list');
   currencyListContainer.innerHTML = '';
-  currencyList.forEach((currency) => {
+  processCurrencyType(currencyList).forEach((currency) => {
     const currencyItem = document.createElement('li');
     currencyItem.className = 'list-item';
     currencyItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${currency.label}' href=${currency.url} target='_blank'>${currency.label}</a>
+      <a class='item-name' title='${currency.title}' href=${currency.url} target='_blank'>${currency.title}</a>
       <a class='link' href=${currency.url} target='_blank'>
-        <span class='item-value'>${currency.ltp}</span>
+        <span class='item-value'>${currency.lastTradingPrice}</span>
       </a>
       <span class='change-value ${currency.change >= 0 ? 'positive' : 'negative'}'>
-        ${currency.change} (${currency.changeper}%)
+        ${currency.change} (${currency.changePercentage}%)
       </span>
     </div>
     `;
     currencyListContainer.appendChild(currencyItem);
   });
+  if (currencyList.length) {
+    currencyListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildCommodityList = (commodityList) => {
-  const commodityListContainer = document.querySelector('.commodity-list');
+  const commodityListContainer = document.querySelector('.block.header .commodity-list');
   commodityListContainer.innerHTML = '';
-  commodityList.forEach((commodity) => {
+  processCommodityType(commodityList).forEach((commodity) => {
     const commodityItem = document.createElement('li');
     commodityItem.className = 'list-item';
     commodityItem.innerHTML = `
     <div class='details-section'>
-      <a class='item-name' title='${commodity.label}' href=${commodity.url} target='_blank'>${commodity.label}</a>
+      <a class='item-name' title='${commodity.title}' href=${commodity.url} target='_blank'>${commodity.title}</a>
       <a class='link' href=${commodity.url} target='_blank'>
-        <span class='item-value'>${commodity.ltp}</span>
+        <span class='item-value'>${commodity.lastTradingPrice}</span>
       </a>
       <span class='change-value ${commodity.change >= 0 ? 'positive' : 'negative'}'>
-        ${commodity.change} (${commodity.changeper}%)
+        ${commodity.change} (${commodity.changePercentage}%)
       </span>
     </div>
     `;
     commodityListContainer.appendChild(commodityItem);
   });
+  if (commodityList.length) {
+    commodityListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildKnowledgeCenterList = (knowledgeCenterList) => {
-  const knowledgeCenterListContainer = document.querySelector('.knowledge_center-list');
+  const knowledgeCenterListContainer = document.querySelector('.block.header .knowledge_center-list');
   knowledgeCenterListContainer.innerHTML = '';
-  knowledgeCenterList.forEach((knowledgeCenter) => {
+  processKnowledgeCenterType(knowledgeCenterList).forEach((knowledgeCenter) => {
     const knowledgeCenterItem = document.createElement('li');
     knowledgeCenterItem.className = 'list-item';
     knowledgeCenterItem.innerHTML = `
     <div class='details-section'>
-      <a class='full-item-name' title='${knowledgeCenter.label}' href=${knowledgeCenter.url} target='_blank'>${knowledgeCenter.label}</a>
+      <a class='full-item-name' title='${knowledgeCenter.title}' href=${knowledgeCenter.url} target='_blank'>${knowledgeCenter.title}</a>
     </div>
     `;
     knowledgeCenterListContainer.appendChild(knowledgeCenterItem);
@@ -644,26 +677,26 @@ const buildKnowledgeCenterList = (knowledgeCenterList) => {
 };
 
 const buildBondsList = (bondsList) => {
-  const bondsListContainer = document.querySelector('.bonds-list');
+  const bondsListContainer = document.querySelector('.block.header .bonds-list');
   bondsListContainer.innerHTML = '';
-  bondsList.forEach((bond) => {
+  processBondsType(bondsList).forEach((bond) => {
     const bondItem = document.createElement('li');
     bondItem.className = 'list-item';
     bondItem.innerHTML = `
     <div class='details-section'>
-      <a class='full-item-name' title='${bond.label}' href=${bond.url} target='_blank'>${bond.label}</a>
+      <a class='full-item-name' title='${bond.title}' href=${bond.url} target='_blank'>${bond.title}</a>
       <a class='link' href=${bond.url} target='_blank'>
-        <span class='item-value'>${bond.ISIN}</span>
+        <span class='item-value'>${bond.isin}</span>
       </a>
       <span class='item-value'}'>
-        (${bond.maturity_date}%)
+        (${bond.maturityDate}%)
       </span>
     </div>
     <div class='action-section hidden'>
-      <button class='action-button' onclick="window.open('${bond.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${bond.buyLink}', '_blank')">
         BUY
       </button>
-      <button class='action-button' onclick="window.open('${bond.url}', '_blank')">
+      <button class='action-button' onclick="window.open('${bond.sellLink}', '_blank')">
         SELL
       </button>
     </div>
@@ -672,36 +705,72 @@ const buildBondsList = (bondsList) => {
     bondItem.addEventListener('mouseleave', (event) => { event.target.classList.remove('hovered'); });
     bondsListContainer.appendChild(bondItem);
   });
+  if (bondsList.length) {
+    bondsListContainer.parentElement.classList.remove('hidden');
+  }
 };
 
 const buildNoResultsFound = () => {
-  const searchResultsContainer = document.querySelector('.block.header .search-results-popup-container');
-  searchResultsContainer.innerHTML = `
-    <span class='search-result-none'>
-      No records found
-    </span>
-  `;
+  const searchResultsNoneItem = document.querySelector('.block.header .search-results-popup-container .search-result-none');
+  searchResultsNoneItem.classList.remove('hidden');
 };
+
+/**
+ * Show and hide the loader in the search result popup when response is pending
+ * @param {*} show true when loading, false when done
+ */
+const showIsSearching = (show) => {
+  const loaderItem = document.querySelector('.block.header .search-box .search-results-popup-container .loader');
+  if (loaderItem) {
+    if (show) {
+      loaderItem.classList.remove('hidden');
+    } else {
+      loaderItem.classList.add('hidden');
+    }
+  }
+};
+
+const processResponse = (error, data) => {
+  showIsSearching(false);
+  if (!data || error) {
+    buildNoResultsFound();
+    return;
+  }
+  const results = data.Data;
+  if (results.length === 0) {
+    buildNoResultsFound();
+    return;
+  }
+  buildEquityList(results.filter((result) => result.TYPE === ENIITY_TYPE.EQUITY));
+  buildMutualFundsList(results.filter((result) => result.TYPE === ENIITY_TYPE.MUTUAL_FUND));
+  buildCurrencyList(results.filter((result) => result.TYPE === ENIITY_TYPE.CURRENCY));
+  buildCommodityList(results.filter((result) => result.TYPE === ENIITY_TYPE.COMMODITY));
+  buildKnowledgeCenterList(results.filter(
+    (result) => result.TYPE === ENIITY_TYPE.KNOWLEDGE_CENTER,
+  ));
+  buildBondsList(results.filter((result) => result.TYPE === ENIITY_TYPE.BONDS));
+};
+
 /**
  * Returns the result of the global search data
  * @param {*} category the category within which to search
  * @param {*} keyword the keyword to be searched
  */
-const handleSearchData = async (category, keyword) => {
+const callGlobalSearch = (category, keyword) => {
   if (!keyword) {
     return;
   }
-  const results = await globalSearchAPI(category, keyword);
-  if (!results) {
-    buildNoResultsFound();
-    return;
-  }
-  buildEquityList(results.filter((result) => result.type === 'eq'));
-  buildMutualFundsList(results.filter((result) => result.type === 'mf'));
-  buildCurrencyList(results.filter((result) => result.type === 'currency'));
-  buildCommodityList(results.filter((result) => result.type === 'commodity'));
-  buildKnowledgeCenterList(results.filter((result) => result.type === 'ilearn'));
-  buildBondsList(results.filter((result) => result.type === 'bonds'));
+  const jsonFormData = {
+    apiName: 'GetGlobalSearchResults',
+    inputJson: JSON.stringify({
+      term: keyword.trim(),
+      type: category,
+    }),
+  };
+  const searchBoxDiv = document.querySelector('.block.header .search-box .search-results-popup-container');
+  buildSearchResultsPopup(searchBoxDiv);
+  showIsSearching(true);
+  postFormData(getResearchAPIUrl(), jsonFormData, processResponse);
 };
 
 /**
@@ -751,14 +820,23 @@ const addHeaderEventHandlers = () => {
   const searchBarInput = document.getElementById('global-search');
   searchBarInput.addEventListener('input', debounce((event) => {
     const searchValue = event.target.value;
-    if (searchValue === '') {
+    if (searchValue === '' || searchValue.length < 2) {
       document.getElementById('search-results-popup').classList.remove('visible');
       return;
     }
     const selectedCategoryId = document.querySelector('.block.header .category-picker .selected-category').id;
-    handleSearchData(selectedCategoryId, searchValue);
+    callGlobalSearch(selectedCategoryId, searchValue);
     document.getElementById('search-results-popup').classList.add('visible');
-  }), 500);
+  }), 1000);
+
+  /**
+   * Handler for disabling the default behaviour when ENTER is pressed in the search bar
+   */
+  searchBarInput.addEventListener('keypress', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+    }
+  });
 
   /**
    * Handler to dismiss the search bar when clicked outside

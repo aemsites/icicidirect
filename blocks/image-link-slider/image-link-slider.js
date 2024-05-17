@@ -1,10 +1,25 @@
-// Map of API names and their respective endpoint URLs
-import { buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
+import {
+  buildBlock, decorateBlock, loadBlock, fetchPlaceholders,
+} from '../../scripts/aem.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
-import { callAPI } from '../../scripts/mockapi.js';
-import { observe } from '../../scripts/blocks-utils.js';
+import {
+  getOriginUrl,
+  getResearchAPIUrl,
+  handleNoResults,
+  parseResponse,
+  postFormData,
+} from '../../scripts/blocks-utils.js';
 
-function renderImageLinkVariant({ data }, carouselItems, maxLimit = 20) {
+const placeholders = await fetchPlaceholders();
+function getFinAceShareLink(permLink) {
+  return `${getOriginUrl()}/research/equity/finace/${permLink}`;
+}
+
+function getFinAceImage(image) {
+  return `${getOriginUrl()}/images/${image}`;
+}
+
+function renderImageLinkVariant(data, carouselItems, maxLimit = 20) {
   let slideCount = 0;
   data.forEach((item) => {
     if (slideCount >= maxLimit) return;
@@ -12,19 +27,19 @@ function renderImageLinkVariant({ data }, carouselItems, maxLimit = 20) {
     slide.classList.add('carousel-slide');
     slide.innerHTML = `
                     <div class="carousel-slide-image">
-                        <img data-src="${item.finImage}" alt="${item.finTitle}">
+                        <img src="${getFinAceImage(item.Image)}" alt="${item.AltImage}">
                     </div>
                     <div class="carousel-slide-content">
-                        <h3><a href="${item.finLink}">${item.finTitle}</a></h3>
+                        <h3><a href="${getFinAceShareLink(item.PermLink)}">${item.Title}</a></h3>
                         <div class="carousel-slide-content-footer copyright">
                         <div>
-                            <div>${item.finPoweredBy}</div>
-                            <div>${item.finPoweredOn}</div>
+                            <div>${placeholders.powerby}</div>
+                            <div>${placeholders.publishedon} ${item.PublishedOn}</div>
                         </div>
                         <div class="socialshare">
-                            <a class="social-share">
+                            <div class="social-share">
                                 <img src="/icons/gray-share-icon.svg" alt="Social Share" >
-                            </a>
+                            </div>
                         </div>
                     </div>
                     </div>
@@ -91,34 +106,29 @@ export default async function decorate(block) {
       const carouselItems = document.createElement('div');
       carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      callAPI(apiName)
-        .then((data) => {
+      const formData = new FormData();
+      if (apiName === 'finace') {
+        formData.append('apiName', 'GetFinaceListing');
+      }
+      formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '5' }));
+      // eslint-disable-next-line consistent-return
+      postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
+        if (error || !apiResponse) {
+          const noResultsContainer = document.createElement('div');
+          noResultsContainer.classList.add('no-results-container');
+          const buttonDiv = block.querySelector('.button-wrapper');
+          block.insertBefore(noResultsContainer, buttonDiv);
+          handleNoResults(noResultsContainer);
+        } else {
+          const jsonResult = parseResponse(apiResponse);
           if (block.classList.contains('image-link-slider')) {
-            renderImageLinkVariant(data, carouselItems, block?.dataset?.maxLimit);
-          }
-          return loadCarousel(block, carouselItems);
-        })
-        .then(() => {
-          block.querySelectorAll('.carousel-slide').forEach((slide) => {
-            observe(slide, (element) => {
-              const img = element.querySelector('img');
-              img.src = img.dataset.src;
-              img.onload = function handleImageLoad() {
-                img.width = this.width;
-                img.height = this.height;
-              };
+            renderImageLinkVariant(jsonResult, carouselItems, block?.dataset?.maxLimit);
+            return loadCarousel(block, carouselItems).then(() => {
+              block.querySelector('.block.carousel').style.display = 'block';
             });
-          });
-        }).then(() => {
-          block.querySelector('.block.carousel').style.display = 'block';
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error('Error fetching data:', error);
-        })
-        .finally(() => {
-          block.style.display = 'block';
-        });
+          }
+        }
+      });
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);

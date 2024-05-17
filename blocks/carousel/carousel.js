@@ -117,11 +117,19 @@ function registerAutoScroll(
   autoRotateDelay = 5000,
 ) {
   let autoRotateCounter = 1;
+  let scrollDirection = 1; // 1 for forward, -1 for backward
   let numberOfRotations = 0;
   const rotateInterval = setInterval(() => {
     const activeSlide = parseInt(block?.dataset?.activeSlide ?? '0', 10);
     const lenOfSlidesWindow = visibleSlides ? visibleSlides - 1 : 0;
-    const nextSlide = (activeSlide + 1) % (totalSlides - lenOfSlidesWindow);
+    let nextSlide = activeSlide + scrollDirection;
+    if (nextSlide >= totalSlides - lenOfSlidesWindow) {
+      nextSlide = totalSlides - lenOfSlidesWindow - 1;
+      scrollDirection = -1; // Change direction to backward
+    } else if (nextSlide < 0) {
+      nextSlide = 0;
+      scrollDirection = 1; // Change direction to forward
+    }
     block.dataset.activeSlide = nextSlide;
     showSlide(block, nextSlide);
     autoRotateCounter += 1;

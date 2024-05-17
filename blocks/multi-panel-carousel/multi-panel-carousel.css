@@ -45,11 +45,23 @@
 }
 
 .block.carousel-section .carousel-highlight p {
-    margin-left: 0.5rem;
+    margin-left: var(--space-8px);
+    font-weight: var(--font-weight-regular);
+    font-size: var(--heading-font-size-ms);
+}
+
+.block.carousel-section .carousel-highlight p strong {
+    font-weight: var(--font-weight-bold);
+    font-size: var(--heading-font-size-ms);
 }
 
 .block.carousel-section .carousel-highlight p:last-child {
     margin-bottom: 0;
+}
+
+.block.carousel-section .carousel-highlight.green-highlight p strong {
+   color: var(--color-dark-green);
+   font-weight: var(--font-weight-regular);
 }
 
 .block.carousel-section .row {
@@ -78,7 +90,7 @@
 }
 
 .block.carousel-section .carousel-header {
-    background-color: var(--primary);
+    background-color: var(--color-orange);
     padding: 0.6rem 0.9rem;
 }
 
@@ -196,7 +208,7 @@
     display: block;
 }
 
-.block.carousel-section .dropdowns .dropdown-menu li a {
+.block.carousel-section .dropdowns .dropdown-menu li span {
     padding: 0.3rem 0.6rem;
     color: var(--link-color-dark-blue);
     cursor: pointer;
@@ -264,8 +276,18 @@
     min-height: 17.5rem;
 }
 
+.block.carousel-section .carousel-slider .carousel-track.scrollable {
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+}
+
 .block.carousel-section .carousel-slider .carousel-track > * {
     opacity: 0;
+}
+
+.block.carousel-section .carousel-slider .carousel-track::-webkit-scrollbar {
+    display: none;
 }
 
 .block.carousel-section .carousel-slider .carousel-track > :first-child {
@@ -275,6 +297,10 @@
 .block.carousel-section .carousel-slider .carousel-card {
     transition: opacity 0.5s ease;
     padding: 0.5rem;
+}
+
+.block.carousel-section .carousel-slider .carousel-card.scrollable {
+    scroll-snap-align: start;
 }
 
 .block.carousel-section .carousel-slider .carousel-card img {
@@ -343,7 +369,7 @@
 }
 
 .block.carousel-section .carousel-slider .box .label-value.positive {
-    color: var(--color-green)
+    color: var(--color-dark-green)
 }
 
 .block.carousel-section .carousel-slider .box .label-value.negative {
@@ -453,7 +479,7 @@
 }
 
 .block.carousel-section .carousel-slider .box .box-footer .btn.btn-buy {
-    background-color: var(--color-green);
+    background-color: var(--color-dark-green);
 }
 
 .block.carousel-section .carousel-slider .box .box-footer .btn.disabled {

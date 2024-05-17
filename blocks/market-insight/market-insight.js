@@ -1,13 +1,17 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
 import {
-  createElement, observe, postFormData, getResearchAPIUrl, parseResponse,
+  createElement, observe, postFormData, getResearchAPIUrl, parseResponse, SITE_ROOT,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
 const apiName = 'GetMarketInsights';
-const apiFormData = '{ pageNo: 1, pageSize: 5 }';
 const defaultCardsCount = 3;
+const MARKETINSIGHT_DIRECTORY = '/research/equity/market-insights/';
 
+function getLink(permLink) {
+  return SITE_ROOT + MARKETINSIGHT_DIRECTORY + permLink;
+}
 function decorateTitle(blockCfg) {
   const { title } = blockCfg;
   const blockTitleDiv = createElement('div', 'title');
@@ -64,7 +68,7 @@ function buildCards(results, cards, cardCount, placeholders) {
     const titleContent = result.Title ?? '';
     if (result.PermLink) {
       const aLink = createElement('a', '');
-      aLink.href = result.PermLink;
+      aLink.href = getLink(result.PermLink);
       aLink.target = '_blank';
       aLink.append(titleContent);
       h3.append(aLink);
@@ -104,12 +108,16 @@ function buildCards(results, cards, cardCount, placeholders) {
 async function decorateCards(block, placeholders, cards, cardCount) {
   const formData = new FormData();
   formData.append('apiName', apiName);
-  formData.append('inputJson', apiFormData);
+  formData.append('inputJson', `{ pageNo: 1, pageSize: ${cardCount} }`);
   postFormData(getResearchAPIUrl(), formData, (error, GetMarketInsights = []) => {
-    if (!GetMarketInsights || !GetMarketInsights.Data) return;
-    const formattedData = parseResponse(GetMarketInsights);
-    const results = sortResult(formattedData);
-    buildCards(results, cards, cardCount, placeholders);
+    if (error || !GetMarketInsights || !GetMarketInsights.Data) {
+      const element = block.querySelector('.cards');
+      handleNoResults(element);
+    } else {
+      const formattedData = parseResponse(GetMarketInsights);
+      const results = sortResult(formattedData);
+      buildCards(results, cards, cardCount, placeholders);
+    }
   }, apiName);
 }
 
@@ -117,7 +125,7 @@ export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
   const blockCfg = readBlockConfig(block);
   const title = decorateTitle(blockCfg);
-  const cards = createElement('ul', '');
+  const cards = createElement('ul', 'cards');
   const cardCount = blockCfg.count ?? defaultCardsCount;
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
   block.textContent = '';
