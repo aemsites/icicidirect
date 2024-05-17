@@ -47,11 +47,11 @@ const decorateGlobalNavigationBar = (fragment, block) => {
 const decorateMainHeaderLogo = (fragment) => {
   const logoDiv = document.createElement('div');
   logoDiv.className = 'logo';
-  const headerLogoDetails = fragment.querySelector('.section.icici-logo');
-  const imageAltData = headerLogoDetails.getAttribute('data-image-alt');
+  const headerLogoDetails = fragment.querySelector('.section.primary-buttons');
   const imageTag = headerLogoDetails.querySelector('img');
-  imageTag.alt = imageAltData;
-  logoDiv.appendChild(imageTag);
+  imageTag.alt = 'ICICI Logo';
+  const wrappedLogo = headerLogoDetails.querySelector('.button-container');
+  logoDiv.appendChild(wrappedLogo);
   return logoDiv;
 };
 
@@ -341,11 +341,11 @@ const buildSidePanelTopSection = (fragment) => {
 
   const sidePanelTopAreaLogo = document.createElement('div');
   sidePanelTopAreaLogo.className = 'top-area-logo';
-  const sidePanelLogoDetails = fragment.querySelector('.section.side-panel-icici-logo');
-  const sidePanelImageAltData = sidePanelLogoDetails.getAttribute('data-image-alt');
+  const sidePanelLogoDetails = fragment.querySelector('.section.side-panel-primary-actions');
   const sidePanelImageTag = sidePanelLogoDetails.querySelector('img');
-  sidePanelImageTag.alt = sidePanelImageAltData;
-  sidePanelTopAreaLogo.appendChild(sidePanelImageTag);
+  sidePanelImageTag.alt = 'ICICI Logo';
+  const wrappedLogo = sidePanelLogoDetails.querySelector('.button-container');
+  sidePanelTopAreaLogo.appendChild(wrappedLogo);
   sidePanelTopAreaDiv.appendChild(sidePanelTopAreaLogo);
   return sidePanelTopAreaDiv;
 };

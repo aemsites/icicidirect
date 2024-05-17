@@ -220,6 +220,10 @@
   width: 9.375rem;
 }
 
+.block.header .sidepanel .top-area-logo p {
+  margin: 0;
+}
+
 .block.header .sidepanel .bottom-area {
   display: flex;
   flex-direction: column;
@@ -801,6 +805,10 @@
   .block.header .top-bar .logo img {
     width: 15.625rem;
     height: auto;
+  }
+
+  .block.header .top-bar .logo p {
+    margin: 0;
   }
 
   .block.header .top-bar .row1 .primary-buttons button.desktop-element {
