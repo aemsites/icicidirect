@@ -75,6 +75,21 @@ function formatDateString(dateString) {
   return formattedDate;
 }
 
+async function addCards(block, blogsDataArray) {
+  const entriesToProcess = blogsDataArray.length;
+  const blogsContainer = block.querySelector('.blogs-cards-container');
+  for (let i = 0; i + 1 < entriesToProcess; i += 2) {
+    const blogsColumn = document.createElement('div');
+    blogsColumn.className = 'blogs-container-column';
+    // eslint-disable-next-line no-await-in-loop
+    const blogCard1 = createBlogCard(blogsDataArray[i]);
+    // eslint-disable-next-line no-await-in-loop
+    const blogCard2 = createBlogCard(blogsDataArray[i + 1]);
+    blogsColumn.appendChild(blogCard1);
+    blogsColumn.appendChild(blogCard2);
+    blogsContainer.appendChild(blogsColumn);
+  }
+}
 async function generateCardsView(block) {
   const blogsContainer = block.querySelector('.blogs-cards-container');
   const blogsDataArray = [];
@@ -121,18 +136,19 @@ async function generateCardsView(block) {
       }
     });
 
-    const entriesToProcess = blogsDataArray.length;
-    for (let i = 0; i + 1 < entriesToProcess; i += 2) {
-      const blogsColumn = document.createElement('div');
-      blogsColumn.className = 'blogs-container-column';
-      // eslint-disable-next-line no-await-in-loop
-      const blogCard1 = createBlogCard(blogsDataArray[i]);
-      // eslint-disable-next-line no-await-in-loop
-      const blogCard2 = createBlogCard(blogsDataArray[i + 1]);
-      blogsColumn.appendChild(blogCard1);
-      blogsColumn.appendChild(blogCard2);
-      blogsContainer.appendChild(blogsColumn);
-    }
+    observe(block, addCards, blogsDataArray);
+    // const entriesToProcess = blogsDataArray.length;
+    // for (let i = 0; i + 1 < entriesToProcess; i += 2) {
+    //   const blogsColumn = document.createElement('div');
+    //   blogsColumn.className = 'blogs-container-column';
+    //   // eslint-disable-next-line no-await-in-loop
+    //   const blogCard1 = createBlogCard(blogsDataArray[i]);
+    //   // eslint-disable-next-line no-await-in-loop
+    //   const blogCard2 = createBlogCard(blogsDataArray[i + 1]);
+    //   blogsColumn.appendChild(blogCard1);
+    //   blogsColumn.appendChild(blogCard2);
+    //   blogsContainer.appendChild(blogsColumn);
+    // }
   });
 }
 

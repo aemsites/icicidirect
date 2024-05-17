@@ -513,7 +513,7 @@ async function fetchCardsData(block, type, marginActions) {
       } else {
         resultData = tradingData.Data.Table ? tradingData.Data.Table : tradingData.Data;
       }
-      updateCardsInView(block, type, resultData, placeholders, marginActions);
+      observe(block, updateCardsInView, type, resultData, placeholders, marginActions);
     }
   });
 }
@@ -560,7 +560,7 @@ async function generateDropDowns(block, type, marginActions) {
             count += 1;
           });
         }
-        addingDynamicDropDowns(block, type, restructuredData, marginActions);
+        observe(block, addingDynamicDropDowns, type, restructuredData, marginActions);
       });
     });
   } else {
@@ -575,7 +575,7 @@ async function generateDropDowns(block, type, marginActions) {
         }
         restructuredData[Type].push({ type: Type, label: Label, value: Value });
       });
-      addingDynamicDropDowns(block, type, restructuredData, marginActions);
+      observe(block, addingDynamicDropDowns, type, restructuredData, marginActions);
     });
   }
 }
@@ -684,5 +684,6 @@ export default async function decorate(block) {
 
   addCarouselCards(carouselBody);
   addDiscoverLink(carouselBody, discoverLink);
-  observe(block, generateDynamicContent, type, marginActions);
+  generateDynamicContent(block, type, marginActions);
+  // observe(block, generateDynamicContent, type, marginActions);
 }

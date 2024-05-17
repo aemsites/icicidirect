@@ -18,6 +18,53 @@ function decorateTitle(blockCfg) {
   return blockTitleDiv;
 }
 
+async function addingSuggestionData(ilensContainer, ilensRecommendations, tableData) {
+  const ilensBody = ilensContainer.querySelector('.i-lens-body');
+  for (let i = 0; i < 5; i++) {
+    const [stockName, ...revenues] = tableData[i];
+
+    const box = document.createElement('div');
+    box.classList.add('box');
+
+    const heading = document.createElement('h3');
+    heading.textContent = stockName;
+    box.appendChild(heading);
+
+    const list = document.createElement('ul');
+    revenues.slice(5, 14).forEach((revenue, index) => {
+      const listItem = document.createElement('li');
+
+      // eslint-disable-next-line no-shadow
+      const label = document.createElement('label');
+      // eslint-disable-next-line max-len
+      const labelText = ilensRecommendations.tableColumns[index + 6].name;
+      label.appendChild(document.createTextNode(labelText));
+      listItem.appendChild(label);
+
+      // eslint-disable-next-line no-shadow
+      const span = document.createElement('span');
+      span.classList.add('value');
+      if (labelText.includes('%')) {
+        if (parseFloat(revenue) > 0) {
+          span.classList.add('green');
+        } else {
+          span.classList.add('red');
+        }
+        span.textContent = `${revenue.toLocaleString()}%`;
+      } else {
+        span.textContent = revenue.toLocaleString();
+      }
+
+      listItem.appendChild(span);
+
+      list.appendChild(listItem);
+    });
+    box.appendChild(list);
+
+    // Append the box to the document body or any other container
+    ilensBody.appendChild(box);
+  }
+}
 function addStocksData(ilensContainer, key) {
   if (!key) {
     return;
@@ -43,52 +90,52 @@ function addStocksData(ilensContainer, key) {
     const { tableData } = ilensRecommendations;
     // Sort the tableData based on the Operating Revenue Qtr (SR_Q) in descending order
     tableData.sort((a, b) => b[6] - a[6]);
-
+    observe(ilensContainer, addingSuggestionData, ilensRecommendations, tableData);
     // eslint-disable-next-line no-plusplus
-    for (let i = 0; i < 5; i++) {
-      const [stockName, ...revenues] = tableData[i];
-
-      const box = document.createElement('div');
-      box.classList.add('box');
-
-      const heading = document.createElement('h3');
-      heading.textContent = stockName;
-      box.appendChild(heading);
-
-      const list = document.createElement('ul');
-      revenues.slice(5, 14).forEach((revenue, index) => {
-        const listItem = document.createElement('li');
-
-        // eslint-disable-next-line no-shadow
-        const label = document.createElement('label');
-        // eslint-disable-next-line max-len
-        const labelText = ilensRecommendations.tableColumns[index + 6].name;
-        label.appendChild(document.createTextNode(labelText));
-        listItem.appendChild(label);
-
-        // eslint-disable-next-line no-shadow
-        const span = document.createElement('span');
-        span.classList.add('value');
-        if (labelText.includes('%')) {
-          if (parseFloat(revenue) > 0) {
-            span.classList.add('green');
-          } else {
-            span.classList.add('red');
-          }
-          span.textContent = `${revenue.toLocaleString()}%`;
-        } else {
-          span.textContent = revenue.toLocaleString();
-        }
-
-        listItem.appendChild(span);
-
-        list.appendChild(listItem);
-      });
-      box.appendChild(list);
-
-      // Append the box to the document body or any other container
-      ilensBody.appendChild(box);
-    }
+    // for (let i = 0; i < 5; i++) {
+    //   const [stockName, ...revenues] = tableData[i];
+    //
+    //   const box = document.createElement('div');
+    //   box.classList.add('box');
+    //
+    //   const heading = document.createElement('h3');
+    //   heading.textContent = stockName;
+    //   box.appendChild(heading);
+    //
+    //   const list = document.createElement('ul');
+    //   revenues.slice(5, 14).forEach((revenue, index) => {
+    //     const listItem = document.createElement('li');
+    //
+    //     // eslint-disable-next-line no-shadow
+    //     const label = document.createElement('label');
+    //     // eslint-disable-next-line max-len
+    //     const labelText = ilensRecommendations.tableColumns[index + 6].name;
+    //     label.appendChild(document.createTextNode(labelText));
+    //     listItem.appendChild(label);
+    //
+    //     // eslint-disable-next-line no-shadow
+    //     const span = document.createElement('span');
+    //     span.classList.add('value');
+    //     if (labelText.includes('%')) {
+    //       if (parseFloat(revenue) > 0) {
+    //         span.classList.add('green');
+    //       } else {
+    //         span.classList.add('red');
+    //       }
+    //       span.textContent = `${revenue.toLocaleString()}%`;
+    //     } else {
+    //       span.textContent = revenue.toLocaleString();
+    //     }
+    //
+    //     listItem.appendChild(span);
+    //
+    //     list.appendChild(listItem);
+    //   });
+    //   box.appendChild(list);
+    //
+    //   // Append the box to the document body or any other container
+    //   ilensBody.appendChild(box);
+    // }
   });
 }
 
