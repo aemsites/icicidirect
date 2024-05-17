@@ -199,7 +199,7 @@ async function getAndApplyRenderDecisions() {
     });
   });
 
-  const sendAAEvent = await window.alloy('event', {
+  const sendAAEvent = await window.alloy('sendEvent', {
     xdm: {
       eventType: 'web.webinteraction.linkClicks',
       _atag: {
