@@ -199,9 +199,14 @@ async function getAndApplyRenderDecisions() {
     });
   });
 
-  const sendAAEvent = await window.alloy('sendEvent', {
+  const sendAAEvent = await window.alloy('event', {
     xdm: {
       eventType: 'web.webinteraction.linkClicks',
+      _atag: {
+        search: {
+          term: 'Example search term',
+        },
+      },
       _experience: {
         analytics: {
           event1to100: {
