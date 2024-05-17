@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-cycle
-import { loadScript, sampleRUM } from './aem.js';
+import { loadScript, sampleRUM, fetchPlaceholders } from './aem.js';
 import {
   // eslint-disable-next-line import/named
   defaultAnalyticsLoadDisabled,
@@ -13,12 +13,14 @@ const isSidekickLibrary = (window.location.pathname.includes('srcdoc'));
 
 const onCaptchaloadCallback = () => {
   document.querySelectorAll('.g-recaptcha').forEach((el) => {
-    // eslint-disable-next-line no-undef
-    grecaptcha.render(el, {
-      sitekey: '6LfrHrQpAAAAAMuD8qoz9J95kTu2I78Gv5HKuQh-', // TODO: Replace with actual sitekey
-      callback(token) {
-        window.validateCaptchaToken = token;
-      },
+    fetchPlaceholders().then((placeholders) => {
+      // eslint-disable-next-line no-undef
+      grecaptcha.render(el, {
+        sitekey: placeholders.sitekey, // Use sitekey from placeholders
+        callback(token) {
+          window.validateCaptchaToken = token;
+        },
+      });
     });
   });
 };
