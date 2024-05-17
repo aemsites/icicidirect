@@ -95,6 +95,19 @@ function createNewsCards(item) {
   return article;
 }
 
+function addCards(block, newsData) {
+  const newsTrack = block.querySelector('.news-track');
+  newsData.forEach((item) => {
+    if (item.PermLink) {
+      const slide = document.createElement('div');
+      slide.className = 'news-card';
+      const article = createNewsCards(item);
+      slide.appendChild(article);
+      newsTrack.appendChild(slide);
+    }
+  });
+}
+
 async function generateNewsCard(block) {
   const newsTrack = block.querySelector('.news-track');
   const formData = new FormData();
@@ -107,15 +120,7 @@ async function generateNewsCard(block) {
       handleNoResults(element);
     } else {
       const jsonResult = parseResponse(apiResponse);
-      jsonResult.forEach((item) => {
-        if (item.PermLink) {
-          const slide = document.createElement('div');
-          slide.className = 'news-card';
-          const article = createNewsCards(item);
-          slide.appendChild(article);
-          newsTrack.appendChild(slide);
-        }
-      });
+      observe(block, addCards, jsonResult, placeholders);
     }
   });
   let currentIndex = 0;
@@ -201,5 +206,6 @@ export default function decorate(block) {
   newsSection.appendChild(createDiscoverMore(blockConfig.discovermorelink));
   container.appendChild(newsSection);
   block.appendChild(container);
-  observe(block, generateNewsCard, placeholders);
+  generateNewsCard(block);
+  //observe(block, generateNewsCard, placeholders);
 }
