@@ -97,7 +97,8 @@ function createNewsCards(item) {
 
 function addCards(block, newsData) {
   const newsTrack = block.querySelector('.news-track');
-  newsData.forEach((item) => {
+  for (let i = 0; i < newsData.length; i += 1) {
+    const item = newsData[i];
     if (item.PermLink) {
       const slide = document.createElement('div');
       slide.className = 'news-card';
@@ -105,7 +106,7 @@ function addCards(block, newsData) {
       slide.appendChild(article);
       newsTrack.appendChild(slide);
     }
-  });
+  }
 }
 
 async function generateNewsCard(block) {
