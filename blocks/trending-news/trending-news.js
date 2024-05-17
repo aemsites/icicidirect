@@ -206,7 +206,7 @@ export default function decorate(block) {
   fetchPlaceholders().then((placeholders) => {
     newsSection.appendChild(createDiscoverMore(
       blockConfig.discovermorelink,
-      placeholders.discovermorelink,
+      placeholders.discovermore,
     ));
   });
 
