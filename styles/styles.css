@@ -585,6 +585,21 @@ main .section.background-gray {
   background: var(--background-color-deep-light-grey);
 }
 
+main .section.code .default-content-wrapper {
+  font-family: var(--fixed-font-family);
+  font-size: var(--body-font-size-s);
+  padding: .125em;
+  overflow: scroll;
+  color: var(--color-white);
+  background: #282c34;
+  display: block;
+  width: 100%;
+}
+
+main .section.code .default-content-wrapper p {
+  color: var(--color-white);
+}
+
   @media (width >= 36rem) {
     main .section.top-bottom-padded {
       padding: 2.5rem 0;
