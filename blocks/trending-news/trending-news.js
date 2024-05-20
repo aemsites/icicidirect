@@ -117,13 +117,18 @@ async function generateNewsCard(block) {
           slide.setAttribute('index', index);
           slide.appendChild(article);
           newsTrack.appendChild(slide);
+          ['mousedown', 'touchmove'].forEach((eventType) => {
+            slide.addEventListener(eventType, () => {
+              clearInterval(newsTrack.getAttribute('interval-id'));
+            });
+          });
           index += 1;
         }
       });
     }
   });
   let forward = true;
-  setInterval(() => {
+  const intervalId = setInterval(() => {
     const cardIndex = Math.round(newsTrack.scrollLeft / cardWidth);
     const nextCard = newsTrack.querySelector(`.news-card[index='${cardIndex + allowedCardsCount()}']`);
     if (cardIndex === 0) forward = true;
@@ -134,6 +139,7 @@ async function generateNewsCard(block) {
       forward = false;
     }
   }, 3000);
+  newsTrack.setAttribute('interval-id', intervalId);
 }
 
 export default function decorate(block) {

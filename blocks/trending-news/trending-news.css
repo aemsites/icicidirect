@@ -36,6 +36,7 @@
     scroll-snap-type: x mandatory;
     overflow-x: auto;
     scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .block.trending-news .news-slider.no-results {
