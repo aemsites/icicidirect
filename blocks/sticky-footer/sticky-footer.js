@@ -2,6 +2,7 @@ import { readBlockConfig, fetchPlaceholders, toCamelCase } from '../../scripts/a
 import {
   div, input, a, p,
 } from '../../scripts/dom-builder.js';
+import { createElement } from '../../scripts/blocks-utils.js';
 
 /**
  * Makes the sticky footer visible when the parent container is scrolled out of view port on top
@@ -80,6 +81,12 @@ const handleMobileNumberValidation = (event) => {
   }
 };
 
+function createReCaptcha() {
+  const captchadiv = createElement('div', 'g-recaptcha');
+  captchadiv.id = 'captchadiv';
+  return captchadiv;
+}
+
 export default async function decorate(block) {
   // extract open account button linl from the block data
   const blockConfig = readBlockConfig(block);
@@ -96,6 +103,9 @@ export default async function decorate(block) {
   mobileNumberField.placeholder = placeholders[toCamelCase('MobileNumberPlaceholder')];
   mobileNumberField.addEventListener('input', handleMobileNumberValidation);
   stickyFooterContainer.appendChild(mobileNumberField);
+
+  const captchaContainer = createReCaptcha();
+  stickyFooterContainer.appendChild(captchaContainer);
 
   const openAccountButton = div({ class: 'open-account' });
   const aLink = a({ class: 'discover-more-button' });
