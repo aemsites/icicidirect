@@ -268,7 +268,8 @@ function addActionButton(boxFooter, company, type, marginActions) {
   const aSell = document.createElement('a');
   aSell.href = marginActions[action.toLowerCase()];
   aSell.className = `btn border-box btn-${action.toLowerCase()}`;
-  if (company.exit) {
+  if ((company.Exit_Price && parseInt(company.Exit_Price, 10) > 0)
+      || (company.Book_Profit_Price && parseInt(company.Book_Profit_Price, 10) > 0)) {
     aSell.classList.add('disabled');
   }
   aSell.target = '_blank';
@@ -560,7 +561,9 @@ async function generateDropDowns(block, type, marginActions) {
             count += 1;
           });
         }
-        addingDynamicDropDowns(block, type, restructuredData, marginActions);
+        if (restructuredData[dropDownDetails.dropdownType].length > 1) {
+          addingDynamicDropDowns(block, type, restructuredData, marginActions);
+        }
       });
     });
   } else {
