@@ -7,7 +7,6 @@ import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts
 
 const placeholders = await fetchPlaceholders();
 const ICICI_DIRECT_NEWS_HOST = 'https://www.icicidirect.com/research/equity/trending-news/';
-const ICICI_NEWS_THUMBNAIL_ICICI_HOST = 'https://www.icicidirect.com/images/';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
