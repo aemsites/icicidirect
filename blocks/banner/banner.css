@@ -1,0 +1,25 @@
+.block.banner {
+  margin-top: 1rem;
+}
+
+.block.banner img {
+  width: 100%;
+}
+
+.block.banner:not(.mobile) {
+  display: none;
+}
+
+.block.banner.mobile {
+  display: block;
+}
+
+@media screen and (width >= 48rem) {
+  .block.banner:not(.mobile) {
+    display: block;
+  }
+
+  .block.banner.mobile {
+    display: none;
+  }
+}
