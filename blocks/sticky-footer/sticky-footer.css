@@ -14,7 +14,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: var(--background-color-blue-dark);
+  background-color: var(--color-orange);
   padding: var(--space-8px) var(--space-15px);
 }
 
@@ -61,6 +61,8 @@
   align-items: center;
   justify-content: center;
   min-height: unset;
+  background-color: var(--color-maroon);
+  border-color: var(--color-maroon);
 }
 
 .block.sticky-footer .action-container .discover-more-button a {
@@ -76,6 +78,11 @@
   padding: var(--space-6px) var(--space-12px);
   cursor: text;
   color: var(--color-gray-dark);
+  margin-bottom: var(--space-3px);
+}
+
+.block.sticky-footer .action-container .g-recaptcha {
+  transform: scale(0.65);
 }
 
 .block.sticky-footer .message-container p {
@@ -106,6 +113,7 @@
     font-size: var(--body-font-size-m);
     height: 2.813rem;
     line-height: 1.5rem;
+    margin-bottom: 0;
   }
 
   .block.sticky-footer .action-container input::placeholder {
