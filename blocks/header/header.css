@@ -673,6 +673,10 @@
   transition: background-color 0.2s;
 }
 
+.block.header .accordion details summary::-webkit-details-marker {
+  display: none;
+}
+
 .block.header .accordion details .accordion-item-label {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
