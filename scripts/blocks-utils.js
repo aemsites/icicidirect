@@ -398,7 +398,7 @@ function loadAdobeLaunchAndGTM() {
   } else if (loadMartech === 'gtm') {
     loadGTM();
   } else if (loadMartech === 'all') {
-    loadAdobeLaunch();
+    // loadAdobeLaunch();
     loadGTM();
   }
 }

@@ -14,7 +14,7 @@ import {
 
 import {
   decorateQuickLinks,
-  defaultAnalyticsLoadDisabled,
+  defaultAnalyticsLoadDisabled, loadAdobeLaunch,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
@@ -144,6 +144,7 @@ async function loadEager(doc) {
     decorateMain(main);
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
+    loadAdobeLaunch();
   }
 
   try {
