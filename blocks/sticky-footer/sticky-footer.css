@@ -81,6 +81,10 @@
   margin-bottom: var(--space-3px);
 }
 
+.block.sticky-footer .action-container input::placeholder {
+  color: var(--color-strong-gray-light);
+}
+
 .block.sticky-footer .action-container .g-recaptcha {
   transform: scale(0.65);
 }
