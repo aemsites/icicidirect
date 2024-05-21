@@ -81,6 +81,12 @@
   margin-bottom: var(--space-3px);
 }
 
+.block.sticky-footer .action-container input::placeholder {
+  color: #405057;
+  font-family: var(--body-font-family);
+  opacity: 0.6;
+}
+
 .block.sticky-footer .action-container .g-recaptcha {
   transform: scale(0.65);
 }
