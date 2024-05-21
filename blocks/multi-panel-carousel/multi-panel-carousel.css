@@ -493,6 +493,7 @@
     font-size: 0.9rem;
     line-height: 1.2rem;
     font-weight: var(--font-weight-medium);
+    color: var(--link-color-orange);
 }
 
 
