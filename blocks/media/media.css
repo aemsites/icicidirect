@@ -54,6 +54,15 @@
     display: flex;
     min-height: 23.5rem;
     transition: transform 1s ease;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For IE and Edge */
+}
+
+.block.media .slider .track::-webkit-scrollbar {
+    display: none;
 }
 
 .block.media .slider .track .slide-card {
@@ -61,6 +70,7 @@
     padding: 1rem;
     flex: 0 0 auto;
     transition: opacity 1s ease;
+    scroll-snap-align: start;
 }
 
 .block.media .dots-container .dot {
