@@ -15,7 +15,7 @@ import {
 
 import {
   decorateQuickLinks,
-  defaultAnalyticsLoadDisabled,
+  defaultAnalyticsLoadDisabled, loadAdobeLaunch,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
@@ -323,6 +323,7 @@ async function loadEager(doc) {
       datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
       orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
     });
+    loadAdobeLaunch();
     // console.log('Alloy configured', JSON.stringify(response));
     // await getAndApplyRenderDecisions();
     decorateMain(main);

@@ -376,7 +376,7 @@ function loadAdobeLaunch() {
 }
 
 function loadAdobeLaunchAndGTM() {
-  loadAdobeLaunch();
+  // loadAdobeLaunch();
   loadGTM();
 }
 
