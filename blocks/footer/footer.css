@@ -216,7 +216,7 @@
 .footer.block .footer-disclaimer {
   background: var(--link-color-dark-gray);
   padding-top: 1.875rem;
-  padding-bottom: 1.875rem;
+  padding-bottom: 6rem;
 }
 
 .footer.block .footer-disclaimer a:hover {
@@ -379,6 +379,10 @@
   .footer.block .footer-top-note p {
     font-size: var(--space-13px);
     padding-left: var(--space-15px);
+  }
+
+  .footer.block .footer-disclaimer {
+    padding-bottom: 4rem;
   }
 }
 
