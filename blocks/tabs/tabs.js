@@ -65,8 +65,11 @@ export default async function decorate(block) {
     tab.remove();
   });
   block.prepend(tablist);
-  block.querySelectorAll('.block.media').forEach((mediaBlock) => {
+  const mediaBlocks = Array.from(block.querySelectorAll('.block.media'));
+  // eslint-disable-next-line no-restricted-syntax
+  for (const mediaBlock of mediaBlocks) {
     decorateBlock(mediaBlock);
-    loadBlock(mediaBlock);
-  });
+    // eslint-disable-next-line no-await-in-loop
+    await loadBlock(mediaBlock);
+  }
 }

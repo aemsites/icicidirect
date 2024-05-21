@@ -5,6 +5,10 @@
   min-height: 3.5rem;
 }
 
+.block.breadcrumbs > div {
+  margin-left: var(--space-14px);
+}
+
 .block.breadcrumbs a {
   text-decoration: none;
 }
@@ -33,10 +37,6 @@
 @media screen and (width >= 48rem) {
   .block.breadcrumbs {
     min-height: 3.75rem;
-  }
-
-  .block.breadcrumbs > div {
-    margin-left: var(--space-14px);
   }
 
   .block.breadcrumbs .button-container .breadcrumb-title {

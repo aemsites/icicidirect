@@ -33,6 +33,11 @@
     transform: translate3d(0, 0, 0);
 }
 
+.block.blogs .blogs-cards-container.no-results {
+  display: block;
+  min-height: unset;
+}
+
 .block.blogs  .blogs-cards-container > :nth-child(-n+1){
     flex: 1;
     display: block;

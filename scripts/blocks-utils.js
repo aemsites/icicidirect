@@ -1,5 +1,5 @@
 import {
-  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName,
+  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName, fetchPlaceholders,
 } from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
@@ -7,6 +7,8 @@ const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
 const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 const SITE_ROOT = 'https://www.icicidirect.com';
+const CONTENT_FEED_URL = 'https://contentfeeds.icicidirect.com/';
+const SOCKET_IO_SCRIPT = 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js';
 
 const DELAY_MARTECH_PARAMS = 'delayMartech';
 const LOAD_MARTECH_PARAM = 'loadMartech';
@@ -40,6 +42,7 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+  getDeviceType();
 
   getDeviceType();
 
@@ -429,11 +432,37 @@ function generateReportLink(companyName, reportId) {
   const trimmedReportId = reportId.toString().replace(/\.0$/, '');
 
   // Generate report link
-  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
+  const reportLink = `${ICICI_FINOUX_HOST}/research/equity/`
     + `${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
 }
+
+function getHostUrl() {
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
+  return hostUrl;
+}
+
+/**
+ * Util function to append no results message in the block with no data to display
+ * @param {*} element - The element to append the no results message
+ */
+const handleNoResults = (element) => {
+  if (element) {
+    element.innerHTML = '';
+    element.classList.add('no-results');
+    const noResultsDiv = document.createElement('div');
+    noResultsDiv.className = 'no-results';
+    fetchPlaceholders().then((placeholders) => {
+      noResultsDiv.textContent = placeholders.norecordsfound;
+      element.appendChild(noResultsDiv);
+    });
+  }
+};
 
 export {
   isInViewport,
@@ -458,9 +487,13 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
+  getHostUrl,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
   defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
+  CONTENT_FEED_URL,
+  SOCKET_IO_SCRIPT,
+  handleNoResults,
 };

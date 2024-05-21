@@ -1,6 +1,7 @@
 import { readBlockConfig, fetchPlaceholders, decorateIcons } from '../../scripts/aem.js';
 import {
   createElement, observe, postFormData, getResearchAPIUrl, parseResponse, SITE_ROOT,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { handleSocialShareClick } from '../../scripts/social-utils.js';
 
@@ -109,10 +110,14 @@ async function decorateCards(block, placeholders, cards, cardCount) {
   formData.append('apiName', apiName);
   formData.append('inputJson', `{ pageNo: 1, pageSize: ${cardCount} }`);
   postFormData(getResearchAPIUrl(), formData, (error, GetMarketInsights = []) => {
-    if (!GetMarketInsights || !GetMarketInsights.Data) return;
-    const formattedData = parseResponse(GetMarketInsights);
-    const results = sortResult(formattedData);
-    buildCards(results, cards, cardCount, placeholders);
+    if (error || !GetMarketInsights || !GetMarketInsights.Data) {
+      const element = block.querySelector('.cards');
+      handleNoResults(element);
+    } else {
+      const formattedData = parseResponse(GetMarketInsights);
+      const results = sortResult(formattedData);
+      buildCards(results, cards, cardCount, placeholders);
+    }
   }, apiName);
 }
 
@@ -120,7 +125,7 @@ export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
   const blockCfg = readBlockConfig(block);
   const title = decorateTitle(blockCfg);
-  const cards = createElement('ul', '');
+  const cards = createElement('ul', 'cards');
   const cardCount = blockCfg.count ?? defaultCardsCount;
   const discoverMoreButton = decorateDiscoverMore(blockCfg, placeholders);
   block.textContent = '';

@@ -8,6 +8,11 @@
   min-height: 18.75rem;
 }
 
+.block.market-insight > ul.no-results {
+  display: block;
+  min-height: unset;
+}
+
 .block.market-insight > ul > li {
   flex: 0 0 100%;
   max-width: 100%;
@@ -92,7 +97,7 @@
   margin-bottom: 0;
   font-size: var(--heading-font-size-xxs);
   line-height: normal;
-  color: var(--text-color-gray);
+  color: var(--color-gray-dark);
 }
 
 .block.market-insight .cards-powerby .socialshare {

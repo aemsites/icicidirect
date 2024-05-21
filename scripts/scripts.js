@@ -10,7 +10,6 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  loadScript,
   getMetadata,
 } from './aem.js';
 
@@ -326,9 +325,6 @@ async function loadPage() {
   await loadLazy(document);
   loadDelayed();
 }
-
-// TODO: Remove once chatbot is compatible with Helix domain
-loadScript('/scripts/mockxmlhttprequest.js');
 loadPage();
 
 window.validateuserToken = '';
