@@ -14,7 +14,7 @@ import {
 
 import {
   decorateQuickLinks,
-  defaultAnalyticsLoadDisabled,
+  defaultAnalyticsLoadDisabled, loadAdobeLaunch,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
@@ -185,6 +185,7 @@ async function loadLazy(doc) {
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
 
+  loadAdobeLaunch();
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
