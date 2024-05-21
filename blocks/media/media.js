@@ -85,17 +85,17 @@ function createSocialLinkElement(shareLink) {
   return socialLink;
 }
 
-function targetedDotView(event) {
+function updateTrack(event) {
   const targetDotIndex = event.currentTarget.dataset.index;
   const block = event.currentTarget.closest('.block.media');
-  clearInterval(block.getAttribute('interval-id'));
   const track = block.querySelector('.track');
-  const dotsContainer = block.querySelector('.dots-container');
-  dotsContainer.querySelector('.active').classList.remove('active');
-  event.currentTarget.classList.add('active');
-  const cardSize = track.firstElementChild.offsetWidth;
-  const moveDistance = (targetDotIndex - 1) * cardSize;
-  track.style.transform = `translateX(-${moveDistance}px)`;
+  clearInterval(track.getAttribute('interval-id'));
+  const relativeOffsetLeft = track.children[targetDotIndex].offsetLeft - track.offsetLeft;
+  track.scrollTo({
+    top: 0,
+    left: relativeOffsetLeft,
+    behavior: 'smooth',
+  });
 }
 
 async function createPicture(imageUrl, mediaWrapper) {
@@ -103,11 +103,14 @@ async function createPicture(imageUrl, mediaWrapper) {
 }
 
 function createMediaCards(container, data, apiKey, cardWidth) {
+  let index = 0;
   data.forEach((item) => {
     // Create slide element
     const card = document.createElement('div');
     card.className = 'slide-card';
     card.style.width = `${cardWidth}px`;
+    card.setAttribute('index', index);
+    index += 1;
 
     // Create cardInfo element
     const cardInfo = document.createElement('div');
@@ -150,6 +153,12 @@ function createMediaCards(container, data, apiKey, cardWidth) {
     // Append cardInfo to slide
     card.appendChild(cardInfo);
 
+    ['mousedown', 'touchmove', 'wheel'].forEach((eventType) => {
+      card.addEventListener(eventType, () => {
+        clearInterval(container.getAttribute('interval-id'));
+      });
+    });
+
     // Append slide to container
     container.appendChild(card);
   });
@@ -157,57 +166,21 @@ function createMediaCards(container, data, apiKey, cardWidth) {
 
 function createMediaDots(totalCards, maxAllowedCards, dots) {
   const numberOfDotsToBeCreated = numberOfDots(totalCards, maxAllowedCards);
-  let index = 1;
-  while (index <= numberOfDotsToBeCreated) {
+  let index = 0;
+  while (index < numberOfDotsToBeCreated) {
     const dot = document.createElement('button');
     dot.className = 'dot';
     dot.dataset.index = index;
     dot.setAttribute('aria-label', `dot-${index}`);
     dots.appendChild(dot);
     dot.addEventListener('click', (event) => {
-      targetedDotView(event);
+      updateTrack(event);
     });
     index += 1;
   }
   if (numberOfDotsToBeCreated > 0) {
     dots.firstElementChild.classList.add('active');
   }
-}
-
-function startCarousel(block) {
-  let nextIndex = 1;
-  let direction = 1;
-  const intervalId = setInterval(() => {
-    const track = block.querySelector('.track');
-    const trackWidth = track.offsetWidth;
-    const dotsContainer = block.querySelector('.dots-container');
-    const dotsArray = dotsContainer.children;
-    const cardWidth = trackWidth / allowedCardsCount();
-    const cards = Array.from(track.children);
-    if (cardWidth > 0) {
-      cards.forEach((card) => {
-        card.style.width = `${cardWidth}px`;
-      });
-    }
-    const totalCards = track.children.length;
-
-    const totalMoves = numberOfDots(totalCards, allowedCardsCount()) - 1;
-    if (nextIndex === totalMoves) {
-      direction = -1;
-    } else if (nextIndex === 0) {
-      direction = 1;
-    }
-    if (nextIndex <= totalMoves) {
-      dotsContainer.querySelector('.active').classList.remove('active');
-      dotsArray[nextIndex].classList.add('active');
-      const moveDistance = cardWidth * nextIndex;
-      track.style.transform = `translateX(-${moveDistance}px)`;
-      if (direction === 1) nextIndex += 1;
-      else nextIndex -= 1;
-    }
-  }, 4000);
-  block.setAttribute('interval-id', intervalId);
-  return intervalId;
 }
 
 async function createMediaPanel(block) {
@@ -239,7 +212,17 @@ async function createMediaPanel(block) {
     default:
       break;
   }
-  startCarousel(block);
+  const intervalId = setInterval(() => {
+    const cardIndex = Math.round(track.scrollLeft / cardWidth);
+    const nextCard = track.querySelector(`.slide-card[index='${cardIndex + 1}']`);
+    if (nextCard) {
+      track.scrollLeft = cardWidth * (cardIndex + 1);
+    }
+    if (cardIndex === track.children.length - allowedCardsCount()) {
+      clearInterval(intervalId);
+    }
+  }, 4000);
+  track.setAttribute('interval-id', intervalId);
 }
 
 export default async function decorate(block) {
@@ -266,6 +249,15 @@ export default async function decorate(block) {
   slider.className = 'slider';
   block.appendChild(slider);
   const track = document.createElement('div');
+  track.addEventListener('scroll', () => {
+    const cardWidth = track.querySelector('.slide-card').offsetWidth;
+    const cardIndex = Math.round(track.scrollLeft / cardWidth);
+    const dots = block.querySelector('.dots-container');
+    if (dots.children.length > 0) {
+      dots.querySelector('.active').classList.remove('active');
+      dots.querySelector(`.dot[data-index='${cardIndex}']`).classList.add('active');
+    }
+  });
   track.className = 'track';
   const dots = document.createElement('div');
   dots.className = 'dots-container';
