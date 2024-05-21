@@ -601,12 +601,12 @@ main .section.background-gray {
       display: none;
     }
 
-    .tablet {
-      display: block;
-    }
-
     .desktop {
       display: none;
+    }
+
+    .tablet {
+      display: block;
     }
 
     main .section.shadow {
