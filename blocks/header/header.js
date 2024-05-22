@@ -417,7 +417,7 @@ const buildSidePanelAccordion = (fragment) => {
     subitemsList.forEach((subitem) => {
       const subItemLinkNode = subitem.querySelector('a');
       const subItemUrl = subItemLinkNode?.getAttribute('href') || '';
-      const subitemName = subItemLinkNode?.innerText || subitem.textContent;
+      const subitemName = subitem.innerText || '';
       const accordionSubitem = document.createElement('div');
       accordionSubitem.className = 'accordion-subitem';
       if (subitemName.includes('[new]')) {
