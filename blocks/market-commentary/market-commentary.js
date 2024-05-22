@@ -1,6 +1,6 @@
 import {
   getDataFromAPI, getResearchAPIUrl, handleNoResults, ICICI_FINOUX_HOST, observe,
-  sanitizeCompanyName, Viewport,
+  sanitizeCompanyName,
 } from '../../scripts/blocks-utils.js';
 import { readBlockConfig, fetchPlaceholders } from '../../scripts/aem.js';
 import {
@@ -68,23 +68,16 @@ function createMarketCommentaryCard(cardData, placeholders) {
   return mainDiv;
 }
 
-function updateCarouselView(activeDot) {
-  const dotIndex = parseInt(activeDot.dataset.index, 10);
-  const commentaryContainer = activeDot.closest('.market-commentary-container');
-  const dots = commentaryContainer.querySelectorAll('.dot');
-  const currentActiveDot = commentaryContainer.querySelector('.dot.active');
-  if (currentActiveDot && currentActiveDot.dataset.index === activeDot.dataset.index) {
-    return;
-  }
-  const commentaryTrack = commentaryContainer.querySelector('.market-commentary-track');
-  const cards = Array.from(commentaryTrack.children);
-  let moveDistance = dotIndex * cards[0].offsetWidth;
-  if (Viewport.getDeviceType() === 'Desktop' && dotIndex === dots.length - 1) {
-    moveDistance -= ((cards[0].offsetWidth) * 0.9);
-  }
-  commentaryTrack.style.transform = `translateX(-${moveDistance}px)`;
-  dots.forEach((dot) => dot.classList.remove('active'));
-  dots[dotIndex].classList.add('active');
+function updateTrack(event) {
+  const targetDotIndex = event.currentTarget.dataset.index;
+  const commentaryContainer = event.currentTarget.closest('.market-commentary-container');
+  const track = commentaryContainer.querySelector('.market-commentary-track');
+  const relativeOffsetLeft = track.children[targetDotIndex].offsetLeft - track.offsetLeft;
+  track.scrollTo({
+    top: 0,
+    left: relativeOffsetLeft,
+    behavior: 'smooth',
+  });
 }
 
 function countVisibleCards(track, cards) {
@@ -123,7 +116,7 @@ function updateDots(block) {
     dot.setAttribute('aria-label', `dot-${i}`);
     dotsContainer.appendChild(dot);
     dot.addEventListener('click', (event) => {
-      updateCarouselView(event.currentTarget);
+      updateTrack(event);
     });
   }
 }
@@ -136,9 +129,12 @@ async function generateCardsView(block, placeholders) {
       handleNoResults(element);
       return;
     }
+    let index = 0;
     marketCommentaryData.Data.Table.forEach((cardData) => {
       const card = createMarketCommentaryCard(cardData, placeholders);
       blogsContainer.appendChild(card);
+      card.setAttribute('index', index);
+      index += 1;
     });
     updateDots(block);
   });
@@ -160,6 +156,19 @@ export default async function decorate(block) {
   const containerTrack = document.createElement('div');
   containerTrack.className = 'market-commentary-track';
 
+  containerTrack.addEventListener('scroll', () => {
+    const cardWidth = containerTrack.querySelector('.card').offsetWidth;
+    const cardIndex = Math.round(containerTrack.scrollLeft / cardWidth);
+    const dots = block.querySelector('.dots-container');
+    if (dots.children.length > 0) {
+      dots.querySelector('.active').classList.remove('active');
+      if (containerTrack.scrollLeft + containerTrack.offsetWidth >= containerTrack.scrollWidth) {
+        dots.querySelector(`.dot[data-index='${dots.children.length - 1}']`).classList.add('active');
+      } else {
+        dots.querySelector(`.dot[data-index='${cardIndex}']`).classList.add('active');
+      }
+    }
+  });
   containerlist.appendChild(containerTrack);
 
   const dotsContainer = document.createElement('div');

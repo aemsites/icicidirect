@@ -19,11 +19,21 @@
     flex-direction: row;
     transition: transform 2s ease;
     transform: translate3d(0, 0, 0);
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.block.market-commentary .market-commentary-track::-webkit-scrollbar {
+    display: none;
 }
 
 .block.market-commentary .card {
     display: block;
     min-width: 15rem;
+    scroll-snap-align: start;
 }
 
 .block.market-commentary .card a {
