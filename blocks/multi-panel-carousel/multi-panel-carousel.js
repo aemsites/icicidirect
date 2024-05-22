@@ -412,9 +412,26 @@ function getRecommendationsCard(companies, type, placeholders, marginActions) {
   });
 }
 
+function addCarouselList(carouselSlider) {
+  carouselSlider.innerHTML = '';
+  const carouselList = document.createElement('div');
+  carouselList.classList.add('carousel-list');
+  carouselSlider.appendChild(carouselList);
+  const carouselTrack = document.createElement('div');
+  carouselTrack.classList.add('carousel-track');
+  carouselList.appendChild(carouselTrack);
+}
+
 function updateCardsInView(block, type, recommendationArray, placeholders, marginActions) {
   const carouselSlider = block.querySelector('.carousel-slider');
-  const carouselTrack = carouselSlider.querySelector('.carousel-track');
+  let carouselTrack = carouselSlider.querySelector('.carousel-track');
+  if (!carouselTrack) {
+    addCarouselList(carouselSlider);
+    const dotsContainer = document.createElement('div');
+    dotsContainer.className = 'dots-container';
+    carouselSlider.appendChild(dotsContainer);
+    carouselTrack = carouselSlider.querySelector('.carousel-track');
+  }
   const companiesArray = [];
   recommendationArray.forEach((company) => {
     const companyObj = {};
@@ -460,10 +477,23 @@ function updateCardsInView(block, type, recommendationArray, placeholders, margi
   }
 }
 
+async function addingDynamicDropDowns(block, type, restructuredData, marginActions) {
+  const dropdownsDiv = block.querySelector('.dropdowns');
+  // eslint-disable-next-line guard-for-in,no-restricted-syntax
+  for (const dropdownType in restructuredData) {
+    const items = restructuredData[dropdownType];
+    const dropDownEle = createDropdown(items, type, marginActions);
+    dropdownsDiv.appendChild(dropDownEle);
+    document.addEventListener('click', (event) => {
+      closeAllDropDowns(event.target);
+    });
+  }
+}
+
 async function fetchCardsData(block, type, marginActions) {
   const toggleBtn = block.querySelectorAll('.dropdown-toggle');
   let rating = '';
-  let timeFrame = '';
+  let timeFrame = type === 'trading' ? 'intraday' : '';
   let option = 'BestPerforming';
   let jsonFormData;
   toggleBtn.forEach((btn) => {
@@ -480,7 +510,33 @@ async function fetchCardsData(block, type, marginActions) {
       jsonFormData = {
         apiName: 'GetTradingIdeasIntraday',
       };
+      const ratingElement = block.querySelector('[data-type="rating"].dropdown-toggle');
+      if (ratingElement) {
+        ratingElement.closest('.dropdown-select').remove();
+      }
     } else {
+      if (rating === '') {
+        rating = '1';
+        const ratingFormData = {
+          apiName: 'GetRatings',
+          inputJson: JSON.stringify({ researchType: 2 }),
+        };
+        postFormData(getResearchAPIUrl(), ratingFormData, (error, DDData = []) => {
+          const restructuredData = {};
+          restructuredData.rating = [];
+          let count = 0;
+          if (error === null && DDData.Data && DDData.Data.Table) {
+            DDData.Data.Table.forEach((dropDownOption) => {
+              restructuredData.rating.push({ type: 'rating', label: dropDownOption.RATING_TYPE_NM, value: dropDownOption.RES_RATINGS_TYPE_ID });
+              if (count === 0) {
+                rating = dropDownOption.RES_RATINGS_TYPE_ID;
+              }
+              count += 1;
+            });
+            addingDynamicDropDowns(block, type, restructuredData, marginActions);
+          }
+        });
+      }
       jsonFormData = {
         apiName: 'GetTradingIdeas',
         inputJson: JSON.stringify({
@@ -513,23 +569,17 @@ async function fetchCardsData(block, type, marginActions) {
         resultData = JSON.parse(tradingData.Data).Success.slice(0, 5);
       } else {
         resultData = tradingData.Data.Table ? tradingData.Data.Table : tradingData.Data;
+        if (resultData.length === 0) {
+          const element = block.querySelector('.carousel-slider');
+          handleNoResults(element);
+          return;
+        }
       }
       updateCardsInView(block, type, resultData, placeholders, marginActions);
     }
   });
 }
-async function addingDynamicDropDowns(block, type, restructuredData, marginActions) {
-  const dropdownsDiv = block.querySelector('.dropdowns');
-  // eslint-disable-next-line guard-for-in,no-restricted-syntax
-  for (const dropdownType in restructuredData) {
-    const items = restructuredData[dropdownType];
-    const dropDownEle = createDropdown(items, type, marginActions);
-    dropdownsDiv.appendChild(dropDownEle);
-    document.addEventListener('click', (event) => {
-      closeAllDropDowns(event.target);
-    });
-  }
-}
+
 async function generateDropDowns(block, type, marginActions) {
   // const restructuredData = {};
   if (type === 'investing') {
@@ -632,13 +682,7 @@ function addCarouselHeader(carouselContainer, title) {
 function addCarouselCards(carouselBody) {
   const carouselSlider = document.createElement('div');
   carouselSlider.className = 'carousel-slider border-box';
-
-  const carouselList = document.createElement('div');
-  carouselList.classList.add('carousel-list');
-  carouselSlider.appendChild(carouselList);
-  const carouselTrack = document.createElement('div');
-  carouselTrack.classList.add('carousel-track');
-  carouselList.appendChild(carouselTrack);
+  addCarouselList(carouselSlider);
   carouselBody.appendChild(carouselSlider);
 }
 
