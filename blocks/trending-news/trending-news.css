@@ -11,15 +11,14 @@
 }
 
 .block.trending-news .container .title {
-    margin-bottom: 2rem;
     text-align: center;
     overflow: hidden;
 }
 
 .block.trending-news .container .title h2 {
-    font-size: var(--heading-font-size-xmxl);
+    font-size: var(--heading-font-size-m);
     color: var(--primary);
-    line-height: 2.813rem;
+    line-height: 1.25rem;
     text-transform: uppercase;
     font-weight: var(--font-weight-bold);
 }
@@ -181,6 +180,11 @@
         width: 21.5rem;
         height: 10rem;
         padding: unset;
+    }
+
+    .block.trending-news .container .title h2 {
+        font-size: var(--heading-font-size-xmxl);
+        line-height: 2.813rem;
     }
 }
 
