@@ -220,7 +220,7 @@ async function getAndApplyRenderDecisions() {
           const { prehidingSelector } = item.data;
           console.log('cssSelector:', cssSelector);
           console.log('prehidingSelector:', prehidingSelector);
-          const section = getSectionByElementSelector(cssSelector);
+          const section = getSectionByElementSelector(prehidingSelector);
           console.log('section:', section);
         }
       });
