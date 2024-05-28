@@ -195,6 +195,7 @@ async function getElementForProposition(proposition) {
 async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
+  console.log('I am here0');
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
 
