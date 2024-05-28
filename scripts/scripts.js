@@ -10,25 +10,18 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
-  // eslint-disable-next-line no-unused-vars
-  loadScript, getMetadata,
+  getMetadata,
 } from './aem.js';
 
 import {
   decorateQuickLinks,
-  defaultAnalyticsLoadDisabled, getHostUrl, getOriginUrl, loadAdobeLaunch,
+  defaultAnalyticsLoadDisabled, getHostUrl,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
-
-/**
- * Customer's XDM schema namespace
- * @type {string}
- */
-const CUSTOM_SCHEMA_NAMESPACE = '_sitesinternal';
 
 /**
  * Set the JSON-LD script in the body
@@ -140,12 +133,11 @@ export function decorateMain(main) {
   decorateQuickLinks(main);
 }
 
-function initWebSDK(path, config) {
+function initWebSDK(path) {
   return new Promise((resolve) => {
     import(path)
       .then(() => {
         console.log('Alloy SDK loaded successfully');
-        // return window.alloy('configure', config);
       })
       .then(() => {
         console.log('Alloy configured successfully');
@@ -298,18 +290,15 @@ async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
         pageViews: {
           value: 1,
         },
-        name: 'testpage',
+        name: 'researchpage',
       },
-    },
-    [CUSTOM_SCHEMA_NAMESPACE]: {
-      ...additionalXdmFields,
     },
   };
 
   return sendAnalyticsEvent(xdmData);
 }
 
-const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`, {});
+const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`);
 
 if (getMetadata('target')) {
   alloyLoadedPromise.then(() => {
