@@ -313,6 +313,7 @@ const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.
 
 if (getMetadata('target')) {
   alloyLoadedPromise.then(() => {
+    const configData = await fetch(`${getHostUrl()}/websdkconfig.json`).then((response) => response.json());
     alloy('configure', {
       datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
       orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
