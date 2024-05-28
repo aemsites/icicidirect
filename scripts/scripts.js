@@ -350,12 +350,6 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  // const heroBlocks = document.querySelectorAll('.target-driven');
-  // if (heroBlocks) {
-  //   heroBlocks.forEach((block) => {
-  //     block.style.visibility = 'hidden';
-  //   });
-  // }
   document.body.style.visibility = 'hidden';
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
