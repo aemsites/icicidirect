@@ -159,6 +159,7 @@ function initWebSDK(path, config) {
 function onDecoratedElement(fn) {
   // Apply propositions to all already decorated blocks/sections
   if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
+    console.log('I am here2');
     fn();
   }
 
@@ -166,6 +167,7 @@ function onDecoratedElement(fn) {
     if (mutations.some((m) => m.target.tagName === 'BODY'
         || m.target.dataset.sectionStatus === 'loaded'
         || m.target.dataset.blockStatus === 'loaded')) {
+      console.log('I am here3');
       fn();
     }
   });
@@ -197,6 +199,7 @@ async function getAndApplyRenderDecisions() {
   const { propositions } = response;
 
   onDecoratedElement(async () => {
+    console.log('I am here1');
     await window.alloy('applyPropositions', { propositions });
 
     const heroBlocks = document.querySelectorAll('.target-driven');
