@@ -240,6 +240,7 @@ async function getAndApplyRenderDecisions() {
       });
     }
   });
+  document.body.style.visibility = 'visible';
 
   onDecoratedElement(async () => {
     console.log('I am here1');
@@ -361,6 +362,7 @@ async function loadEager(doc) {
   //     block.style.visibility = 'hidden';
   //   });
   // }
+  document.body.style.visibility = 'hidden';
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
