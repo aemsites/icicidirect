@@ -282,6 +282,7 @@ async function sendAnalyticsEvent(xdmData) {
  * @param additionalXdmFields
  * @returns {Promise<*>}
  */
+// eslint-disable-next-line no-unused-vars
 async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
   const xdmData = {
     eventType: 'web.webpagedetails.pageViews',
@@ -305,6 +306,7 @@ if (getMetadata('target')) {
     fetch(`${getHostUrl()}/websdkconfig.json`)
       .then((response) => response.json())
       .then((configData) => {
+        // eslint-disable-next-line no-undef
         alloy('configure', {
           datastreamId: configData.data[0].DatastreamId,
           orgId: configData.data[0].OrgId,
