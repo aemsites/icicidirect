@@ -192,24 +192,36 @@ async function getElementForProposition(proposition) {
   return document.querySelector(selector);
 }
 
+function escapeSelector(selector) {
+  return selector.replaceAll(/#(\d)/g, '#\\3$1 ');
+}
+function getSectionByElementSelector(selector) {
+  let section = document.querySelector(escapeSelector(selector));
+  while (section && !section.classList.contains('section')) {
+    section = section.parentNode;
+  }
+  return section;
+}
+
 async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
   console.log('I am here0');
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-  console.log('propositions:', JSON.stringify(propositions));
+  // console.log('propositions:', JSON.stringify(propositions));
 
   propositions.forEach((entry) => {
     // Iterate over the array of items in each entry
     if (entry.items) {
       entry.items.forEach((item) => {
-        console.log(item);
         if (item.schema === 'https://ns.adobe.com/personalization/dom-action') {
           const cssSelector = item.data.selector;
           const { prehidingSelector } = item.data;
           console.log('cssSelector:', cssSelector);
           console.log('prehidingSelector:', prehidingSelector);
+          const section = getSectionByElementSelector(cssSelector);
+          console.log('section:', section);
         }
       });
     }
