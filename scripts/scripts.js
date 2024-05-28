@@ -198,10 +198,10 @@ async function getAndApplyRenderDecisions() {
   console.log('I am here0');
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-
+  console.log('propositions:', JSON.stringify(propositions));
   onDecoratedElement(async () => {
     console.log('I am here1');
-    console.log('propositions:', JSON.stringify(propositions));
+
     await window.alloy('applyPropositions', { propositions });
 
     const heroBlocks = document.querySelectorAll('.target-driven');
