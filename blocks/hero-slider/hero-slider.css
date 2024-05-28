@@ -6,13 +6,7 @@
   position: absolute;
   bottom: 0;
   left: 45%;
-} 
-
-
-/*.block.hero-slider > picture {*/
-/*  width: 691px;*/
-/*  height: 206px;*/
-/*}*/
+}
 
 .block.hero-slider:not(.carousel){
   height: 100%;
