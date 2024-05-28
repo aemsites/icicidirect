@@ -9,10 +9,10 @@
 } 
 
 
-.block.hero-slider > picture {
-  width: 691px;
-  height: 206px;
-}
+/*.block.hero-slider > picture {*/
+/*  width: 691px;*/
+/*  height: 206px;*/
+/*}*/
 
 .block.hero-slider:not(.carousel){
   height: 100%;
