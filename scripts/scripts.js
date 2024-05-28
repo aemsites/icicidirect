@@ -324,8 +324,8 @@ if (getMetadata('target')) {
       .then((response) => response.json())
       .then((configData) => {
         alloy('configure', {
-          datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
-          orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
+          datastreamId: configData.data[0].DatastreamId,
+          orgId: configData.data[0].OrgId,
         });
         getAndApplyRenderDecisions();
         analyticsTrackPageViews(document);
