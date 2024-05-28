@@ -158,9 +158,15 @@ function initWebSDK(path, config) {
 
 function onDecoratedElement(fn) {
   // Apply propositions to all already decorated blocks/sections
-  if (document.querySelector('[data-block-status="loaded"],[data-section-status="loaded"]')) {
+  const elements = document.querySelectorAll('[data-block-status="loaded"],[data-section-status="loaded"]');
+  if (elements.length > 0) {
     console.log('I am here2');
     fn();
+    elements.forEach((element) => {
+      if (element.style.visibility === 'hidden') {
+        element.style.visibility = 'visible';
+      }
+    });
   }
 
   const observer = new MutationObserver((mutations) => {
@@ -169,6 +175,12 @@ function onDecoratedElement(fn) {
         || m.target.dataset.blockStatus === 'loaded')) {
       console.log(`I am here3 ${JSON.stringify(mutations)}`);
       fn();
+      mutations.forEach((m) => {
+        // Apply the desired operation on each mutation
+        if (m.target.style.visibility === 'hidden') {
+          m.target.style.visibility = 'visible';
+        }
+      });
     }
   });
   // Watch sections and blocks being decorated async
@@ -221,7 +233,9 @@ async function getAndApplyRenderDecisions() {
           console.log('cssSelector:', cssSelector);
           console.log('prehidingSelector:', prehidingSelector);
           const section = getSectionByElementSelector(prehidingSelector);
-          console.log('section:', section);
+          if (section) {
+            section.style.visibility = 'hidden';
+          }
         }
       });
     }
