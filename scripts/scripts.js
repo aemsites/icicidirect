@@ -246,14 +246,14 @@ async function getAndApplyRenderDecisions() {
 
     await window.alloy('applyPropositions', { propositions });
 
-    const heroBlocks = document.querySelectorAll('.target-driven');
-    if (heroBlocks) {
-      heroBlocks.forEach((block) => {
-        if (block.style.visibility !== 'visible') {
-          block.style.visibility = 'visible';
-        }
-      });
-    }
+    // const heroBlocks = document.querySelectorAll('.target-driven');
+    // if (heroBlocks) {
+    //   heroBlocks.forEach((block) => {
+    //     if (block.style.visibility !== 'visible') {
+    //       block.style.visibility = 'visible';
+    //     }
+    //   });
+    // }
 
     // keep track of propositions that were applied
     propositions.forEach((p) => {
@@ -355,12 +355,12 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  const heroBlocks = document.querySelectorAll('.target-driven');
-  if (heroBlocks) {
-    heroBlocks.forEach((block) => {
-      block.style.visibility = 'hidden';
-    });
-  }
+  // const heroBlocks = document.querySelectorAll('.target-driven');
+  // if (heroBlocks) {
+  //   heroBlocks.forEach((block) => {
+  //     block.style.visibility = 'hidden';
+  //   });
+  // }
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
