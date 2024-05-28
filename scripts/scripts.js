@@ -199,6 +199,20 @@ async function getAndApplyRenderDecisions() {
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
   console.log('propositions:', JSON.stringify(propositions));
+
+  propositions.forEach((entry) => {
+    // Iterate over the array of items in each entry
+    if (entry.items) {
+      entry.items.forEach(async (item) => {
+        console.log(item);
+        if (item.schema === 'https://ns.adobe.com/personalization/dom-action') {
+          const element = await getElementForProposition(item);
+          console.log('element:', element);
+        }
+      });
+    }
+  });
+
   onDecoratedElement(async () => {
     console.log('I am here1');
 
