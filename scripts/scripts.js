@@ -160,7 +160,6 @@ function onDecoratedElement(fn) {
   // Apply propositions to all already decorated blocks/sections
   const elements = document.querySelectorAll('[data-block-status="loaded"],[data-section-status="loaded"]');
   if (elements.length > 0) {
-    console.log('I am here2');
     fn();
     elements.forEach((element) => {
       if (element.style.visibility === 'hidden') {
@@ -173,7 +172,6 @@ function onDecoratedElement(fn) {
     if (mutations.some((m) => m.target.tagName === 'BODY'
         || m.target.dataset.sectionStatus === 'loaded'
         || m.target.dataset.blockStatus === 'loaded')) {
-      console.log(`I am here3 ${JSON.stringify(mutations)}`);
       fn();
       mutations.forEach((m) => {
         // Apply the desired operation on each mutation
@@ -223,10 +221,8 @@ function getSectionByElementSelector(selector) {
 async function getAndApplyRenderDecisions() {
   // Get the decisions, but don't render them automatically
   // so we can hook up into the AEM EDS page load sequence
-  console.log('I am here0');
   const response = await window.alloy('sendEvent', { renderDecisions: false });
   const { propositions } = response;
-  // console.log('propositions:', JSON.stringify(propositions));
 
   propositions.forEach((entry) => {
     // Iterate over the array of items in each entry
@@ -235,8 +231,6 @@ async function getAndApplyRenderDecisions() {
         if (item.schema === 'https://ns.adobe.com/personalization/dom-action') {
           const cssSelector = item.data.selector;
           const { prehidingSelector } = item.data;
-          console.log('cssSelector:', cssSelector);
-          console.log('prehidingSelector:', prehidingSelector);
           let section;
           if (prehidingSelector) {
             section = getSectionByElementSelector(prehidingSelector);
@@ -254,18 +248,7 @@ async function getAndApplyRenderDecisions() {
   document.body.style.visibility = 'visible';
 
   onDecoratedElement(async () => {
-    console.log('I am here1');
-
     await window.alloy('applyPropositions', { propositions });
-
-    // const heroBlocks = document.querySelectorAll('.target-driven');
-    // if (heroBlocks) {
-    //   heroBlocks.forEach((block) => {
-    //     if (block.style.visibility !== 'visible') {
-    //       block.style.visibility = 'visible';
-    //     }
-    //   });
-    // }
 
     // keep track of propositions that were applied
     propositions.forEach((p) => {
