@@ -1,7 +1,7 @@
 import {
-  createElement, fetchData, getResearchAPIUrl, observe, postFormData,
+  createElement, fetchData, getResearchAPIUrl, observe, postFormData, getHostUrl,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
-import { getHostUrl } from '../../scripts/mockapi.js';
 import { decorateIcons, readBlockConfig } from '../../scripts/aem.js';
 
 function decorateTitle(blockCfg) {
@@ -34,6 +34,11 @@ function addStocksData(ilensContainer, key) {
   };
 
   postFormData(getResearchAPIUrl(), jsonFormData, (error, ilensStocksData = []) => {
+    if (error || !ilensStocksData || ilensStocksData.length === 0) {
+      const element = ilensContainer.querySelector('.i-lens-body');
+      handleNoResults(element);
+      return;
+    }
     const ilensRecommendations = JSON.parse(ilensStocksData.Data).body;
     const { tableData } = ilensRecommendations;
     // Sort the tableData based on the Operating Revenue Qtr (SR_Q) in descending order
@@ -108,11 +113,9 @@ function createDropdown(ilensContainer, menuItems, dropDownDetails = []) {
     if (item.value) {
       li.dataset.value = item.value;
     }
-    const a = document.createElement('a');
     const span = document.createElement('span');
     span.textContent = item.text;
-    a.appendChild(span);
-    li.appendChild(a);
+    li.appendChild(span);
     li.addEventListener('click', (event) => {
       // eslint-disable-next-line no-use-before-define
       updateRecommedations(ilensContainer, event.currentTarget, dropDownDetails);

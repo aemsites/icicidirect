@@ -2,6 +2,7 @@
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import {
   createPictureElement, getOriginUrl, getResearchAPIUrl, ICICI_FINOUX_HOST, observe, postFormData,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 
 function createBlogCard(blogData) {
@@ -84,7 +85,9 @@ async function generateCardsView(block) {
     }),
   };
   postFormData(getResearchAPIUrl(), jsonFormData, (error, blogsData = []) => {
-    if (!blogsData || !blogsData.Data) {
+    if (error || !blogsData || !blogsData.Data) {
+      const element = block.querySelector('.blogs-cards-container');
+      handleNoResults(element);
       return;
     }
     const recommendationArray = blogsData.Data;

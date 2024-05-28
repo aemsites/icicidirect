@@ -101,6 +101,11 @@
     margin-bottom: 1.125rem;
 }
 
+.block.faq .faq-content .faq-item-content > div p a {
+    color: var(--color-blue);
+    text-decoration: underline;
+}
+
 .block.faq .faq-content .faq-item-content.visible {
     grid-template-rows: 1fr;
 }

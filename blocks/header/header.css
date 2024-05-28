@@ -127,7 +127,11 @@
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-value.positive {
-  color: var(--color-green);
+  color: var(--color-dark-green);
+}
+
+.block.header .share-index-bar .dynamic-stock-index .share-value.market-closed {
+  color: var(--link-color-dark-blue);
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-down {
@@ -135,7 +139,7 @@
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-up {
-  color: var(--color-green);
+  color: var(--color-dark-green);
 }
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-down::before {
@@ -148,7 +152,7 @@
 
 .block.header .share-index-bar .dynamic-stock-index .share-change.share-up::before {
   font-family: icomoon, sans-serif;
-  color: var(--color-green);
+  color: var(--color-dark-green);
   content: "\e900";
   display: inline-block;
 }
@@ -216,6 +220,10 @@
   width: 9.375rem;
 }
 
+.block.header .sidepanel .top-area-logo p {
+  margin: 0;
+}
+
 .block.header .sidepanel .bottom-area {
   display: flex;
   flex-direction: column;
@@ -246,7 +254,7 @@
   display: flex;
   cursor: pointer;
   flex-direction: column;
-  justify-content: center; 
+  justify-content: center;
   align-items: center;
   margin-top: 0.3rem;
 }
@@ -409,7 +417,7 @@
   width: 100%;
   outline: none;
   font-size: var(--heading-font-size-xs);
-  color: var(--color-light-gray);
+  color: var(--color-darker-gray);
   user-select: none;
 }
 
@@ -541,7 +549,7 @@
   color: var(--link-color-dark-blue);
   line-height: 2.375rem;
   margin-right: var(--space-5px);
-} 
+}
 
 .block.header .search-bar .search-results-popup .change-value {
   font-size: var(--body-font-size-m);
@@ -665,6 +673,10 @@
   transition: background-color 0.2s;
 }
 
+.block.header .accordion details summary::-webkit-details-marker {
+  display: none;
+}
+
 .block.header .accordion details .accordion-item-label {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -687,12 +699,12 @@
 
 /* for no sub items, hide the plus symbol */
 .block.header .accordion details:not(:has(.accordion-subitem)) .accordion-item-expand {
-  display: none; 
+  display: none;
 }
 
 .block.header .accordion details[open] .accordion-item-label {
   border-bottom: none;
-  
+
   a {
     color: var(--link-color-dark-blue);
   }
@@ -737,16 +749,16 @@
     width: auto;
     padding: 0.45rem 0;
   }
-  
+
   .block.header .search-bar-container.floating-visible .category-picker .dropdown-select {
     width: auto;
   }
-  
+
   .block.header .search-bar-container.floating-visible .category-picker .dropdown-menu-container.visible {
     width: auto;
     right: 0;
   }
-  
+
   .block.header .search-bar-container.floating-visible .search-results-popup.visible {
     min-width: 100%;
     top: 2.3rem;
@@ -799,6 +811,10 @@
     height: auto;
   }
 
+  .block.header .top-bar .logo p {
+    margin: 0;
+  }
+
   .block.header .top-bar .row1 .primary-buttons button.desktop-element {
     display: block;
   }
@@ -826,5 +842,9 @@
   .block.header .share-index-bar .dynamic-stock-index .stock-item .spn-date-time {
     padding-right: var(--space-8px);
     border-right: var(--line-width-hairline) solid var(--color-blue-dark);
+  }
+
+  .block.header .share-index-bar .dynamic-stock-index .stock-item .spn-date-time.market-open{
+    display: none;
   }
 }
