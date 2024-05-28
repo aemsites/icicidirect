@@ -208,11 +208,16 @@ function escapeSelector(selector) {
   return selector.replaceAll(/#(\d)/g, '#\\3$1 ');
 }
 function getSectionByElementSelector(selector) {
-  let section = document.querySelector(escapeSelector(selector));
-  while (section && !section.classList.contains('section')) {
-    section = section.parentNode;
+  try {
+    let section = document.querySelector(escapeSelector(selector));
+    while (section && !section.classList.contains('section')) {
+      section = section.parentNode;
+    }
+    return section;
+  } catch (error) {
+    console.error('Error occurred while querying selector:', error);
+    return null; // Return null if an error occurs
   }
-  return section;
 }
 
 async function getAndApplyRenderDecisions() {
@@ -232,7 +237,13 @@ async function getAndApplyRenderDecisions() {
           const { prehidingSelector } = item.data;
           console.log('cssSelector:', cssSelector);
           console.log('prehidingSelector:', prehidingSelector);
-          const section = getSectionByElementSelector(prehidingSelector);
+          let section;
+          if (prehidingSelector) {
+            section = getSectionByElementSelector(prehidingSelector);
+          }
+          if (!section && cssSelector) {
+            section = getSectionByElementSelector(cssSelector);
+          }
           if (section) {
             section.style.visibility = 'hidden';
           }
