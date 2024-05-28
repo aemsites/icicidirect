@@ -371,7 +371,6 @@ async function loadEager(doc) {
     decorateMain(main);
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
-    loadAdobeLaunch();
   }
 
   try {
