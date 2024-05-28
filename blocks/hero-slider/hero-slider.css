@@ -5,7 +5,7 @@
 .block.hero-slider.carousel > nav {
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 45%;
 } 
 
 
@@ -31,6 +31,17 @@
 
 .block.hero-slider .carousel-slide-indicators {
   margin: 1.3rem 0;
+}
+
+.block.hero-slider .carousel .carousel-slide-indicator button {
+  background-color: var(--background-color-dark-grey);
+  border: none;
+}
+
+.block.hero-slider .carousel .carousel-slide-indicator button:disabled,
+.block.hero-slider .carousel .carousel-slide-indicator button:hover,
+.block.hero-slider .carousel .carousel-slide-indicator button:focus-visible {
+  background-color: var(--button-color-orange);
 }
 
 .block.hero-slider .carousel .carousel-slide .carousel-slide-image picture {

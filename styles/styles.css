@@ -22,7 +22,7 @@
   --color-lightest-gray: #E1E1E1;
   --color-darker-gray:#333;
   --color-gray: #6c757d;
-  --color-gray-dark: #4A4A4A;
+  --color-gray-dark: #474747;
   --color-lighter-gray:#AEB7C1;
   --color-light-gray-dark: #979797;
   --color-strong-gray-light: #6B6B6B;
@@ -35,12 +35,13 @@
   --color-white: #FFF;
   --color-green: #259702;
   --color-light-green: #008000;
+  --color-dark-green: #196601;
   --color-transparent-orange: #ffe3ce;
   --color-text-orange: #D4622C;
   --color-indigo: #6610f2;
   --color-purple: #6f42c1;
   --color-pink: #e83e8c;
-  --color-red: #da0000;
+  --color-red: #b50000;
   --color-maroon: #97291e;
   --color-yellow: #ffc107;
   --color-teal: #20c997;
@@ -87,12 +88,12 @@
   --color-disable-dot: #D1D1D1;
   --color-footer-top-note-blue: #0e1f35;
   --color-footer-top-number-blue: #004c84;
-  --color-footer-gray: #a3a3a3;
+  --color-footer-gray: #D1D1D1;
   --box-shadow-footer-top-gray: #0e1f354d;
   --veritcal-line-footer-top-gray: #9797974d;
   --box-shadow: #97979733;
   --boarder-trendign-news-card: #EAEAEA;
-  --card-post-color: #6B6B6B;
+  --card-post-color: #4B4B4B;
   --card-post-boarder: #d7d7d7;
   --modal-background-color: #000000BF;
   --image-box-shadow: #878787;
@@ -451,7 +452,7 @@ sup {
 
 /* links */
 a:any-link {
-  color: var(--color-blue);
+  color: var(--color-deep-blue);
   text-decoration: none;
   background-color: transparent;
 }
@@ -521,6 +522,11 @@ a.discover-more, a.discover-more-button:any-link {
   content: "\e900";
 }
 
+.no-results {
+  color: var(--primary);
+  font-weight: var(--font-weight-semibold);
+}
+
 main img {
   max-width: 100%;
   width: auto;
@@ -566,6 +572,11 @@ main .section.background-lighter-gray {
   background: var(--color-lightest-gray);
 }
 
+main .section.background-orange {
+  background: var(--color-orange);
+  padding: var(--space-8px) 0;
+}
+
 main .margin-bottom {
   margin-bottom: 2rem;
 }
@@ -590,12 +601,12 @@ main .section.background-gray {
       display: none;
     }
 
-    .tablet {
-      display: block;
-    }
-
     .desktop {
       display: none;
+    }
+
+    .tablet {
+      display: block;
     }
 
     main .section.shadow {

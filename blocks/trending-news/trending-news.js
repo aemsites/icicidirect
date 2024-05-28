@@ -1,12 +1,12 @@
 import {
   getResearchAPIUrl, postFormData,
   Viewport, createPictureElement, observe, parseResponse, getOriginUrl,
+  handleNoResults,
 } from '../../scripts/blocks-utils.js';
 import { decorateIcons, fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 
 const placeholders = await fetchPlaceholders();
 const ICICI_DIRECT_NEWS_HOST = 'https://www.icicidirect.com/research/equity/trending-news/';
-const ICICI_NEWS_THUMBNAIL_ICICI_HOST = 'https://www.icicidirect.com/images/';
 
 function allowedCardsCount() {
   const deviceType = Viewport.getDeviceType();
@@ -24,10 +24,8 @@ function getNewsShareLink(permLink) {
   return ICICI_DIRECT_NEWS_HOST + permLink;
 }
 
-function getNewsThumbnail(image, author) {
-  if (author.toLowerCase() === 'icici securities') return ICICI_NEWS_THUMBNAIL_ICICI_HOST + image;
-  if (author.toLowerCase() === 'finoux') return `${getOriginUrl()}/images/${image}`;
-  return '';
+function getNewsThumbnail(image) {
+  return `${getOriginUrl()}/images/${image}`;
 }
 
 function createDiscoverMore(discovermorelink) {
@@ -53,7 +51,7 @@ function createNewsCards(item) {
   const mediaWrapper = document.createElement('div');
   mediaWrapper.className = 'picture-wrapper';
 
-  const picture = createPictureElement(getNewsThumbnail(item.Image, item.Author), 'article-thumbnail', false);
+  const picture = createPictureElement(getNewsThumbnail(item.Image), 'article-thumbnail', false);
 
   mediaWrapper.appendChild(picture);
 
@@ -77,7 +75,7 @@ function createNewsCards(item) {
   const abbr = document.createElement('abbr');
   abbr.textContent = `${item.PublishedOn} `;
   const abbrSource = document.createElement('abbr');
-  abbrSource.textContent = item.Author;
+  abbrSource.textContent = placeholders.icicisecurities;
   postMeta.appendChild(iconSpan);
   postMeta.appendChild(abbr);
   postMeta.appendChild(abbrSource);
@@ -97,77 +95,51 @@ function createNewsCards(item) {
 async function generateNewsCard(block) {
   const newsTrack = block.querySelector('.news-track');
   const formData = new FormData();
-
+  let cardWidth;
   formData.append('apiName', 'GetTrendingNews');
   formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '4' }));
+  if (newsTrack.offsetWidth) {
+    cardWidth = newsTrack.offsetWidth / allowedCardsCount();
+  }
   postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
-    if (apiResponse) {
+    if (error || !apiResponse || apiResponse.length === 0) {
+      const element = block.querySelector('.news-slider');
+      handleNoResults(element);
+    } else {
       const jsonResult = parseResponse(apiResponse);
+      let index = 0;
       jsonResult.forEach((item) => {
         if (item.PermLink) {
           const slide = document.createElement('div');
           slide.className = 'news-card';
           const article = createNewsCards(item);
+          slide.style.width = `${cardWidth}px`;
+          slide.setAttribute('index', index);
           slide.appendChild(article);
           newsTrack.appendChild(slide);
+          ['mousedown', 'touchmove'].forEach((eventType) => {
+            slide.addEventListener(eventType, () => {
+              clearInterval(newsTrack.getAttribute('interval-id'));
+            });
+          });
+          index += 1;
         }
       });
     }
   });
-  let currentIndex = 0;
-  let shift = 0;
+  let forward = true;
   const intervalId = setInterval(() => {
-    const cards = newsTrack.children;
-    const firstCard = newsTrack.firstChild;
-    const cardSize = firstCard ? firstCard.offsetWidth : 0;
-    const offset = allowedCardsCount();
-    const cardsArray = Array.from(cards);
-    if (offset >= 4) {
-      cardsArray.forEach(((card) => {
-        card.style.opacity = 1;
-      }));
-      newsTrack.style.transform = 'translateX(0px)';
-      clearInterval(intervalId);
-    }
-
-    if (currentIndex >= cards.length) currentIndex = 0;
-    if ((shift === 0 || shift !== allowedCardsCount()) && !(shift < 0)) {
-      currentIndex = 0;
-      shift = allowedCardsCount();
-    }
-    if (currentIndex === cards.length - offset && shift > 0) {
-      shift = -shift; // Change direction when reaching the end
-    } else if (currentIndex === 0 && shift < 0) {
-      shift = -shift; // Change direction when reaching the beginning
-    }
-    currentIndex += shift;
-    const moveDistance = currentIndex * (cardSize);
-    newsTrack.style.transform = `translateX(-${moveDistance}px)`;
-    let index = 0;
-    if (allowedCardsCount() < 4) {
-      if (allowedCardsCount() === 2) {
-        while (index < cards.length) {
-          if (index === currentIndex) {
-            cards[index].style.opacity = 1;
-            cards[index + 1].style.opacity = 1;
-          } else {
-            cards[index].style.opacity = 0;
-            cards[index + 1].style.opacity = 0;
-          }
-          index += 2;
-        }
-      } else {
-        while (index < cards.length) {
-          if (index === currentIndex) {
-            cards[index].style.opacity = 1;
-          } else {
-            cards[index].style.opacity = 0;
-          }
-          index += 1;
-        }
-      }
+    const cardIndex = Math.round(newsTrack.scrollLeft / cardWidth);
+    const nextCard = newsTrack.querySelector(`.news-card[index='${cardIndex + allowedCardsCount()}']`);
+    if (cardIndex === 0) forward = true;
+    if (nextCard && forward) {
+      newsTrack.scrollLeft = cardWidth * (cardIndex + allowedCardsCount());
+    } else {
+      newsTrack.scrollLeft = cardWidth * (cardIndex - allowedCardsCount());
+      forward = false;
     }
   }, 3000);
+  newsTrack.setAttribute('interval-id', intervalId);
 }
 
 export default function decorate(block) {
@@ -192,6 +164,15 @@ export default function decorate(block) {
   const newsTrack = document.createElement('div');
   newsTrack.className = 'news-track';
 
+  newsTrack.addEventListener('scroll', () => {
+    const cardWidth = newsTrack.querySelector('.news-card').offsetWidth;
+    const cardIndex = Math.round(newsTrack.scrollLeft / cardWidth);
+    const nextCard = newsTrack.querySelector(`.news-card[index='${cardIndex}']`);
+    newsTrack.querySelectorAll('.news-card').forEach((card) => {
+      card.classList.remove('active');
+    });
+    nextCard.classList.add('active');
+  });
   slider.appendChild(newsTrack);
   newsSection.appendChild(slider);
   newsSection.appendChild(createDiscoverMore(blockConfig.discovermorelink));

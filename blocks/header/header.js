@@ -1,20 +1,21 @@
-import { getMetadata } from '../../scripts/aem.js';
+import { fetchPlaceholders, getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { fetchDynamicStockIndexData } from '../../scripts/mockapi.js';
 import {
   processEquityType,
   processMutualFundsType,
   processCurrencyType,
   processCommodityType,
   processKnowledgeCenterType,
-  processBondsType, ENIITY_TYPE,
+  processBondsType, ENIITY_TYPE, loadStockFeed,
 } from './headerutil.js';
 import {
   formatDateTime,
   debounce,
   postFormData,
-  getResearchAPIUrl,
+  getResearchAPIUrl, getDataFromAPI, getMarketingAPIUrl,
 } from '../../scripts/blocks-utils.js';
+
+const placeholders = await fetchPlaceholders();
 
 /**
  * Decorator for global navigation on top the page
@@ -46,11 +47,11 @@ const decorateGlobalNavigationBar = (fragment, block) => {
 const decorateMainHeaderLogo = (fragment) => {
   const logoDiv = document.createElement('div');
   logoDiv.className = 'logo';
-  const headerLogoDetails = fragment.querySelector('.section.icici-logo');
-  const imageAltData = headerLogoDetails.getAttribute('data-image-alt');
+  const headerLogoDetails = fragment.querySelector('.section.primary-buttons');
   const imageTag = headerLogoDetails.querySelector('img');
-  imageTag.alt = imageAltData;
-  logoDiv.appendChild(imageTag);
+  imageTag.alt = 'ICICI Logo';
+  const wrappedLogo = headerLogoDetails.querySelector('.button-container');
+  logoDiv.appendChild(wrappedLogo);
   return logoDiv;
 };
 
@@ -132,11 +133,9 @@ const getSearchCategoryDropDown = (fragment) => {
 
   menuItems.forEach((item) => {
     const li = document.createElement('li');
-    const a = document.createElement('a');
     const span = document.createElement('span');
     span.textContent = item.itemText;
-    a.appendChild(span);
-    li.appendChild(a);
+    li.appendChild(span);
     li.addEventListener('click', (event) => {
       updateCategorySelection(event.currentTarget);
     });
@@ -342,11 +341,11 @@ const buildSidePanelTopSection = (fragment) => {
 
   const sidePanelTopAreaLogo = document.createElement('div');
   sidePanelTopAreaLogo.className = 'top-area-logo';
-  const sidePanelLogoDetails = fragment.querySelector('.section.side-panel-icici-logo');
-  const sidePanelImageAltData = sidePanelLogoDetails.getAttribute('data-image-alt');
+  const sidePanelLogoDetails = fragment.querySelector('.section.side-panel-primary-actions');
   const sidePanelImageTag = sidePanelLogoDetails.querySelector('img');
-  sidePanelImageTag.alt = sidePanelImageAltData;
-  sidePanelTopAreaLogo.appendChild(sidePanelImageTag);
+  sidePanelImageTag.alt = 'ICICI Logo';
+  const wrappedLogo = sidePanelLogoDetails.querySelector('.button-container');
+  sidePanelTopAreaLogo.appendChild(wrappedLogo);
   sidePanelTopAreaDiv.appendChild(sidePanelTopAreaLogo);
   return sidePanelTopAreaDiv;
 };
@@ -418,7 +417,7 @@ const buildSidePanelAccordion = (fragment) => {
     subitemsList.forEach((subitem) => {
       const subItemLinkNode = subitem.querySelector('a');
       const subItemUrl = subItemLinkNode?.getAttribute('href') || '';
-      const subitemName = subItemLinkNode?.innerText || subitem.textContent;
+      const subitemName = subitem.innerText || '';
       const accordionSubitem = document.createElement('div');
       accordionSubitem.className = 'accordion-subitem';
       if (subitemName.includes('[new]')) {
@@ -498,44 +497,51 @@ const decorateShareIndexPanel = (fragment, block) => {
   stockItemDiv.className = 'stock-item';
   const dateTimeSpan = document.createElement('span');
   dateTimeSpan.className = 'spn-date-time';
-  dateTimeSpan.innerText = formatDateTime(new Date());
   stockItemDiv.appendChild(dateTimeSpan);
   dynamicStockIndexDiv.appendChild(stockItemDiv);
 
-  // TODO: Get this dynamic data from the web socket API
-  const dynamicStockData = fetchDynamicStockIndexData();
-  dynamicStockData.forEach((singleStock) => {
-    const stockDiv = document.createElement('div');
-    stockDiv.className = 'stock-item';
-    const stockNameSpan = document.createElement('span');
-    stockNameSpan.innerText = `${singleStock.indexName}: `;
-    stockDiv.appendChild(stockNameSpan);
+  const callback = async (error, apiResponse = []) => {
+    if (apiResponse) {
+      apiResponse.Data.Table.forEach((index) => {
+        const stockDiv = document.createElement('div');
+        // eslint-disable-next-line no-unused-expressions
+        index.INDEX_NAME.includes('Nifty') ? stockDiv.classList.add('stock-item', 'nifty') : stockDiv.classList.add('stock-item', 'sensex');
+        const stockNameSpan = document.createElement('span');
+        stockNameSpan.innerText = index.INDEX_NAME.includes('Nifty') ? 'NIFTY: ' : 'SENSEX: ';
+        stockDiv.appendChild(stockNameSpan);
+        if (index.INDEX_NAME.includes('Nifty')) dateTimeSpan.innerText = formatDateTime(index.LTP_DATE);
+        const shareValueSpan = document.createElement('span');
+        shareValueSpan.className = 'share-value';
+        if (index.CHANGE >= 0) {
+          shareValueSpan.classList.remove('negative');
+          shareValueSpan.classList.add('positive');
+        } else {
+          shareValueSpan.classList.remove('positive');
+          shareValueSpan.classList.add('negative');
+        }
+        shareValueSpan.innerText = `${index.LTP.toLocaleString()} `;
+        stockDiv.appendChild(shareValueSpan);
 
-    const shareValueSpan = document.createElement('span');
-    shareValueSpan.className = 'share-value';
-    if (singleStock.change >= 0) {
-      shareValueSpan.classList.remove('negative');
-      shareValueSpan.classList.add('positive');
+        const shareChangeSpan = document.createElement('span');
+        shareChangeSpan.className = 'share-change';
+        shareChangeSpan.innerText = `${index.CHANGE.toLocaleString()}(${index.PER_CHANGE.toFixed(2)}%)`;
+        if (index.CHANGE >= 0) {
+          shareChangeSpan.classList.remove('share-down');
+          shareChangeSpan.classList.add('share-up');
+        } else {
+          shareChangeSpan.classList.remove('share-up');
+          shareChangeSpan.classList.add('share-down');
+        }
+        stockDiv.appendChild(shareChangeSpan);
+        dynamicStockIndexDiv.appendChild(stockDiv);
+      });
+      loadStockFeed(placeholders.gaToken);
     } else {
-      shareValueSpan.classList.remove('positive');
-      shareValueSpan.classList.add('negative');
+      dateTimeSpan.classList.remove('spn-date-time');
     }
-    shareValueSpan.innerText = `${singleStock.stockValue.toLocaleString()} `;
-    stockDiv.appendChild(shareValueSpan);
+  };
 
-    const shareChangeSpan = document.createElement('span');
-    shareChangeSpan.className = 'share-change';
-    shareChangeSpan.innerText = `${singleStock.change.toLocaleString()}(${singleStock.changePercentage}%)`;
-    if (singleStock.change >= 0) {
-      shareChangeSpan.classList.remove('share-down');
-      shareChangeSpan.classList.add('share-up');
-    } else {
-      shareChangeSpan.classList.remove('share-up');
-      shareChangeSpan.classList.add('share-down');
-    }
-    stockDiv.appendChild(shareChangeSpan);
-    dynamicStockIndexDiv.appendChild(stockDiv);
-  });
+  getDataFromAPI(getMarketingAPIUrl(), 'GetEquityNiftySensex', callback);
   shareIndexContainer.appendChild(bigMenuDiv);
   shareIndexContainer.appendChild(dynamicStockIndexDiv);
   shareIndexPanelDiv.appendChild(shareIndexContainer);

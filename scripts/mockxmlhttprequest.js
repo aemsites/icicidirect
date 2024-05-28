@@ -1,6 +1,10 @@
+import { getEnvType, getQueryParam } from './blocks-utils.js';
+
 /**
  * MockXMLHttpRequest class to mock the XMLHttpRequest object
  * to intercept and modify the request and response for specific URLs
+ * Needed for testing the chatbot in the development environment as only prod,
+ * live and preview environments have been whitelisted
  */
 class MockXMLHttpRequest {
   constructor() {
@@ -79,6 +83,9 @@ class MockXMLHttpRequest {
   }
 }
 
-window.OrigXmlHttpRequest = window.XMLHttpRequest;
-// Override the global XMLHttpRequest with your custom class
-window.XMLHttpRequest = MockXMLHttpRequest;
+// Mock the XMLHttpRequest object for non-prod environments
+if (getEnvType() !== 'prod' && getQueryParam('dontmockxmlhttprequest') !== 'true') {
+  window.OrigXmlHttpRequest = window.XMLHttpRequest;
+  // Override the global XMLHttpRequest with your custom class
+  window.XMLHttpRequest = MockXMLHttpRequest;
+}

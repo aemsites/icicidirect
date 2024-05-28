@@ -1,5 +1,5 @@
 import {
-  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName,
+  createOptimizedPicture, loadScript, readBlockConfig, toCamelCase, toClassName, fetchPlaceholders,
 } from './aem.js';
 
 const WORKER_ORIGIN_URL = 'https://icicidirect-secure-worker.franklin-prod.workers.dev';
@@ -7,8 +7,11 @@ const RESEARCH_API_URL = `${WORKER_ORIGIN_URL}/CDNResearchAPI/CallResearchAPI`;
 const MARKETING_API_URL = `${WORKER_ORIGIN_URL}/CDNMarketAPI/CallMarketAPI`;
 const ICICI_FINOUX_HOST = 'http://icicidirect.finoux.com';
 const SITE_ROOT = 'https://www.icicidirect.com';
+const CONTENT_FEED_URL = 'https://contentfeeds.icicidirect.com/';
+const SOCKET_IO_SCRIPT = 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/3.1.0/socket.io.min.js';
 
 const DELAY_MARTECH_PARAMS = 'delayMartech';
+const LOAD_MARTECH_PARAM = 'loadMartech';
 
 function isInViewport(el) {
   const rect = el.getBoundingClientRect();
@@ -39,6 +42,7 @@ const Viewport = (function initializeViewport() {
     }
     return deviceType;
   }
+  getDeviceType();
 
   getDeviceType();
 
@@ -346,23 +350,25 @@ function debounce(func, timeout = 200) {
 }
 
 async function loadGTM() {
-  const scriptTag = document.createElement('script');
-  scriptTag.innerHTML = `
-        (function (w, d, s, l, i) {
-        w[l] = w[l] || [];
-        w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        });
-        var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
-        j.async = true;
-        j.src =
-            'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
-        f.parentNode.insertBefore(j, f);
-        }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
-    `;
-  document.head.prepend(scriptTag);
+  setTimeout(() => {
+    const scriptTag = document.createElement('script');
+    scriptTag.innerHTML = `
+          (function (w, d, s, l, i) {
+          w[l] = w[l] || [];
+          w[l].push({
+              'gtm.start':
+                  new Date().getTime(), event: 'gtm.js'
+          });
+          var f = d.getElementsByTagName(s)[0],
+              j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : '';
+          j.async = true;
+          j.src =
+              'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+          f.parentNode.insertBefore(j, f);
+          }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
+      `;
+    document.head.prepend(scriptTag);
+  }, 1000);
 }
 
 function loadAdobeLaunch() {
@@ -375,11 +381,6 @@ function loadAdobeLaunch() {
   loadScript(adobeLaunchSrc[getEnvType()], { async: true });
 }
 
-function loadAdobeLaunchAndGTM() {
-  // loadAdobeLaunch();
-  loadGTM();
-}
-
 /**
  * Get query param from URL
  * @param param {string} The query param to get
@@ -390,9 +391,24 @@ function getQueryParam(param) {
   return urlParams.get(param);
 }
 
+function loadAdobeLaunchAndGTM() {
+  const loadMartech = getQueryParam(LOAD_MARTECH_PARAM) ?? 'all';
+  if (loadMartech === 'adobe') {
+    loadAdobeLaunch();
+  } else if (loadMartech === 'gtm') {
+    loadGTM();
+  } else if (loadMartech === 'all') {
+    loadAdobeLaunch();
+    loadGTM();
+  }
+}
+
 function defaultAnalyticsLoadDisabled() {
   const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
-  return delayParam !== null && !Number.isNaN(delayParam);
+  const result = delayParam !== null && !Number.isNaN(delayParam);
+  // eslint-disable-next-line no-console
+  console.log('defaultAnalyticsLoadDisabled', result);
+  return result;
 }
 
 function loadAnalyticsDelayed() {
@@ -416,11 +432,37 @@ function generateReportLink(companyName, reportId) {
   const trimmedReportId = reportId.toString().replace(/\.0$/, '');
 
   // Generate report link
-  const reportLink = `https://${ICICI_FINOUX_HOST}/research/equity/`
-                      + `${formattedCompanyName}/${trimmedReportId}`;
+  const reportLink = `${ICICI_FINOUX_HOST}/research/equity/`
+    + `${formattedCompanyName}/${trimmedReportId}`;
 
   return reportLink;
 }
+
+function getHostUrl() {
+  let hostUrl = window.location.origin;
+  if (!hostUrl || hostUrl === 'null') {
+    // eslint-disable-next-line prefer-destructuring
+    hostUrl = window.location.ancestorOrigins[0];
+  }
+  return hostUrl;
+}
+
+/**
+ * Util function to append no results message in the block with no data to display
+ * @param {*} element - The element to append the no results message
+ */
+const handleNoResults = (element) => {
+  if (element) {
+    element.innerHTML = '';
+    element.classList.add('no-results');
+    const noResultsDiv = document.createElement('div');
+    noResultsDiv.className = 'no-results';
+    fetchPlaceholders().then((placeholders) => {
+      noResultsDiv.textContent = placeholders.norecordsfound;
+      element.appendChild(noResultsDiv);
+    });
+  }
+};
 
 export {
   isInViewport,
@@ -445,9 +487,13 @@ export {
   loadAdobeLaunch,
   loadGTM,
   getQueryParam,
+  getHostUrl,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
   defaultAnalyticsLoadDisabled,
   generateReportLink,
   sanitizeCompanyName,
+  CONTENT_FEED_URL,
+  SOCKET_IO_SCRIPT,
+  handleNoResults,
 };

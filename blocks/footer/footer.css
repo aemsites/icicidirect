@@ -134,7 +134,7 @@
 }
 
 .footer.block .footer-bottom p {
-  padding: 1.563rem var(--space-15px);
+  padding: 1rem var(--space-15px);
   text-align: center;
   color: var(--color-white);
   font-size: var(--body-font-size-s);
@@ -144,7 +144,7 @@
 .footer.block .footer-links {
   background: var(--link-color-dark-gray);
   padding: 2rem 0 0;
-} 
+}
 
 .footer.block .footer-links .links-title {
   font-size: var(--body-font-size-xs);
@@ -216,7 +216,7 @@
 .footer.block .footer-disclaimer {
   background: var(--link-color-dark-gray);
   padding-top: 1.875rem;
-  padding-bottom: 1.875rem;
+  padding-bottom: 6rem;
 }
 
 .footer.block .footer-disclaimer a:hover {
@@ -276,7 +276,7 @@
 
 .footer.block .footer-disclaimer .panel-body {
   padding-left: 1rem;
-  padding-right: 1rem; 
+  padding-right: 1rem;
   max-height: 200rem;
   opacity: 1;
   transition: max-height 0.4s ease, opacity 0.4s ease;
@@ -359,7 +359,7 @@
     bottom: 0;
     margin: auto;
   }
-  
+
   .footer.block .footer-top .col-2::after {
     height: 6rem;
     background: var(--veritcal-line-footer-top-gray);
@@ -379,6 +379,10 @@
   .footer.block .footer-top-note p {
     font-size: var(--space-13px);
     padding-left: var(--space-15px);
+  }
+
+  .footer.block .footer-disclaimer {
+    padding-bottom: 4rem;
   }
 }
 
