@@ -358,10 +358,15 @@ async function loadEager(doc) {
   if (main) {
     createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
     const configData = await fetch(`${getHostUrl()}/websdkconfig.json`).then((response) => response.json());
-    alloy('configure', {
-      datastreamId: '49f60b5b-a0d6-4857-99a7-efd5d4588b30',
-      orgId: '908936ED5D35CC220A495CD4@AdobeOrg',
-    });
+    if (configData && configData.data && configData.data.length > 0) {
+      alloy('configure', {
+        datastreamId: configData.data[0].DatastreamId,
+        orgId: configData.data[0].OrgId,
+      });
+    } else {
+      document.body.style.visibility = 'visible';
+    }
+
 
     // console.log('Alloy configured', JSON.stringify(response));
     // await getAndApplyRenderDecisions();
