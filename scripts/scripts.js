@@ -203,11 +203,13 @@ async function getAndApplyRenderDecisions() {
   propositions.forEach((entry) => {
     // Iterate over the array of items in each entry
     if (entry.items) {
-      entry.items.forEach(async (item) => {
+      entry.items.forEach((item) => {
         console.log(item);
         if (item.schema === 'https://ns.adobe.com/personalization/dom-action') {
-          const element = await getElementForProposition(item);
-          console.log('element:', element);
+          const cssSelector = item.data.selector;
+          const { prehidingSelector } = item.data;
+          console.log('cssSelector:', cssSelector);
+          console.log('prehidingSelector:', prehidingSelector);
         }
       });
     }
