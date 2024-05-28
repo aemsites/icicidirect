@@ -167,7 +167,7 @@ function onDecoratedElement(fn) {
     if (mutations.some((m) => m.target.tagName === 'BODY'
         || m.target.dataset.sectionStatus === 'loaded'
         || m.target.dataset.blockStatus === 'loaded')) {
-      console.log('I am here3');
+      console.log(`I am here3 ${JSON.stringify(mutations)}`);
       fn();
     }
   });
