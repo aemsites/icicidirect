@@ -291,26 +291,28 @@ async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
   sendAnalyticsEvent(xdmData);
 }
 
-const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`);
+function initializeTargetAnalytics() {
+  const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`);
 
-if (getMetadata('target')) {
-  alloyLoadedPromise.then(() => {
-    fetch(`${getHostUrl()}/websdkconfig.json`)
-      .then((response) => response.json())
-      .then((configData) => {
-        // eslint-disable-next-line no-undef
-        alloy('configure', {
-          datastreamId: configData.data[0].DatastreamId,
-          orgId: configData.data[0].OrgId,
+  if (getMetadata('target')) {
+    alloyLoadedPromise.then(() => {
+      fetch(`${getHostUrl()}/websdkconfig.json`)
+        .then((response) => response.json())
+        .then((configData) => {
+          // eslint-disable-next-line no-undef
+          alloy('configure', {
+            datastreamId: configData.data[0].DatastreamId,
+            orgId: configData.data[0].OrgId,
+          });
+          getAndApplyRenderDecisions();
+          analyticsTrackPageViews(document);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line no-console
+          console.error('Error:', error);
         });
-        getAndApplyRenderDecisions();
-        analyticsTrackPageViews(document);
-      })
-      .catch((error) => {
-        // eslint-disable-next-line no-console
-        console.error('Error:', error);
-      });
-  });
+    });
+  }
 }
 
 /**
@@ -352,6 +354,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
+    initializeTargetAnalytics();
     decorateMain(main);
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
