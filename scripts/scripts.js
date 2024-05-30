@@ -137,14 +137,11 @@ function initWebSDK(path) {
   return new Promise((resolve) => {
     import(path)
       .then(() => {
-        console.log('Alloy SDK loaded successfully');
       })
       .then(() => {
-        console.log('Alloy configured successfully');
         resolve();
       })
-      .catch((error) => {
-        console.error('Error loading or configuring Alloy SDK:', error);
+      .catch(() => {
       });
   });
 }
@@ -191,7 +188,6 @@ function toCssSelector(selector) {
 async function getElementForProposition(proposition) {
   const selector = proposition.data.prehidingSelector
       || toCssSelector(proposition.data.selector);
-  console.log('selector:', selector);
   return document.querySelector(selector);
 }
 
@@ -206,7 +202,6 @@ function getSectionByElementSelector(selector) {
     }
     return section;
   } catch (error) {
-    console.error('Error occurred while querying selector:', error);
     return null; // Return null if an error occurs
   }
 }
@@ -266,7 +261,6 @@ async function getAndApplyRenderDecisions() {
 async function sendAnalyticsEvent(xdmData) {
   // eslint-disable-next-line no-undef
   if (!alloy) {
-    console.log('alloy not initialized, cannot send analytics event');
     return Promise.resolve();
   }
   // eslint-disable-next-line no-undef
@@ -291,12 +285,11 @@ async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
         pageViews: {
           value: 1,
         },
-        name: 'researchpage',
+        name: document.title,
       },
     },
   };
-
-  return sendAnalyticsEvent(xdmData);
+  sendAnalyticsEvent(xdmData);
 }
 
 const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`);
@@ -315,6 +308,7 @@ if (getMetadata('target')) {
         analyticsTrackPageViews(document);
       })
       .catch((error) => {
+        // eslint-disable-next-line no-console
         console.error('Error:', error);
       });
   });
