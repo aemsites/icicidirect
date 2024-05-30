@@ -152,8 +152,8 @@ function onDecoratedElement(fn) {
   if (elements.length > 0) {
     fn();
     elements.forEach((element) => {
-      if (element.style.visibility === 'hidden') {
-        element.style.visibility = 'visible';
+      if (element.classList.contains('visibility-hidden')) {
+        element.classList.remove('visibility-hidden');
       }
     });
   }
@@ -165,8 +165,8 @@ function onDecoratedElement(fn) {
       fn();
       mutations.forEach((m) => {
         // Apply the desired operation on each mutation
-        if (m.target.style.visibility === 'hidden') {
-          m.target.style.visibility = 'visible';
+        if (m.target.classList.contains('visibility-hidden')) {
+          m.target.classList.remove('visibility-hidden');
         }
       });
     }
@@ -227,7 +227,7 @@ async function getAndApplyRenderDecisions() {
             section = getSectionByElementSelector(cssSelector);
           }
           if (section) {
-            section.style.visibility = 'hidden';
+            section.classList.add('visibility-hidden');
           }
         }
       });
@@ -347,7 +347,7 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.body.style.visibility = 'hidden';
+  document.body.classList.add('visibility-hidden');
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
