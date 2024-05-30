@@ -233,8 +233,7 @@ async function getAndApplyRenderDecisions() {
       });
     }
   });
-  document.body.style.visibility = 'visible';
-
+  document.body.classList.remove('visibility-hidden');
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
 
