@@ -283,12 +283,13 @@ async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
 }
 
 async function initializeTargetAnalytics() {
-  const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`);
+  const alloyLoadedPromise = Promise.all([
+    initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`),
+    fetch(`${getHostUrl()}/websdkconfig.json`).then((response) => response.json()),
+  ]);
   if (getMetadata('target')) {
     alloyLoadedPromise
-      .then(() => fetch(`${getHostUrl()}/websdkconfig.json`))
-      .then((response) => response.json())
-      .then(async (configData) => {
+      .then(async ([, configData]) => {
         window.alloy('configure', {
           datastreamId: configData.data[0].DatastreamId,
           orgId: configData.data[0].OrgId,
