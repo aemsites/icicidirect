@@ -311,19 +311,6 @@ async function initializeTargetAnalytics() {
  * https://experienceleague.adobe.com/docs/experience-platform/edge/fundamentals/installing-the-sdk.html?lang=en#adding-the-code
  * @type {string}
  */
-function getAlloyInitScript() {
-  return `!function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=
-  function(){var u=arguments;return new Promise(function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}(window,["alloy"]);`;
-}
-
-/**
- * Create inline script
- * @param document
- * @param element where to create the script element
- * @param innerHTML the script
- * @param type the type of the script element
- * @returns {HTMLScriptElement}
- */
 function initAlloyQueue(instanceName) {
   if (window[instanceName]) {
     return;
