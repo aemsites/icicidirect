@@ -133,17 +133,8 @@ export function decorateMain(main) {
   decorateQuickLinks(main);
 }
 
-function initWebSDK(path) {
-  return new Promise((resolve) => {
-    import(path)
-      .then(() => {
-      })
-      .then(() => {
-        resolve();
-      })
-      .catch(() => {
-      });
-  });
+async function initWebSDK(path) {
+  return import(path);
 }
 
 function onDecoratedElement(fn) {
