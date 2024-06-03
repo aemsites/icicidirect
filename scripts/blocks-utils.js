@@ -349,7 +349,23 @@ function debounce(func, timeout = 200) {
   };
 }
 
+/**
+ * Get query param from URL
+ * @param param {string} The query param to get
+ * @returns {string} The value of the query param
+ */
+function getQueryParam(param) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get(param);
+}
+
 async function loadGTM() {
+  let delay = 2; // default value
+  const gtmDelayParam = getQueryParam('gtm_delay');
+
+  if (gtmDelayParam !== null && !Number.isNaN(parseInt(gtmDelayParam, 10))) {
+    delay = parseInt(gtmDelayParam, 10);
+  }
   setTimeout(() => {
     const scriptTag = document.createElement('script');
     scriptTag.innerHTML = `
@@ -368,7 +384,7 @@ async function loadGTM() {
           }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
       `;
     document.head.prepend(scriptTag);
-  }, 1000);
+  }, delay * 1000);
 }
 
 function loadAdobeLaunch() {
@@ -379,16 +395,6 @@ function loadAdobeLaunch() {
     prod: 'https://assets.adobedtm.com/64c36731dbac/390f7bab5b74/launch-285ee83071cc-development.min.js',
   };
   loadScript(adobeLaunchSrc[getEnvType()], { async: true });
-}
-
-/**
- * Get query param from URL
- * @param param {string} The query param to get
- * @returns {string} The value of the query param
- */
-function getQueryParam(param) {
-  const urlParams = new URLSearchParams(window.location.search);
-  return urlParams.get(param);
 }
 
 function loadAdobeLaunchAndGTM() {
