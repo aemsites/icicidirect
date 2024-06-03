@@ -282,28 +282,26 @@ async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
   sendAnalyticsEvent(xdmData);
 }
 
-function initializeTargetAnalytics() {
+async function initializeTargetAnalytics() {
   const alloyLoadedPromise = initWebSDK(`${window.hlx.codeBasePath}/scripts/alloy.min.js`);
-
   if (getMetadata('target')) {
-    alloyLoadedPromise.then(() => {
-      fetch(`${getHostUrl()}/websdkconfig.json`)
-        .then((response) => response.json())
-        .then((configData) => {
-          // eslint-disable-next-line no-undef
-          alloy('configure', {
-            datastreamId: configData.data[0].DatastreamId,
-            orgId: configData.data[0].OrgId,
-          });
-          getAndApplyRenderDecisions();
-          analyticsTrackPageViews(document);
-        })
-        .catch((error) => {
-          // eslint-disable-next-line no-console
-          console.error('Error:', error);
+    alloyLoadedPromise
+      .then(() => fetch(`${getHostUrl()}/websdkconfig.json`))
+      .then((response) => response.json())
+      .then(async (configData) => {
+        window.alloy('configure', {
+          datastreamId: configData.data[0].DatastreamId,
+          orgId: configData.data[0].OrgId,
         });
-    });
+        await getAndApplyRenderDecisions();
+        await analyticsTrackPageViews(document);
+      })
+      .catch((error) => {
+        // eslint-disable-next-line no-console
+        console.error('Error:', error);
+      });
   }
+  return alloyLoadedPromise;
 }
 
 /**
