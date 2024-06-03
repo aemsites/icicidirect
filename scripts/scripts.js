@@ -324,12 +324,18 @@ function getAlloyInitScript() {
  * @param type the type of the script element
  * @returns {HTMLScriptElement}
  */
-function createInlineScript(document, element, innerHTML, type) {
-  const script = document.createElement('script');
-  script.type = type;
-  script.innerHTML = innerHTML;
-  element.appendChild(script);
-  return script;
+function initAlloyQueue(instanceName) {
+  if (window[instanceName]) {
+    return;
+  }
+  // eslint-disable-next-line no-underscore-dangle
+  (window.__alloyNS ||= []).push(instanceName);
+  window[instanceName] = (...args) => new Promise((resolve, reject) => {
+    window.setTimeout(() => {
+      window[instanceName].q.push([resolve, reject, args]);
+    });
+  });
+  window[instanceName].q = [];
 }
 
 /**
@@ -341,7 +347,7 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
-    createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
+    initAlloyQueue('alloy');
     initializeTargetAnalytics();
     decorateMain(main);
     await waitForLCP(LCP_BLOCKS);
