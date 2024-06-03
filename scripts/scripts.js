@@ -224,7 +224,7 @@ async function getAndApplyRenderDecisions() {
       });
     }
   });
-  document.body.classList.remove('visibility-hidden');
+  document.body.classList.add('appear');
   onDecoratedElement(async () => {
     await window.alloy('applyPropositions', { propositions });
 
@@ -339,7 +339,6 @@ function createInlineScript(document, element, innerHTML, type) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.body.classList.add('visibility-hidden');
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
@@ -347,7 +346,6 @@ async function loadEager(doc) {
     createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
     initializeTargetAnalytics();
     decorateMain(main);
-    document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
   }
 
