@@ -1,7 +1,7 @@
 import { fetchPlaceholders, readBlockConfig } from '../../scripts/aem.js';
 import {
   getResearchAPIUrl, getHostUrl,
-  readBlockMarkup, observe, postFormData,
+  observe, postFormData,
   Viewport, fetchData, generateReportLink,
   handleNoResults,
 } from '../../scripts/blocks-utils.js';
@@ -447,7 +447,7 @@ function updateCardsInView(block, type, recommendationArray, placeholders, margi
       companyObj.targetPrice = company.TARGET_PRICE || company.Target_One_Price || 'NA';
       companyObj.cmp = !company.CMP ? 'NA' : company.CMP;
       companyObj.stopLoss = company.STOPLOSS_PRICE || company.SLTP_Price || 'NA';
-      companyObj.action = company.RATING_TYPE_NM || (company.Call_Type && company.Call_Type.replace('MARGIN – ', '')) || 'Buy';
+      companyObj.action = company.RATING_TYPE_NM || (company.Call_Type && company.Call_Type.replace('MARGIN – ', '')) || 'Sell';
 
       if (type === 'trading') {
         companyObj.recoPrice = company.RECOM_PRICE || company.Recom_From_Price || 'NA';
@@ -637,28 +637,6 @@ async function generateDynamicContent(block, type, marginActions) {
   fetchCardsData(block, type, marginActions);
 }
 
-function addHighLightSection(carouselSection, highLightDiv, highLightIcon, type) {
-  if (highLightDiv) {
-    const div = document.createElement('div');
-    div.className = 'carousel-highlight';
-    if (type !== 'trading') {
-      div.classList.add('green-highlight');
-    }
-    const span = document.createElement('span');
-    const p = document.createElement('p');
-    p.innerHTML = highLightDiv.innerHTML;
-    span.appendChild(p);
-    if (highLightIcon) {
-      div.appendChild(highLightIcon);
-      div.appendChild(span);
-      div.appendChild(highLightIcon.cloneNode(true));
-    } else {
-      div.appendChild(span);
-    }
-    carouselSection.appendChild(div);
-  }
-}
-
 function addCarouselHeader(carouselContainer, title) {
   const carouselHeader = document.createElement('div');
   carouselHeader.className = 'carousel-header border-box';
@@ -705,19 +683,15 @@ function addDiscoverLink(carouselBody, discoverLink) {
 
 export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
-  const blockMarkup = readBlockMarkup(block);
   const { type } = blockConfig;
   const { title } = blockConfig;
   const marginActions = {
     buy: blockConfig['buy-action'],
     sell: blockConfig['sell-action'],
   };
-  const highlightDiv = blockMarkup.predication;
-  const highlightIcon = blockMarkup.targeticon.querySelector('picture');
   const discoverLink = blockConfig.discoverlink;
   block.textContent = '';
   block.classList.add('carousel-section');
-  addHighLightSection(block, highlightDiv, highlightIcon, type);
 
   const carouselContainer = document.createElement('div');
   carouselContainer.className = 'carousel-container border-box';

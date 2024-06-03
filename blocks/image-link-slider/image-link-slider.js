@@ -110,7 +110,7 @@ export default async function decorate(block) {
       if (apiName === 'finace') {
         formData.append('apiName', 'GetFinaceListing');
       }
-      formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '5' }));
+      formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '10' }));
       // eslint-disable-next-line consistent-return
       postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
         if (error || !apiResponse) {
