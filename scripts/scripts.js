@@ -180,11 +180,10 @@ async function loadLazy(doc) {
   if (hash && element) element.scrollIntoView();
 
   await loadHeader(doc.querySelector('header'));
-  loadFooter(doc.querySelector('footer'));
-  
+  await loadFooter(doc.querySelector('footer'));
   await Promise.all([
     loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`),
-    loadFonts()
+    loadFonts(),
   ]);
 
   sampleRUM('lazy');
