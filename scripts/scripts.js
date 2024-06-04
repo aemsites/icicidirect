@@ -181,10 +181,8 @@ async function loadLazy(doc) {
 
   await loadHeader(doc.querySelector('header'));
   await loadFooter(doc.querySelector('footer'));
-  await Promise.all([
-    loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`),
-    loadFonts(),
-  ]);
+  await loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  await loadFonts();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
