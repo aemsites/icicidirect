@@ -481,6 +481,22 @@ function isInternalPage() {
   return getHref().indexOf('/sidekick/blocks/') > 0 || getHref().indexOf('/_tools/') > 0;
 }
 
+/**
+ * Add prefetch link to the head
+ * @param {*} kind - The kind of prefetch link
+ * @param {*} url - The URL to prefetch
+ * @param {*} as - The as attribute for the prefetch link
+ */
+function addPrefetch(kind, url, as) {
+  const linkEl = document.createElement('link');
+  linkEl.rel = kind;
+  linkEl.href = url;
+  if (as) {
+    linkEl.as = as;
+  }
+  document.head.append(linkEl);
+}
+
 export {
   isInViewport,
   Viewport,
@@ -515,4 +531,5 @@ export {
   handleNoResults,
   getHref,
   isInternalPage,
+  addPrefetch,
 };
