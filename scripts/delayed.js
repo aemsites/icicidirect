@@ -2,12 +2,17 @@
 import { loadScript, sampleRUM, fetchPlaceholders } from './aem.js';
 import {
   // eslint-disable-next-line import/named
-  defaultAnalyticsLoadDisabled,
+  defaultAnalyticsLoadDisabled, getQueryParam,
   loadAdobeLaunchAndGTM,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
+
+const loadMartech = getQueryParam(LOAD_MARTECH_PARAM) ?? 'all';
+if (loadMartech === 'off') {
+  return;
+}
 
 const isSidekickLibrary = (window.location.pathname.includes('srcdoc'));
 
