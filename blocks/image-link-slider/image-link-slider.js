@@ -132,7 +132,7 @@ export default async function decorate(block) {
     const configName = configNameElement.textContent.trim().toLowerCase();
     if (configName === 'type') {
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      const maxLimit = block?.dataset?.maxLimit;
+      const maxLimit = block?.dataset?.maxLimit || 20;
       observe(block, addCarouselItems, apiName, maxLimit);
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
