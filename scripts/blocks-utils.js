@@ -514,5 +514,5 @@ export {
   SOCKET_IO_SCRIPT,
   handleNoResults,
   getHref,
-  isInternalPage
+  isInternalPage,
 };
