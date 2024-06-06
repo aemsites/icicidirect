@@ -3,7 +3,7 @@ import { loadScript, sampleRUM, fetchPlaceholders } from './aem.js';
 import {
   // eslint-disable-next-line import/named
   defaultAnalyticsLoadDisabled, getQueryParam,
-  loadAdobeLaunchAndGTM,
+  loadAdobeLaunchAndGTM, LOAD_MARTECH_PARAM,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
