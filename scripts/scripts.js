@@ -181,11 +181,11 @@ async function loadLazy(doc) {
   if (hash && element) element.scrollIntoView();
 
   if (!isInternalPage()) {
-    loadHeader(doc.querySelector('header'));
-    loadFooter(doc.querySelector('footer'));
+    await loadHeader(doc.querySelector('header'));
+    await loadFooter(doc.querySelector('footer'));
   }
-  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  loadFonts();
+  await loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  await loadFonts();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
