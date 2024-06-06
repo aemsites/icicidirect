@@ -92,7 +92,7 @@ function decorateContent(faqContents, block, schemaData) {
   });
 }
 
-function decorateButton(faqButton, block, buttonTitle, expendButtonTitle) {
+function decorateButton(faqButton, block, buttonTitle, expandButtonTitle) {
   const button = createElement('button', 'button');
   button.textContent = buttonTitle;
   faqButton.append(button);
@@ -108,7 +108,7 @@ function decorateButton(faqButton, block, buttonTitle, expendButtonTitle) {
       if (showButtons.length > 0) {
         button.textContent = buttonTitle;
       } else {
-        button.textContent = expendButtonTitle;
+        button.textContent = expandButtonTitle;
       }
     }
   });
@@ -121,7 +121,7 @@ export default async function decorate(block) {
   const blockConfig = readBlockConfig(block);
   const topTitle = blockConfig.title;
   const buttonTitle = blockConfig['button-title'];
-  const expendButtonTitle = blockConfig['expend-button-title'];
+  const expandButtonTitle = blockConfig['expand-button-title'];
   let faqContentIndex = false;
   [...block.children].forEach((child) => {
     if ([...child.children][0].textContent === 'Contents') {
@@ -135,7 +135,7 @@ export default async function decorate(block) {
   decorateTitle(faqTitle, topTitle);
   const schemaData = [];
   decorateContent(faqContent, block, schemaData);
-  decorateButton(faqButton, block, buttonTitle, expendButtonTitle);
+  decorateButton(faqButton, block, buttonTitle, expandButtonTitle);
 
   block.replaceChildren(faqTitle);
   block.appendChild(faqContent);
