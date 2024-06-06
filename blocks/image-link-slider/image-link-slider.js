@@ -5,7 +5,7 @@ import { handleSocialShareClick } from '../../scripts/social-utils.js';
 import {
   getOriginUrl,
   getResearchAPIUrl,
-  handleNoResults,
+  handleNoResults, observe,
   parseResponse,
   postFormData,
 } from '../../scripts/blocks-utils.js';
@@ -90,6 +90,34 @@ function handleTitleConfig(titleElement, container) {
   container.insertBefore(titleWrapper, container.firstChild);
 }
 
+async function addCarouselItems(block, apiName, maxLimit = 20) {
+  const carouselItems = document.createElement('div');
+  carouselItems.classList.add('carousel-items');
+  const formData = new FormData();
+  if (apiName === 'finace') {
+    formData.append('apiName', 'GetFinaceListing');
+  }
+  formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '10' }));
+  // eslint-disable-next-line consistent-return
+  postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
+    if (error || !apiResponse) {
+      const noResultsContainer = document.createElement('div');
+      noResultsContainer.classList.add('no-results-container');
+      const buttonDiv = block.querySelector('.button-wrapper');
+      block.insertBefore(noResultsContainer, buttonDiv);
+      handleNoResults(noResultsContainer);
+    } else {
+      const jsonResult = parseResponse(apiResponse);
+      if (block.classList.contains('image-link-slider')) {
+        renderImageLinkVariant(jsonResult, carouselItems, maxLimit);
+        return loadCarousel(block, carouselItems).then(() => {
+          block.querySelector('.block.carousel').style.display = 'block';
+        });
+      }
+    }
+  });
+}
+
 export default async function decorate(block) {
   // style the block
   block.classList.add('padded');
@@ -103,32 +131,9 @@ export default async function decorate(block) {
     const configNameElement = configElement.querySelector('div');
     const configName = configNameElement.textContent.trim().toLowerCase();
     if (configName === 'type') {
-      const carouselItems = document.createElement('div');
-      carouselItems.classList.add('carousel-items');
       const apiName = configNameElement.nextElementSibling.textContent.trim();
-      const formData = new FormData();
-      if (apiName === 'finace') {
-        formData.append('apiName', 'GetFinaceListing');
-      }
-      formData.append('inputJson', JSON.stringify({ pageNo: '1', pageSize: '10' }));
-      // eslint-disable-next-line consistent-return
-      postFormData(getResearchAPIUrl(), formData, async (error, apiResponse = []) => {
-        if (error || !apiResponse) {
-          const noResultsContainer = document.createElement('div');
-          noResultsContainer.classList.add('no-results-container');
-          const buttonDiv = block.querySelector('.button-wrapper');
-          block.insertBefore(noResultsContainer, buttonDiv);
-          handleNoResults(noResultsContainer);
-        } else {
-          const jsonResult = parseResponse(apiResponse);
-          if (block.classList.contains('image-link-slider')) {
-            renderImageLinkVariant(jsonResult, carouselItems, block?.dataset?.maxLimit);
-            return loadCarousel(block, carouselItems).then(() => {
-              block.querySelector('.block.carousel').style.display = 'block';
-            });
-          }
-        }
-      });
+      const maxLimit = block?.dataset?.maxLimit;
+      observe(block, addCarouselItems, apiName, maxLimit);
     } else if (configName === 'title') {
       const titleElement = configNameElement.nextElementSibling;
       handleTitleConfig(titleElement, block);
