@@ -464,6 +464,23 @@ const handleNoResults = (element) => {
   }
 };
 
+/**
+ * Returns the true of the current page in the browser.
+ * If the page is running in a iframe with srcdoc,
+ * the ancestor origin + the path query param is returned.
+ * @returns {String} The href of the current page or the href of the block running in the library
+ */
+function getHref() {
+  if (window.location.href !== 'about:srcdoc') return window.location.href;
+
+  const urlParams = new URLSearchParams(window.parent.location.search);
+  return `${window.parent.location.origin}${urlParams.get('path')}`;
+}
+
+function isInternalPage() {
+  return getHref().indexOf('/sidekick/blocks/') > 0 || getHref().indexOf('/_tools/') > 0;
+}
+
 export {
   isInViewport,
   Viewport,
@@ -496,4 +513,6 @@ export {
   CONTENT_FEED_URL,
   SOCKET_IO_SCRIPT,
   handleNoResults,
+  getHref,
+  isInternalPage
 };
