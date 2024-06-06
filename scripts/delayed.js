@@ -32,7 +32,7 @@ const onCaptchaloadCallback = () => {
 
 window.onCaptchaloadCallback = onCaptchaloadCallback;
 
-loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback&render=explicit');
+
 
 /**
  * Google Tag Manager

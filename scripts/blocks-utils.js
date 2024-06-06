@@ -368,6 +368,7 @@ async function loadGTM() {
           }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
       `;
     document.head.prepend(scriptTag);
+    loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback&render=explicit');
   }, 1000);
 }
 
