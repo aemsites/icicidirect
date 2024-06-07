@@ -17,6 +17,7 @@ import {
   defaultAnalyticsLoadDisabled,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
+  isInternalPage,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 import loadTargetOffers from './target.js';
@@ -180,11 +181,12 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadHeader(doc.querySelector('header'));
-  loadFooter(doc.querySelector('footer'));
-
-  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  loadFonts();
+  if (!isInternalPage()) {
+    await loadHeader(doc.querySelector('header'));
+    await loadFooter(doc.querySelector('footer'));
+  }
+  await loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+  await loadFonts();
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
