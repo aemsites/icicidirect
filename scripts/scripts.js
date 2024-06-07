@@ -18,6 +18,7 @@ import {
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
   isInternalPage,
+  addPrefetch,
 } from './blocks-utils.js';
 import { decorateSocialShare } from './social-utils.js';
 
@@ -207,8 +208,7 @@ async function loadPage() {
   await loadLazy(document);
   loadDelayed();
 }
+addPrefetch('preconnect', 'https://icicidirect-secure-worker.franklin-prod.workers.dev');
 loadPage();
-
 window.validateuserToken = '';
-
 window.validateCaptchaToken = '';
