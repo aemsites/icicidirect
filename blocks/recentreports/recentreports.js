@@ -111,9 +111,13 @@ function createReportBox(title, targetPrice, rating, date, reportId, buttontitle
   return slideDiv;
 }
 
-function renderRecentReportsCards(recentReportsDataArray, carouselItems, blockCfg, maxLimit = 20) {
+function renderRecentReportsCards(
+  recentReportsDataArray,
+  carouselItems,
+  buttontitle,
+  maxLimit = 20,
+) {
   let slideCount = 0;
-  const { buttontitle } = blockCfg;
   recentReportsDataArray.Data.Table.slice(0, 20).forEach((item) => {
     if (slideCount >= maxLimit) return;
     const slide = document.createElement('li');
@@ -215,29 +219,23 @@ function addDiscoverLink(discoverMoreDiv, block) {
   }
 }
 
-function addCardsDiv(block, blockConfig) {
-  if (blockConfig.type === 'recentreports') {
-    const carouselItems = document.createElement('div');
-    carouselItems.classList.add('carousel-items');
-    createCarouselDiv(block);
-    getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
-      if (error || recentReportsDataArray.length === 0) {
-        const element = block.querySelector('.carousel-wrapper');
-        handleNoResults(element);
-      } else {
-        renderRecentReportsCards(
-          recentReportsDataArray,
-          carouselItems,
-          blockConfig,
-          block?.dataset?.maxLimit,
-        );
-        observe(block, loadCarousel, carouselItems);
-      }
-    });
-  } else {
-    const section = block.closest('.section');
-    section.style.visibility = 'hidden';
-  }
+function addCardsDiv(block, title) {
+  const carouselItems = document.createElement('div');
+  carouselItems.classList.add('carousel-items');
+  getDataFromAPI(getResearchAPIUrl(), 'GetResearchRecentReports', async (error, recentReportsDataArray = []) => {
+    if (error || recentReportsDataArray.length === 0) {
+      const element = block.querySelector('.carousel-wrapper');
+      handleNoResults(element);
+    } else {
+      renderRecentReportsCards(
+        recentReportsDataArray,
+        carouselItems,
+        title,
+        block?.dataset?.maxLimit,
+      );
+      loadCarousel(block, carouselItems);
+    }
+  });
 }
 
 function setAutoScrollBasedOnViewport(autoscrollString) {
@@ -282,6 +280,7 @@ export default async function decorate(block) {
   block.textContent = '';
   const {
     title, visibleslides, autoscroll, autoscrolldelay, maxlimit, discoverlink,
+    buttontitle, type,
   } = blockConfig;
   handleTitleConfig(title, block);
   block.dataset.autoScroll = setAutoScrollBasedOnViewport(autoscroll);
@@ -292,7 +291,13 @@ export default async function decorate(block) {
   if (maxlimit) {
     block.dataset.maxLimit = maxlimit;
   }
-  addCardsDiv(block, blockConfig);
+  if (type === 'recentreports') {
+    createCarouselDiv(block);
+    observe(block, addCardsDiv, buttontitle);
+  } else {
+    const section = block.closest('.section');
+    section.style.visibility = 'hidden';
+  }
   if (discoverlink) {
     addDiscoverLink(blockMarkup.discoverlink, block);
   }
