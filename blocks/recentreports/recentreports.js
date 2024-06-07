@@ -233,7 +233,7 @@ function addCardsDiv(block, title) {
         title,
         block?.dataset?.maxLimit,
       );
-      observe(block, loadCarousel, carouselItems);
+      loadCarousel(block, carouselItems);
     }
   });
 }
