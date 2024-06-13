@@ -349,6 +349,10 @@ body.appear {
   display: block;
 }
 
+body.visibility-hidden {
+  visibility: hidden;
+}
+
 body.modal-open {
   overflow: hidden;
 }
@@ -539,6 +543,10 @@ main .section > .section-container {
   width: 100%;
   margin-right: auto;
   margin-left: auto;
+}
+
+main .section.visibility-hidden {
+  visibility: hidden;
 }
 
 /* section - full-width */
