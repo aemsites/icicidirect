@@ -3,7 +3,6 @@ import { loadScript, sampleRUM, fetchPlaceholders } from './aem.js';
 import {
   // eslint-disable-next-line import/named
   defaultAnalyticsLoadDisabled,
-  loadAdobeLaunchAndGTM,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
@@ -37,7 +36,7 @@ loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
   if (!defaultAnalyticsLoadDisabled()) {
-    loadAdobeLaunchAndGTM();
+    // loadAdobeLaunchAndGTM();
   }
   // Needed for chatbot to work in non-prod environments
   loadScript('/scripts/mockxmlhttprequest.js', { type: 'module' });
