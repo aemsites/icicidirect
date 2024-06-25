@@ -349,10 +349,9 @@ function debounce(func, timeout = 200) {
   };
 }
 
-async function loadGTM() {
-  setTimeout(() => {
-    const scriptTag = document.createElement('script');
-    scriptTag.innerHTML = `
+function loadGTM() {
+  const scriptTag = document.createElement('script');
+  scriptTag.innerHTML = `
           (function (w, d, s, l, i) {
           w[l] = w[l] || [];
           w[l].push({
@@ -367,8 +366,7 @@ async function loadGTM() {
           f.parentNode.insertBefore(j, f);
           }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
       `;
-    document.head.prepend(scriptTag);
-  }, 1000);
+  document.head.prepend(scriptTag);
 }
 
 function loadAdobeLaunch() {
@@ -403,14 +401,23 @@ function loadAdobeLaunchAndGTM() {
   }
 }
 
-function defaultAnalyticsLoadDisabled() {
+/**
+ * Tells if the delay is overridden through query param
+ * @returns {boolean} True if the delay is overridden through query param else false
+ */
+function isCustomAnalyticsLoadDelay() {
   const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
-  const result = delayParam !== null && !Number.isNaN(delayParam);
+  const result = delayParam !== null && !Number.isNaN(delayParam) && delayParam >= 0;
   // eslint-disable-next-line no-console
-  console.log('defaultAnalyticsLoadDisabled', result);
+  console.log('isCustomAnalyticsLoadDelay', result);
   return result;
 }
 
+/**
+ * Extracts the delay time from the query param
+ * If the delay time is not present or invalid, returns -1
+ * @returns {number} The delay time in seconds
+ */
 function loadAnalyticsDelayed() {
   let delayTime = -1;
   const delayMartech = getQueryParam(DELAY_MARTECH_PARAMS);
@@ -557,7 +564,7 @@ export {
   getHostUrl,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
-  defaultAnalyticsLoadDisabled,
+  isCustomAnalyticsLoadDelay,
   generateReportLink,
   sanitizeCompanyName,
   CONTENT_FEED_URL,
