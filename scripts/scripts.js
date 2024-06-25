@@ -20,7 +20,6 @@ import {
   isInternalPage,
   addPrefetch,
 } from './blocks-utils.js';
-import { decorateSocialShare } from './social-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -106,15 +105,6 @@ function decorateAnchors(element = document) {
 
   if (discoverMoreAnchors.length > 0) {
     decorateDiscoverMore(discoverMoreAnchors);
-  }
-
-  const socialShareAnchors = anchors.filter((anchor) => {
-    const img = anchor.querySelector('img');
-    return img && img.src.includes('/icons/gray-share-icon.svg');
-  });
-
-  if (socialShareAnchors.length > 0) {
-    decorateSocialShare(socialShareAnchors);
   }
 }
 
