@@ -4,10 +4,13 @@ import {
   // eslint-disable-next-line import/named
   defaultAnalyticsLoadDisabled,
   loadAdobeLaunchAndGTM,
+  buildHowToSchema,
 } from './blocks-utils.js';
 
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
+
+buildHowToSchema();
 
 const isSidekickLibrary = (window.location.pathname.includes('srcdoc'));
 

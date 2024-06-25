@@ -497,6 +497,40 @@ function addPrefetch(kind, url, as) {
   document.head.append(linkEl);
 }
 
+/**
+ * Set the JSON-LD script in the body
+ * @param {*} data To be appended json
+ * @param {string} name The data-name of the script tag
+ */
+function setJsonLd(data, name) {
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  script.dataset.name = name;
+  document.body.appendChild(script);
+}
+
+/**
+ * Builds HowTo schema and append it to body.
+ */
+async function buildHowToSchema() {
+  const existingScript = document.body.querySelector('script[data-name="howto"]');
+  if (existingScript) return;
+  // Get Howto schema from schema excel
+  const response = await fetch('/howto-schema.json?sheet=data&sheet=step');
+  const json = await response.json();
+  const jsonLD = {};
+  if (json) {
+    if (json.data.data) {
+      Object.assign(jsonLD, json.data.data[0]);
+    }
+    if (json.step.data) {
+      jsonLD.step = json.step.data;
+    }
+  }
+  setJsonLd(jsonLD, 'howto');
+}
+
 export {
   isInViewport,
   Viewport,
@@ -532,4 +566,5 @@ export {
   getHref,
   isInternalPage,
   addPrefetch,
+  buildHowToSchema,
 };
