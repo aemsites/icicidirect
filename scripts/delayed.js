@@ -2,7 +2,7 @@
 import { loadScript, sampleRUM, fetchPlaceholders } from './aem.js';
 import {
   // eslint-disable-next-line import/named
-  defaultAnalyticsLoadDisabled,
+  isCustomAnalyticsLoadDelay,
   loadAdobeLaunchAndGTM,
 } from './blocks-utils.js';
 
@@ -36,7 +36,8 @@ loadScript('https://www.google.com/recaptcha/api.js?onload=onCaptchaloadCallback
 loadScript('/scripts/cookie-script.js');
 
 if (!isSidekickLibrary) {
-  if (!defaultAnalyticsLoadDisabled()) {
+  // There was no custome loading for analytics, load it now
+  if (!isCustomAnalyticsLoadDelay()) {
     loadAdobeLaunchAndGTM();
   }
   // Needed for chatbot to work in non-prod environments

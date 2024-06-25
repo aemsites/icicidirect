@@ -14,7 +14,7 @@ import {
 
 import {
   decorateQuickLinks,
-  defaultAnalyticsLoadDisabled,
+  isCustomAnalyticsLoadDelay,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
   isInternalPage,
@@ -157,8 +157,14 @@ async function loadEager(doc) {
     // do nothing
   }
 
-  if (defaultAnalyticsLoadDisabled()) {
+  // If there is a custom loading of analytics specified, load it now
+  if (isCustomAnalyticsLoadDelay()) {
     const delayTime = loadAnalyticsDelayed();
+    /*
+      * If delayTime is 0, load Adobe Launch and GTM immediately.
+      * If delayTime is greater than 0, load Adobe Launch and GTM after the delayTime.
+      * If delayTime is less than 0, do nothing and it will get loaded in the delayed.js
+    */
     if (delayTime === 0) {
       loadAdobeLaunchAndGTM();
     } else if (delayTime > 0) {
