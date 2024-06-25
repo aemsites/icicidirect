@@ -407,7 +407,7 @@ function loadAdobeLaunchAndGTM() {
  */
 function isCustomAnalyticsLoadDelay() {
   const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
-  const result = delayParam !== null && !Number.isNaN(delayParam);
+  const result = delayParam !== null && !Number.isNaN(delayParam) && delayParam >= 0;
   // eslint-disable-next-line no-console
   console.log('isCustomAnalyticsLoadDelay', result);
   return result;
