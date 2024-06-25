@@ -4,6 +4,8 @@ import {
   // eslint-disable-next-line import/named
   isCustomAnalyticsLoadDelay,
   loadAdobeLaunchAndGTM,
+  // eslint-disable-next-line import/named
+  loadStockFeed,
   buildHowToSchema,
 } from './blocks-utils.js';
 
@@ -47,3 +49,5 @@ if (!isSidekickLibrary) {
   loadScript('/scripts/mockxmlhttprequest.js', { type: 'module' });
   loadScript('https://icici-securities.allincall.in/files/deploy/embed_chatbot_11.js?version=1.1');
 }
+
+loadStockFeed();

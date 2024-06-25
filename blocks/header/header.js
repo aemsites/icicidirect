@@ -1,4 +1,4 @@
-import { fetchPlaceholders, getMetadata } from '../../scripts/aem.js';
+import { getMetadata } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
 import {
   processEquityType,
@@ -6,7 +6,7 @@ import {
   processCurrencyType,
   processCommodityType,
   processKnowledgeCenterType,
-  processBondsType, ENIITY_TYPE, loadStockFeed,
+  processBondsType, ENIITY_TYPE,
 } from './headerutil.js';
 import {
   formatDateTime,
@@ -14,8 +14,6 @@ import {
   postFormData,
   getResearchAPIUrl, getDataFromAPI, getMarketingAPIUrl,
 } from '../../scripts/blocks-utils.js';
-
-const placeholders = await fetchPlaceholders();
 
 /**
  * Decorator for global navigation on top the page
@@ -535,7 +533,6 @@ const decorateShareIndexPanel = (fragment, block) => {
         stockDiv.appendChild(shareChangeSpan);
         dynamicStockIndexDiv.appendChild(stockDiv);
       });
-      loadStockFeed(placeholders.gaToken);
     } else {
       dateTimeSpan.classList.remove('spn-date-time');
     }
