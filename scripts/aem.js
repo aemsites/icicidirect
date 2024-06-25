@@ -646,7 +646,7 @@ async function loadHeader(header) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
   decorateBlock(headerBlock);
-  return loadBlock(headerBlock);
+  await loadBlock(headerBlock);
 }
 
 /**
