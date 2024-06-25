@@ -504,8 +504,7 @@ function addPrefetch(kind, url, as) {
   document.head.append(linkEl);
 }
 
-async function loadStockFeed(gaTokenId)
-{
+async function loadStockFeed(gaTokenId) {
   if (!gaTokenId) {
     const placeholders = await fetchPlaceholders();
     // eslint-disable-next-line no-param-reassign
@@ -537,7 +536,7 @@ async function loadStockFeed(gaTokenId)
   const connect = (hostname, token) => {
     // eslint-disable-next-line no-undef
     socket = io.connect(hostname, {
-      auth: {token},
+      auth: { token },
       transports: ['websocket'],
     });
   };
