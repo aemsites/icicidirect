@@ -14,7 +14,7 @@ import {
 
 import {
   decorateQuickLinks,
-  defaultAnalyticsLoadDisabled,
+  isCustomAnalyticsLoadDelay,
   loadAdobeLaunchAndGTM,
   loadAnalyticsDelayed,
   isInternalPage,
@@ -22,40 +22,6 @@ import {
 } from './blocks-utils.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
-
-/**
- * Set the JSON-LD script in the body
- * @param {*} data To be appended json
- * @param {string} name The data-name of the script tag
- */
-export function setJsonLd(data, name) {
-  const existingScript = document.body.querySelector(`script[data-name="${name}"]`);
-  if (existingScript) return;
-  const script = document.createElement('script');
-  script.type = 'application/ld+json';
-  script.textContent = JSON.stringify(data);
-  script.dataset.name = name;
-  document.body.appendChild(script);
-}
-
-/**
- * Builds HowTo schema and append it to body.
- */
-async function buildHowToSchema() {
-  // Get Howto schema from schema excel
-  const response = await fetch('/howto-schema.json?sheet=data&sheet=step');
-  const json = await response.json();
-  const jsonLD = {};
-  if (json) {
-    if (json.data.data) {
-      Object.assign(jsonLD, json.data.data[0]);
-    }
-    if (json.step.data) {
-      jsonLD.step = json.step.data;
-    }
-  }
-  setJsonLd(jsonLD, 'howto');
-}
 
 /**
  * load fonts.css and set a session storage flag
@@ -66,19 +32,6 @@ async function loadFonts() {
     if (!window.location.hostname.includes('localhost')) sessionStorage.setItem('fonts-loaded', 'true');
   } catch (e) {
     // do nothing
-  }
-}
-
-/**
- * Builds all synthetic blocks in a container element.
- * @param {Element} main The container element
- */
-function buildAutoBlocks() {
-  try {
-    buildHowToSchema();
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Auto Blocking failed', error);
   }
 }
 
@@ -118,7 +71,6 @@ export function decorateMain(main) {
   decorateButtons(main);
   decorateAnchors(document);
   decorateIcons(main);
-  buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
   decorateQuickLinks(main);
@@ -146,17 +98,6 @@ async function loadEager(doc) {
   } catch (e) {
     // do nothing
   }
-
-  if (defaultAnalyticsLoadDisabled()) {
-    const delayTime = loadAnalyticsDelayed();
-    if (delayTime === 0) {
-      loadAdobeLaunchAndGTM();
-    } else if (delayTime > 0) {
-      setTimeout(() => {
-        loadAdobeLaunchAndGTM();
-      }, delayTime * 1000);
-    }
-  }
 }
 
 /**
@@ -177,6 +118,23 @@ async function loadLazy(doc) {
   }
   await loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   await loadFonts();
+
+  // If there is a custom loading of analytics specified, load it now
+  if (isCustomAnalyticsLoadDelay()) {
+    const delayTime = loadAnalyticsDelayed();
+    /*
+      * If delayTime is 0, load Adobe Launch and GTM immediately.
+      * If delayTime is greater than 0, load Adobe Launch and GTM after the delayTime.
+      * If delayTime is less than 0, do nothing and it will get loaded in the delayed.js
+    */
+    if (delayTime === 0) {
+      loadAdobeLaunchAndGTM();
+    } else if (delayTime > 0) {
+      setTimeout(() => {
+        loadAdobeLaunchAndGTM();
+      }, delayTime * 1000);
+    }
+  }
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));

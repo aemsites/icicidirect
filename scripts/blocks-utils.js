@@ -349,10 +349,9 @@ function debounce(func, timeout = 200) {
   };
 }
 
-async function loadGTM() {
-  setTimeout(() => {
-    const scriptTag = document.createElement('script');
-    scriptTag.innerHTML = `
+function loadGTM() {
+  const scriptTag = document.createElement('script');
+  scriptTag.innerHTML = `
           (function (w, d, s, l, i) {
           w[l] = w[l] || [];
           w[l].push({
@@ -367,8 +366,7 @@ async function loadGTM() {
           f.parentNode.insertBefore(j, f);
           }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
       `;
-    document.head.prepend(scriptTag);
-  }, 1000);
+  document.head.prepend(scriptTag);
 }
 
 function loadAdobeLaunch() {
@@ -403,14 +401,23 @@ function loadAdobeLaunchAndGTM() {
   }
 }
 
-function defaultAnalyticsLoadDisabled() {
+/**
+ * Tells if the delay is overridden through query param
+ * @returns {boolean} True if the delay is overridden through query param else false
+ */
+function isCustomAnalyticsLoadDelay() {
   const delayParam = getQueryParam(DELAY_MARTECH_PARAMS);
-  const result = delayParam !== null && !Number.isNaN(delayParam);
+  const result = delayParam !== null && !Number.isNaN(delayParam) && delayParam >= 0;
   // eslint-disable-next-line no-console
-  console.log('defaultAnalyticsLoadDisabled', result);
+  console.log('isCustomAnalyticsLoadDelay', result);
   return result;
 }
 
+/**
+ * Extracts the delay time from the query param
+ * If the delay time is not present or invalid, returns -1
+ * @returns {number} The delay time in seconds
+ */
 function loadAnalyticsDelayed() {
   let delayTime = -1;
   const delayMartech = getQueryParam(DELAY_MARTECH_PARAMS);
@@ -497,7 +504,8 @@ function addPrefetch(kind, url, as) {
   document.head.append(linkEl);
 }
 
-async function loadStockFeed(gaTokenId) {
+async function loadStockFeed(gaTokenId)
+{
   if (!gaTokenId) {
     const placeholders = await fetchPlaceholders();
     // eslint-disable-next-line no-param-reassign
@@ -529,7 +537,7 @@ async function loadStockFeed(gaTokenId) {
   const connect = (hostname, token) => {
     // eslint-disable-next-line no-undef
     socket = io.connect(hostname, {
-      auth: { token },
+      auth: {token},
       transports: ['websocket'],
     });
   };
@@ -604,6 +612,39 @@ async function loadStockFeed(gaTokenId) {
     sensexValue.classList.add('market-closed');
   }
 }
+/**
+ * Set the JSON-LD script in the body
+ * @param {*} data To be appended json
+ * @param {string} name The data-name of the script tag
+ */
+function setJsonLd(data, name) {
+  const script = document.createElement('script');
+  script.type = 'application/ld+json';
+  script.textContent = JSON.stringify(data);
+  script.dataset.name = name;
+  document.body.appendChild(script);
+}
+
+/**
+ * Builds HowTo schema and append it to body.
+ */
+async function buildHowToSchema() {
+  const existingScript = document.body.querySelector('script[data-name="howto"]');
+  if (existingScript) return;
+  // Get Howto schema from schema excel
+  const response = await fetch('/howto-schema.json?sheet=data&sheet=step');
+  const json = await response.json();
+  const jsonLD = {};
+  if (json) {
+    if (json.data.data) {
+      Object.assign(jsonLD, json.data.data[0]);
+    }
+    if (json.step.data) {
+      jsonLD.step = json.step.data;
+    }
+  }
+  setJsonLd(jsonLD, 'howto');
+}
 
 export {
   isInViewport,
@@ -631,7 +672,7 @@ export {
   getHostUrl,
   loadAnalyticsDelayed,
   loadAdobeLaunchAndGTM,
-  defaultAnalyticsLoadDisabled,
+  isCustomAnalyticsLoadDelay,
   generateReportLink,
   sanitizeCompanyName,
   CONTENT_FEED_URL,
@@ -641,4 +682,5 @@ export {
   isInternalPage,
   addPrefetch,
   loadStockFeed,
+  buildHowToSchema,
 };
