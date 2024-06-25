@@ -368,7 +368,7 @@ async function loadGTM() {
           }(window, document, 'script', 'dataLayer', 'GTM-WF9LTLZ'));
       `;
     document.head.prepend(scriptTag);
-  }, 1000);
+  }, 100);
 }
 
 function loadAdobeLaunch() {
