@@ -646,7 +646,8 @@ async function loadHeader(header) {
   const headerBlock = buildBlock('header', '');
   header.append(headerBlock);
   decorateBlock(headerBlock);
-  return loadBlock(headerBlock);
+  const loadedBlock = await loadBlock(headerBlock);
+  return loadedBlock;
 }
 
 /**
@@ -658,7 +659,8 @@ async function loadFooter(footer) {
   const footerBlock = buildBlock('footer', '');
   footer.append(footerBlock);
   decorateBlock(footerBlock);
-  return loadBlock(footerBlock);
+  const loadedBlock = await loadBlock(footerBlock);
+  return loadedBlock;
 }
 
 /**
