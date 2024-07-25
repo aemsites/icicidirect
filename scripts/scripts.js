@@ -98,6 +98,22 @@ async function loadEager(doc) {
   } catch (e) {
     // do nothing
   }
+  
+  if (isCustomAnalyticsLoadDelay()) {
+    const delayTime = loadAnalyticsDelayed();
+    /*
+      * If delayTime is 0, load Adobe Launch and GTM immediately.
+      * If delayTime is greater than 0, load Adobe Launch and GTM after the delayTime.
+      * If delayTime is less than 0, do nothing and it will get loaded in the delayed.js
+    */
+    if (delayTime === 0) {
+      loadAdobeLaunchAndGTM();
+    } else if (delayTime > 0) {
+      setTimeout(() => {
+        loadAdobeLaunchAndGTM();
+      }, delayTime * 1000);
+    }
+  }
 }
 
 /**
@@ -120,21 +136,7 @@ async function loadLazy(doc) {
   await loadFonts();
 
   // If there is a custom loading of analytics specified, load it now
-  if (isCustomAnalyticsLoadDelay()) {
-    const delayTime = loadAnalyticsDelayed();
-    /*
-      * If delayTime is 0, load Adobe Launch and GTM immediately.
-      * If delayTime is greater than 0, load Adobe Launch and GTM after the delayTime.
-      * If delayTime is less than 0, do nothing and it will get loaded in the delayed.js
-    */
-    if (delayTime === 0) {
-      loadAdobeLaunchAndGTM();
-    } else if (delayTime > 0) {
-      setTimeout(() => {
-        loadAdobeLaunchAndGTM();
-      }, delayTime * 1000);
-    }
-  }
+
 
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
